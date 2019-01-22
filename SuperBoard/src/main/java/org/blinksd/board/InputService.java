@@ -1,12 +1,10 @@
 package org.blinksd.board;
 
-import android.content.res.*;
-import android.graphics.*;
+import android.content.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.view.*;
 import android.view.inputmethod.*;
-import java.util.*;
 
 import static org.blinksd.board.SuperBoard.*;
 
@@ -28,23 +26,26 @@ public class InputService extends InputMethodService {
 
 	@Override
 	public void onFinishInput(){
-		//sb.closeKeyboard();
 		sb.setEnabledLayout(0);
 		super.onFinishInput();
 	}
-
-	/*@Override
-	public boolean onKeyDown(int keyCode,KeyEvent event){
-		if(isInputViewShown()){
-			switch(keyCode){
-				case event.KEYCODE_BACK:
-					sb.closeKeyboard();
-					return true;
-			}
-		}
-		return super.onKeyDown(keyCode,event);
-	}*/
 	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		restart();
+	}
+
+	@Override
+	public boolean onUnbind(Intent intent){
+		restart();
+		return super.onUnbind(intent);
+	}
+	
+	public void restart(){
+		startService(new Intent(this,InputService.class));
+	}
+
 	private void setKeyBg(int clr){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(clr);
@@ -96,13 +97,16 @@ public class InputService extends InputMethodService {
 			sb.createLayoutWithRows(kbd[4],KeyboardType.NUMBER);
 			
 			sb.setPressEventForKey(0,3,0,Keyboard.KEYCODE_SHIFT);
+			sb.setKeyDrawable(0,3,0,R.drawable.sym_keyboard_shift);
 			sb.setPressEventForKey(1,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(2,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(3,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
 			
 			sb.setPressEventForKey(-1,2,-1,Keyboard.KEYCODE_DELETE);
 			sb.setKeyRepeat(-1,2,-1);
+			sb.setKeyDrawable(-1,2,-1,R.drawable.sym_keyboard_delete);
 			sb.setPressEventForKey(-1,3,-1,Keyboard.KEYCODE_DONE);
+			sb.setKeyDrawable(-1,3,-1,R.drawable.sym_keyboard_return);
 			
 			sb.setPressEventForKey(3,1,4,KeyEvent.KEYCODE_PAGE_DOWN);
 			sb.setPressEventForKey(3,1,5,KeyEvent.KEYCODE_PAGE_UP);
@@ -144,9 +148,11 @@ public class InputService extends InputMethodService {
 					sb.setKeyRepeat(i,3,-1);
 					sb.setKeyRepeat(i,4,2);
 					sb.setPressEventForKey(i,3,-1,Keyboard.KEYCODE_DELETE);
+					sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
 					sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
 					sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
 					sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
+					sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
 					sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
 					sb.setLongPressEventForKey(i,4,1,'\t',false);
 				}
@@ -163,8 +169,6 @@ public class InputService extends InputMethodService {
 			sb.setKeyWidthPercent(i,4,3,15);
 			sb.setKeyWidthPercent(i,4,-1,20);
 		}
-		sb.fixHeight();
 		sb.updateKeyState(this);
 	}
-	
 }

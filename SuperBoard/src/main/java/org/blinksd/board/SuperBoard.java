@@ -18,7 +18,7 @@ import static android.view.Gravity.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, ori = 0, hp = 45, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
+	private int selected = 0, shift = 0, keyclr = -1, ori = 0, hp = 40, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean block = false, clear = false, lng = false;
 	private Drawable keybg = null, kbdbg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
@@ -128,7 +128,7 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	private boolean isKeyRepeat(View v){
-		CharSequence cs = ((TextView)v).getHint();
+		CharSequence cs = ((Key)v).getHint();
 		if(cs == null) return false;
 		return cs.toString().equals(KEY_REPEAT);
 	}
@@ -152,6 +152,10 @@ public class SuperBoard extends FrameLayout {
 	
 	public int hp(int percent){
 		return (int)((getScreenHeight() / 100f) * percent);
+	}
+	
+	public int mp(int percent){
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? hp(percent) : wp(percent);
 	}
 	
 	/*private boolean isHasPopup(View v){
@@ -190,13 +194,12 @@ public class SuperBoard extends FrameLayout {
 			for(int i = 0;i < k.getChildCount();i++){
 				r = getRow(j,i);
 				for(int g = 0;g < r.getChildCount();g++){
-					TextView t = (TextView)r.getChildAt(g);
-					for(Drawable d : t.getCompoundDrawables()){
-						if(d != null){
-							d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
-						}
+					Key t = (Key)r.getChildAt(g);
+					if(t.isKeyIconSet()){
+						t.getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
+					} else {
+						t.setTextColor(color);
 					}
-					t.setTextColor(color);
 				}
 			}
 		}
@@ -210,7 +213,7 @@ public class SuperBoard extends FrameLayout {
 			for(int i = 0;i < k.getChildCount();i++){
 				r = getRow(j,i);
 				for(int g = 0;g < r.getChildCount();g++){
-					((TextView)r.getChildAt(g)).setBackgroundDrawable(d);
+					((Key)r.getChildAt(g)).setBackgroundDrawable(d);
 				}
 			}
 		}
@@ -231,13 +234,16 @@ public class SuperBoard extends FrameLayout {
 	public void setKeyLongClickEvent(int keyboardIndex, int rowIndex, int keyIndex, OnLongClickListener event){
 		getKey(keyboardIndex, rowIndex, keyIndex).setOnLongClickListener(event);
 	}
+	
+	public void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, int resId){
+		setKeyDrawable(keyboardIndex, rowIndex, keyIndex, getResources().getDrawable(resId));
+	}
 
 	public void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, Drawable d){
 		d.setColorFilter(keyclr,PorterDuff.Mode.SRC_ATOP);
-		Key t = (Key) getKey(keyboardIndex, rowIndex, keyIndex);
+		Key t = getKey(keyboardIndex, rowIndex, keyIndex);
 		((LinearLayout.LayoutParams)t.getLayoutParams()).gravity = CENTER;
-		t.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
-		t.setText(null);
+		t.setKeyIcon(d);
 	}
 
 	public int getEnabledLayoutIndex(){
@@ -320,11 +326,11 @@ public class SuperBoard extends FrameLayout {
 		return (ViewGroup)getKeyboard(keyboardIndex).getChildAt(rowIndex);
 	}
 
-	public TextView getKey(int keyboardIndex, int rowIndex, int keyIndex){
+	public Key getKey(int keyboardIndex, int rowIndex, int keyIndex){
 		if(keyboardIndex < 0) keyboardIndex += getChildCount();
 		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
 		if(keyIndex < 0) keyIndex += getRow(keyboardIndex,rowIndex).getChildCount();
-		return (TextView)getRow(keyboardIndex,rowIndex).getChildAt(keyIndex);
+		return (Key)getRow(keyboardIndex,rowIndex).getChildAt(keyIndex);
 	}
 
 	public void setKeyPopup(int keyboardIndex, int rowIndex, int keyIndex, String chars){
@@ -360,10 +366,10 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public void sendDefaultKeyboardEvent(View v){
-		defaultKeyboardEvent((TextView)v);
+		defaultKeyboardEvent((Key)v);
 	}
 
-	private void defaultKeyboardEvent(TextView v){
+	private void defaultKeyboardEvent(Key v){
 		if(v.getTag(TAG_NP) != null){
 			x = v.getTag(TAG_NP).toString().split(":");
 			switch(y = Integer.parseInt(x[0])){
@@ -430,15 +436,28 @@ public class SuperBoard extends FrameLayout {
 	private void setShiftState(){
 		setShiftState(shift = (shift+1) % 3);
 	}
+	
+	/*private void fixKeyChanges(Configuration c){
+		ViewGroup k = getCurrentKeyboard(),r = null;
+		Key t = null;
+		for(int i = 0;i < k.getChildCount();i++){
+			r = getRow(selected,i);
+			for(int g = 0;g < r.getChildCount();g++){
+				t = (Key) r.getChildAt(g);
+				t.setKeyIconPadding(mp(4));
+				//t.onConfigurationChanged(c);
+			}
+		}
+	}*/
 
 	public void setShiftState(int state){
 		shift = state;
 		ViewGroup k = getCurrentKeyboard(),r = null;
-		TextView t = null;
+		Key t = null;
 		for(int i = 0;i < k.getChildCount();i++){
 			r = getRow(selected,i);
 			for(int g = 0;g < r.getChildCount();g++){
-				t = (TextView) r.getChildAt(g);
+				t = (Key) r.getChildAt(g);
 				if(t.getTag(TAG_NP) == null && t.getTag(TAG_LP) == null){
 					if(t.getText() != null){
 						if(state > 0){
@@ -497,9 +516,8 @@ public class SuperBoard extends FrameLayout {
 	protected void onConfigurationChanged(Configuration newConfig){
 		if(ori != newConfig.orientation){
 			ori = newConfig.orientation;
-			setKeyboardHeight(hp);
-		}
-		super.onConfigurationChanged(newConfig);
+			fixHeight();
+		} else super.onConfigurationChanged(newConfig);
 	}
 	
 	public void setRowPadding(int keyboardIndex, int rowIndex, int padding){
@@ -638,54 +656,50 @@ public class SuperBoard extends FrameLayout {
 		}
 	}
 
-	private class Key extends TextView {
+	private class Key extends LinearLayout {
 		
-		public boolean isCompoundDrawableSet(){
-			for(Drawable d : getCompoundDrawables()){
-				if(d != null){
-					return true;
-				}
-			}
-			return false;
+		TextView t = null;
+		ImageView i = null;
+		Drawable d = null;
+		
+		public boolean isKeyIconSet(){
+			return i.isShown();
 		}
 		
 		public int getKeyWidth(){
 			return getLayoutParams().width;
 		}
 		
-		public void setCompoundPadding(){
-			switch(ori){
-				case Configuration.ORIENTATION_PORTRAIT:
-					setPadding((int)(getKeyWidth()/4.4f),0,0,0);
-					break;
-				case Configuration.ORIENTATION_LANDSCAPE:
-					setPadding((int)(getKeyWidth()/3.5f),0,0,0);
-					break;
-			}
-		}
-		
-		int ori = 0;
+		int ori = 0, pad = 0;
 
 		@Override
 		protected void onConfigurationChanged(Configuration newConfig){
 			if(ori != newConfig.orientation){
 				ori = newConfig.orientation;
-				if(isCompoundDrawableSet()){
-					setCompoundPadding();
-				}
-				
-			}
-			super.onConfigurationChanged(newConfig);
+				setKeyIconPadding();
+			} else super.onConfigurationChanged(newConfig);
 		}
 
 		Key(Context c){
 			super(c);
 			ori = getResources().getConfiguration().orientation;
+			pad = (ori == Configuration.ORIENTATION_LANDSCAPE ? mp(2) : mp(4));
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-			setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
+			t = new TextView(c);
+			t.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+			i = new ImageView(c);
+			i.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+			addView(t);
+			addView(i);
+			i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+			setKeyIconPadding();
+			i.setVisibility(View.GONE);
+			//t.setVisibility(View.GONE);
+			t.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
 			setGravity(CENTER);
-			setHintTextColor(0);
-			setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
+			t.setGravity(CENTER);
+			t.setHintTextColor(0);
+			t.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
 			setBackground(keybg);
 			setOnTouchListener(new OnTouchListener(){
 					@Override
@@ -764,9 +778,41 @@ public class SuperBoard extends FrameLayout {
 			super.setBackgroundDrawable(b.getConstantState().newDrawable());
 		}
 		
-		public void setCompoundDrawablesWithIntrinsicBounds(Drawable left,Drawable top,Drawable right,Drawable bottom){
-			setCompoundPadding();
-			super.setCompoundDrawablesWithIntrinsicBounds(left,top,right,bottom);
+		public void setKeyIcon(Drawable dr){
+			t.setVisibility(View.GONE);
+			i.setVisibility(View.VISIBLE);
+			i.setImageDrawable(d = dr);
+		}
+		
+		private void setKeyIconPadding(){
+			pad = mp(ori == Configuration.ORIENTATION_LANDSCAPE ? 2 : 4);
+			i.setPadding(pad,pad,pad,pad);
+		}
+		
+		public void setTextColor(int color){
+			t.setTextColor(color);
+		}
+		
+		public void setText(CharSequence cs){
+			i.setVisibility(View.GONE);
+			t.setVisibility(View.VISIBLE);
+			t.setText(cs);
+		}
+		
+		public CharSequence getText(){
+			return t.getText();
+		}
+		
+		public Drawable getKeyIcon(){
+			return d;
+		}
+		
+		public CharSequence getHint(){
+			return t.getHint();
+		}
+		
+		public void setHint(CharSequence cs){
+			t.setHint(cs);
 		}
 	}
 }
