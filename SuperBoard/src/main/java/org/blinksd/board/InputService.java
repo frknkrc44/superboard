@@ -52,7 +52,7 @@ public class InputService extends InputMethodService {
 		gd.setColor(clr);
 		gd.setCornerRadius(sb.dp(8));
 		gd.setStroke(sb.dp(6),0);
-		sb.setKeyBackground(gd);
+		sb.setKeysBackground(gd);
 	}
 	
 	private void setLayout(){

@@ -197,33 +197,22 @@ public class SuperBoard extends FrameLayout {
 	}*/
 
 	public void setKeyTextColor(int color){
-		ViewGroup k = null,r = null;
 		keyclr = color;
 		for(int j = 0;j < getChildCount();j++){
-			k = getKeyboard(j);
-			for(int i = 0;i < k.getChildCount();i++){
-				r = getRow(j,i);
-				for(int g = 0;g < r.getChildCount();g++){
-					Key t = (Key)r.getChildAt(g);
-					if(t.isKeyIconSet()){
-						t.getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
-					} else {
-						t.setTextColor(color);
-					}
+			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
+				for(int g = 0;g < getRow(j,i).getChildCount();g++){
+					getKey(j,i,g).setKeyItemColor(color);
 				}
 			}
 		}
 	}
 
-	public void setKeyBackground(Drawable d){
-		ViewGroup k = null,r = null;
+	public void setKeysBackground(Drawable d){
 		keybg = d;
 		for(int j = 0;j < getChildCount();j++){
-			k = getKeyboard(j);
-			for(int i = 0;i < k.getChildCount();i++){
-				r = getRow(j,i);
-				for(int g = 0;g < r.getChildCount();g++){
-					((Key)r.getChildAt(g)).setBackgroundDrawable(d);
+			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
+				for(int g = 0;g < getRow(j,i).getChildCount();g++){
+					getKey(j,i,g).setBackgroundDrawable(d);
 				}
 			}
 		}
@@ -667,7 +656,8 @@ public class SuperBoard extends FrameLayout {
 		void setKeyWidths(){
 			for(int i = 0;i < getChildCount();i++){
 				Key k = (Key) getChildAt(i);
-				k.setId(k.getId() < 1 ? 100 / getChildCount() : k.getId());
+				if(k.getId() < 1)
+					k.setId(100 / getChildCount());
 				k.getLayoutParams().width = wp(k.getId());
 			}
 		}
@@ -677,7 +667,6 @@ public class SuperBoard extends FrameLayout {
 		
 		TextView t = null;
 		ImageView i = null;
-		Drawable d = null;
 		
 		public boolean isKeyIconSet(){
 			return i.isShown();
@@ -710,8 +699,7 @@ public class SuperBoard extends FrameLayout {
 			addView(i);
 			i.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			setKeyIconPadding();
-			i.setVisibility(View.GONE);
-			//t.setVisibility(View.GONE);
+			setKeyImageVisible(false);
 			t.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
 			setGravity(CENTER);
 			t.setGravity(CENTER);
@@ -797,9 +785,8 @@ public class SuperBoard extends FrameLayout {
 		}
 		
 		public void setKeyIcon(Drawable dr){
-			t.setVisibility(View.GONE);
-			i.setVisibility(View.VISIBLE);
-			i.setImageDrawable(d = dr);
+			setKeyImageVisible(true);
+			i.setImageDrawable(dr);
 		}
 		
 		private void setKeyIconPadding(){
@@ -807,13 +794,15 @@ public class SuperBoard extends FrameLayout {
 			i.setPadding(pad,pad,pad,pad);
 		}
 		
-		public void setTextColor(int color){
+		public void setKeyItemColor(int color){
 			t.setTextColor(color);
+			if(getKeyIcon() != null){
+				getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
+			}
 		}
 		
 		public void setText(CharSequence cs){
-			i.setVisibility(View.GONE);
-			t.setVisibility(View.VISIBLE);
+			setKeyImageVisible(false);
 			t.setText(cs);
 		}
 		
@@ -822,11 +811,16 @@ public class SuperBoard extends FrameLayout {
 		}
 		
 		public Drawable getKeyIcon(){
-			return d;
+			return i.getDrawable();
 		}
 		
 		public CharSequence getHint(){
 			return t.getHint();
+		}
+		
+		public void setKeyImageVisible(boolean visible){
+			i.setVisibility(visible?VISIBLE:GONE);
+			t.setVisibility(visible?GONE:VISIBLE);
 		}
 		
 		public void setHint(CharSequence cs){
