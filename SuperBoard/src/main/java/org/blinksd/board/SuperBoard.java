@@ -18,7 +18,7 @@ import static android.view.Gravity.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, ori = 0, hp = 40, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
+	private int selected = 0, shift = 0, keyclr = -1, /*ori = 0,*/ hp = 40, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean block = false, clear = false, lng = false;
 	private Drawable keybg = null, kbdbg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
@@ -35,7 +35,7 @@ public class SuperBoard extends FrameLayout {
 
 	public SuperBoard(Context c){
 		super(c);
-		ori = getResources().getConfiguration().orientation;
+		//ori = getResources().getConfiguration().orientation;
 		disableSystemSuggestions();
 		setLayoutParams(new LayoutParams(-1,-1));
 		setBackgroundColor(0xFF212121);
@@ -63,8 +63,17 @@ public class SuperBoard extends FrameLayout {
 		return getLayoutParams().height;
 	}
 	
+	public int getKeyboardHeightPercent(){
+		return hp;
+	}
+	
 	public void fixHeight(){
 		setKeyboardHeight(hp);
+		for(int i = 0;i < getChildCount();i++){
+			for(int g = 0;g < getKeyboard(i).getChildCount();g++){
+				getRow(i,g).setKeyWidths();
+			}
+		}
 	}
 
 	public void setBackground(Drawable background){
@@ -134,8 +143,9 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public void setKeyWidthPercent(int keyboardIndex, int rowIndex, int keyIndex, int percent){
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) getKey(keyboardIndex,rowIndex,keyIndex).getLayoutParams();
-		lp.width = wp(percent);
+		Key k = getKey(keyboardIndex,rowIndex,keyIndex);
+		k.getLayoutParams().width = wp(percent);
+		k.setId(percent);
 	}
 	
 	private int getScreenWidth(){
@@ -321,9 +331,9 @@ public class SuperBoard extends FrameLayout {
 		getRow(keyboardIndex,rowIndex).removeViewAt(keyIndex);
 	}
 
-	public ViewGroup getRow(int keyboardIndex, int rowIndex){
+	public Row getRow(int keyboardIndex, int rowIndex){
 		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
-		return (ViewGroup)getKeyboard(keyboardIndex).getChildAt(rowIndex);
+		return (Row)getKeyboard(keyboardIndex).getChildAt(rowIndex);
 	}
 
 	public Key getKey(int keyboardIndex, int rowIndex, int keyIndex){
@@ -411,7 +421,7 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	private InputMethodService getServiceContext(){
-		return (InputMethodService)getContext();
+		return curr;
 	}
 	
 	private InputConnection getCurrentIC(){
@@ -471,11 +481,16 @@ public class SuperBoard extends FrameLayout {
 		}
 	}
 	
+	InputMethodService curr = null;
+	
 	private void updateKeyState(){
-		updateKeyState(getServiceContext());
+		updateKeyState(curr);
 	}
 
 	public void updateKeyState(InputMethodService s){
+		if(!s.equals(curr)){
+			curr = s;
+		}
 		EditorInfo ei = s.getCurrentInputEditorInfo();
 		/*Row t = null;
 		Key k = null;*/
@@ -514,10 +529,10 @@ public class SuperBoard extends FrameLayout {
 
 	@Override
 	protected void onConfigurationChanged(Configuration newConfig){
-		if(ori != newConfig.orientation){
+		/*if(ori != newConfig.orientation){
 			ori = newConfig.orientation;
-			fixHeight();
-		} else super.onConfigurationChanged(newConfig);
+		}*/
+		fixHeight();
 	}
 	
 	public void setRowPadding(int keyboardIndex, int rowIndex, int padding){
@@ -651,7 +666,9 @@ public class SuperBoard extends FrameLayout {
 		
 		void setKeyWidths(){
 			for(int i = 0;i < getChildCount();i++){
-				getChildAt(i).getLayoutParams().width = wp(100 / getChildCount());
+				Key k = (Key) getChildAt(i);
+				k.setId(k.getId() < 1 ? 100 / getChildCount() : k.getId());
+				k.getLayoutParams().width = wp(k.getId());
 			}
 		}
 	}
@@ -711,7 +728,7 @@ public class SuperBoard extends FrameLayout {
 										block = lng = true;
 										h.removeMessages(0);
 										h.sendEmptyMessageDelayed(0,500);
-									} else if(m.getAction() == m.ACTION_MOVE){
+									} else {
 										x = v.getTag(TAG_LP).toString().split(":");
 										y = Integer.parseInt(x[0]);
 										if(Boolean.parseBoolean(x[1])){
@@ -748,13 +765,14 @@ public class SuperBoard extends FrameLayout {
 						} else */if(isKeyRepeat(v)){
 							if(m.getAction() != m.ACTION_UP){
 								if(!block){
-									if(!lng){
-										block = true;
-										h.removeMessages(0);
-										h.sendEmptyMessageDelayed(0,50*/*(lng?1:*/12/*)*/);
-										/*if(!lng) */lng = true;
-									}
-									sendDefaultKeyboardEvent(v);
+									//if(!lng){
+										if(!h.hasMessages(0)){
+											block = true;
+											h.sendEmptyMessageDelayed(0,20*(lng?1:23));
+											if(!lng) lng = true;
+											sendDefaultKeyboardEvent(v);
+										}
+									//}
 								}
 							} else {
 								h.removeMessages(0);

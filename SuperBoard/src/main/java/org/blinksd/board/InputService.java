@@ -7,6 +7,7 @@ import android.view.*;
 import android.view.inputmethod.*;
 
 import static org.blinksd.board.SuperBoard.*;
+import android.content.res.*;
 
 public class InputService extends InputMethodService {
 	
@@ -57,7 +58,10 @@ public class InputService extends InputMethodService {
 	private void setLayout(){
 		if(sb == null){
 			sb = new SuperBoard(this);
-			setKeyBg(0xFF363636);
+			sb.setBackgroundColor(0xFF282D31);
+			setKeyBg(0xFF474B4C);
+			sb.setKeyTextColor(0xFFDDE1E2);
+			//setKeyBg(0xFF363636);
 			String[][][] kbd = {
 				{
 					{"1","2","3","4","5","6","7","8","9","0"},
@@ -142,6 +146,10 @@ public class InputService extends InputMethodService {
 			}
 			//sb.setPopupForKey(0,0,0,"yep");
 			
+			/*for(int i = 0;i < sb.getRow(0,0).getChildCount();i++){
+				sb.setKeyTintColor(0,0,i,0xFF373C40);
+			}*/
+			
 			for(int i = 0;i < kbd.length;i++){
 				if(i < 3){
 					sb.setRowPadding(i,2,sb.wp(2));
@@ -151,12 +159,22 @@ public class InputService extends InputMethodService {
 					sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
 					sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
 					sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
+					//sb.setKeyTintColor(i,4,2,0xFF373C40);
+					sb.setKeyTintColor(i,3,-1,0xFF373C40);
+					for(int h = 3;h < 5;h++){
+						sb.setKeyTintColor(i,h,0,0xFF373C40);
+					}
 					sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
 					sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
 					sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
 					sb.setLongPressEventForKey(i,4,1,'\t',false);
+					sb.setKeyTintColor(i,4,1,0xFF373C40);
+					sb.setKeyTintColor(i,4,3,0xFF373C40);
 				}
-				if(i != 3) sb.setKeyTintColor(i,-1,-1,0xFFCC3434);
+				//if(i != 3) sb.setKeyTintColor(i,-1,-1,0xFFCC3434);
+				if(i != 3){
+					sb.setKeyTintColor(i,-1,-1,0xFF5F97F6);
+				}
 			}
 		}
 		
@@ -170,5 +188,10 @@ public class InputService extends InputMethodService {
 			sb.setKeyWidthPercent(i,4,-1,20);
 		}
 		sb.updateKeyState(this);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig){
+		// fixing crashes
 	}
 }
