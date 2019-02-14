@@ -1,22 +1,38 @@
 package org.blinksd.board;
 
 import android.content.*;
+import android.content.res.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.view.*;
 import android.view.inputmethod.*;
+import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import android.content.res.*;
 
 public class InputService extends InputMethodService {
 	
 	SuperBoard sb = null;
+	SuperDB sd = null;
+	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
+	private String kbd[][][] = null;
 
 	@Override
 	public View onCreateInputView(){
 		setLayout();
 		return sb;
+	}
+
+	@Override
+	public void onUnbindInput(){
+		requestHideSelf(0);
+		super.onUnbindInput();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode,KeyEvent event){
+		if(keyCode == event.KEYCODE_BACK) requestHideSelf(0);
+		return super.onKeyDown(keyCode,event);
 	}
 
 	@Override
@@ -29,6 +45,7 @@ public class InputService extends InputMethodService {
 	public void onFinishInput(){
 		sb.setEnabledLayout(0);
 		super.onFinishInput();
+		System.gc();
 	}
 	
 	@Override
@@ -44,25 +61,27 @@ public class InputService extends InputMethodService {
 	}
 	
 	public void restart(){
-		startService(new Intent(this,InputService.class));
+		Intent i = new Intent(this,InputService.class);
+		stopService(i);
+		startService(i);
 	}
 
 	private void setKeyBg(int clr){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(clr);
-		gd.setCornerRadius(sb.dp(8));
-		gd.setStroke(sb.dp(6),0);
+		gd.setCornerRadius(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),sb.mp(1)));
+		gd.setStroke(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),sb.mp(1)),0);
 		sb.setKeysBackground(gd);
 	}
 	
 	private void setLayout(){
+		if(sd == null){
+			sd = SuperDBHelper.getDefault(this);
+			registerReceiver(r,new IntentFilter(COLORIZE_KEYBOARD));
+		}
 		if(sb == null){
 			sb = new SuperBoard(this);
-			sb.setBackgroundColor(0xFF282D31);
-			setKeyBg(0xFF474B4C);
-			sb.setKeyTextColor(0xFFDDE1E2);
-			//setKeyBg(0xFF363636);
-			String[][][] kbd = {
+			kbd = new String[][][]{
 				{
 					{"1","2","3","4","5","6","7","8","9","0"},
 					{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
@@ -125,10 +144,8 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(3,2,6,KeyEvent.KEYCODE_MEDIA_STOP);
 			sb.setPressEventForKey(3,2,7,KeyEvent.KEYCODE_MEDIA_NEXT);
 			
-			//sb.setPressEventForKey(3,3,2,KeyEvent.KEYCODE_BRIGHTNESS_DOWN);
 			sb.setPressEventForKey(3,3,3,KeyEvent.KEYCODE_MOVE_HOME);
 			sb.setPressEventForKey(3,3,4,KeyEvent.KEYCODE_SEARCH);
-			//sb.setPressEventForKey(3,3,5,KeyEvent.KEYCODE_DPAD_DOWN_RIGHT);
 			
 			sb.setPressEventForKey(3,-1,1,KeyEvent.KEYCODE_MUTE);
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
@@ -144,11 +161,6 @@ public class InputService extends InputMethodService {
 					sb.setPressEventForKey(3,i,g,KeyEvent.KEYCODE_F1+(g+(i*8)));
 				}
 			}
-			//sb.setPopupForKey(0,0,0,"yep");
-			
-			/*for(int i = 0;i < sb.getRow(0,0).getChildCount();i++){
-				sb.setKeyTintColor(0,0,i,0xFF373C40);
-			}*/
 			
 			for(int i = 0;i < kbd.length;i++){
 				if(i < 3){
@@ -159,21 +171,10 @@ public class InputService extends InputMethodService {
 					sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
 					sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
 					sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
-					//sb.setKeyTintColor(i,4,2,0xFF373C40);
-					sb.setKeyTintColor(i,3,-1,0xFF373C40);
-					for(int h = 3;h < 5;h++){
-						sb.setKeyTintColor(i,h,0,0xFF373C40);
-					}
 					sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
 					sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
 					sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
 					sb.setLongPressEventForKey(i,4,1,'\t',false);
-					sb.setKeyTintColor(i,4,1,0xFF373C40);
-					sb.setKeyTintColor(i,4,3,0xFF373C40);
-				}
-				//if(i != 3) sb.setKeyTintColor(i,-1,-1,0xFFCC3434);
-				if(i != 3){
-					sb.setKeyTintColor(i,-1,-1,0xFF5F97F6);
 				}
 			}
 		}
@@ -187,11 +188,45 @@ public class InputService extends InputMethodService {
 			sb.setKeyWidthPercent(i,4,3,15);
 			sb.setKeyWidthPercent(i,4,-1,20);
 		}
+		setPrefs();
 		sb.updateKeyState(this);
 	}
+	
+	/*public int getThemeColor(){
+		return Build.VERSION.SDK_INT>19?obtainStyledAttributes(new int[]{android.R.attr.colorAccent}).getInt(0,0xFF5F97F6):0xFF5F97F6;
+	}*/
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
+		// System.exit(0);
 		// fixing crashes
 	}
+	
+	public void setPrefs(){
+		sb.setBackgroundColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31));
+		setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
+		sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
+		sb.setKeysTextSize(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),sb.mp(1)));
+		for(int i = 0;i < kbd.length;i++){
+			if(i < 3){
+				int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
+				sb.setKeyTintColor(i,3,-1,y);
+				for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
+				sb.setKeyTintColor(i,4,1,y);
+				sb.setKeyTintColor(i,4,3,y);
+			}
+			
+			if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
+		}
+	}
+	
+	BroadcastReceiver r = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context p1,Intent p2){
+			sd.onlyRead();
+			setPrefs();
+		}
+		
+	};
 }
