@@ -31,7 +31,12 @@ public class InputService extends InputMethodService {
 
 	@Override
 	public boolean onKeyDown(int keyCode,KeyEvent event){
-		if(keyCode == event.KEYCODE_BACK) requestHideSelf(0);
+		if(isInputViewShown()){
+			if(keyCode == event.KEYCODE_BACK){
+				requestHideSelf(0);
+				return true;
+			}
+		}
 		return super.onKeyDown(keyCode,event);
 	}
 
@@ -69,8 +74,8 @@ public class InputService extends InputMethodService {
 	private void setKeyBg(int clr){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(clr);
-		gd.setCornerRadius(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),sb.mp(1)));
-		gd.setStroke(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),sb.mp(1)),0);
+		gd.setCornerRadius(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+		gd.setStroke(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
 		sb.setKeysBackground(gd);
 	}
 	
@@ -206,7 +211,7 @@ public class InputService extends InputMethodService {
 		sb.setBackgroundColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31));
 		setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
 		sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
-		sb.setKeysTextSize(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),sb.mp(1)));
+		sb.setKeysTextSize(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
 		for(int i = 0;i < kbd.length;i++){
 			if(i < 3){
 				int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);

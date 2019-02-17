@@ -628,32 +628,6 @@ public class SuperDB {
 	private List<Object> l = Arrays.asList(hex);
 	private String out,sq,sr[],se,sd = "g",es = "=";
 	private Random r = new Random();
-	
-	/*private String encode(String s){
-		chVal = stVal;
-		rc1 = s.toCharArray();
-		rc2 = new char[rc1.length];
-		z = 0;
-		for(char c : rc1){
-			rc2[(z = (z + 1)) - 1] = (char)(z % 2 == 0 ? c - chVal : c + chVal);
-			chVal = ((chVal != 12500 + stVal) ? (chVal + 1) : stVal);
-		}
-		return new String(rc2);
-	}
-
-	private String decode(String s){
-		chVal = stVal;
-		rc1 = s.toCharArray();
-		rc2 = new char[rc1.length];
-		z = 0;
-		for(char c : rc1){
-			rc2[(z = (z + 1)) - 1] = (char)(z % 2 == 0 ? c + chVal : c - chVal);
-			chVal = ((chVal != 12500 + stVal) ? (chVal + 1) : stVal);
-		}
-		return new String(rc2);
-	}
-	
-	private char[] rc1,rc2;*/
 
 	private String append(int i, String c){
 		if(i == 0) st += c;

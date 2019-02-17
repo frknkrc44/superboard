@@ -58,7 +58,7 @@ public class Settings extends Activity {
 				i.putExtra("action",a);
 				i.putExtra("type",a.endsWith("clr") ? 0 : 1);
 				String s = sd.getString(a,"def");
-				i.putExtra("value",s.equals("def")?s:(a.endsWith("clr")?s:unmp(Integer.valueOf(s))+""));
+				i.putExtra("value",s.equals("def")?s:/*(a.endsWith("clr")?s:unmp(*/Integer.valueOf(s)/*)*/+"")/*)*/;
 				startActivityForResult(i,RESULT_CANCELED);
 			}
 		});
@@ -70,18 +70,20 @@ public class Settings extends Activity {
 		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.$VALUES){
 			@Override
 			public View getView(int p,View v,ViewGroup g){
-				v = v == null ? super.getView(p,v,g) : v;
+				if(v == null) v = super.getView(p,v,g);
 				TextView t = (TextView) v.findViewById(android.R.id.text1);
 				t.setText(getItem(p).name());
 				t = (TextView) v.findViewById(android.R.id.text2);
 				String s = sd.getString(getItem(p).name(),"def");
 				t.setText(s.equals("def") 
 					? "Varsayılan" 
-					: (getItem(p).name().endsWith("clr") ? SetActivity.getColorString(Integer.valueOf(s),false) : unmp(Integer.valueOf(s))+""));
+					: (getItem(p).name().endsWith("clr") 
+						? SetActivity.getColorString(Integer.valueOf(s),false) 
+						: /*unmp(*/a(Integer.valueOf(s))/*)*/+""));
 				if((!s.equals("def")) && getItem(p).name().endsWith("clr")){
 					int c = Integer.valueOf(s);
 					t.setBackgroundColor(c);
-					t.setTextColor(ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0XFFDEDEDE);
+					t.setTextColor(ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
 				}
 				return v;
 			}
@@ -89,9 +91,13 @@ public class Settings extends Activity {
 		lv.setAdapter(aa);
 	}
 	
-	private int unmp(int mp){
-		return (int)(mp / (float)SuperBoard.mp(1));
+	public static float a(int i){
+		return i / 10.0f;
 	}
+	
+	/*private int unmp(int mp){
+		return (int)(mp / (float)SuperBoard.mp(1));
+	}*/
 	
 	public enum Key {
 		keyboard_bgclr,
@@ -130,7 +136,7 @@ public class Settings extends Activity {
 									@Override
 									public void onClick(View v){
 										if(v.getId() == 1){
-											sd.putInteger(act.name(),act.name().endsWith("clr")?set:SuperBoard.mp(set));
+											sd.putInteger(act.name(),/*act.name().endsWith("clr")?*/set/*:SuperBoard.mp(set)*/);
 											sd.onlyWrite();
 											sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
 										}
@@ -227,12 +233,12 @@ public class Settings extends Activity {
 				case num:
 					SeekBar sb = new SeekBar(this);
 					if(act.name().endsWith("padding")){
-						sb.setMax(4);
+						sb.setMax(40);
 					} else if(act.name().endsWith("radius")){
-						sb.setMax(6);
+						sb.setMax(100);
 					} else if(act.name().endsWith("textsize")){
-						sb.setMin(1);
-						sb.setMax(6);
+						sb.setMin(6);
+						sb.setMax(60);
 					}
 					sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
