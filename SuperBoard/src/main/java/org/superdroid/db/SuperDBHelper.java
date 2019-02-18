@@ -11,7 +11,7 @@ public class SuperDBHelper {
 	public static String getValueAndSetItToDefaultIsNotSet(SuperDB db, String key, String def){
 		if(!db.isDBContainsKey(key)){
 			db.putString(key,def);
-			db.refresh();
+			db.writeKey(key);
 		}
 		return db.getString(key,def);
 	}

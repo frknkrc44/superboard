@@ -6,7 +6,7 @@ package org.superdroid.db;
      by Furkan Karcıoğlu
         25.08.2017 Fri
  ----------------------------
-  Last Edit: 03.02.2019 Sun
+  Last Edit: 18.02.2019 Sun
  ----------------------------
 */
 
@@ -510,7 +510,7 @@ public class SuperDB {
 	}
 
 	public final void refresh(){
-		write();
+		writeAll();
 		read();
 	}
 	
@@ -519,23 +519,42 @@ public class SuperDB {
 	}
 	
 	public final void onlyWrite(){
-		write();
+		writeAll();
 	}
 	
-	private void write(){
+	public final void writeKey(String key){
+		write(key);
+	}
+	
+	private void write(Object key){
 		dbRemoved = false;
+		try{
+			if(((String)key).length() > 1){
+				if(os != null) os.close();
+				tf = new File(folder+File.separator+key+"."+fileFormat);
+				os = new FileOutputStream(tf);
+				st = components[0]+key+components[2]+hm1.get(key)+components[1];
+				os.write(st.getBytes());
+				os.flush();
+			}
+		} catch(Exception e){}
+	}
+	
+	private void writeAll(){
 		for(Object key : getKeys(false)){
-			try{
-				if(((String)key).length() > 1){
-					if(os != null) os.close();
-					tf = new File(folder+File.separator+key+"."+fileFormat);
-					os = new FileOutputStream(tf);
-					st = components[0]+key+components[2]+hm1.get(key)+components[1];
-					os.write(st.getBytes());
-					os.flush();
-				}
-			} catch(Exception e){}
+			write(key);
 		}
+	}
+	
+	public final void readKey(String key){
+		try {
+			parseValues(new File(folder+File.separator+key+"."+fileFormat));
+		} catch(FileNotFoundException e){}
+	}
+	
+	public final void refreshKey(String key){
+		writeKey(key);
+		readKey(key);
 	}
 
 	private void read(){
