@@ -4,11 +4,13 @@ import android.content.*;
 import android.content.res.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
+import android.os.*;
 import android.view.*;
 import android.view.inputmethod.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
+import org.blinksd.utils.color.*;
 
 public class InputService extends InputMethodService {
 	
@@ -223,6 +225,17 @@ public class InputService extends InputMethodService {
 			
 			if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 		}
+		try {
+			if(Build.VERSION.SDK_INT > 20){
+				int c = ((ColorDrawable)sb.getBackground()).getColor();
+				Window w = getWindow().getWindow();
+				w.setNavigationBarColor(c);
+				w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+						(Build.VERSION.SDK_INT > 25 && ColorUtils.satisfiesTextContrast(c)
+							? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
+							: 0));
+			}
+		} catch(Exception e){}
 	}
 	
 	BroadcastReceiver r = new BroadcastReceiver(){
