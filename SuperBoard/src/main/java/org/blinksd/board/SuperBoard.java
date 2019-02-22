@@ -280,14 +280,17 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public void setKeyboardHeight(int percent){
-		if(percent > 0 && percent < 80){
+		if(percent > 19 && percent < 81){
 			hp = percent;
 			getLayoutParams().height = hp(percent);
 			if(getChildCount() > 0){
 				for(int i = 0;i < getChildCount();i++){
-					getChildAt(i).getLayoutParams().height = getLayoutParams().height;
+					getChildAt(i).getLayoutParams().height = hp(percent);
 				}
 			}
+			int x = selected;
+			setEnabledLayout(findNumberKeyboardIndex());
+			setEnabledLayout(x);
 		} else throw new RuntimeException("Invalid keyboard height");
 	}
 

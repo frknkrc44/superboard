@@ -58,7 +58,7 @@ public class Settings extends Activity {
 				i.putExtra("action",a);
 				i.putExtra("type",a.endsWith("clr") ? 0 : 1);
 				String s = sd.getString(a,"def");
-				i.putExtra("value",s.equals("def")?s:/*(a.endsWith("clr")?s:unmp(*/Integer.valueOf(s)/*)*/+"")/*)*/;
+				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
 				startActivityForResult(i,RESULT_CANCELED);
 			}
 		});
@@ -79,7 +79,8 @@ public class Settings extends Activity {
 					? "Varsayılan" 
 					: (getItem(p).name().endsWith("clr") 
 						? SetActivity.getColorString(Integer.valueOf(s),false) 
-						: /*unmp(*/a(Integer.valueOf(s))/*)*/+""));
+						: (getItem(p).equals(Key.keyboard_height) 
+							? s : a(Integer.valueOf(s))+"")));
 				if((!s.equals("def")) && getItem(p).name().endsWith("clr")){
 					int c = Integer.valueOf(s);
 					t.setBackgroundColor(c);
@@ -95,10 +96,6 @@ public class Settings extends Activity {
 		return i / 10.0f;
 	}
 	
-	/*private int unmp(int mp){
-		return (int)(mp / (float)SuperBoard.mp(1));
-	}*/
-	
 	public enum Key {
 		keyboard_bgclr,
 		key_bgclr,
@@ -107,7 +104,8 @@ public class Settings extends Activity {
 		key_textclr,
 		key_padding,
 		key_radius,
-		key_textsize
+		key_textsize,
+		keyboard_height
 	}
 	
 	private enum Type { color, num }
@@ -136,7 +134,7 @@ public class Settings extends Activity {
 									@Override
 									public void onClick(View v){
 										if(v.getId() == 1){
-											sd.putInteger(act.name(),/*act.name().endsWith("clr")?*/set/*:SuperBoard.mp(set)*/);
+											sd.putInteger(act.name(),set);
 											sd.onlyWrite();
 											sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
 										}
@@ -232,19 +230,24 @@ public class Settings extends Activity {
 					return ll;
 				case num:
 					SeekBar sb = new SeekBar(this);
+					int min = 0;
 					if(act.name().endsWith("padding")){
 						sb.setMax(40);
 					} else if(act.name().endsWith("radius")){
 						sb.setMax(100);
 					} else if(act.name().endsWith("textsize")){
-						sb.setMin(6);
-						sb.setMax(60);
+						min = 6;
+						sb.setMax(60-min);
+					} else if(act.equals(Key.keyboard_height)){
+						min = 20;
+						sb.setMax(80-min);
 					}
+					sb.setProgress(Integer.valueOf(val)-min);
+					final int m = min;
 					sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-
 							@Override
 							public void onProgressChanged(SeekBar p1,int p2,boolean p3){
-								set = p2;
+								set = p2 + m;
 							}
 
 							@Override
@@ -252,9 +255,7 @@ public class Settings extends Activity {
 
 							@Override
 							public void onStopTrackingTouch(SeekBar p1){}
-						
 					});
-					sb.setProgress(Integer.valueOf(val));
 					sb.getProgressDrawable().setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
 					sb.getThumb().setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
 					sb.setLayoutParams(new LinearLayout.LayoutParams(-1,SuperBoard.dp(36)));
