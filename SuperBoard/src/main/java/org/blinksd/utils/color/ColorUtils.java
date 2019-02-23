@@ -2,7 +2,10 @@ package org.blinksd.utils.color;
 
 import android.graphics.*;
 import android.util.*;
-import org.blinksd.utils.annotation.*;
+
+import java.lang.annotation.*;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 
 // Copied from support library
 // Android Open Source Project
@@ -141,6 +144,29 @@ public class ColorUtils {
 		if(Color.alpha(backgroundColor) > 0x88)
         	return calculateContrast(foregroundColor, backgroundColor) >= 8;
 		return false;
-		// Modified for music player, default value is 4.5;
     }
+	
+	@Retention(SOURCE)
+	@Target({PARAMETER,METHOD,LOCAL_VARIABLE,FIELD})
+	public @interface ColorInt {}
+	
+	@Retention(SOURCE)
+	@Target({METHOD,PARAMETER,FIELD,LOCAL_VARIABLE})
+	public @interface FloatRange {
+		double from() default Double.MIN_VALUE;
+		double to() default Double.MAX_VALUE;
+		boolean fromInclusive() default true;
+		boolean toInclusive() default true;
+	}
+	
+	@Retention(SOURCE)
+	@Target({METHOD,PARAMETER,FIELD})
+	public @interface NonNull {}
+	
+	@Retention(SOURCE)
+	@Target({METHOD,PARAMETER,FIELD,LOCAL_VARIABLE,ANNOTATION_TYPE})
+	public @interface IntRange {
+		long from() default Long.MIN_VALUE;
+		long to() default Long.MAX_VALUE;
+	}
 }

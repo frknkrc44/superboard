@@ -3,6 +3,7 @@ package org.blinksd.board;
 import android.app.*;
 import android.content.*;
 import android.graphics.*;
+import android.graphics.drawable.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
@@ -44,7 +45,7 @@ public class Settings extends Activity {
 		m.setOrientation(LinearLayout.VERTICAL);
 		st = new SuperToolbar(this);
 		st.resetIcon();
-		st.setTextGravity(Gravity.CENTER);
+		st.setTextColor(0xFFFFFFFF);
 		m.addView(st);
 		lv = new ListView(this);
 		lv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
@@ -63,6 +64,17 @@ public class Settings extends Activity {
 			}
 		});
 		m.addView(lv);
+		Drawable d = getResources().getDrawable(R.drawable.sym_keyboard_close);
+		d.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
+		st.addMenuItem(d, new View.OnClickListener(){
+				@Override
+				public void onClick(View v){
+					sd.removeDB();
+					restartKeyboard(Settings.this);
+					finish();
+					startActivity(new Intent(Settings.this,Settings.class));
+				}
+		});
 		return m;
 	}
 	
@@ -94,6 +106,10 @@ public class Settings extends Activity {
 	
 	public static float a(int i){
 		return i / 10.0f;
+	}
+	
+	private static void restartKeyboard(Context c){
+		c.sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
 	}
 	
 	public enum Key {
@@ -136,7 +152,7 @@ public class Settings extends Activity {
 										if(v.getId() == 1){
 											sd.putInteger(act.name(),set);
 											sd.onlyWrite();
-											sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
+											restartKeyboard(SetActivity.this);
 										}
 										finish();
 									}
