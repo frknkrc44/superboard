@@ -221,46 +221,48 @@ public class InputService extends InputMethodService {
 	}
 	
 	public void setPrefs(){
-		sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
-		int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
-		sb.setBackgroundColor(c);
-		setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
-		sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
-		sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
-		for(int i = 0;i < kbd.length;i++){
-			if(i < 3){
-				int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
-				sb.setKeyTintColor(i,3,-1,y);
-				for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
-				sb.setKeyTintColor(i,4,1,y);
-				sb.setKeyTintColor(i,4,3,y);
+		if(sb != null && sd != null){
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
+			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
+			sb.setBackgroundColor(c);
+			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
+			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
+			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
+			for(int i = 0;i < kbd.length;i++){
+				if(i < 3){
+					int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
+					sb.setKeyTintColor(i,3,-1,y);
+					for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
+					sb.setKeyTintColor(i,4,1,y);
+					sb.setKeyTintColor(i,4,3,y);
+				}
+
+				if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 			}
-			
-			if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
-		}
-		try {
-			if(Build.VERSION.SDK_INT > 20){
-				Window w = getWindow().getWindow();
-				if(Build.VERSION.SDK_INT > 27){
-					w.setNavigationBarColor(c);
-					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
-														   (ColorUtils.satisfiesTextContrast(c)
-														   ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
-														   : 0));
-				} else {
-					if(detectNavbar()){
-						if(ll.getChildCount() > 1){
-							ll.removeViewAt(1);
-						}
-						if(x()){
-							w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-							ll.addView(createNavbarLayout(c));
-							ll.setOrientation(x() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+			try {
+				if(Build.VERSION.SDK_INT > 20){
+					Window w = getWindow().getWindow();
+					if(Build.VERSION.SDK_INT > 27){
+						w.setNavigationBarColor(c);
+						w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+															   (ColorUtils.satisfiesTextContrast(c)
+															   ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
+															   : 0));
+					} else {
+						if(detectNavbar()){
+							if(ll.getChildCount() > 1){
+								ll.removeViewAt(1);
+							}
+							if(x()){
+								w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+								ll.addView(createNavbarLayout(c));
+								ll.setOrientation(x() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+							}
 						}
 					}
 				}
-			}
-		} catch(Exception e){}
+			} catch(Exception e){}
+		}
 	}
 	
 	private View createNavbarLayout(int color){
