@@ -7,10 +7,12 @@ import android.inputmethodservice.*;
 import android.os.*;
 import android.view.*;
 import android.view.inputmethod.*;
+import java.lang.reflect.*;
+import org.blinksd.utils.color.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import org.blinksd.utils.color.*;
+import android.widget.*;
 
 public class InputService extends InputMethodService {
 	
@@ -18,11 +20,12 @@ public class InputService extends InputMethodService {
 	SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
 	private String kbd[][][] = null;
+	private LinearLayout ll = null;
 
 	@Override
 	public View onCreateInputView(){
 		setLayout();
-		return sb;
+		return ll;
 	}
 
 	@Override
@@ -76,8 +79,8 @@ public class InputService extends InputMethodService {
 	private void setKeyBg(int clr){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(clr);
-		gd.setCornerRadius(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
-		gd.setStroke(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+		gd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+		gd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
 		sb.setKeysBackground(gd);
 	}
 	
@@ -88,6 +91,7 @@ public class InputService extends InputMethodService {
 		}
 		if(sb == null){
 			sb = new SuperBoard(this);
+			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			kbd = new String[][][]{
 				{
 					{"1","2","3","4","5","6","7","8","9","0"},
@@ -197,6 +201,12 @@ public class InputService extends InputMethodService {
 		}
 		setPrefs();
 		sb.updateKeyState(this);
+		if(ll == null){
+			ll = new LinearLayout(this);
+			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+			ll.setOrientation(LinearLayout.VERTICAL);
+			ll.addView(sb);
+		}
 	}
 	
 	/*public int getThemeColor(){
@@ -205,16 +215,18 @@ public class InputService extends InputMethodService {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
+		setPrefs();
 		// System.exit(0);
 		// fixing crashes
 	}
 	
 	public void setPrefs(){
 		sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
-		sb.setBackgroundColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31));
+		int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
+		sb.setBackgroundColor(c);
 		setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
 		sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
-		sb.setKeysTextSize(sb.wp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
+		sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
 		for(int i = 0;i < kbd.length;i++){
 			if(i < 3){
 				int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
@@ -228,15 +240,68 @@ public class InputService extends InputMethodService {
 		}
 		try {
 			if(Build.VERSION.SDK_INT > 20){
-				int c = ((ColorDrawable)sb.getBackground()).getColor();
 				Window w = getWindow().getWindow();
-				w.setNavigationBarColor(c);
-				w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
-						(Build.VERSION.SDK_INT > 25 && ColorUtils.satisfiesTextContrast(c)
-							? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
-							: 0));
+				if(Build.VERSION.SDK_INT > 27){
+					w.setNavigationBarColor(c);
+					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+														   (ColorUtils.satisfiesTextContrast(c)
+														   ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
+														   : 0));
+				} else {
+					if(detectNavbar()){
+						if(ll.getChildCount() > 1){
+							ll.removeViewAt(1);
+						}
+						if(x()){
+							w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+							ll.addView(createNavbarLayout(c));
+							ll.setOrientation(x() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+						}
+					}
+				}
 			}
 		} catch(Exception e){}
+	}
+	
+	private View createNavbarLayout(int color){
+		View v = new View(this);
+		v.setLayoutParams(new ViewGroup.LayoutParams(x() ? -1 : navbarH(),x() ? navbarH() : -1));
+		v.setBackgroundColor(color);
+		return v;
+	}
+	
+	private int navbarH(){
+		int resourceId = getResources().getIdentifier(x() ? "navigation_bar_height" : "navigation_bar_width", "dimen", "android");
+		return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
+	}
+	
+	private boolean x(){
+		return !isLand() || isTablet();
+	}
+	
+	private boolean isTablet(){
+		return isLand() && getResources().getConfiguration().smallestScreenWidthDp >= 600;
+	}
+	
+	private boolean isLand(){
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	}
+	
+	private boolean detectNavbar(){
+		if(Build.VERSION.SDK_INT >= 14){
+			try {
+				Class<?> serviceManager = Class.forName("android.os.ServiceManager");
+				IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
+				Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
+				Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
+				Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
+				return (boolean) hasNavigationBar.invoke(windowManagerService);
+			} catch(Exception e){
+				return ViewConfiguration.get(this).hasPermanentMenuKey();
+			}
+		}
+		return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && 
+			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 	
 	BroadcastReceiver r = new BroadcastReceiver(){
