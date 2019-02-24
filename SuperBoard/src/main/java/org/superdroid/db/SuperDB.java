@@ -6,7 +6,7 @@ package org.superdroid.db;
      by Furkan Karcıoğlu
         25.08.2017 Fri
  ----------------------------
-  Last Edit: 18.02.2019 Sun
+  Last Edit: 25.02.2019 Mon
  ----------------------------
 */
 
@@ -15,30 +15,23 @@ import java.util.*;
 
 public class SuperDB {
 
-	/*
-	 Components:
-	 1- Start
-	 2- End
-	 3- Split1 character
-	 4- Split2 character
-	 5- Split3 character
-	 */
-
-	private String [] components = {
-		"<",">","•","_","—"
-	};
-
-	private String fileName,fileFormat = "sdb",st = "",su = "",sv = "";
+	// Split characters for arrays
+	private String components[] = { "_","—" };
+	private String su,sv,s0[],s1[],out,sq,sr[],se,sd = "g",es = "=";
 	private boolean dbRemoved = false;
 	private File folder,tf;
 	private int x,y;
-	private String[] s0,s1;
 	private Scanner sc = null;
 	private FileOutputStream os = null;
+	
+	private Object[] hex = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+	private List<Object> l = Arrays.asList(hex);
+	private Random r = new Random();
+	
+	private HashMap<String,String> hm1 = new HashMap<String,String>();
 
 	public SuperDB(String dbName, File path){
-		fileName = path+File.separator+"superdb"+File.separator+dbName;
-		folder = new File(fileName);
+		folder = new File(path+File.separator+"superdb"+File.separator+dbName);
 		if(!folder.exists()) folder.mkdirs();
 		read();
 	}
@@ -54,10 +47,10 @@ public class SuperDB {
 	public final String[][] getStringArrayArray(String key, String[][] def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			String[][] xx = new String[s0.length][s0.length];
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				for(String su : s1){
 					s1[y] = decode(su);
@@ -72,11 +65,11 @@ public class SuperDB {
 	public final long[][] getLongArrayArray(String key, long[][] def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			long[][] xx = new long[s0.length][s0.length];
 			long[] yy = null;
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new long[s1.length];
 				for(String su : s1){
@@ -92,11 +85,11 @@ public class SuperDB {
 	public final byte[][] getByteArrayArray(String key, byte[][] def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			byte[][] xx = new byte[s0.length][s0.length];
 			byte[] yy = null;
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new byte[s1.length];
 				for(String su : s1){
@@ -112,11 +105,11 @@ public class SuperDB {
 	public final int[][] getIntegerArrayArray(String key, int[][] def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			int[][] xx = new int[s0.length][s0.length];
 			int[] yy = null;
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new int[s1.length];
 				for(String su : s1){
@@ -132,11 +125,11 @@ public class SuperDB {
 	public final float[][] getFloatArrayArray(String key, float[]... def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			float[][] xx = new float[s0.length][s0.length];
 			float[] yy = null;
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new float[s1.length];
 				for(String su : s1){
@@ -152,11 +145,11 @@ public class SuperDB {
 	public final double[][] getDoubleArrayArray(String key, double[]... def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			double[][] xx = new double[s0.length][s0.length];
 			double[] yy = null;
 			for(String ss : s1){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new double[s1.length];
 				for(String su : s1){
@@ -172,11 +165,11 @@ public class SuperDB {
 	public final boolean[][] getBooleanArrayArray(String key, boolean[]... def){
 		if(isDBContainsKey(key)){
 			x = 0;
-			s0 = hm1.get(key).split(components[4]);
+			s0 = hm1.get(key).split(components[1]);
 			boolean[][] xx = new boolean[s0.length][s0.length];
 			boolean[] yy = {};
 			for(String ss : s0){
-				s1 = ss.split(components[3]);
+				s1 = ss.split(components[0]);
 				y = 0;
 				yy = new boolean[s1.length];
 				for(String su : s1){
@@ -194,8 +187,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n])+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n])+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -206,8 +199,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -218,8 +211,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -230,8 +223,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -242,8 +235,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -254,8 +247,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -266,8 +259,8 @@ public class SuperDB {
 		sv = su = "";
 		for(int i = 0;i != value.length;i++){
 			for(int n = 0;n != value[i].length;n++)
-				append(1,encode(value[i][n]+"")+components[3]);
-			append(2,su.substring(0,su.length()-1)+components[4]);
+				append(1,encode(value[i][n]+"")+components[0]);
+			append(2,su.substring(0,su.length()-1)+components[1]);
 			su = "";
 		}
 		sv.substring(0,sv.length()-2);
@@ -277,9 +270,9 @@ public class SuperDB {
 	public final String[] getStringArray(String key, String[] def){
 		if(isDBContainsKey(key)){
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
-			return su.split(components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
+			return su.split(components[0]);
 		} return def;
 	}
 	
@@ -287,10 +280,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			long[] num = new long[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Long.parseLong(x);
 				i++;
 			} return num;
@@ -301,10 +294,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			byte[] num = new byte[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Byte.parseByte(x);
 				i++;
 			} return num;
@@ -315,10 +308,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			int[] num = new int[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Integer.parseInt(x);
 				i++;
 			}
@@ -330,10 +323,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			float[] num = new float[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Float.parseFloat(x);
 				i++;
 			} return num;
@@ -344,10 +337,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			double[] num = new double[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Double.parseDouble(x);
 				i++;
 			} return num;
@@ -358,10 +351,10 @@ public class SuperDB {
 		if(isDBContainsKey(key)){
 			int i = 0;
 			su = "";
-			for(String p : hm1.get(key).split(components[3]))
-				append(1,decode(p)+components[3]);
+			for(String p : hm1.get(key).split(components[0]))
+				append(1,decode(p)+components[0]);
 			boolean[] num = new boolean[su.length()];
-			for(String x : su.split(components[3])){
+			for(String x : su.split(components[0])){
 				num[i] = Boolean.parseBoolean(x);
 				i++;
 			} return num;
@@ -371,7 +364,7 @@ public class SuperDB {
 	public final void putStringArray(String key, String[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i])+components[3]);
+			append(1,encode(value[i])+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -379,7 +372,7 @@ public class SuperDB {
 	public final void putLongArray(String key, long[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -387,7 +380,7 @@ public class SuperDB {
 	public final void putByteArray(String key, byte[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -395,7 +388,7 @@ public class SuperDB {
 	public final void putIntegerArray(String key, int[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -403,7 +396,7 @@ public class SuperDB {
 	public final void putFloatArray(String key, float[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -411,7 +404,7 @@ public class SuperDB {
 	public final void putDoubleArray(String key, double[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -419,7 +412,7 @@ public class SuperDB {
 	public final void putBooleanArray(String key, boolean[] value){
 		su = "";
 		for(int i = 0;i != value.length;i++)
-			append(1,encode(value[i]+"")+components[3]);
+			append(1,encode(value[i]+"")+components[0]);
 		su.substring(0,su.length()-1);
 		hm1.put(key,su);
 	}
@@ -488,8 +481,9 @@ public class SuperDB {
 	
 	public final void removeKeyFromDB(String key){
 		hm1.remove(key);
-		tf = new File(folder+File.separator+key+"."+fileFormat);
+		tf = new File(folder+File.separator+key);
 		tf.delete();
+		tf = null;
 	}
 
 	public final void removeDB(){
@@ -528,16 +522,22 @@ public class SuperDB {
 	
 	private void write(Object key){
 		dbRemoved = false;
-		try{
+		try {
 			if(((String)key).length() > 1){
 				if(os != null) os.close();
-				tf = new File(folder+File.separator+key+"."+fileFormat);
+				tf = new File(folder+File.separator+key);
 				os = new FileOutputStream(tf);
-				st = components[0]+key+components[2]+hm1.get(key)+components[1];
-				os.write(st.getBytes());
+				os.write(hm1.get(key).getBytes());
 				os.flush();
 			}
-		} catch(Exception e){}
+		} catch(Exception e){
+			// do nothing
+		} finally {
+			try {
+				os.close();
+				os = null;
+			} catch(Exception e){}
+		}
 	}
 	
 	private void writeAll(){
@@ -548,7 +548,7 @@ public class SuperDB {
 	
 	public final void readKey(String key){
 		try {
-			parseValues(new File(folder+File.separator+key+"."+fileFormat));
+			parseValues(new File(folder+File.separator+key));
 		} catch(FileNotFoundException e){}
 	}
 	
@@ -566,20 +566,16 @@ public class SuperDB {
 						parseValues(f);
 					}
 				} else folder.mkdirs();
-			} catch(Exception e){
-				//throw new RuntimeException(e);
-			}
+			} catch(Exception e){}
 		}
 	}
 	
 	private void parseValues(File f) throws FileNotFoundException {
-		st = "";
+		sq = "";
 		sc = new Scanner(f);
 		while(sc.hasNext()) append(0,sc.nextLine());
-		s1 = st.replace(components[0],"").replace(components[1],"").split(components[2]);
-		hm1.put(s1[0],s1[1]);
-		st = "";
-		s1 = null;
+		hm1.put(f.getName(),sq);
+		sq = "";
 		sc = null;
 	}
 	
@@ -613,20 +609,13 @@ public class SuperDB {
 	}
 
 	private String rnd(String s){
-		switch(s.length() % 3){
-			case 1:
-				return s+es;
-			case 2:
-				return s+es+es;
-			default:
-				return s;
-		}
+		return s.length() % 2 == 1 ? s+es+es : s;
 	}
 
 	private String rev(String s){
 		sq = "";
 		for(int i = (s.length() - 1);i >= 0;i--){
-			sq += s.charAt(i);
+			append(0,s.charAt(i)+"");
 		}
 		return sq;
 	}
@@ -634,25 +623,18 @@ public class SuperDB {
 	private String updn(String s){
 		sq = "";
 		for(int i = 0;i < s.length();i++){
-			if(r.nextInt() % 2 == 0){
-				sq += (s.charAt(i)+"").toUpperCase();
-			} else {
-				sq += (s.charAt(i)+"").toLowerCase();
-			}
+			append(0,r.nextInt() % 2 == 0 
+				? (s.charAt(i)+"").toUpperCase() 
+				: (s.charAt(i)+"").toLowerCase());
 		}
 		return sq;
 	}
 
-	private Object[] hex = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
-	private List<Object> l = Arrays.asList(hex);
-	private String out,sq,sr[],se,sd = "g",es = "=";
-	private Random r = new Random();
-
 	private String append(int i, String c){
-		if(i == 0) st += c;
+		if(i == 0) sq += c;
 		else if(i == 1) su += c;
 		else sv += c;
-		return i == 0 ? st : i == 1 ? su : sv;
+		return i == 0 ? sq : i == 1 ? su : sv;
 	}
 	
 	public Object[] getKeys(boolean descending){
@@ -664,6 +646,4 @@ public class SuperDB {
 		}
 		return x.toArray();
 	}
-	
-	private HashMap<String,String> hm1 = new HashMap<String,String>();
 }
