@@ -15,6 +15,8 @@ import java.util.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
+import org.blinksd.utils.*;
+import org.blinksd.utils.color.*;
 
 public class SuperBoard extends FrameLayout {
 
@@ -159,7 +161,24 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public void setKeyTintColor(int keyboardIndex, int rowIndex, int keyIndex, int color){
-		getKey(keyboardIndex, rowIndex, keyIndex).getBackground().setColorFilter(color,PorterDuff.Mode.SRC_IN);
+		getKey(keyboardIndex, rowIndex, keyIndex).getBackground().setTintList(getTintListWithStates(color));
+	}
+	
+	public ColorStateList getTintListWithStates(int color){
+		return new ColorStateList(new int[][]{
+			{android.R.attr.state_selected},{}
+		},new int[]{getColorWithState(color,true),getColorWithState(color,false)});
+	}
+	
+	public int getColorWithState(int color, boolean selected){
+		if(selected){
+			int[] state = {Color.red(color),Color.green(color),Color.blue(color)};
+			for(int i = 0;i < state.length;i++){
+				state[i] /= 1.2;
+			}
+			return Color.argb(Color.alpha(color),state[0],state[1],state[2]);
+		}
+		return color;
 	}
 
 	public void setKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex){
@@ -777,6 +796,7 @@ public class SuperBoard extends FrameLayout {
 			setOnTouchListener(new OnTouchListener(){
 					@Override
 					public boolean onTouch(View v, MotionEvent m){
+						v.setSelected(m.getAction() != m.ACTION_UP);
 						if(m.getAction() == m.ACTION_UP && lock){
 							h.sendEmptyMessage(0);
 						} else if(isHasLongPressEvent(v)){

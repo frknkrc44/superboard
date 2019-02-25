@@ -7,25 +7,30 @@ import android.inputmethodservice.*;
 import android.os.*;
 import android.view.*;
 import android.view.inputmethod.*;
+import android.widget.*;
+import java.io.*;
 import java.lang.reflect.*;
 import org.blinksd.utils.color.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import android.widget.*;
+import android.graphics.*;
 
 public class InputService extends InputMethodService {
 	
-	SuperBoard sb = null;
-	SuperDB sd = null;
+	private SuperBoard sb = null;
+	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
 	private String kbd[][][] = null;
 	private LinearLayout ll = null;
+	private RelativeLayout fl = null;
+	private ImageView iv = null;
+	private File img = null;
 
 	@Override
 	public View onCreateInputView(){
 		setLayout();
-		return ll;
+		return fl;
 	}
 
 	@Override
@@ -77,11 +82,18 @@ public class InputService extends InputMethodService {
 	}
 
 	private void setKeyBg(int clr){
+		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
-		gd.setColor(clr);
+		gd.setColor(sb.getColorWithState(clr,false));
 		gd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
 		gd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
-		sb.setKeysBackground(gd);
+		GradientDrawable pd = new GradientDrawable();
+		pd.setColor(sb.getColorWithState(clr,true));
+		pd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+		pd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+		d.addState(new int[]{android.R.attr.state_selected},pd);
+		d.addState(new int[]{},gd);
+		sb.setKeysBackground(d);
 	}
 	
 	private void setLayout(){
@@ -199,7 +211,6 @@ public class InputService extends InputMethodService {
 			sb.setKeyWidthPercent(i,4,3,15);
 			sb.setKeyWidthPercent(i,4,-1,20);
 		}
-		setPrefs();
 		sb.updateKeyState(this);
 		if(ll == null){
 			ll = new LinearLayout(this);
@@ -207,11 +218,17 @@ public class InputService extends InputMethodService {
 			ll.setOrientation(LinearLayout.VERTICAL);
 			ll.addView(sb);
 		}
+		if(fl == null){
+			fl = new RelativeLayout(this);
+			fl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+			iv = new ImageView(this);
+			fl.addView(iv);
+			fl.addView(ll);
+			setPrefs();
+			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			iv.setAdjustViewBounds(false);
+		} else setPrefs();
 	}
-	
-	/*public int getThemeColor(){
-		return Build.VERSION.SDK_INT>19?obtainStyledAttributes(new int[]{android.R.attr.colorAccent}).getInt(0,0xFF5F97F6):0xFF5F97F6;
-	}*/
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
@@ -223,7 +240,16 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
-			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
+			img = new File(getFilesDir()+"/bg");
+			if(fl != null){
+				ImageView iv = (ImageView) fl.getChildAt(0);
+				if(img.exists()){
+					iv.setImageBitmap(BitmapFactory.decodeFile(img.getAbsolutePath()));
+				} else {
+					iv.setImageDrawable(null);
+				}
+			}
+			int c = img.exists() ? 0x44000000 : SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
 			sb.setBackgroundColor(c);
 			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
@@ -242,24 +268,28 @@ public class InputService extends InputMethodService {
 			try {
 				if(Build.VERSION.SDK_INT > 20){
 					Window w = getWindow().getWindow();
-					if(Build.VERSION.SDK_INT > 27){
+					/*if(Build.VERSION.SDK_INT > 27){
 						w.setNavigationBarColor(c);
 						w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
 															   (ColorUtils.satisfiesTextContrast(c)
 															   ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
 															   : 0));
-					} else {
+					} else {*/
 						if(detectNavbar()){
+							iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
 							if(ll.getChildCount() > 1){
 								ll.removeViewAt(1);
 							}
 							if(x()){
 								w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 								ll.addView(createNavbarLayout(c));
-								ll.setOrientation(x() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+							} else {
+								w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 							}
+						} else {
+							iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 						}
-					}
+					//}
 				}
 			} catch(Exception e){}
 		}
@@ -268,7 +298,11 @@ public class InputService extends InputMethodService {
 	private View createNavbarLayout(int color){
 		View v = new View(this);
 		v.setLayoutParams(new ViewGroup.LayoutParams(x() ? -1 : navbarH(),x() ? navbarH() : -1));
-		v.setBackgroundColor(color);
+		v.setBackgroundColor(Build.VERSION.SDK_INT < 26 ? sb.getColorWithState(color,ColorUtils.satisfiesTextContrast(color)) : color);
+		v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+			(ColorUtils.satisfiesTextContrast(color)
+				? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
+				: 0));
 		return v;
 	}
 	

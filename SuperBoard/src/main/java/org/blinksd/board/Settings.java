@@ -4,9 +4,12 @@ import android.app.*;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import android.net.*;
 import android.os.*;
+import android.provider.*;
 import android.view.*;
 import android.widget.*;
+import java.io.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.toolbar.*;
 import org.superdroid.db.*;
@@ -57,7 +60,7 @@ public class Settings extends Activity {
 				Intent i = new Intent(Settings.this,SetActivity.class);
 				String a = ((Key)((ArrayAdapter)p1.getAdapter()).getItem(p3)).name();
 				i.putExtra("action",a);
-				i.putExtra("type",a.endsWith("clr") ? 0 : 1);
+				i.putExtra("type",a.endsWith("clr") ? 0 : a.endsWith("img") ? 2 : 1);
 				String s = sd.getString(a,"def");
 				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
 				startActivityForResult(i,RESULT_CANCELED);
@@ -86,18 +89,25 @@ public class Settings extends Activity {
 				TextView t = (TextView) v.findViewById(android.R.id.text1);
 				t.setText(getItem(p).name());
 				t = (TextView) v.findViewById(android.R.id.text2);
-				String s = sd.getString(getItem(p).name(),"def");
-				t.setText(s.equals("def") 
-					? "Varsayılan" 
-					: (getItem(p).name().endsWith("clr") 
-						? SetActivity.getColorString(Integer.valueOf(s),false) 
-						: (getItem(p).equals(Key.keyboard_height) 
-							? s : a(Integer.valueOf(s))+"")));
-				if((!s.equals("def")) && getItem(p).name().endsWith("clr")){
-					int c = Integer.valueOf(s);
-					t.setBackgroundColor(c);
-					t.setTextColor(ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
+				if(getItem(p).name().endsWith("img")){
+					t.setVisibility(View.GONE);
+					TwoLineListItem i = (TwoLineListItem) v;
+					i.setGravity(Gravity.CENTER_VERTICAL);
+				} else {
+					String s = sd.getString(getItem(p).name(),"def");
+					t.setText(s.equals("def") 
+							  ? "Varsayılan" 
+							  : (getItem(p).name().endsWith("clr") 
+							  ? SetActivity.getColorString(Integer.valueOf(s),false) 
+							  : (getItem(p).equals(Key.keyboard_height) 
+							  ? s : a(Integer.valueOf(s))+"")));
+					if((!s.equals("def")) && getItem(p).name().endsWith("clr")){
+						int c = Integer.valueOf(s);
+						t.setBackgroundColor(c);
+						t.setTextColor(ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
+					}
 				}
+				
 				return v;
 			}
 		};
@@ -113,6 +123,7 @@ public class Settings extends Activity {
 	}
 	
 	public enum Key {
+		keyboard_bgimg,
 		keyboard_bgclr,
 		key_bgclr,
 		key2_bgclr,
@@ -124,23 +135,24 @@ public class Settings extends Activity {
 		keyboard_height
 	}
 	
-	private enum Type { color, num }
+	private enum Type { color, num, image }
 	
 	public static class SetActivity extends Activity {
-		
-		Key act;
-		Type type;
-		String val;
-		int set;
+		private Key act;
+		private Type type;
+		private String val,kbgimg;
+		private int set;
+		private Bitmap temp;
 
 		@Override
 		protected void onCreate(Bundle b){
 			super.onCreate(b);
+			kbgimg = getFilesDir()+"/bg";
 			act = Key.valueOf(getIntent().getExtras().getString("action"));
 			type = Type.$VALUES[getIntent().getExtras().getInt("type")];
 			val = getIntent().getExtras().getString("value");
 			setTitle(act.name());
-			if(!val.equals("def")){
+			if(!val.equals("def") || type.equals(Type.image)){
 				LinearLayout ll = new LinearLayout(this);
 				ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 				ll.setPadding(0,SuperBoard.dp(16),0,0);
@@ -150,8 +162,16 @@ public class Settings extends Activity {
 									@Override
 									public void onClick(View v){
 										if(v.getId() == 1){
-											sd.putInteger(act.name(),set);
-											sd.onlyWrite();
+											if(!type.equals(Type.image)){
+												sd.putInteger(act.name(),set);
+												sd.onlyWrite();
+											} else {
+												try {
+													if(temp != null){
+														temp.compress(Bitmap.CompressFormat.PNG,85,new FileOutputStream(kbgimg));
+													}
+												} catch(Exception e){}
+											}
 											restartKeyboard(SetActivity.this);
 										}
 										finish();
@@ -212,7 +232,6 @@ public class Settings extends Activity {
 					g = new SeekBar(this),
 					b = new SeekBar(this);
 					SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener(){
-
 						@Override
 						public void onProgressChanged(SeekBar s, int i, boolean c){
 							int clr = set = Color.argb(a.getProgress(),r.getProgress(),g.getProgress(),b.getProgress());
@@ -226,7 +245,6 @@ public class Settings extends Activity {
 
 						@Override
 						public void onStopTrackingTouch(SeekBar s){}
-
 					};
 					for(SeekBar v : new SeekBar[]{a,r,g,b}){
 						v.setMax(255);
@@ -277,9 +295,65 @@ public class Settings extends Activity {
 					sb.setLayoutParams(new LinearLayout.LayoutParams(-1,SuperBoard.dp(36)));
 					sb.setPadding(sb.getLayoutParams().height,sb.getPaddingTop(),sb.getLayoutParams().height,sb.getPaddingBottom());
 					return sb;
+				case image:
+					LinearLayout l = new LinearLayout(this);
+					l.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+					l.setOrientation(LinearLayout.VERTICAL);
+					Button s = new Button(this);
+					s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+					s.setText("Select image");
+					l.addView(s);
+					ImageView iv = new ImageView(this);
+					iv.setId(22);
+					l.addView(iv);
+					s.setOnClickListener(new View.OnClickListener(){
+						@Override
+						public void onClick(View p1){
+							Intent i = new Intent();
+							i.setType("image/*");
+							i.setAction(Intent.ACTION_GET_CONTENT);
+							startActivityForResult(Intent.createChooser(i,""),1);
+						}
+					});
+					iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+					iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+					iv.setAdjustViewBounds(true);
+					final File f = new File(kbgimg);
+					if(f.exists()){
+						iv.setImageBitmap(temp = BitmapFactory.decodeFile(kbgimg));
+					}
+					s.setOnLongClickListener(new View.OnLongClickListener(){
+						@Override
+						public boolean onLongClick(View p1){
+							f.delete();
+							findImageView().setImageDrawable(null);
+							finish();
+							return false;
+						}
+					});
+					return l;
 				default:
 					return null;
 			}
+		}
+
+		@Override
+		protected void onActivityResult(int requestCode,int resultCode,Intent data){
+			super.onActivityResult(requestCode,resultCode,data);
+			if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+				Uri uri = data.getData();
+				try {
+					temp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+					findImageView().setImageBitmap(temp);
+				} catch(Exception e){}
+			}
+		}
+		
+		private ImageView findImageView(){
+			ViewGroup v = (ViewGroup) findViewById(android.R.id.content);
+			v = (ViewGroup) v.getChildAt(0);
+			v = (ViewGroup) v.getChildAt(0);
+			return (ImageView) v.findViewById(22);
 		}
 		
 		private static String getColorString(int color, boolean l){
@@ -295,6 +369,5 @@ public class Settings extends Activity {
 			String s = Integer.toHexString(x);
 			return x < 16 ? "0"+s : s;
 		}
-
 	}
 }
