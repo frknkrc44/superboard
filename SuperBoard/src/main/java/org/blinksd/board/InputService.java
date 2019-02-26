@@ -307,8 +307,11 @@ public class InputService extends InputMethodService {
 	}
 	
 	private int navbarH(){
-		int resourceId = getResources().getIdentifier(x() ? "navigation_bar_height" : "navigation_bar_width", "dimen", "android");
-		return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
+		if(x()){
+			int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+			return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
+		}
+		return 0;
 	}
 	
 	private boolean x(){
