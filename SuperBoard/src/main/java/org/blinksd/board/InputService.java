@@ -40,17 +40,6 @@ public class InputService extends InputMethodService {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode,KeyEvent event){
-		if(isInputViewShown()){
-			if(keyCode == event.KEYCODE_BACK){
-				requestHideSelf(0);
-				return true;
-			}
-		}
-		return super.onKeyDown(keyCode,event);
-	}
-
-	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting){
 		super.onStartInput(attribute, restarting);
 		setLayout();
@@ -232,9 +221,11 @@ public class InputService extends InputMethodService {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
-		setPrefs();
-		// System.exit(0);
-		// fixing crashes
+		try {
+			setPrefs();
+		} catch(Exception | Error e){
+			System.exit(0);
+		}
 	}
 	
 	public void setPrefs(){
@@ -265,44 +256,40 @@ public class InputService extends InputMethodService {
 
 				if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 			}
-			try {
-				if(Build.VERSION.SDK_INT > 20){
-					Window w = getWindow().getWindow();
-					/*if(Build.VERSION.SDK_INT > 27){
-						w.setNavigationBarColor(c);
-						w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
-															   (ColorUtils.satisfiesTextContrast(c)
-															   ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
-															   : 0));
-					} else {*/
-						if(detectNavbar()){
-							iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
-							if(ll.getChildCount() > 1){
-								ll.removeViewAt(1);
-							}
-							if(x()){
-								w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-								ll.addView(createNavbarLayout(c));
-							} else {
-								w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-							}
-						} else {
-							iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
-						}
-					//}
+			adjustNavbar(c);
+		}
+	}
+	
+	private void adjustNavbar(int c){
+		if(Build.VERSION.SDK_INT > 20){
+			if(detectNavbar()){
+				if(ll.getChildCount() > 1){
+					ll.removeViewAt(1);
 				}
-			} catch(Exception e){}
+				Window w = getWindow().getWindow();
+				if(x()){
+					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
+					ll.addView(createNavbarLayout(c));
+				} else {
+					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+				}
+			} else {
+				iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+			}
 		}
 	}
 	
 	private View createNavbarLayout(int color){
 		View v = new View(this);
-		v.setLayoutParams(new ViewGroup.LayoutParams(x() ? -1 : navbarH(),x() ? navbarH() : -1));
+		v.setLayoutParams(new ViewGroup.LayoutParams(-1,x() ? navbarH() : -1));
 		v.setBackgroundColor(Build.VERSION.SDK_INT < 26 ? sb.getColorWithState(color,ColorUtils.satisfiesTextContrast(color)) : color);
-		v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
-			(ColorUtils.satisfiesTextContrast(color)
-				? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
-				: 0));
+		if(Build.VERSION.SDK_INT >= 26)
+			v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+				(ColorUtils.satisfiesTextContrast(color)
+					? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR 
+					: 0));
 		return v;
 	}
 	
