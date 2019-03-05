@@ -7,6 +7,10 @@ public class SuperDBHelper {
 	public static SuperDB getDefault(Context c){
 		return new SuperDB(c.getPackageName(),c.getFilesDir());
 	}
+
+	public static SuperDB getDefault(Context c, String key){
+		return new SuperDB(c.getPackageName(),c.getFilesDir(),key);
+	}
 	
 	public static String getValueAndSetItToDefaultIsNotSet(SuperDB db, String key, String def){
 		if(!db.isDBContainsKey(key)){

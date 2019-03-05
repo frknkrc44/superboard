@@ -114,9 +114,9 @@ public class InputService extends InputMethodService {
 					{"ABC","₺","space","…","ENTER"}
 				},{
 					{"F1","F2","F3","F4","F5","F6","F7","F8"},
-					{"F9","F10","F11","F12","P↑","P↓","INS","DEL"},
-					{"TAB","HOME","END","ESC","PREV","PL/PA","STOP","NEXT"},
-					{"","","","MH","S","","",""},
+					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
+					{"TAB","ENTER","","ESC","PREV","PL/PA","STOP","NEXT"},
+					{"","","","","","","",""},
 					{"ABC","🔇","←","↑","↓","→","🔉","🔊"}
 				},{
 					{"1","2","3","+"},
@@ -148,16 +148,12 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(3,1,6,KeyEvent.KEYCODE_INSERT);
 			sb.setPressEventForKey(3,1,7,KeyEvent.KEYCODE_DEL);
 			sb.setPressEventForKey(3,2,0,KeyEvent.KEYCODE_TAB);
-			sb.setPressEventForKey(3,2,1,KeyEvent.KEYCODE_HOME);
-			sb.setPressEventForKey(3,2,2,KeyEvent.KEYCODE_BREAK);
+			sb.setPressEventForKey(3,2,1,'\n',false);
 			sb.setPressEventForKey(3,2,3,KeyEvent.KEYCODE_ESCAPE);
 			sb.setPressEventForKey(3,2,4,KeyEvent.KEYCODE_MEDIA_PREVIOUS);
 			sb.setPressEventForKey(3,2,5,KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
 			sb.setPressEventForKey(3,2,6,KeyEvent.KEYCODE_MEDIA_STOP);
 			sb.setPressEventForKey(3,2,7,KeyEvent.KEYCODE_MEDIA_NEXT);
-			
-			sb.setPressEventForKey(3,3,3,KeyEvent.KEYCODE_MOVE_HOME);
-			sb.setPressEventForKey(3,3,4,KeyEvent.KEYCODE_SEARCH);
 			
 			sb.setPressEventForKey(3,-1,1,KeyEvent.KEYCODE_MUTE);
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
@@ -231,7 +227,7 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
-			img = new File(getFilesDir()+"/bg");
+			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){
 				ImageView iv = (ImageView) fl.getChildAt(0);
 				if(img.exists()){

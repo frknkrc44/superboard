@@ -20,7 +20,7 @@ import org.blinksd.utils.color.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, txtsze = -1, hp = 40, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
+	private int selected = 0, shift = 0, keyclr = -1, txtsze = -1, hp = 40, wp = 100, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean block = false, clear = false, lng = false, lock =  false;
 	private Drawable keybg = null, kbdbg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
@@ -304,7 +304,22 @@ public class SuperBoard extends FrameLayout {
 			getLayoutParams().height = hp(percent);
 			if(getChildCount() > 0){
 				for(int i = 0;i < getChildCount();i++){
-					getChildAt(i).getLayoutParams().height = hp(percent);
+					getChildAt(i).getLayoutParams().height = getLayoutParams().height;
+				}
+			}
+			int x = selected;
+			setEnabledLayout(findNumberKeyboardIndex());
+			setEnabledLayout(x);
+		} else throw new RuntimeException("Invalid keyboard height");
+	}
+	
+	public void setKeyboardWidth(int percent){
+		if(percent > 11 && percent < 101){
+			wp = percent;
+			getLayoutParams().width = wp(percent);
+			if(getChildCount() > 0){
+				for(int i = 0;i < getChildCount();i++){
+					getChildAt(i).getLayoutParams().width = getLayoutParams().width;
 				}
 			}
 			int x = selected;
@@ -481,7 +496,7 @@ public class SuperBoard extends FrameLayout {
 					if(Boolean.parseBoolean(x[1])){
 						sendKeyEvent(y);
 					} else {
-						commitText(x[0]);
+						commitText((char)y+"");
 					}
 					if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
 						updateKeyState();
@@ -641,7 +656,7 @@ public class SuperBoard extends FrameLayout {
 		//System.exit(0);
 	}
 	
-	private int findSymbolKeyboardIndex(){
+	public int findSymbolKeyboardIndex(){
 		for(int i = 0;i < getChildCount();i++){
 			if(getChildAt(i).getTag() != null && 
 			   getChildAt(i).getTag().equals(KeyboardType.SYMBOL)){
@@ -652,7 +667,7 @@ public class SuperBoard extends FrameLayout {
 		return findNormalKeyboardIndex();
 	}
 	
-	private int findNormalKeyboardIndex(){
+	public int findNormalKeyboardIndex(){
 		for(int i = 0;i < getChildCount();i++){
 			if(getChildAt(i).getTag() == null || getChildAt(i).getTag().equals(KeyboardType.TEXT)){
 				return i;
@@ -662,7 +677,7 @@ public class SuperBoard extends FrameLayout {
 		throw new RuntimeException("You must set a normal keyboard for input");
 	}
 	
-	private int findNumberKeyboardIndex(){
+	public int findNumberKeyboardIndex(){
 		for(int i = 0;i < getChildCount();i++){
 			if(getChildAt(i).getTag() != null && 
 				getChildAt(i).getTag().equals(KeyboardType.NUMBER)){
@@ -725,9 +740,9 @@ public class SuperBoard extends FrameLayout {
 		}
 	}*/
 
-	private class Row extends LinearLayout {
+	protected class Row extends LinearLayout {
 
-		Row(Context c){
+		public Row(Context c){
 			super(c);
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 		}
@@ -750,7 +765,7 @@ public class SuperBoard extends FrameLayout {
 		}
 	}
 
-	private class Key extends LinearLayout {
+	protected class Key extends LinearLayout {
 		
 		TextView t = null;
 		ImageView i = null;
@@ -843,6 +858,7 @@ public class SuperBoard extends FrameLayout {
 			setBackgroundDrawable(b);
 		}
 
+		@Override
 		public void setBackgroundDrawable(Drawable b){
 			super.setBackgroundDrawable(b == null ? null : b.getConstantState().newDrawable());
 		}
@@ -877,7 +893,7 @@ public class SuperBoard extends FrameLayout {
 			return i.getDrawable();
 		}
 		
-		private CharSequence getHint(){
+		protected CharSequence getHint(){
 			return t.getHint();
 		}
 		
@@ -886,12 +902,26 @@ public class SuperBoard extends FrameLayout {
 			t.setVisibility(visible?GONE:VISIBLE);
 		}
 		
-		private void setHint(CharSequence cs){
+		protected void setHint(CharSequence cs){
 			t.setHint(cs);
 		}
 		
-		private void setKeyTextSize(int size){
+		private void setKeyTextSize(float size){
 			t.setTextSize(size);
+		}
+		
+		@Override
+		public Key clone(){
+			Key k = new Key(getContext());
+			k.setLayoutParams(new LinearLayout.LayoutParams(k.getLayoutParams()));
+			k.setHint(getHint());
+			k.setKeyTextSize(t.getTextSize());
+			if(isKeyIconSet()){
+				k.setKeyIcon(getKeyIcon());
+			} else {
+				k.setText(getText());
+			}
+			return k;
 		}
 	}
 }

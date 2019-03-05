@@ -19,6 +19,8 @@ public class Settings extends Activity {
 	private ListView lv = null;
 	private SuperToolbar st = null;
 	private static SuperDB sd = null;
+	private SuperBoard sb = null;
+	private ImageView iv = null;
 	private ArrayAdapter<Key> aa = null;
 	
 	@Override
@@ -33,13 +35,67 @@ public class Settings extends Activity {
 		sd.onlyRead();
 		lv.removeAllViewsInLayout();
 		setAdapter();
+		setKeyPrefs();
 		super.onResume();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode,Intent data){
-		onResume();
 		super.onActivityResult(requestCode,resultCode,data);
+		onResume();
+	}
+	
+	public static File getBackgroundImageFile(Context c){
+		return new File(c.getFilesDir()+"/bg");
+	}
+	
+	private void setKeyPrefs(){
+		File img = getBackgroundImageFile(this);
+		if(img.exists()){
+			iv.setImageBitmap(BitmapFactory.decodeFile(img.getAbsolutePath()));
+		} else {
+			iv.setImageDrawable(null);
+		}
+		StateListDrawable d = new StateListDrawable();
+		GradientDrawable gd = new GradientDrawable();
+		gd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),false));
+		gd.setCornerRadius(sb.mp(a(sd.getInteger(Key.key_radius.name(),0))));
+		gd.setStroke(sb.mp(a(sd.getInteger(Settings.Key.key_padding.name(),0))),0);
+		GradientDrawable pd = new GradientDrawable();
+		pd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),true));
+		pd.setCornerRadius(sb.mp(a(sd.getInteger(Key.key_radius.name(),0))));
+		pd.setStroke(sb.mp(a(sd.getInteger(Settings.Key.key_padding.name(),0))),0);
+		d.addState(new int[]{android.R.attr.state_selected},pd);
+		d.addState(new int[]{},gd);
+		sb.setKeysBackground(d);
+		sb.setKeyTintColor(0,0,1,sd.getInteger(Key.key2_bgclr.name(),0));
+		sb.setKeyTintColor(0,0,2,sd.getInteger(Key.enter_bgclr.name(),0));
+		sb.setBackgroundColor(sd.getInteger(Key.keyboard_bgclr.name(),0));
+		sb.setKeysTextColor(sd.getInteger(Settings.Key.key_textclr.name(),0));
+		sb.setKeysTextSize(sb.mp(a(sd.getInteger(Settings.Key.key_textsize.name(),0))));
+	}
+	
+	private View p(){
+		if(sd.isDBContainsKey(Key.key_bgclr.name())){
+			RelativeLayout rl = new RelativeLayout(this);
+			sb = new SuperBoard(this){
+				@Override
+				public void sendDefaultKeyboardEvent(View v){}
+			};
+			iv = new ImageView(this);
+			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+			rl.addView(iv);
+			rl.addView(sb);
+			rl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+			sb.addRow(0,new String[]{"1","2","3"});
+			sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
+			sb.setKeyboardHeight(20);
+			sb.setKeysPadding(sb.mp(4));
+			return rl;
+		} else {
+			return ok(this);
+		}
 	}
 	
 	private View m(){
@@ -50,6 +106,7 @@ public class Settings extends Activity {
 		st.resetIcon();
 		st.setTextColor(0xFFFFFFFF);
 		m.addView(st);
+		m.addView(p());
 		lv = new ListView(this);
 		lv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 		lv.setDivider(null);
@@ -73,11 +130,14 @@ public class Settings extends Activity {
 				@Override
 				public void onClick(View v){
 					sd.removeDB();
+					File img = getBackgroundImageFile(v.getContext());
+					if(img.exists()) img.delete();
 					restartKeyboard(Settings.this);
 					finish();
 					startActivity(new Intent(Settings.this,Settings.class));
 				}
 		});
+		setKeyPrefs();
 		return m;
 	}
 	
@@ -90,9 +150,7 @@ public class Settings extends Activity {
 				t.setText(getItem(p).name());
 				t = (TextView) v.findViewById(android.R.id.text2);
 				if(getItem(p).name().endsWith("img")){
-					t.setVisibility(View.GONE);
-					TwoLineListItem i = (TwoLineListItem) v;
-					i.setGravity(Gravity.CENTER_VERTICAL);
+					t.setText("");
 				} else {
 					String s = sd.getString(getItem(p).name(),"def");
 					t.setText(s.equals("def") 
@@ -122,6 +180,16 @@ public class Settings extends Activity {
 		c.sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
 	}
 	
+	private static View ok(Context c){
+		TextView tv = new TextView(c);
+		int p = SuperBoard.dp(16);
+		tv.setPadding(p,p,p,p);
+		tv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+		tv.setGravity(Gravity.CENTER);
+		tv.setText("Firstly, open keyboard for get default value");
+		return tv;
+	}
+	
 	public enum Key {
 		keyboard_bgimg,
 		keyboard_bgclr,
@@ -140,14 +208,13 @@ public class Settings extends Activity {
 	public static class SetActivity extends Activity {
 		private Key act;
 		private Type type;
-		private String val,kbgimg;
+		private String val;
 		private int set;
 		private Bitmap temp;
 
 		@Override
 		protected void onCreate(Bundle b){
 			super.onCreate(b);
-			kbgimg = getFilesDir()+"/bg";
 			act = Key.valueOf(getIntent().getExtras().getString("action"));
 			type = Type.$VALUES[getIntent().getExtras().getInt("type")];
 			val = getIntent().getExtras().getString("value");
@@ -168,7 +235,7 @@ public class Settings extends Activity {
 											} else {
 												try {
 													if(temp != null){
-														temp.compress(Bitmap.CompressFormat.PNG,85,new FileOutputStream(kbgimg));
+														temp.compress(Bitmap.CompressFormat.PNG,85,new FileOutputStream(getBackgroundImageFile(v.getContext())));
 													}
 												} catch(Exception e){}
 											}
@@ -179,13 +246,7 @@ public class Settings extends Activity {
 				},android.R.string.cancel,android.R.string.ok));
 				setContentView(ll);
 			} else {
-				TextView tv = new TextView(this);
-				int p = SuperBoard.dp(16);
-				tv.setPadding(p,p,p,p);
-				tv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
-				tv.setGravity(Gravity.CENTER);
-				tv.setText("Firstly, open keyboard for get default value");
-				setContentView(tv);
+				setContentView(ok(this));
 			}
 		}
 		
@@ -276,12 +337,14 @@ public class Settings extends Activity {
 						min = 20;
 						sb.setMax(80-min);
 					}
-					sb.setProgress(Integer.valueOf(val)-min);
+					sb.setProgress((set = Integer.valueOf(val))-min);
+					setTitle(act.name()+" ("+(act.equals(Key.keyboard_height)  ? set+"" : Settings.a(set)+"")+")");
 					final int m = min;
 					sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 							@Override
 							public void onProgressChanged(SeekBar p1,int p2,boolean p3){
 								set = p2 + m;
+								setTitle(act.name()+" ("+(act.equals(Key.keyboard_height)  ? set+"" : Settings.a(set)+"")+")");
 							}
 
 							@Override
@@ -318,9 +381,9 @@ public class Settings extends Activity {
 					iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 					iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
 					iv.setAdjustViewBounds(true);
-					final File f = new File(kbgimg);
+					final File f = getBackgroundImageFile(this);
 					if(f.exists()){
-						iv.setImageBitmap(temp = BitmapFactory.decodeFile(kbgimg));
+						iv.setImageBitmap(temp = BitmapFactory.decodeFile(f.getAbsolutePath()));
 					}
 					s.setOnLongClickListener(new View.OnLongClickListener(){
 						@Override

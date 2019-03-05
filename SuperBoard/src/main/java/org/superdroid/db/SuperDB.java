@@ -6,7 +6,7 @@ package org.superdroid.db;
      by Furkan Karcıoğlu
         25.08.2017 Fri
  ----------------------------
-  Last Edit: 25.02.2019 Mon
+  Last Edit: 05.03.2019 Tue
  ----------------------------
 */
 
@@ -31,9 +31,18 @@ public class SuperDB {
 	private HashMap<String,String> hm1 = new HashMap<String,String>();
 
 	public SuperDB(String dbName, File path){
+		init(dbName, path);
+		read();
+	}
+	
+	public SuperDB(String dbName, File path, String key){
+		init(dbName, path);
+		readKey(key);
+	}
+	
+	private void init(String dbName, File path){
 		folder = new File(path+File.separator+"superdb"+File.separator+dbName);
 		if(!folder.exists()) folder.mkdirs();
-		read();
 	}
 
 	public final int getLength(){
