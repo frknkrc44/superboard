@@ -15,13 +15,12 @@ import java.util.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
-import org.blinksd.utils.*;
-import org.blinksd.utils.color.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, txtsze = -1, hp = 40, wp = 100, y, TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
-	private boolean block = false, clear = false, lng = false, lock =  false;
+	private int selected = 0, shift = 0, keyclr = -1, txtsze = -1, hp = 40, wp = 100, y;
+	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
+	private boolean block = false, clear = false, lng = false, lock = false, elock = false;
 	private Drawable keybg = null, kbdbg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
@@ -31,12 +30,12 @@ public class SuperBoard extends FrameLayout {
 			switch(msg.what){
 				case 0:
 					block = false;
-					removeMessages(0);
+					h.removeMessages(0);
 					if(lock){
 						lock = lng = false;
-						removeMessages(0);
-						removeMessages(1);
-						removeMessages(2);
+						h.removeMessages(1);
+						h.removeMessages(2);
+						h.sendEmptyMessageDelayed(3,50);
 					}
 					break;
 				case 1:
@@ -65,13 +64,16 @@ public class SuperBoard extends FrameLayout {
 						removeMessages(2);
 						block = lng = lock = false;
 					}
+					break;
+				case 3:
+					afterKeyboardEvent();
+					h.removeMessages(3);
+					break;
 			}
 		}
 	};
 	
 	//Vibrator vb = null;
-	
-	//PopupView pv = null;
 
 	public SuperBoard(Context c){
 		super(c);
@@ -81,6 +83,14 @@ public class SuperBoard extends FrameLayout {
 		setBackgroundColor(0xFF212121);
 		createEmptyLayout();
 		setKeyboardHeight(hp);
+	}
+	
+	public void onKeyboardEvent(View v){
+		
+	}
+	
+	public void afterKeyboardEvent(){
+		elock = false;
 	}
 	
 	private void disableSystemSuggestions(){
@@ -160,8 +170,21 @@ public class SuperBoard extends FrameLayout {
 		}
 	}
 	
+	public void setKeyTintColor(Key k, int color){
+		Drawable d = k.getBackground();
+		try {
+			if(Build.VERSION.SDK_INT > 21){
+				d.setTintList(getTintListWithStates(color));
+			} else {
+				d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
+			}
+		} catch(Exception e){
+			d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
+		}
+	}
+	
 	public void setKeyTintColor(int keyboardIndex, int rowIndex, int keyIndex, int color){
-		getKey(keyboardIndex, rowIndex, keyIndex).getBackground().setTintList(getTintListWithStates(color));
+		setKeyTintColor(getKey(keyboardIndex, rowIndex, keyIndex),color);
 	}
 	
 	public ColorStateList getTintListWithStates(int color){
@@ -191,6 +214,14 @@ public class SuperBoard extends FrameLayout {
 
 	public boolean isKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex){
 		return isKeyRepeat(getKey(keyboardIndex, rowIndex, keyIndex));
+	}
+	
+	public boolean isKeyHasEvent(int keyboardIndex, int rowIndex, int keyIndex){
+		return isKeyHasEvent(getKey(keyboardIndex,rowIndex,keyIndex));
+	}
+	
+	public boolean isKeyHasEvent(Key k){
+		return isKeyRepeat(k) || k.getTag(TAG_LP) != null || k.getTag(TAG_NP) != null || k.getText().toString().length() > 0;
 	}
 
 	private boolean isKeyRepeat(View v){
@@ -226,7 +257,7 @@ public class SuperBoard extends FrameLayout {
 		return x < y ? x : y;
 	}
 	
-	/*private boolean isHasPopup(Key v){
+	protected boolean isHasPopup(Key v){
 		String cs = v.getHint().toString();
 		if(cs == null) return false;
 		return !isKeyRepeat(v);
@@ -251,7 +282,7 @@ public class SuperBoard extends FrameLayout {
 					setPopupForKey(keyboardIndex,i,g,chars[i][g]);
 			}
 		} else throw new RuntimeException("Invalid keyboard index number");
-	}*/
+	}
 	
 	public void setKeysPadding(int p){
 		for(int j = 0;j < getChildCount();j++){
@@ -325,7 +356,7 @@ public class SuperBoard extends FrameLayout {
 			int x = selected;
 			setEnabledLayout(findNumberKeyboardIndex());
 			setEnabledLayout(x);
-		} else throw new RuntimeException("Invalid keyboard height");
+		} else throw new RuntimeException("Invalid keyboard width");
 	}
 
 	public void setKeyLongClickEvent(int keyboardIndex, int rowIndex, int keyIndex, OnLongClickListener event){
@@ -389,13 +420,6 @@ public class SuperBoard extends FrameLayout {
 	public ViewGroup getKeyboard(int keyboardIndex){
 		return (ViewGroup)getChildAt(keyboardIndex);
 	}
-	
-	/*private void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, Row r){
-		if(keyboardIndex < 0) keyboardIndex += getChildCount();
-		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
-		getKeyboard(keyboardIndex).removeViewAt(rowIndex);
-		getKeyboard(keyboardIndex).addView(r,rowIndex);
-	}*/
 	
 	public void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, String[] chars){
 		getRow(keyboardIndex, rowIndex).removeAllViewsInLayout();
@@ -771,7 +795,7 @@ public class SuperBoard extends FrameLayout {
 		ImageView i = null;
 		
 		public boolean isKeyIconSet(){
-			return i.isShown();
+			return i.getDrawable() != null;
 		}
 		
 		public int getKeyWidth(){
@@ -803,6 +827,7 @@ public class SuperBoard extends FrameLayout {
 			setKeyIconPadding();
 			setKeyImageVisible(false);
 			t.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
+			t.setSingleLine();
 			setGravity(CENTER);
 			t.setGravity(CENTER);
 			t.setHintTextColor(0);
@@ -831,6 +856,7 @@ public class SuperBoard extends FrameLayout {
 										}
 										lng = false;
 										block = !lng;
+										h.sendEmptyMessageDelayed(3,50);
 									}
 								}
 							} else {
@@ -848,6 +874,14 @@ public class SuperBoard extends FrameLayout {
 							if(m.getAction() == m.ACTION_DOWN){
 								sendDefaultKeyboardEvent(v);
 							}
+						}
+						if(m.getAction() != m.ACTION_UP){
+							if(!elock){
+								elock = true;
+								onKeyboardEvent(v);
+							}
+						} else {
+							if(!lock) h.sendEmptyMessageDelayed(3,50);
 						}
 						return true;
 					}
@@ -910,12 +944,30 @@ public class SuperBoard extends FrameLayout {
 			t.setTextSize(size);
 		}
 		
+		protected TextView getTextView(){
+			return t;
+		}
+		
+		protected ImageView getImageView(){
+			return i;
+		}
+		
 		@Override
 		public Key clone(){
+			return clone(false);
+		}
+		
+		public Key clone(boolean disableTouchEvent){
 			Key k = new Key(getContext());
 			k.setLayoutParams(new LinearLayout.LayoutParams(k.getLayoutParams()));
+			Rect r = getBackground().getBounds();
+			k.getLayoutParams().width = r.right;
+			k.getLayoutParams().height = r.bottom;
 			k.setHint(getHint());
-			k.setKeyTextSize(t.getTextSize());
+			k.getTextView().setSingleLine();
+			k.setId(getId());
+			k.setKeyTextSize(t.getTextSize()/2.5f);
+			if(disableTouchEvent) k.setOnTouchListener(null);
 			if(isKeyIconSet()){
 				k.setKeyIcon(getKeyIcon());
 			} else {

@@ -287,6 +287,7 @@ public class Settings extends Activity {
 					final TextView x = new TextView(this);
 					x.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 					x.setGravity(Gravity.CENTER);
+					
 					ll.addView(x);
 					final SeekBar a = new SeekBar(this),
 					r = new SeekBar(this),
@@ -299,6 +300,9 @@ public class Settings extends Activity {
 							x.setText(getColorString(clr,true));
 							x.setTextColor(ColorUtils.satisfiesTextContrast(clr) ? 0xFF212121 : 0XFFDEDEDE);
 							x.setBackgroundColor(clr);
+							changeSeekBarColor(r,Color.rgb(r.getProgress(),0,0));
+							changeSeekBarColor(g,Color.rgb(0,g.getProgress(),0));
+							changeSeekBarColor(b,Color.rgb(0,0,b.getProgress()));
 						}
 
 						@Override
@@ -310,8 +314,7 @@ public class Settings extends Activity {
 					for(SeekBar v : new SeekBar[]{a,r,g,b}){
 						v.setMax(255);
 						v.setOnSeekBarChangeListener(opc);
-						v.getProgressDrawable().setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-						v.getThumb().setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
+						changeSeekBarColor(v,0xFFFFFFFF);
 						v.setLayoutParams(new LinearLayout.LayoutParams(-1,SuperBoard.dp(36),0));
 						v.setPadding(v.getLayoutParams().height,v.getPaddingTop(),v.getLayoutParams().height,v.getPaddingBottom());
 						ll.addView(v);
@@ -398,6 +401,11 @@ public class Settings extends Activity {
 				default:
 					return null;
 			}
+		}
+		
+		private void changeSeekBarColor(SeekBar s, int c){
+			s.getThumb().setColorFilter(c,PorterDuff.Mode.SRC_ATOP);
+			s.getProgressDrawable().setColorFilter(c,PorterDuff.Mode.SRC_ATOP);
 		}
 
 		@Override

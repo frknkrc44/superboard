@@ -19,6 +19,7 @@ import android.graphics.*;
 public class InputService extends InputMethodService {
 	
 	private SuperBoard sb = null;
+	private BoardPopup po = null;
 	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
 	private String kbd[][][] = null;
@@ -91,7 +92,19 @@ public class InputService extends InputMethodService {
 			registerReceiver(r,new IntentFilter(COLORIZE_KEYBOARD));
 		}
 		if(sb == null){
-			sb = new SuperBoard(this);
+			sb = new SuperBoard(this){
+				@Override
+				public void onKeyboardEvent(View v){
+					po.setKey((SuperBoard.Key)v);
+					po.showCharacter();
+				}
+				
+				@Override
+				public void afterKeyboardEvent(){
+					super.afterKeyboardEvent();
+					po.hideCharacter();
+				}
+			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			kbd = new String[][][]{
 				{
@@ -213,6 +226,10 @@ public class InputService extends InputMethodService {
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
 		} else setPrefs();
+		if(po == null){
+			po = new BoardPopup(fl);
+			po.setKeyboardHeight(sb.getKeyboardHeightPercent());
+		}
 	}
 
 	@Override
