@@ -2,6 +2,7 @@ package org.blinksd.board;
 
 import android.content.*;
 import android.content.res.*;
+import android.graphics.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.os.*;
@@ -14,7 +15,6 @@ import org.blinksd.utils.color.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import android.graphics.*;
 
 public class InputService extends InputMethodService {
 	
@@ -106,25 +106,26 @@ public class InputService extends InputMethodService {
 				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			String appname = getString(R.string.app_name);
 			kbd = new String[][][]{
 				{
 					{"1","2","3","4","5","6","7","8","9","0"},
 					{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
 					{"a","s","d","f","g","h","j","k","l","ş","i"},
-					{"UP","z","x","c","v","b","n","m","ö","ç","BS"},
-					{"!?#",",","space",".","ENTER"}
+					{"","z","x","c","v","b","n","m","ö","ç",""},
+					{"!?#",",",appname,".",""}
 				},{
 					{"[","]","θ","÷","<",">","`","´","{","}"},
 					{"©","£","€","+","®","¥","π","Ω","λ","β"},
 					{"@","#","$","%","&","*","-","=","(",")"},
-					{"S2","!","\"","'",":",";","/","?","BS"},
-					{"ABC",",","space",".","ENTER"}
+					{"S2","!","\"","'",":",";","/","?",""},
+					{"ABC",",",appname,".",""}
 				},{
 					{"√","ℕ","★","×","™","‰","∛","^","~","±"},
 					{"♣","♠","♪","♥","♦","≈","Π","¶","§","∆"},
 					{"←","↑","↓","→","∞","≠","_","℅","‘","’"},
-					{"S3","¡","•","°","¢","|","\\","¿","BS"},
-					{"ABC","₺","space","…","ENTER"}
+					{"S3","¡","•","°","¢","|","\\","¿",""},
+					{"ABC","₺",appname,"…",""}
 				},{
 					{"F1","F2","F3","F4","F5","F6","F7","F8"},
 					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
@@ -134,8 +135,8 @@ public class InputService extends InputMethodService {
 				},{
 					{"1","2","3","+"},
 					{"4","5","6",";"},
-					{"7","8","9","BS"},
-					{"*","0","#","ENTER"}
+					{"7","8","9",""},
+					{"*","0","#",""}
 				}
 			};
 			sb.addRows(0,kbd[0]);
@@ -246,12 +247,7 @@ public class InputService extends InputMethodService {
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
 			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){
-				ImageView iv = (ImageView) fl.getChildAt(0);
-				if(img.exists()){
-					iv.setImageBitmap(BitmapFactory.decodeFile(img.getAbsolutePath()));
-				} else {
-					iv.setImageDrawable(null);
-				}
+				iv.setImageDrawable(img.exists()?Drawable.createFromPath(img.getAbsolutePath()):new ColorDrawable());
 			}
 			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
 			sb.setBackgroundColor(c);

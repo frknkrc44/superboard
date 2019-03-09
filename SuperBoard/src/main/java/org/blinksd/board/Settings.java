@@ -22,28 +22,83 @@ public class Settings extends Activity {
 	private SuperBoard sb = null;
 	private ImageView iv = null;
 	private ArrayAdapter<Key> aa = null;
+	private boolean first = true;
 	
 	@Override
 	public void onCreate(Bundle b){
 		super.onCreate(b);
 		sd = SuperDBHelper.getDefault(this);
+		sb = new SuperBoard(this){
+			@Override
+			public void sendDefaultKeyboardEvent(View v){}
+		};
+		iv = new ImageView(this);
+		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+		sb.addRow(0,new String[]{"1","2","3"});
+		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
+		sb.setKeyboardHeight(20);
+		sb.setKeysPadding(sb.mp(4));
+		st = new SuperToolbar(this);
+		st.setTextColor(0xFFFFFFFF);
+		Drawable d = getResources().getDrawable(R.drawable.sym_keyboard_close);
+		d.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
+		st.addMenuItem(d, new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				sd.removeDB();
+				File img = getBackgroundImageFile(v.getContext());
+				if(img.exists()) img.delete();
+				restartKeyboard(Settings.this);
+				finish();
+				startActivity(new Intent(Settings.this,Settings.class));
+			}
+		});
+		lv = new ListView(this);
+		lv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+		lv.setDivider(null);
+		lv.setOnItemClickListener(new ListView.OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> p1,View p2,int p3,long p4){
+				Intent i = new Intent(Settings.this,SetActivity.class);
+				String a = ((Key)((ArrayAdapter)p1.getAdapter()).getItem(p3)).name();
+				i.putExtra("action",a);
+				i.putExtra("type",a.endsWith("clr") ? 0 : a.endsWith("img") ? 2 : 1);
+				String s = sd.getString(a,"def");
+				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
+				startActivityForResult(i,RESULT_CANCELED);
+			}
+		});
 		setContentView(m());
 	}
 
 	@Override
 	protected void onResume(){
-		sd.onlyRead();
-		lv.removeAllViewsInLayout();
-		setAdapter();
-		setKeyPrefs();
+		resume();
 		super.onResume();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode,Intent data){
 		super.onActivityResult(requestCode,resultCode,data);
-		onResume();
+		resume();
 	}
+
+	@Override
+	public void setTitle(CharSequence title){
+		st.setTitle(title.toString());
+		super.setTitle(title);
+	}
+	
+	private void resume(){
+		if(!first){
+			sd.onlyRead();
+			lv.removeAllViewsInLayout();
+			setAdapter();
+			setKeyPrefs();
+		} else first = false;
+	}
+	
 	
 	public static File getBackgroundImageFile(Context c){
 		return new File(c.getFilesDir()+"/bg");
@@ -51,11 +106,7 @@ public class Settings extends Activity {
 	
 	private void setKeyPrefs(){
 		File img = getBackgroundImageFile(this);
-		if(img.exists()){
-			iv.setImageBitmap(BitmapFactory.decodeFile(img.getAbsolutePath()));
-		} else {
-			iv.setImageDrawable(null);
-		}
+		iv.setImageDrawable(img.exists()?Drawable.createFromPath(img.getAbsolutePath()):new ColorDrawable());
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),false));
@@ -78,20 +129,9 @@ public class Settings extends Activity {
 	private View p(){
 		if(sd.isDBContainsKey(Key.key_bgclr.name())){
 			RelativeLayout rl = new RelativeLayout(this);
-			sb = new SuperBoard(this){
-				@Override
-				public void sendDefaultKeyboardEvent(View v){}
-			};
-			iv = new ImageView(this);
-			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 			rl.addView(iv);
 			rl.addView(sb);
 			rl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
-			sb.addRow(0,new String[]{"1","2","3"});
-			sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
-			sb.setKeyboardHeight(20);
-			sb.setKeysPadding(sb.mp(4));
 			return rl;
 		} else {
 			return ok(this);
@@ -102,41 +142,10 @@ public class Settings extends Activity {
 		LinearLayout m = new LinearLayout(this);
 		m.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 		m.setOrientation(LinearLayout.VERTICAL);
-		st = new SuperToolbar(this);
-		st.resetIcon();
-		st.setTextColor(0xFFFFFFFF);
 		m.addView(st);
 		m.addView(p());
-		lv = new ListView(this);
-		lv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
-		lv.setDivider(null);
 		setAdapter();
-		lv.setOnItemClickListener(new ListView.OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> p1,View p2,int p3,long p4){
-				Intent i = new Intent(Settings.this,SetActivity.class);
-				String a = ((Key)((ArrayAdapter)p1.getAdapter()).getItem(p3)).name();
-				i.putExtra("action",a);
-				i.putExtra("type",a.endsWith("clr") ? 0 : a.endsWith("img") ? 2 : 1);
-				String s = sd.getString(a,"def");
-				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
-				startActivityForResult(i,RESULT_CANCELED);
-			}
-		});
 		m.addView(lv);
-		Drawable d = getResources().getDrawable(R.drawable.sym_keyboard_close);
-		d.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-		st.addMenuItem(d, new View.OnClickListener(){
-				@Override
-				public void onClick(View v){
-					sd.removeDB();
-					File img = getBackgroundImageFile(v.getContext());
-					if(img.exists()) img.delete();
-					restartKeyboard(Settings.this);
-					finish();
-					startActivity(new Intent(Settings.this,Settings.class));
-				}
-		});
 		setKeyPrefs();
 		return m;
 	}

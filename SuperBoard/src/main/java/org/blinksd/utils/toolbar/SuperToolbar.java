@@ -17,6 +17,7 @@ public class SuperToolbar extends LinearLayout {
 	public SuperToolbar(Activity a){
 		super(a);
 		create();
+		setTitle(a.getTitle().toString());
 	}
 
 	private Activity getActivity(){
@@ -32,9 +33,8 @@ public class SuperToolbar extends LinearLayout {
 		title.setLayoutParams(new LayoutParams(-1,-1,1));
 		title.setGravity(Gravity.CENTER_VERTICAL);
 		title.setTextSize(dp(8.5f));
-		h.sendEmptyMessage(0);
 		nav = new ImageView(getContext());
-		nav.setLayoutParams(new LayoutParams(-2,-1,0));
+		nav.setLayoutParams(new LayoutParams(dp(56),-1,0));
 		nav.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		setDefaultIcon();
 		getViewParams(nav).rightMargin = dp(8);
@@ -99,22 +99,10 @@ public class SuperToolbar extends LinearLayout {
 	private static int dp(float px){
 		return (int)(Resources.getSystem().getDisplayMetrics().density * px);
 	}
-
-	private Handler h = new Handler(){
-		@Override
-		public void handleMessage(Message msg){
-			switch(msg.what){
-				case 0:
-					title.setText(getActivity().getTitle());
-					removeMessages(0);
-					sendEmptyMessageDelayed(0,100);
-					break;
-				default:
-					removeMessages(msg.what);
-					break;
-			}
-		}
-	};
+	
+	public void setTitle(String newTitle){
+		title.setText(newTitle);
+	}
 	
 	public static class MenuItem {
 		

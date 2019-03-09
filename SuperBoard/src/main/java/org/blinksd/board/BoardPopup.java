@@ -1,9 +1,7 @@
 package org.blinksd.board;
 
-import android.content.*;
-import android.widget.*;
-import android.view.*;
 import android.content.res.*;
+import android.view.*;
 
 public class BoardPopup extends SuperBoard {
 	
