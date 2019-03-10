@@ -35,7 +35,7 @@ public class SuperBoard extends FrameLayout {
 						lock = lng = false;
 						h.removeMessages(1);
 						h.removeMessages(2);
-						h.sendEmptyMessageDelayed(3,50);
+						h.sendEmptyMessageDelayed(3,10);
 					}
 					break;
 				case 1:
@@ -856,7 +856,6 @@ public class SuperBoard extends FrameLayout {
 										}
 										lng = false;
 										block = !lng;
-										h.sendEmptyMessageDelayed(3,50);
 									}
 								}
 							} else {
@@ -881,7 +880,7 @@ public class SuperBoard extends FrameLayout {
 								onKeyboardEvent(v);
 							}
 						} else {
-							if(!lock) h.sendEmptyMessageDelayed(3,50);
+							if(!lock) h.sendEmptyMessageDelayed(3,10);
 						}
 						return true;
 					}
@@ -958,11 +957,18 @@ public class SuperBoard extends FrameLayout {
 		}
 		
 		public Key clone(boolean disableTouchEvent){
-			Key k = new Key(getContext());
-			k.setLayoutParams(new LinearLayout.LayoutParams(k.getLayoutParams()));
+			return clone(new Key(getContext()),disableTouchEvent);
+		}
+		
+		public Key clone(Key k){
+			return clone(k,false);
+		}
+		
+		public Key clone(Key k, boolean disableTouchEvent){
 			Rect r = getBackground().getBounds();
 			k.getLayoutParams().width = r.right;
 			k.getLayoutParams().height = r.bottom;
+			k.setBackgroundDrawable(getBackground());
 			k.setHint(getHint());
 			k.getTextView().setSingleLine();
 			k.setId(getId());

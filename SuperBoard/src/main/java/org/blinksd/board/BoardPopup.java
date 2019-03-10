@@ -6,21 +6,21 @@ import android.view.*;
 public class BoardPopup extends SuperBoard {
 	
 	private static ViewGroup mRoot;
-	private static Key mKey;
+	private Key mKey;
 	private static int[] pos = new int[2];
 	
 	public BoardPopup(ViewGroup root){
 		super((mRoot = root).getContext());
+		mKey = new Key(getContext());
+		mKey.setOnTouchListener(null);
+		root.addView(mKey);
+		mKey.setVisibility(GONE);
 		setVisibility(GONE);
 		cc();
 	}
 	
 	public void setKey(Key key){
-		if(mKey != null) mRoot.removeView(mKey);
-		mKey = key.clone(true);
-		mKey.getTextView().setSingleLine();
-		replacer();
-		mRoot.addView(mKey);
+		key.clone(mKey);
 		mKey.setVisibility(GONE);
 		key.getLocationInWindow(pos);
 		mKey.setX(pos[0]);
@@ -28,21 +28,12 @@ public class BoardPopup extends SuperBoard {
 		setCharacters(key.getHint());
 	}
 
-	private void replacer(){
-		ViewGroup.LayoutParams p = mKey.getLayoutParams();
-		if(p.width < 1) p.width = wp(mKey.getId() > 20 ? mKey.getId()/1.25f : 10);
-		if(p.height < 1) p.height = hp(getKeyboardHeightPercent()/5);
-	}
-	
 	public void showCharacter(){
-		if(isKeyHasEvent(mKey) || mKey.isKeyIconSet())
-			mKey.setVisibility(VISIBLE);
+		mKey.setVisibility(VISIBLE);
 	}
 	
 	public void hideCharacter(){
-		mRoot.removeView(mKey);
-		mKey = null;
-		System.gc();
+		mKey.setVisibility(GONE);
 	}
 	
 	public void showPopup(boolean visible){
