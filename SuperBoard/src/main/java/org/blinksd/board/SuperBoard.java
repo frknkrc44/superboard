@@ -193,7 +193,7 @@ public class SuperBoard extends FrameLayout {
 		},new int[]{getColorWithState(color,true),getColorWithState(color,false)});
 	}
 	
-	public int getColorWithState(int color, boolean selected){
+	public static int getColorWithState(int color, boolean selected){
 		if(selected){
 			int[] state = {Color.red(color),Color.green(color),Color.blue(color)};
 			for(int i = 0;i < state.length;i++){
@@ -803,12 +803,14 @@ public class SuperBoard extends FrameLayout {
 		}
 		
 		int ori = 0, pad = 0;
+		boolean autoAdjustIconPadding = true;
 
 		@Override
 		protected void onConfigurationChanged(Configuration newConfig){
 			if(ori != newConfig.orientation){
 				ori = newConfig.orientation;
-				setKeyIconPadding();
+				if(autoAdjustIconPadding)
+					setKeyIconPadding();
 			} else super.onConfigurationChanged(newConfig);
 		}
 
@@ -903,7 +905,16 @@ public class SuperBoard extends FrameLayout {
 		
 		private void setKeyIconPadding(){
 			pad = mp(ori == Configuration.ORIENTATION_LANDSCAPE ? 2 : 4);
-			i.setPadding(pad,pad,pad,pad);
+			setKeyIconPadding(pad);
+		}
+		
+		public void setKeyIconPadding(int p){
+			if(autoAdjustIconPadding = p < 0){
+				setKeyIconPadding();
+			} else {
+				pad = p;
+				i.setPadding(p,p,p,p);
+			}
 		}
 		
 		public void setKeyItemColor(int color){

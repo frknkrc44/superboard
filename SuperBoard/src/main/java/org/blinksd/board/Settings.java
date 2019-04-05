@@ -37,13 +37,17 @@ public class Settings extends Activity {
 		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 		sb.addRow(0,new String[]{"1","2","3"});
+		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
+		sb.getKey(0,0,1).setKeyIconPadding(sb.mp(8));
+		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_return);
+		sb.getKey(0,0,-1).setKeyIconPadding(sb.mp(8));
 		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
 		st = new SuperToolbar(this);
-		st.setTextColor(0xFF212121);
+		//st.setTextColor(0xFF212121);
 		Drawable d = getResources().getDrawable(R.drawable.sym_keyboard_close);
-		d.setColorFilter(0xFF212121,PorterDuff.Mode.SRC_ATOP);
+		//d.setColorFilter(0xFF212121,PorterDuff.Mode.SRC_ATOP);
 		st.addMenuItem(d, new View.OnClickListener(){
 			@Override
 			public void onClick(View v){
@@ -159,6 +163,7 @@ public class Settings extends Activity {
 				TextView t = (TextView) v.findViewById(android.R.id.text1);
 				t.setText(getItem(p).name());
 				t = (TextView) v.findViewById(android.R.id.text2);
+				st.setTextColor(t.getTextColors().getColorForState(new int[]{android.R.attr.state_enabled},0));
 				if(getItem(p).name().endsWith("img")){
 					t.setText("");
 				} else {
@@ -225,9 +230,9 @@ public class Settings extends Activity {
 		@Override
 		protected void onCreate(Bundle b){
 			super.onCreate(b);
-			setTitleColor(0xFF212121);
+			setTitleColor(0xFFDEDEDE);
 			GradientDrawable gd = new GradientDrawable();
-			gd.setColor(0xFFFFFFFF);
+			gd.setColor(0xFF212121);
 			gd.setCornerRadius(SuperBoard.dp(8));
 			getWindow().setBackgroundDrawable(gd);
 			act = Key.valueOf(getIntent().getExtras().getString("action"));
@@ -238,6 +243,7 @@ public class Settings extends Activity {
 				LinearLayout ll = new LinearLayout(this);
 				ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 				ll.setOrientation(LinearLayout.VERTICAL);
+				ll.setGravity(Gravity.CENTER_HORIZONTAL);
 				ll.addView(s());
 				ll.addView(b(new View.OnClickListener(){
 									@Override
@@ -250,6 +256,7 @@ public class Settings extends Activity {
 												try {
 													if(temp != null){
 														temp.compress(Bitmap.CompressFormat.JPEG,85,new FileOutputStream(getBackgroundImageFile(v.getContext())));
+														setColorsFromBitmap(temp);
 													}
 												} catch(Exception e){}
 											}
@@ -262,6 +269,17 @@ public class Settings extends Activity {
 			} else {
 				setContentView(ok(this));
 			}
+		}
+		
+		private void setColorsFromBitmap(Bitmap b){
+			if(b == null) return;
+			int c = ColorUtils.getBitmapColor(b);
+			sd.putInteger(Key.keyboard_bgclr.name(),c-0xAA000000);
+			sd.putInteger(Key.key_bgclr.name(),c-0xAA000000);
+			sd.putInteger(Key.key2_bgclr.name(),SuperBoard.getColorWithState(c,true));
+			sd.putInteger(Key.enter_bgclr.name(),ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(sd.getInteger(Key.key2_bgclr.name(),0xFF212121),true) : 0xFFFFFFFF);
+			sd.putInteger(Key.key_textclr.name(),ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
+			sd.onlyWrite();
 		}
 		
 		private View b(View.OnClickListener c, int... a){
@@ -291,33 +309,44 @@ public class Settings extends Activity {
 			return ll;
 		}
 		
+		private void q(TextView x){
+			x.setText(getColorString(set,true));
+			x.setTextColor(ColorUtils.satisfiesTextContrast(set) ? 0xFF212121 : 0XFFDEDEDE);
+			x.setBackgroundColor(set);
+		}
+		
 		private View s(){
 			switch(type){
 				case color:
 					LinearLayout ll = new LinearLayout(this);
-					LinearLayout.LayoutParams y = new LinearLayout.LayoutParams(-1,-1,1);
-					//y.bottomMargin = y.topMargin = y.leftMargin = y.rightMargin = SuperBoard.dp(16);
-					ll.setLayoutParams(y);
+					ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 					ll.setOrientation(LinearLayout.VERTICAL);
 					ll.setGravity(Gravity.CENTER);
 					final TextView x = new TextView(this);
 					x.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-					x.setGravity(Gravity.CENTER);
+					x.setGravity(ll.getGravity());
 					ll.addView(x);
 					final CustomSeekBar a = new CustomSeekBar(this),
 					r = new CustomSeekBar(this),
 					g = new CustomSeekBar(this),
 					b = new CustomSeekBar(this);
+					changeSeekBarColor(r,Color.rgb(0xDE,0,0));
+					changeSeekBarColor(g,Color.rgb(0,0xDE,0));
+					changeSeekBarColor(b,Color.rgb(0,0,0xDE));
+					set = Integer.valueOf(val);
+					q(x);
+					for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
+						v.setMax(255);
+					}
+					a.setProgress(Color.alpha(set));
+					r.setProgress(Color.red(set));
+					g.setProgress(Color.green(set));
+					b.setProgress(Color.blue(set));
 					SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener(){
 						@Override
 						public void onProgressChanged(SeekBar s, int i, boolean c){
-							int clr = set = Color.argb(a.getProgress(),r.getProgress(),g.getProgress(),b.getProgress());
-							x.setText(getColorString(clr,true));
-							x.setTextColor(ColorUtils.satisfiesTextContrast(clr) ? 0xFF212121 : 0XFFDEDEDE);
-							x.setBackgroundColor(clr);
-							changeSeekBarColor(r,Color.rgb(r.getProgress(),0,0));
-							changeSeekBarColor(g,Color.rgb(0,g.getProgress(),0));
-							changeSeekBarColor(b,Color.rgb(0,0,b.getProgress()));
+							set = Color.argb(a.getProgress(),r.getProgress(),g.getProgress(),b.getProgress());
+							q(x);
 						}
 
 						@Override
@@ -327,16 +356,9 @@ public class Settings extends Activity {
 						public void onStopTrackingTouch(SeekBar s){}
 					};
 					for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
-						v.setMax(255);
 						v.setOnSeekBarChangeListener(opc);
 						ll.addView(v);
 					}
-					int clr = Integer.valueOf(val);
-					a.setProgress(Color.alpha(clr));
-					r.setProgress(Color.red(clr));
-					g.setProgress(Color.green(clr));
-					b.setProgress(Color.blue(clr));
-					x.setBackgroundColor(clr);
 					return ll;
 				case num:
 					CustomSeekBar sb = new CustomSeekBar(this);
@@ -423,7 +445,7 @@ public class Settings extends Activity {
 				Uri uri = data.getData();
 				try {
 					temp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-					iv.setImageBitmap(temp);
+					((ImageView)((ViewGroup)findViewById(android.R.id.content)).getChildAt(0).findViewById(22)).setImageBitmap(temp);
 				} catch(Exception e){}
 			}
 		}
@@ -458,20 +480,11 @@ public class Settings extends Activity {
 			Canvas c = new Canvas(b);
 			Paint p = new Paint();
 			p.setStyle(Paint.Style.FILL);
-			p.setColor(0xFF212121);
+			p.setColor(0xFFDEDEDE);
 			c.drawOval(0,0,b.getWidth(),b.getHeight(),p);
 			setThumb(new BitmapDrawable(b));
-			GradientDrawable pd = new GradientDrawable();
-			pd.setStroke(SuperBoard.dp(14),0);
-			pd.setCornerRadius(100);
-			pd.setColor(0xFF212121);
-			GradientDrawable xd = new GradientDrawable();
-			xd.setStroke(SuperBoard.dp(14),0);
-			xd.setCornerRadius(100);
-			xd.setColor(0);
-			LayerDrawable ld = new LayerDrawable(new Drawable[]{xd,pd});
-			ld.setId(1,android.R.id.progress);
-			ld.setId(0,android.R.id.background);
+			Drawable ld = getResources().getDrawable(R.drawable.pbar);
+			ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
 			setProgressDrawable(ld);
 		}
 	}

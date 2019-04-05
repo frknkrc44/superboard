@@ -142,9 +142,40 @@ public class ColorUtils {
 	
 	public static boolean satisfiesTextContrast(int backgroundColor, int foregroundColor) {
 		if(Color.alpha(backgroundColor) > 0x88)
-        	return calculateContrast(foregroundColor, backgroundColor) >= 8;
+        	return calculateContrast(foregroundColor, backgroundColor) >= 10;
 		return false;
     }
+	
+	public static int getBitmapColor(@NonNull Bitmap bitmap){
+		if (bitmap == null) return 0xFF000000;
+		bitmap = bitmap.createScaledBitmap(bitmap,64,64,false);
+		int width = bitmap.getWidth(),height = bitmap.getHeight();
+		int pixels[] = new int[width * height];
+		bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+		int color,count = 0,r = 0,g = 0,b = 0,a = 0;
+		for(int i = 0;i < pixels.length;i++){
+			color = pixels[i];
+			a = Color.alpha(color);
+			if(a > 0){
+				color = (a < 255) ? Color.rgb(Color.red(color),Color.green(color),Color.blue(color)) : color;
+				r += Color.red(color);
+				g += Color.green(color);
+				b += Color.blue(color);
+				count++;
+			}
+		}
+		if(r == g && g == b && r == 0){
+			count = 1;
+		}
+		r /= count;
+		g /= count;
+		b /= count;
+		r = (r << 16) & 0x00FF0000;
+		g = (g << 8) & 0x0000FF00;
+		b = b & 0x000000FF;
+		color = 0xFF000000 | r | g | b;
+		return color;
+	}
 	
 	@Retention(SOURCE)
 	@Target({PARAMETER,METHOD,LOCAL_VARIABLE,FIELD})

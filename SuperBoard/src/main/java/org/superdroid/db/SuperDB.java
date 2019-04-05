@@ -6,7 +6,7 @@ package org.superdroid.db;
      by Furkan Karcıoğlu
         25.08.2017 Fri
  ----------------------------
-  Last Edit: 05.03.2019 Tue
+  Last Edit: 20.03.2019 Tue
  ----------------------------
 */
 
@@ -18,7 +18,7 @@ public class SuperDB {
 	// Split characters for arrays
 	private String components[] = { "_","—" };
 	private String su,sv,s0[],s1[],out,sq,sr[],se,sd = "g",es = "=";
-	private boolean dbRemoved = false;
+	private boolean clean = true;
 	private File folder,tf;
 	private int x,y;
 	private Scanner sc = null;
@@ -50,6 +50,7 @@ public class SuperDB {
 	}
 	
 	public final boolean isDBContainsKey(String key){
+		if(clean) readKey(key);
 		return hm1.containsKey(key);
 	}
 	
@@ -498,7 +499,6 @@ public class SuperDB {
 	public final void removeDB(){
 		hm1.clear();
 		removeRecursive(folder);
-		dbRemoved = true;
 	}
 	
 	private final void removeRecursive(File f){
@@ -510,6 +510,23 @@ public class SuperDB {
 			}
 		}
 		f.delete();
+	}
+	
+	public final void clearRAM(){
+		clean = true;
+		hm1.clear();
+	}
+	
+	public final boolean isRAMClean(){
+		return clean;
+	}
+	
+	public final void exportToDir(File dir){
+		if(dir.isDirectory()){
+			writeAll(dir);
+		} else {
+			throw new RuntimeException(dir+" is not a directory");
+		}
 	}
 
 	public final void refresh(){
@@ -529,12 +546,15 @@ public class SuperDB {
 		write(key);
 	}
 	
-	private void write(Object key){
-		dbRemoved = false;
+	private void write(String key){
+		write(folder,key);
+	}
+	
+	private void write(File dir, String key){
 		try {
-			if(((String)key).length() > 1){
+			if(key.length() > 0){
 				if(os != null) os.close();
-				tf = new File(folder+File.separator+key);
+				tf = new File(dir+File.separator+key);
 				os = new FileOutputStream(tf);
 				os.write(hm1.get(key).getBytes());
 				os.flush();
@@ -550,12 +570,17 @@ public class SuperDB {
 	}
 	
 	private void writeAll(){
-		for(Object key : getKeys(false)){
-			write(key);
+		writeAll(folder);
+	}
+	
+	private void writeAll(File dir){
+		for(String key : getKeys()){
+			write(dir,key);
 		}
 	}
 	
 	public final void readKey(String key){
+		if(clean) clean = false;
 		try {
 			parseValues(new File(folder+File.separator+key));
 		} catch(FileNotFoundException e){}
@@ -568,15 +593,13 @@ public class SuperDB {
 
 	private void read(){
 		hm1.clear();
-		if(!dbRemoved){
-			try{
-				if(folder.exists()){
-					for(File f : folder.listFiles()){
-						parseValues(f);
-					}
-				} else folder.mkdirs();
-			} catch(Exception e){}
-		}
+		try{
+			if(folder.exists()){
+				for(File f : folder.listFiles()){
+					parseValues(f);
+				}
+			} else folder.mkdirs();
+		} catch(Exception e){}
 	}
 	
 	private void parseValues(File f) throws FileNotFoundException {
@@ -646,13 +669,20 @@ public class SuperDB {
 		return i == 0 ? sq : i == 1 ? su : sv;
 	}
 	
-	public Object[] getKeys(boolean descending){
+	public final Set<String> getKeys(){
+		return getKeys(false,false);
+	}
+	
+	public final Set<String> getKeys(boolean descending){
+		return getKeys(true,descending);
+	}
+	
+	public final Set<String> getKeys(boolean sort, boolean descending){
 		Set<String> s = hm1.keySet();
-		TreeSet<String> x = new TreeSet<String>(s);
-		if(descending){
-			s = x.descendingSet();
-			return s.toArray();
+		if(sort){
+			TreeSet<String> x = new TreeSet<String>(s);
+			return descending ? x.descendingSet() : x;
 		}
-		return x.toArray();
+		return s;
 	}
 }

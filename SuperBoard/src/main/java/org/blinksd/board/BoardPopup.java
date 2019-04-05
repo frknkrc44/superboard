@@ -21,7 +21,7 @@ public class BoardPopup extends SuperBoard {
 	
 	public void setKey(Key key){
 		key.clone(mKey);
-		mKey.setVisibility(GONE);
+		mKey.setVisibility(INVISIBLE);
 		key.getLocationInWindow(pos);
 		mKey.setX(pos[0]);
 		mKey.setY(pos[1] - (pos[1] >= mKey.getLayoutParams().height ? mKey.getLayoutParams().height : 0));
@@ -33,7 +33,7 @@ public class BoardPopup extends SuperBoard {
 	}
 	
 	public void hideCharacter(){
-		mKey.setVisibility(GONE);
+		mKey.setVisibility(INVISIBLE);
 	}
 	
 	public void showPopup(boolean visible){

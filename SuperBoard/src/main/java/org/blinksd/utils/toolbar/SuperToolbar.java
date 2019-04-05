@@ -77,7 +77,15 @@ public class SuperToolbar extends LinearLayout {
 	
 	public void setTextColor(int color){
 		title.setTextColor(color);
-		
+		for(int i = 0;i < menu.getChildCount();i++){
+			ImageView iv = (ImageView) menu.getChildAt(i);
+			Drawable d = iv.getDrawable();
+			if(d != null) d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
+		}
+	}
+	
+	public int getTextColor(){
+		return title.getTextColors().getColorForState(new int[]{},0);
 	}
 	
 	public void addMenuItem(MenuItem item){
@@ -104,13 +112,16 @@ public class SuperToolbar extends LinearLayout {
 		title.setText(newTitle);
 	}
 	
-	public static class MenuItem {
+	public class MenuItem {
 		
 		Drawable d = null;
 		View.OnClickListener a = null;
 		
 		public MenuItem(Drawable icon, View.OnClickListener action){
 			d = icon;
+			if(icon != null){
+				icon.setColorFilter(getTextColor(),PorterDuff.Mode.SRC_ATOP);
+			}
 			a = action;
 		}
 		

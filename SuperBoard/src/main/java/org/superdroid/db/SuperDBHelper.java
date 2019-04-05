@@ -13,6 +13,7 @@ public class SuperDBHelper {
 	}
 	
 	public static String getValueAndSetItToDefaultIsNotSet(SuperDB db, String key, String def){
+		if(db.isRAMClean()) db.onlyRead();
 		if(!db.isDBContainsKey(key)){
 			db.putString(key,def);
 			db.writeKey(key);
