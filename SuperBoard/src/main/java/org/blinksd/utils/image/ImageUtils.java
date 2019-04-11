@@ -34,8 +34,11 @@ public class ImageUtils {
 	public static final Bitmap get512pxBitmap(Bitmap b){
 		if(b != null){
 			int a = getLongDimensionOfPicture(b);
-			float f = 512.0f/a;
-			return getScaledBitmap(b,f);
+			if(a > 512){
+				float f = 512.0f/a;
+				return getScaledBitmap(b,f);
+			}
+			return b;
 		}
 		return null;
 	}
