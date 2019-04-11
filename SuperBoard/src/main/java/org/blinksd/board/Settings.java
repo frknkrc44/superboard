@@ -226,7 +226,8 @@ public class Settings extends Activity {
 		private Type type;
 		private String val;
 		private int set;
-		private Bitmap temp;
+		private static Bitmap temp;
+		private static ImageView iv;
 
 		@Override
 		protected void onCreate(Bundle b){
@@ -400,8 +401,13 @@ public class Settings extends Activity {
 					s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 					s.setText("Select image");
 					l.addView(s);
-					ImageView iv = new ImageView(this);
-					iv.setId(22);
+					iv = new ImageView(this){
+						@Override
+						public void setImageBitmap(Bitmap b){
+							super.setImageBitmap(b);
+							temp = b;
+						}
+					};
 					l.addView(iv);
 					s.setOnClickListener(new View.OnClickListener(){
 						@Override
@@ -433,6 +439,27 @@ public class Settings extends Activity {
 					return null;
 			}
 		}
+
+		private static class ImageTask extends AsyncTask<Object,Bitmap,Bitmap> {
+
+			@Override
+			protected Bitmap doInBackground(Object[] p1){
+				try {
+					return MediaStore.Images.Media.getBitmap((ContentResolver)p1[0],(Uri)p1[1]);
+				} catch(Throwable e){}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Bitmap result){
+				super.onPostExecute(result);
+				if(result != null){
+					result = ImageUtils.get512pxBitmap(result);
+					iv.setImageBitmap(result);
+				}
+			}
+
+		}
 		
 		private void changeSeekBarColor(CustomSeekBar s, int c){
 			s.getThumb().setColorFilter(c,PorterDuff.Mode.SRC_ATOP);
@@ -443,11 +470,8 @@ public class Settings extends Activity {
 		protected void onActivityResult(int requestCode,int resultCode,Intent data){
 			super.onActivityResult(requestCode,resultCode,data);
 			if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-				Uri uri = data.getData();
-				try {
-					temp = ImageUtils.get512pxBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), uri));
-					((ImageView)((ViewGroup)findViewById(android.R.id.content)).getChildAt(0).findViewById(22)).setImageBitmap(temp);
-				} catch(Exception e){}
+				final Uri uri = data.getData();
+				new ImageTask().execute(getContentResolver(),uri);
 			}
 		}
 		
