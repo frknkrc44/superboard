@@ -300,26 +300,20 @@ public class InputService extends InputMethodService {
 	private void adjustNavbar(int c){
 		if(Build.VERSION.SDK_INT > 20){
 			Window w = getWindow().getWindow();
-			if(Build.VERSION.SDK_INT >= 28){
-				w.setNavigationBarColor(c);
-				w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | (ColorUtils.satisfiesTextContrast(c) 
-														? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR : 0));
-			} else {
-				if(detectNavbar()){
-					if(ll.getChildCount() > 1){
-						ll.removeViewAt(1);
-					}
-					if(x()){
-						w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-						iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
-						ll.addView(createNavbarLayout(c));
-					} else {
-						w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-						iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
-					}
+			if(detectNavbar()){
+				if(ll.getChildCount() > 1){
+					ll.removeViewAt(1);
+				}
+				if(x()){
+					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
+					ll.addView(createNavbarLayout(c));
 				} else {
+					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 				}
+			} else {
+				iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 			}
 		}
 	}
@@ -327,7 +321,7 @@ public class InputService extends InputMethodService {
 	private View createNavbarLayout(int color){
 		View v = new View(this);
 		v.setLayoutParams(new ViewGroup.LayoutParams(-1,x() ? navbarH() : -1));
-		v.setBackgroundColor(Build.VERSION.SDK_INT < 28 ? sb.getColorWithState(color,ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)))) : color);
+		v.setBackgroundColor(sb.getColorWithState(color,ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)))));
 		return v;
 	}
 	
