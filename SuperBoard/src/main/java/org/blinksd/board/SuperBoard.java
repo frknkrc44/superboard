@@ -18,7 +18,8 @@ import static android.view.Gravity.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, txtsze = -1, hp = 40, wp = 100, y;
+	private int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y;
+	private float txtsze = -1;
 	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean block = false, clear = false, lng = false, lock = false, elock = false;
 	private Drawable keybg = null, kbdbg = null;
@@ -805,14 +806,14 @@ public class SuperBoard extends FrameLayout {
 		int ori = 0, pad = 0;
 		boolean autoAdjustIconPadding = true;
 
-		@Override
+		/*@Override
 		protected void onConfigurationChanged(Configuration newConfig){
 			if(ori != newConfig.orientation){
 				ori = newConfig.orientation;
 				if(autoAdjustIconPadding)
 					setKeyIconPadding();
 			} else super.onConfigurationChanged(newConfig);
-		}
+		}*/
 
 		Key(Context c){
 			super(c);
@@ -826,14 +827,14 @@ public class SuperBoard extends FrameLayout {
 			addView(t);
 			addView(i);
 			i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-			setKeyIconPadding();
+			//setKeyIconPadding();
 			setKeyImageVisible(false);
 			t.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
 			t.setSingleLine();
 			setGravity(CENTER);
 			t.setGravity(CENTER);
 			t.setHintTextColor(0);
-			t.setTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
+			setKeyTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
 			setBackground(keybg);
 			setOnTouchListener(new OnTouchListener(){
 					@Override
@@ -903,6 +904,7 @@ public class SuperBoard extends FrameLayout {
 			i.setImageDrawable(dr);
 		}
 		
+		/*
 		private void setKeyIconPadding(){
 			pad = mp(ori == Configuration.ORIENTATION_LANDSCAPE ? 2 : 4);
 			setKeyIconPadding(pad);
@@ -916,6 +918,7 @@ public class SuperBoard extends FrameLayout {
 				i.setPadding(p,p,p,p);
 			}
 		}
+		*/
 		
 		public void setKeyItemColor(int color){
 			t.setTextColor(color);
@@ -951,7 +954,10 @@ public class SuperBoard extends FrameLayout {
 		}
 		
 		private void setKeyTextSize(float size){
-			t.setTextSize(size);
+			t.setTextSize(txtsze=size);
+			ViewGroup.LayoutParams vp = i.getLayoutParams();
+			vp.width = (int)(size*3);
+			vp.height = (int)(size*3);
 		}
 		
 		protected TextView getTextView(){

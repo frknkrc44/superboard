@@ -14,6 +14,7 @@ import java.io.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.toolbar.*;
 import org.superdroid.db.*;
+import org.blinksd.utils.image.*;
 
 public class Settings extends Activity {
 	
@@ -38,9 +39,9 @@ public class Settings extends Activity {
 		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 		sb.addRow(0,new String[]{"1","2","3"});
 		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
-		sb.getKey(0,0,1).setKeyIconPadding(sb.mp(8));
+		//sb.getKey(0,0,1).setKeyIconPadding(sb.mp(8));
 		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_return);
-		sb.getKey(0,0,-1).setKeyIconPadding(sb.mp(8));
+		//sb.getKey(0,0,-1).setKeyIconPadding(sb.mp(8));
 		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
@@ -444,7 +445,7 @@ public class Settings extends Activity {
 			if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 				Uri uri = data.getData();
 				try {
-					temp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+					temp = ImageUtils.get512pxBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), uri));
 					((ImageView)((ViewGroup)findViewById(android.R.id.content)).getChildAt(0).findViewById(22)).setImageBitmap(temp);
 				} catch(Exception e){}
 			}
@@ -469,9 +470,10 @@ public class Settings extends Activity {
 		CustomSeekBar(Context c){
 			super(c);
 			setLayoutParams(new LinearLayout.LayoutParams(SuperBoard.mp(50),-2,0));
-			setSplitTrack(false);
 			int p = SuperBoard.dp(4);
 			setPadding(p*4,p,p*4,p);
+			if(Build.VERSION.SDK_INT >= 21)
+				setSplitTrack(false);
 			drawSeekBar();
 		}
 		

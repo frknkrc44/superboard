@@ -159,7 +159,7 @@ public class InputService extends InputMethodService {
 				sb.createLayoutWithRows(kbd[4],KeyboardType.SYMBOL);
 				sb.setPressEventForKey(4,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
 				sb.setPressEventForKey(4,2,-1,Keyboard.KEYCODE_DELETE);
-				sb.getKey(4,2,-1).setKeyIconPadding(sb.mp(1.5f));
+				//sb.getKey(4,2,-1).setKeyIconPadding(sb.mp(1.5f));
 				sb.setKeyDrawable(4,2,-1,R.drawable.sym_keyboard_delete);
 				sb.setPressEventForKey(4,-1,-1,Keyboard.KEYCODE_DONE);
 				sb.setKeyDrawable(4,-1,-1,R.drawable.sym_keyboard_return);
