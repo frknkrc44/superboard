@@ -15,10 +15,11 @@ import java.util.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
+import org.blinksd.utils.image.*;
 
 public class SuperBoard extends FrameLayout {
 
-	private int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y;
+	private int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = 0;
 	private float txtsze = -1;
 	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean block = false, clear = false, lng = false, lock = false, elock = false;
@@ -325,6 +326,18 @@ public class SuperBoard extends FrameLayout {
 			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
 				for(int g = 0;g < getRow(j,i).getChildCount();g++){
 					getKey(j,i,g).setBackgroundDrawable(d);
+				}
+			}
+		}
+	}
+	
+	public void setKeysShadow(int radius, int color){
+		shrad = radius;
+		shclr = color;
+		for(int j = 0;j < getChildCount();j++){
+			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
+				for(int g = 0;g < getRow(j,i).getChildCount();g++){
+					getKey(j,i,g).setKeyShadow(radius,color);
 				}
 			}
 		}
@@ -922,7 +935,7 @@ public class SuperBoard extends FrameLayout {
 		
 		public void setKeyItemColor(int color){
 			t.setTextColor(color);
-			if(getKeyIcon() != null){
+			if(isKeyIconSet()){
 				getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
 			}
 		}
@@ -959,6 +972,21 @@ public class SuperBoard extends FrameLayout {
 			vp.width = (int)(size*3);
 			vp.height = (int)(size*3);
 		}
+		
+		private void setKeyShadow(int radius, int color){
+			t.setShadowLayer(radius,0,0,color);
+			/*if(isKeyIconSet()){
+				Bitmap b = Bitmap.createBitmap(128,128,Bitmap.Config.ARGB_8888);
+				Canvas c = new Canvas(b);
+				getKeyIcon().draw(c);
+				//b = ImageUtils.fastblur(b,1,radius);
+				setKeyIcon(new BitmapDrawable(b));
+			}*/
+		}
+		
+		/*private int gg(int a, int b){
+			return a > b ? a : b;
+		}*/
 		
 		protected TextView getTextView(){
 			return t;

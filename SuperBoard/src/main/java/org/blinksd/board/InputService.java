@@ -12,10 +12,10 @@ import android.widget.*;
 import java.io.*;
 import java.lang.reflect.*;
 import org.blinksd.utils.color.*;
+import org.blinksd.utils.image.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import android.app.*;
 
 public class InputService extends InputMethodService {
 	
@@ -274,11 +274,16 @@ public class InputService extends InputMethodService {
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
 			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){
-				iv.setImageDrawable(img.exists()?Drawable.createFromPath(img.getAbsolutePath()):null);
+				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);
+				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 			}
 			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
 			sb.setBackgroundColor(c);
 			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
+			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowsize.name(),0),
+				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowclr.name(),0xFFDDE1E2);
+			sb.setKeysShadow(shr,shc);
 			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
 			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
 			for(int i = 0;i < CHILDS;i++){
@@ -289,7 +294,6 @@ public class InputService extends InputMethodService {
 					sb.setKeyTintColor(i,4,1,y);
 					sb.setKeyTintColor(i,4,3,y);
 				}
-
 				if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 			}
 			adjustNavbar(c);

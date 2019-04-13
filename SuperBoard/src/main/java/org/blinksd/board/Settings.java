@@ -112,7 +112,9 @@ public class Settings extends Activity {
 	
 	private void setKeyPrefs(){
 		File img = getBackgroundImageFile(this);
-		iv.setImageDrawable(img.exists()?Drawable.createFromPath(img.getAbsolutePath()):new ColorDrawable());
+		int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);
+		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),false));
@@ -125,11 +127,12 @@ public class Settings extends Activity {
 		d.addState(new int[]{android.R.attr.state_selected},pd);
 		d.addState(new int[]{},gd);
 		sb.setKeysBackground(d);
+		sb.setKeysShadow(sd.getInteger(Key.key_shadowsize.name(),0),sd.getInteger(Key.key_shadowclr.name(),0));
 		sb.setKeyTintColor(0,0,1,sd.getInteger(Key.key2_bgclr.name(),0));
 		sb.setKeyTintColor(0,0,2,sd.getInteger(Key.enter_bgclr.name(),0));
 		sb.setBackgroundColor(sd.getInteger(Key.keyboard_bgclr.name(),0));
-		sb.setKeysTextColor(sd.getInteger(Settings.Key.key_textclr.name(),0));
-		sb.setKeysTextSize(sb.mp(a(sd.getInteger(Settings.Key.key_textsize.name(),0))));
+		sb.setKeysTextColor(sd.getInteger(Key.key_textclr.name(),0));
+		sb.setKeysTextSize(sb.mp(a(sd.getInteger(Key.key_textsize.name(),0))));
 	}
 	
 	private View p(){
@@ -173,7 +176,7 @@ public class Settings extends Activity {
 							  ? "Varsayılan" 
 							  : (getItem(p).name().endsWith("clr") 
 							  ? SetActivity.getColorString(Integer.valueOf(s),false) 
-							  : (getItem(p).equals(Key.keyboard_height) 
+							  : (SetActivity.isNumberNotFloat(getItem(p))
 							  ? s : a(Integer.valueOf(s))+"")));
 					if((!s.equals("def")) && getItem(p).name().endsWith("clr")){
 						int c = Integer.valueOf(s);
@@ -208,15 +211,18 @@ public class Settings extends Activity {
 	
 	public enum Key {
 		keyboard_bgimg,
+		keyboard_bgblur,
+		keyboard_height,
 		keyboard_bgclr,
 		key_bgclr,
 		key2_bgclr,
 		enter_bgclr,
 		key_textclr,
+		key_shadowclr,
 		key_padding,
 		key_radius,
 		key_textsize,
-		keyboard_height
+		key_shadowsize
 	}
 	
 	private enum Type { color, num, image }
@@ -281,6 +287,7 @@ public class Settings extends Activity {
 			sd.putInteger(Key.key2_bgclr.name(),SuperBoard.getColorWithState(c,true));
 			sd.putInteger(Key.enter_bgclr.name(),ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(sd.getInteger(Key.key2_bgclr.name(),0xFF212121),true) : 0xFFFFFFFF);
 			sd.putInteger(Key.key_textclr.name(),ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
+			sd.putInteger(Key.key_shadowclr.name(),sd.getInteger(Key.key2_bgclr.name(),0xFFDEDEDE));
 			sd.onlyWrite();
 		}
 		
@@ -365,9 +372,7 @@ public class Settings extends Activity {
 				case num:
 					CustomSeekBar sb = new CustomSeekBar(this);
 					int min = 0;
-					if(act.name().endsWith("padding")){
-						sb.setMax(40);
-					} else if(act.name().endsWith("radius")){
+					if(act.name().endsWith("radius")){
 						sb.setMax(100);
 					} else if(act.name().endsWith("textsize")){
 						min = 6;
@@ -375,15 +380,17 @@ public class Settings extends Activity {
 					} else if(act.equals(Key.keyboard_height)){
 						min = 20;
 						sb.setMax(80-min);
+					} else {
+						sb.setMax(40);
 					}
 					sb.setProgress((set = Integer.valueOf(val))-min);
-					setTitle(act.name()+" ("+(act.equals(Key.keyboard_height)  ? set+"" : Settings.a(set)+"")+")");
+					setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
 					final int m = min;
 					sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 							@Override
 							public void onProgressChanged(SeekBar p1,int p2,boolean p3){
 								set = p2 + m;
-								setTitle(act.name()+" ("+(act.equals(Key.keyboard_height)  ? set+"" : Settings.a(set)+"")+")");
+								setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
 							}
 
 							@Override
@@ -438,6 +445,10 @@ public class Settings extends Activity {
 				default:
 					return null;
 			}
+		}
+		
+		private static boolean isNumberNotFloat(Key k){
+			return k.equals(Key.keyboard_height) || k.equals(Key.keyboard_bgblur);
 		}
 
 		private static class ImageTask extends AsyncTask<Object,Bitmap,Bitmap> {
