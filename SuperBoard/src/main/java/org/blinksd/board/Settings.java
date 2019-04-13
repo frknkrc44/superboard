@@ -287,7 +287,7 @@ public class Settings extends Activity {
 			sd.putInteger(Key.key2_bgclr.name(),SuperBoard.getColorWithState(c,true));
 			sd.putInteger(Key.enter_bgclr.name(),ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(sd.getInteger(Key.key2_bgclr.name(),0xFF212121),true) : 0xFFFFFFFF);
 			sd.putInteger(Key.key_textclr.name(),ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
-			sd.putInteger(Key.key_shadowclr.name(),sd.getInteger(Key.key2_bgclr.name(),0xFFDEDEDE));
+			sd.putInteger(Key.key_shadowclr.name(),sd.getInteger(Key.key_textclr.name(),0xFFDEDEDE)-0x88000000);
 			sd.onlyWrite();
 		}
 		
