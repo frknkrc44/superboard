@@ -233,7 +233,11 @@ public class InputService extends InputMethodService {
 			}
 		}
 		
-		if(sb.getEnabledLayoutIndex() != 4){
+		if(IS_OREO){
+			if(sb.getEnabledLayoutIndex() != 4){
+				sb.updateKeyState(this);
+			}
+		} else {
 			sb.updateKeyState(this);
 		}
 		

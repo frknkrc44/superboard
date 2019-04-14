@@ -99,7 +99,6 @@ public class Settings extends Activity {
 	private void resume(){
 		if(!first){
 			sd.onlyRead();
-			lv.removeAllViewsInLayout();
 			setAdapter();
 			setKeyPrefs();
 		} else first = false;
