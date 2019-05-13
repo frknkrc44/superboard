@@ -20,10 +20,10 @@ import static org.blinksd.board.SuperBoard.*;
 public class InputService extends InputMethodService {
 	
 	private SuperBoard sb = null;
-	//private BoardPopup po = null;
+	private BoardPopup po = null;
 	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
-	private String kbd[][][] = null;
+	private String kbd[][][] = null, popup[][] = null;
 	private LinearLayout ll = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
@@ -55,37 +55,26 @@ public class InputService extends InputMethodService {
 		System.gc();
 	}
 	
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		restart();
-	}
-
-	@Override
-	public boolean onUnbind(Intent intent){
-		restart();
-		return super.onUnbind(intent);
-	}
-	
-	public void restart(){
-		Intent i = new Intent(this,InputService.class);
-		stopService(i);
-		startService(i);
-	}
-
 	private void setKeyBg(int clr){
-		StateListDrawable d = new StateListDrawable();
+		sb.setKeysBackground(setKeyBg(sd,sb,clr,true));
+	}
+
+	public static Drawable setKeyBg(SuperDB sd,SuperBoard sb,int clr,boolean pressEffect){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(clr,false));
 		gd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
 		gd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
-		GradientDrawable pd = new GradientDrawable();
-		pd.setColor(sb.getColorWithState(clr,true));
-		pd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
-		pd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
-		d.addState(new int[]{android.R.attr.state_selected},pd);
-		d.addState(new int[]{},gd);
-		sb.setKeysBackground(d);
+		if(pressEffect){
+			StateListDrawable d = new StateListDrawable();
+			GradientDrawable pd = new GradientDrawable();
+			pd.setColor(sb.getColorWithState(clr,true));
+			pd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+			pd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+			d.addState(new int[]{android.R.attr.state_selected},pd);
+			d.addState(new int[]{},gd);
+			return d;
+		}
+		return gd;
 	}
 	
 	private void setLayout(){
@@ -95,17 +84,31 @@ public class InputService extends InputMethodService {
 		}
 		if(sb == null){
 			sb = new SuperBoard(this){
-				/*@Override
+				private boolean shown = false;
+				@Override
 				public void onKeyboardEvent(View v){
-					po.setKey((SuperBoard.Key)v);
+					if(shown = po.isShown()){
+						po.showPopup(false);
+						return;
+					}
+					po.setKey((SuperBoard.Key)v,sd);
 					po.showCharacter();
-				}*/
+				}
 				
-				/*@Override
+				public void onPopupEvent(){
+					po.showPopup();
+				}
+				
+				@Override
 				public void afterKeyboardEvent(){
 					super.afterKeyboardEvent();
 					po.hideCharacter();
-				}*/
+				}
+				
+				public void sendDefaultKeyboardEvent(View v){
+					if(!shown) super.sendDefaultKeyboardEvent(v);
+					else shown = false;
+				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			String appname = getString(R.string.app_name),abc = "ABC";
@@ -146,6 +149,14 @@ public class InputService extends InputMethodService {
 					{"*","0","#",""}
 				}
 			};
+			
+			popup = new String[][]{
+				{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
+				{"bǫⓆ","ʍᴡⓌ","ǝᴇⒺèéëēėęê","ɹʀⓇ","ʇᴛⓉ","ʎʏⓎý","nᴜⓊūùúû","ɪⒾīìíïîį","Ⓞōõóòœô","dᴘⓅ","ƃɢⒼ","nᴜⓊūùúû"},
+				{"ɐᴀⒶâäàáæåāã","Ⓢßśš","pᴅⒹ","ɟꜰⒻ","ƃɢⒼ","ɥʜⒽ","ɾᴊⒿ","ʞᴋⓀ","ʟⓁ","Ⓢßśš","ɪⒾīìíïîį"},
+				{"","Ⓩž","Ⓧ","ɔⒸćč","^Ⓥ","qʙⒷ","uɴⓃñň","ɯᴍⓂ","Ⓞōõóòœô","ɔⒸćč",""},
+				{"","","","",""}
+			};
 			CHILDS = kbd.length - (IS_OREO ? 0 : 1);
 			sb.addRows(0,kbd[0]);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
@@ -159,7 +170,6 @@ public class InputService extends InputMethodService {
 				sb.createLayoutWithRows(kbd[4],KeyboardType.SYMBOL);
 				sb.setPressEventForKey(4,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
 				sb.setPressEventForKey(4,2,-1,Keyboard.KEYCODE_DELETE);
-				//sb.getKey(4,2,-1).setKeyIconPadding(sb.mp(1.5f));
 				sb.setKeyDrawable(4,2,-1,R.drawable.sym_keyboard_delete);
 				sb.setPressEventForKey(4,-1,-1,Keyboard.KEYCODE_DONE);
 				sb.setKeyDrawable(4,-1,-1,R.drawable.sym_keyboard_return);
@@ -209,6 +219,8 @@ public class InputService extends InputMethodService {
 				}
 			}
 			
+			sb.setLayoutPopup(0,popup);
+			
 			for(int i = 0;i < CHILDS;i++){
 				if(i < 3){
 					sb.setRowPadding(i,2,sb.wp(2));
@@ -256,11 +268,16 @@ public class InputService extends InputMethodService {
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
 		}
+		if(po == null){
+			po = new BoardPopup(fl){
+				@Override
+				public void afterKeyboardEvent(){
+					sb.afterPopupEvent();
+				}
+			};
+			fl.addView(po);
+		}
 		setPrefs();
-		/*if(po == null){
-			po = new BoardPopup(fl);
-			po.setKeyboardHeight(sb.getKeyboardHeightPercent());
-		}*/
 	}
 
 	@Override
@@ -275,7 +292,7 @@ public class InputService extends InputMethodService {
 	
 	public void setPrefs(){
 		if(sb != null && sd != null){
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),40));
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),50));
 			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){
 				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);
@@ -288,8 +305,10 @@ public class InputService extends InputMethodService {
 			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowsize.name(),0),
 				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowclr.name(),0xFFDDE1E2);
 			sb.setKeysShadow(shr,shc);
+			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_longpress_duration.name(),1));
+			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_vibrate_duration.name(),0));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
-			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),10))));
+			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),13))));
 			for(int i = 0;i < CHILDS;i++){
 				if(i < 3){
 					int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
@@ -301,7 +320,6 @@ public class InputService extends InputMethodService {
 				if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 			}
 			adjustNavbar(c);
-			sd.clearRAM();
 		}
 	}
 	
@@ -323,7 +341,10 @@ public class InputService extends InputMethodService {
 			} else {
 				iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 			}
+		} else {
+			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 		}
+		po.setFilterHeight(iv.getLayoutParams().height);
 	}
 	
 	private View createNavbarLayout(int color){
@@ -371,12 +392,18 @@ public class InputService extends InputMethodService {
 	}
 	
 	BroadcastReceiver r = new BroadcastReceiver(){
-
 		@Override
 		public void onReceive(Context p1,Intent p2){
 			sd.onlyRead();
 			setPrefs();
 		}
-		
 	};
+
+	@Override
+	public boolean onKeyDown(int keyCode,KeyEvent event){
+		if(po != null && po.isShown()){
+			po.showPopup(false);
+		}
+		return super.onKeyDown(keyCode,event);
+	}
 }

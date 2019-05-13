@@ -7,14 +7,14 @@ import android.graphics.drawable.*;
 import android.net.*;
 import android.os.*;
 import android.provider.*;
-import android.util.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
 import org.blinksd.utils.color.*;
+import org.blinksd.utils.image.*;
 import org.blinksd.utils.toolbar.*;
 import org.superdroid.db.*;
-import org.blinksd.utils.image.*;
+import android.view.View.*;
 
 public class Settings extends Activity {
 	
@@ -39,16 +39,12 @@ public class Settings extends Activity {
 		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 		sb.addRow(0,new String[]{"1","2","3"});
 		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
-		//sb.getKey(0,0,1).setKeyIconPadding(sb.mp(8));
 		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_return);
-		//sb.getKey(0,0,-1).setKeyIconPadding(sb.mp(8));
 		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
 		st = new SuperToolbar(this);
-		//st.setTextColor(0xFF212121);
 		Drawable d = getResources().getDrawable(R.drawable.sym_keyboard_close);
-		//d.setColorFilter(0xFF212121,PorterDuff.Mode.SRC_ATOP);
 		st.addMenuItem(d, new View.OnClickListener(){
 			@Override
 			public void onClick(View v){
@@ -159,7 +155,7 @@ public class Settings extends Activity {
 	}
 	
 	private void setAdapter(){
-		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.$VALUES){
+		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.values()){
 			@Override
 			public View getView(int p,View v,ViewGroup g){
 				if(v == null) v = super.getView(p,v,g);
@@ -221,10 +217,18 @@ public class Settings extends Activity {
 		key_padding,
 		key_radius,
 		key_textsize,
-		key_shadowsize
+		key_shadowsize,
+		key_vibrate_duration,
+		key_longpress_duration
 	}
 	
 	private enum Type { color, num, image }
+	
+	private enum Gradient {
+		grad_color1,
+		grad_color2,
+		grad_orientation
+	}
 	
 	public static class SetActivity extends Activity {
 		private Key act;
@@ -243,7 +247,7 @@ public class Settings extends Activity {
 			gd.setCornerRadius(SuperBoard.dp(8));
 			getWindow().setBackgroundDrawable(gd);
 			act = Key.valueOf(getIntent().getExtras().getString("action"));
-			type = Type.$VALUES[getIntent().getExtras().getInt("type")];
+			type = Type.values()[getIntent().getExtras().getInt("type")];
 			val = getIntent().getExtras().getString("value");
 			setTitle(act.name());
 			if(!val.equals("def") || type.equals(Type.image)){
@@ -286,7 +290,7 @@ public class Settings extends Activity {
 			sd.putInteger(Key.key2_bgclr.name(),SuperBoard.getColorWithState(c,true));
 			sd.putInteger(Key.enter_bgclr.name(),ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(sd.getInteger(Key.key2_bgclr.name(),0xFF212121),true) : 0xFFFFFFFF);
 			sd.putInteger(Key.key_textclr.name(),ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE);
-			sd.putInteger(Key.key_shadowclr.name(),sd.getInteger(Key.key_textclr.name(),0xFFDEDEDE)-0x88000000);
+			sd.putInteger(Key.key_shadowclr.name(),sd.getInteger(Key.key_textclr.name(),0xFFDEDEDE));
 			sd.onlyWrite();
 		}
 		
@@ -323,131 +327,185 @@ public class Settings extends Activity {
 			x.setBackgroundColor(set);
 		}
 		
+		private View generateColorDialog(){
+			LinearLayout ll = new LinearLayout(this);
+			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			ll.setOrientation(LinearLayout.VERTICAL);
+			ll.setGravity(Gravity.CENTER);
+			final TextView x = new TextView(this);
+			x.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			x.setGravity(ll.getGravity());
+			ll.addView(x);
+			final CustomSeekBar a = new CustomSeekBar(this),
+				r = new CustomSeekBar(this),
+				g = new CustomSeekBar(this),
+				b = new CustomSeekBar(this);
+			changeSeekBarColor(r,Color.rgb(0xDE,0,0));
+			changeSeekBarColor(g,Color.rgb(0,0xDE,0));
+			changeSeekBarColor(b,Color.rgb(0,0,0xDE));
+			set = Integer.valueOf(val);
+			q(x);
+			for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
+				v.setMax(255);
+			}
+			a.setProgress(Color.alpha(set));
+			r.setProgress(Color.red(set));
+			g.setProgress(Color.green(set));
+			b.setProgress(Color.blue(set));
+			SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener(){
+				@Override
+				public void onProgressChanged(SeekBar s, int i, boolean c){
+					set = Color.argb(a.getProgress(),r.getProgress(),g.getProgress(),b.getProgress());
+					q(x);
+				}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar s){}
+
+				@Override
+				public void onStopTrackingTouch(SeekBar s){}
+			};
+			for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
+				v.setOnSeekBarChangeListener(opc);
+				ll.addView(v);
+			}
+			return ll;
+		}
+		
+		private View generateNumberSeekDialog(){
+			CustomSeekBar sb = new CustomSeekBar(this);
+			int min = 0;
+			if(act.name().endsWith("radius") || act.equals(Key.key_vibrate_duration)){
+				sb.setMax(100);
+			} else if(act.name().endsWith("textsize")){
+				min = 6;
+				sb.setMax(60-min);
+			} else if(act.equals(Key.key_longpress_duration)){
+				min = 1;
+				sb.setMax(3-min);
+			} else if(act.equals(Key.keyboard_height)){
+				min = 20;
+				sb.setMax(80-min);
+			} else {
+				sb.setMax(40);
+			}
+			sb.setProgress((set = Integer.valueOf(val))-min);
+			setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
+			final int m = min;
+			sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+					@Override
+					public void onProgressChanged(SeekBar p1,int p2,boolean p3){
+						set = p2 + m;
+						setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar p1){}
+
+					@Override
+					public void onStopTrackingTouch(SeekBar p1){}
+				});
+			return sb;
+		}
+		
+		private View generateImageSelectorDialog(){
+			LinearLayout l = new LinearLayout(this);
+			l.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			l.setOrientation(LinearLayout.VERTICAL);
+			Button s = new Button(this);
+			s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+			s.setText("Select image");
+			l.addView(s);
+			iv = new ImageView(this){
+				@Override
+				public void setImageBitmap(Bitmap b){
+					super.setImageBitmap(b);
+					temp = b;
+				}
+			};
+			l.addView(iv);
+			s.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View p1){
+						Intent i = new Intent();
+						i.setType("image/*");
+						i.setAction(Intent.ACTION_GET_CONTENT);
+						startActivityForResult(Intent.createChooser(i,""),1);
+					}
+				});
+			iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+			iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+			iv.setAdjustViewBounds(true);
+			final File f = getBackgroundImageFile(this);
+			if(f.exists()){
+				iv.setImageBitmap(temp = BitmapFactory.decodeFile(f.getAbsolutePath()));
+			}
+			s.setOnLongClickListener(new View.OnLongClickListener(){
+					@Override
+					public boolean onLongClick(View p1){
+						f.delete();
+						Settings.iv.setImageDrawable(null);
+						finish();
+						return false;
+					}
+				});
+			return l;
+		}
+		
+		private View generateGradientSelectorDialog(){
+			LinearLayout l = new LinearLayout(this);
+			l.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			l.setOrientation(LinearLayout.VERTICAL);
+			LinearLayout h = new LinearLayout(this);
+			h.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,1));
+			for(Gradient g : Gradient.values()){
+				Button b = new Button(this);
+				b.setLayoutParams(new LinearLayout.LayoutParams(-2,-1,1));
+				b.setText(g.name());
+				h.addView(b);
+			}
+			HorizontalScrollView s = new HorizontalScrollView(this);
+			s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,1));
+			s.addView(h);
+			ImageView v = new ImageView(this);
+			v.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+			v.setScaleType(ImageView.ScaleType.FIT_CENTER);
+			
+			l.addView(s);
+			return l;
+		}
+		
+		private OnClickListener onButtonClick = new OnClickListener(){
+
+			@Override
+			public void onClick(View p1) {
+				Intent i = new Intent(SetActivity.this,SetActivity.class);
+				String a = ((Key)p1.getTag()).name();
+				i.putExtra("action",a);
+				i.putExtra("type",a.contains("color") ? 1 : 2);
+				String s = sd.getString(a,"def");
+				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
+				startActivityForResult(i,RESULT_CANCELED);
+			}
+
+			
+		};
+		
 		private View s(){
 			switch(type){
 				case color:
-					LinearLayout ll = new LinearLayout(this);
-					ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-					ll.setOrientation(LinearLayout.VERTICAL);
-					ll.setGravity(Gravity.CENTER);
-					final TextView x = new TextView(this);
-					x.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-					x.setGravity(ll.getGravity());
-					ll.addView(x);
-					final CustomSeekBar a = new CustomSeekBar(this),
-					r = new CustomSeekBar(this),
-					g = new CustomSeekBar(this),
-					b = new CustomSeekBar(this);
-					changeSeekBarColor(r,Color.rgb(0xDE,0,0));
-					changeSeekBarColor(g,Color.rgb(0,0xDE,0));
-					changeSeekBarColor(b,Color.rgb(0,0,0xDE));
-					set = Integer.valueOf(val);
-					q(x);
-					for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
-						v.setMax(255);
-					}
-					a.setProgress(Color.alpha(set));
-					r.setProgress(Color.red(set));
-					g.setProgress(Color.green(set));
-					b.setProgress(Color.blue(set));
-					SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener(){
-						@Override
-						public void onProgressChanged(SeekBar s, int i, boolean c){
-							set = Color.argb(a.getProgress(),r.getProgress(),g.getProgress(),b.getProgress());
-							q(x);
-						}
-
-						@Override
-						public void onStartTrackingTouch(SeekBar s){}
-
-						@Override
-						public void onStopTrackingTouch(SeekBar s){}
-					};
-					for(CustomSeekBar v : new CustomSeekBar[]{a,r,g,b}){
-						v.setOnSeekBarChangeListener(opc);
-						ll.addView(v);
-					}
-					return ll;
+					return generateColorDialog();
 				case num:
-					CustomSeekBar sb = new CustomSeekBar(this);
-					int min = 0;
-					if(act.name().endsWith("radius")){
-						sb.setMax(100);
-					} else if(act.name().endsWith("textsize")){
-						min = 6;
-						sb.setMax(60-min);
-					} else if(act.equals(Key.keyboard_height)){
-						min = 20;
-						sb.setMax(80-min);
-					} else {
-						sb.setMax(40);
-					}
-					sb.setProgress((set = Integer.valueOf(val))-min);
-					setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
-					final int m = min;
-					sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-							@Override
-							public void onProgressChanged(SeekBar p1,int p2,boolean p3){
-								set = p2 + m;
-								setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
-							}
-
-							@Override
-							public void onStartTrackingTouch(SeekBar p1){}
-
-							@Override
-							public void onStopTrackingTouch(SeekBar p1){}
-					});
-					return sb;
+					return generateNumberSeekDialog();
 				case image:
-					LinearLayout l = new LinearLayout(this);
-					l.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-					l.setOrientation(LinearLayout.VERTICAL);
-					Button s = new Button(this);
-					s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
-					s.setText("Select image");
-					l.addView(s);
-					iv = new ImageView(this){
-						@Override
-						public void setImageBitmap(Bitmap b){
-							super.setImageBitmap(b);
-							temp = b;
-						}
-					};
-					l.addView(iv);
-					s.setOnClickListener(new View.OnClickListener(){
-						@Override
-						public void onClick(View p1){
-							Intent i = new Intent();
-							i.setType("image/*");
-							i.setAction(Intent.ACTION_GET_CONTENT);
-							startActivityForResult(Intent.createChooser(i,""),1);
-						}
-					});
-					iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
-					iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-					iv.setAdjustViewBounds(true);
-					final File f = getBackgroundImageFile(this);
-					if(f.exists()){
-						iv.setImageBitmap(temp = BitmapFactory.decodeFile(f.getAbsolutePath()));
-					}
-					s.setOnLongClickListener(new View.OnLongClickListener(){
-						@Override
-						public boolean onLongClick(View p1){
-							f.delete();
-							Settings.iv.setImageDrawable(null);
-							finish();
-							return false;
-						}
-					});
-					return l;
+					return generateImageSelectorDialog();
 				default:
 					return null;
 			}
 		}
 		
 		private static boolean isNumberNotFloat(Key k){
-			return k.equals(Key.keyboard_height) || k.equals(Key.keyboard_bgblur);
+			return k.name().endsWith("height") || k.equals(Key.keyboard_bgblur) || k.name().endsWith("duration");
 		}
 
 		private static class ImageTask extends AsyncTask<Object,Bitmap,Bitmap> {
