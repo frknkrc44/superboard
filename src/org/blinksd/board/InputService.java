@@ -94,6 +94,7 @@ public class InputService extends InputMethodService {
 				public void onKeyboardEvent(View v){
 					if(shown = po.isShown()){
 						po.showPopup(false);
+						po.clear();
 						return;
 					}
 					po.setKey((SuperBoard.Key)v,sd);

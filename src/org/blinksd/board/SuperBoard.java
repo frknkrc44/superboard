@@ -27,7 +27,7 @@ public class SuperBoard extends FrameLayout {
 	private Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
-	private Handler h = new Handler(){
+	protected Handler h = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			View v = null;
@@ -92,6 +92,12 @@ public class SuperBoard extends FrameLayout {
 							removeMessages(i);
 						}
 					}
+					break;
+				case 5:
+					setEnabled(false);
+					break;
+				case 6:
+					setEnabled(true);
 					break;
 			}
 		}
@@ -643,7 +649,7 @@ public class SuperBoard extends FrameLayout {
 	public void setKeyboardLanguage(String lang){
 		if(lang != null){
 			String[] la = lang.split("_");
-			loc = la > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
+			loc = la.length > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
 			trigSystemSuggestions();
 		}
 	}

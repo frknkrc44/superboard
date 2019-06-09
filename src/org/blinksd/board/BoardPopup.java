@@ -2,6 +2,7 @@ package org.blinksd.board;
 
 import android.graphics.*;
 import android.inputmethodservice.*;
+import android.os.*;
 import android.view.*;
 import android.widget.*;
 import org.superdroid.db.*;
@@ -119,5 +120,11 @@ public class BoardPopup extends SuperBoard {
 		showPopup(false);
 		clear();
 		System.gc();
+	}
+	
+	@Override
+	public void clear(){
+		super.clear();
+		mKey.setHint(null);
 	}
 }
