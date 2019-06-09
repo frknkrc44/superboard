@@ -6,11 +6,14 @@ import android.graphics.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.os.*;
+import android.util.*;
 import android.view.*;
 import android.view.inputmethod.*;
 import android.widget.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.util.*;
+import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
 import org.superdroid.db.*;
@@ -23,7 +26,7 @@ public class InputService extends InputMethodService {
 	private BoardPopup po = null;
 	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
-	private String kbd[][][] = null, popup[][] = null;
+	private String kbd[][][] = null/*, popup[][] = null*/;
 	private LinearLayout ll = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
@@ -46,7 +49,9 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting){
 		super.onStartInput(attribute, restarting);
-		setLayout();
+		if(sb != null){
+			sb.updateKeyState(this);
+		}
 	}
 
 	@Override
@@ -97,6 +102,7 @@ public class InputService extends InputMethodService {
 				
 				public void onPopupEvent(){
 					po.showPopup();
+					po.setShiftState(shift);
 				}
 				
 				@Override
@@ -113,13 +119,13 @@ public class InputService extends InputMethodService {
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			String appname = getString(R.string.app_name),abc = "ABC";
 			kbd = new String[][][]{
-				{
+				/*{
 					{"1","2","3","4","5","6","7","8","9","0"},
 					{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
 					{"a","s","d","f","g","h","j","k","l","ş","i"},
 					{"","z","x","c","v","b","n","m","ö","ç",""},
 					{"!?#",",",appname,".",""}
-				},{
+				},*/{
 					{"[","]","θ","÷","<",">","`","´","{","}"},
 					{"©","£","€","+","®","¥","π","Ω","λ","β"},
 					{"@","#","$","%","&","*","-","=","(",")"},
@@ -150,24 +156,44 @@ public class InputService extends InputMethodService {
 				}
 			};
 			
-			popup = new String[][]{
+			/*popup = new String[][]{
 				{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
 				{"bǫⓆ","ʍᴡⓌ","ǝᴇⒺèéëēėęê","ɹʀⓇ","ʇᴛⓉ","ʎʏⓎý","nᴜⓊūùúû","ɪⒾīìíïîį","Ⓞōõóòœô","dᴘⓅ","ƃɢⒼ","nᴜⓊūùúû"},
 				{"ɐᴀⒶâäàáæåāã","Ⓢßśš","pᴅⒹ","ɟꜰⒻ","ƃɢⒼ","ɥʜⒽ","ɾᴊⒿ","ʞᴋⓀ","ʟⓁ","Ⓢßśš","ɪⒾīìíïîį"},
 				{"","Ⓩž","Ⓧ","ɔⒸćč","^Ⓥ","qʙⒷ","uɴⓃñň","ɯᴍⓂ","Ⓞōõóòœô","ɔⒸćč",""},
-				{"","","","",""}
-			};
+				{"","","","?!*&@/\\:;-+=",""}
+			};*/
 			CHILDS = kbd.length - (IS_OREO ? 0 : 1);
-			sb.addRows(0,kbd[0]);
+			try {
+				List<Language> llist = LayoutUtils.getLanguageList(this);
+				for(Language l : llist){
+					if(l.language.equals("tr_TR")){
+						String[][] lkeys = LayoutUtils.getLayoutKeysFromList(l.layout);
+						sb.addRows(0,lkeys);
+						sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(l.popup));
+						if(l.midPadding){
+							sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
+						}
+						LayoutUtils.setKeyOpts(l.layout,sb);
+					}
+				}
+			} catch(Throwable e){
+				throw new RuntimeException(e);
+				/*ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PrintStream ps = new PrintStream(bos);
+				e.printStackTrace(ps);
+				Log.e("AndroidRuntime","FATAL "+bos.toString());*/
+			}
+			//sb.addRows(0,kbd[0]);
+			sb.createLayoutWithRows(kbd[0],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[2],KeyboardType.SYMBOL);
-			sb.createLayoutWithRows(kbd[3],KeyboardType.SYMBOL);
 			
 			// add old Turkish characters to Symbol 4 page
 			if(IS_OREO){
 				sb.getKey(3,3,0).setText("S4");
 				sb.setPressEventForKey(3,3,0,Keyboard.KEYCODE_ALT);
-				sb.createLayoutWithRows(kbd[4],KeyboardType.SYMBOL);
+				sb.createLayoutWithRows(kbd[3],KeyboardType.SYMBOL);
 				sb.setPressEventForKey(4,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
 				sb.setPressEventForKey(4,2,-1,Keyboard.KEYCODE_DELETE);
 				sb.setKeyDrawable(4,2,-1,R.drawable.sym_keyboard_delete);
@@ -178,10 +204,10 @@ public class InputService extends InputMethodService {
 				sb.setKeyWidthPercent(4,-1,-1,20);
 			}
 				
-			sb.createLayoutWithRows(kbd[5],KeyboardType.NUMBER);
+			sb.createLayoutWithRows(kbd[4],KeyboardType.NUMBER);
 			
-			sb.setPressEventForKey(0,3,0,Keyboard.KEYCODE_SHIFT);
-			sb.setKeyDrawable(0,3,0,R.drawable.sym_keyboard_shift);
+			/*sb.setPressEventForKey(0,3,0,Keyboard.KEYCODE_SHIFT);
+			sb.setKeyDrawable(0,3,0,R.drawable.sym_keyboard_shift);*/
 			sb.setPressEventForKey(1,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(2,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(3,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
@@ -219,10 +245,10 @@ public class InputService extends InputMethodService {
 				}
 			}
 			
-			sb.setLayoutPopup(0,popup);
+			//sb.setLayoutPopup(0,popup);
 			
 			for(int i = 0;i < CHILDS;i++){
-				if(i < 3){
+				if(i != 0 && i < 3){
 					sb.setRowPadding(i,2,sb.wp(2));
 					sb.setKeyRepeat(i,3,-1);
 					sb.setKeyRepeat(i,4,2);
@@ -285,14 +311,14 @@ public class InputService extends InputMethodService {
 		try {
 			sd.onlyRead();
 			setPrefs();
-		} catch(Exception | Error e){
+		} catch(Throwable t){
 			System.exit(0);
 		}
 	}
 	
 	public void setPrefs(){
 		if(sb != null && sd != null){
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),50));
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),36));
 			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){
 				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);

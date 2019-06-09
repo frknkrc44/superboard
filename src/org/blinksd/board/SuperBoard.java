@@ -463,6 +463,14 @@ public class SuperBoard extends FrameLayout {
 		return (ViewGroup)getChildAt(keyboardIndex);
 	}
 	
+	public void replaceNormalKeyboard(String[][] newKeyboard){
+		if(getChildCount() > 0){
+			removeViewAt(0);
+		}
+		createEmptyLayout();
+		addRows(0,newKeyboard);
+	}
+	
 	public void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, String[] chars){
 		getRow(keyboardIndex, rowIndex).removeAllViewsInLayout();
 		for(String chr : chars){

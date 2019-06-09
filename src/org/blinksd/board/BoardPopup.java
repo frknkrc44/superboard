@@ -90,7 +90,7 @@ public class BoardPopup extends SuperBoard {
 		setX(wp(50-(getKeyboardWidthPercent()/2)));
 		h = a.length / c;
 		h = h > 0 ? h : 1;
-		h += ((a.length > (c - 1)) && a.length % c == (c - 1)) ? 1 :0;
+		h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 :0;
 		setKeyboardHeight(10*h);
 		setY(hp((khp-getKeyboardHeightPercent())/2));
 		String[] x = null;
