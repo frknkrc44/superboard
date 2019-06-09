@@ -166,8 +166,10 @@ public class InputService extends InputMethodService {
 			CHILDS = kbd.length - (IS_OREO ? 0 : 1);
 			try {
 				List<Language> llist = LayoutUtils.getLanguageList(this);
+				boolean set = false;
 				for(Language l : llist){
 					if(l.language.equals("tr_TR")){
+						sb.setKeyboardLanguage(l.language);
 						String[][] lkeys = LayoutUtils.getLayoutKeysFromList(l.layout);
 						sb.addRows(0,lkeys);
 						sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(l.popup));
@@ -175,7 +177,12 @@ public class InputService extends InputMethodService {
 							sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
 						}
 						LayoutUtils.setKeyOpts(l.layout,sb);
+						set = true;
+						break;
 					}
+				}
+				if(!set){
+					throw new RuntimeException("Where is the layout JSON file (in assets)?");
 				}
 			} catch(Throwable e){
 				throw new RuntimeException(e);

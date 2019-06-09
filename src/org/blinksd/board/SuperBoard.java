@@ -105,7 +105,7 @@ public class SuperBoard extends FrameLayout {
 			curr = (InputMethodService) c;
 		}
 		vb = (Vibrator) c.getSystemService(c.VIBRATOR_SERVICE);
-		disableSystemSuggestions();
+		trigSystemSuggestions();
 		setLayoutParams(new LayoutParams(-1,-1));
 		setBackgroundColor(0xFF212121);
 		createEmptyLayout();
@@ -129,8 +129,7 @@ public class SuperBoard extends FrameLayout {
 		h.sendEmptyMessage(0);
 	}
 	
-	private void disableSystemSuggestions(){
-		Locale loc = new Locale("tr","TR");
+	private void trigSystemSuggestions(){
 		Locale.setDefault(loc);
 		Configuration c = new Configuration();
 		c.locale = loc;
@@ -629,13 +628,23 @@ public class SuperBoard extends FrameLayout {
 				if(t.getTag(TAG_NP) == null && t.getTag(TAG_LP) == null){
 					if(t.getText() != null){
 						if(state > 0){
-							t.setText(t.getText().toString().toUpperCase(new Locale("tr","TR")));
+							t.setText(t.getText().toString().toUpperCase(loc));
 						} else {
-							t.setText(t.getText().toString().toLowerCase(new Locale("tr","TR")));
+							t.setText(t.getText().toString().toLowerCase(loc));
 						}
 					}
 				}
 			}
+		}
+	}
+	
+	private static Locale loc = new Locale("tr","TR");
+	
+	public void setKeyboardLanguage(String lang){
+		if(lang != null){
+			String[] la = lang.split("_");
+			loc = la > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
+			trigSystemSuggestions();
 		}
 	}
 	
