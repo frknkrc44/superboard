@@ -3,6 +3,7 @@ package org.blinksd.board;
 import android.content.*;
 import android.content.res.*;
 import android.inputmethodservice.*;
+import android.os.*;
 import android.util.*;
 import android.view.*;
 import java.util.*;
@@ -85,6 +86,7 @@ public class LayoutUtils {
 		l.name = main.getString("name");
 		l.label = main.getString("label");
 		l.enabled = main.getBoolean("enabled");
+		l.enabledSdk = main.getInt("enabledSdk");
 		l.midPadding = main.getBoolean("midPadding");
 		l.author = main.getString("author");
 		l.language = main.getString("language");
@@ -102,7 +104,7 @@ public class LayoutUtils {
 				String s = "";
 				while(sc.hasNext()) s += sc.nextLine();
 				Language l = getLanguage(s);
-				if(l.enabled) langs.add(l);
+				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk) langs.add(l);
 			}
 		}
 		return langs;
@@ -189,6 +191,7 @@ public class LayoutUtils {
 		String name;
 		String label;
 		boolean enabled;
+		int enabledSdk;
 		boolean midPadding;
 		String author;
 		String language;

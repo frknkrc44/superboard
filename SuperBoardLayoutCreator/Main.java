@@ -58,7 +58,7 @@ public class Main {
 			{false,false,false,false,false,false,false,false,false,false,false},
 			{false,true,false,false,false}
 		};
-		String y = create("trq","Türkçe Q",true,true,"blinksd","tr_TR",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents);
+		String y = create("trq","Türkçe Q",true,1,true,"blinksd","tr_TR",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents);
 		try {
 			FileWriter fw = new FileWriter("trq.json");
 			fw.write(y);
@@ -69,11 +69,12 @@ public class Main {
 		}
 	}
 	
-	static String create(String name, String label, boolean enabled, boolean midPadding, String author, String language, String[][] layout, String[][] popup, int[][] keyWidth, int[][] pkc, int[][] lpkc, boolean[][] rpt, boolean[][] pine, boolean[][] lpine){
+	static String create(String name, String label, boolean enabled, int enabledSdk, boolean midPadding, String author, String language, String[][] layout, String[][] popup, int[][] keyWidth, int[][] pkc, int[][] lpkc, boolean[][] rpt, boolean[][] pine, boolean[][] lpine){
 		String out = "{";
 		out += keyValueOut("name",name)+",";
 		out += keyValueOut("label",label)+",";
 		out += keyValueOut("enabled",enabled)+",";
+		out += keyValueOut("enabledSdk",enabledSdk)+",";
 		out += keyValueOut("midPadding",midPadding)+",";
 		out += keyValueOut("author",author)+",";
 		out += keyValueOut("language",language)+",";
