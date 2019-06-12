@@ -60,6 +60,18 @@ public class LayoutUtils {
 						ko.longPressIsNotEvent = false;
 					}
 					
+					try {
+						ko.longPressIsNotEvent = jox.getBoolean("lpine");
+					} catch(Throwable e){
+						ko.longPressIsNotEvent = false;
+					}
+					
+					try {
+						ko.darkerKeyTint = jox.getBoolean("dkt");
+					} catch(Throwable e){
+						ko.darkerKeyTint = false;
+					}
+					
 					jsonList.get(i).add(ko);
 				}
 			}
@@ -68,16 +80,19 @@ public class LayoutUtils {
 	}
 	
 	public static String[][] getLayoutKeysFromList(List<List<KeyOptions>> list){
-		String[][] out = new String[list.size()][];
-		for(int i = 0;i < list.size();i++){
-			List<KeyOptions> subList = list.get(i);
-			String[] subOut = new String[subList.size()];
-			for(int g = 0;g < subList.size();g++){
-				subOut[g] = subList.get(g).key;
+		if(list != null){
+			String[][] out = new String[list.size()][];
+			for(int i = 0;i < list.size();i++){
+				List<KeyOptions> subList = list.get(i);
+				String[] subOut = new String[subList.size()];
+				for(int g = 0;g < subList.size();g++){
+					subOut[g] = subList.get(g).key;
+				}
+				out[i] = subOut;
 			}
-			out[i] = subOut;
+			return out;
 		}
-		return out;
+		return null;
 	}
 	
 	private static Language getLanguage(String fileData) throws JSONException {
@@ -95,8 +110,20 @@ public class LayoutUtils {
 		return l;
 	}
 	
-	public static List<Language> getLanguageList(Context ctx) throws Throwable {
-		List<Language> langs = new ArrayList<Language>();
+	public static Language getLanguage(Context ctx, String name){
+		try {
+			HashMap<String,Language> llist = getLanguageList(ctx);
+			if(llist.containsKey(name)){
+				return llist.get(name);
+			}
+		} catch(Throwable t){}
+		Language l = new Language();
+		l.layout = l.popup = new ArrayList<List<KeyOptions>>();
+		return l;
+	}
+	
+	public static HashMap<String,Language> getLanguageList(Context ctx) throws Throwable {
+		HashMap<String,Language> langs = new HashMap<String,Language>();
 		AssetManager assets = ctx.getAssets();
 		for(String str : assets.list("")){
 			if(str.endsWith(".json")){
@@ -104,7 +131,9 @@ public class LayoutUtils {
 				String s = "";
 				while(sc.hasNext()) s += sc.nextLine();
 				Language l = getLanguage(s);
-				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk) langs.add(l);
+				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
+					langs.put(l.language,l);
+				}
 			}
 		}
 		return langs;
@@ -187,14 +216,19 @@ public class LayoutUtils {
 		}
 	}
 	
+	public static List<String> getKeyListFromLanguageList(HashMap<String,Language> list){
+		List<String> a = new ArrayList<String>(list.keySet());
+		return a;
+	}
+	
 	public static class Language {
-		String name;
-		String label;
+		String name = "";
+		String label = "";
 		boolean enabled;
-		int enabledSdk;
+		int enabledSdk = 1;
 		boolean midPadding;
-		String author;
-		String language;
+		String author = "";
+		String language = "";
 		List<List<KeyOptions>> layout;
 		List<List<KeyOptions>> popup;
 	}
@@ -207,6 +241,7 @@ public class LayoutUtils {
 		boolean repeat;
 		boolean pressIsNotEvent;
 		boolean longPressIsNotEvent;
+		boolean darkerKeyTint;
 	}
 	
 }

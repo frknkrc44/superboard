@@ -309,14 +309,16 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public void setLayoutPopup(int keyboardIndex,String[][] chars){
-		if(keyboardIndex < getChildCount() && keyboardIndex >= 0){
-			ViewGroup v = getKeyboard(keyboardIndex), r = null;
-			for(int i = 0;i < v.getChildCount();i++){
-				r = getRow(keyboardIndex,i);
-				for(int g = 0;g < r.getChildCount();g++)
-					setPopupForKey(keyboardIndex,i,g,chars[i][g]);
-			}
-		} else throw new RuntimeException("Invalid keyboard index number");
+		if(chars != null){
+			if(keyboardIndex < getChildCount() && keyboardIndex >= 0){
+				ViewGroup v = getKeyboard(keyboardIndex), r = null;
+				for(int i = 0;i < v.getChildCount();i++){
+					r = getRow(keyboardIndex,i);
+					for(int g = 0;g < r.getChildCount();g++)
+						setPopupForKey(keyboardIndex,i,g,chars[i][g]);
+				}
+			} else throw new RuntimeException("Invalid keyboard index number");
+		}
 	}
 	
 	public void setKeysPadding(int p){
@@ -469,11 +471,9 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public void replaceNormalKeyboard(String[][] newKeyboard){
-		if(getChildCount() > 0){
-			removeViewAt(0);
-		}
-		createEmptyLayout();
-		addRows(0,newKeyboard);
+		ViewGroup vg = getKeyboard(findNormalKeyboardIndex());
+		vg.removeAllViewsInLayout();
+		addRows(findNormalKeyboardIndex(),newKeyboard);
 	}
 	
 	public void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, String[] chars){
@@ -514,8 +514,10 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public void addRows(int keyboardIndex,String[][] keys){
-		for(String[] key : keys){
-			addRow(keyboardIndex,key);
+		if(keys != null){
+			for(String[] key : keys){
+				addRow(keyboardIndex,key);
+			}
 		}
 	}
 	

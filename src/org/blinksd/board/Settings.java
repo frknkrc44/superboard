@@ -15,6 +15,7 @@ import org.blinksd.utils.image.*;
 import org.blinksd.utils.toolbar.*;
 import org.superdroid.db.*;
 import android.view.View.*;
+import java.util.*;
 
 public class Settings extends Activity {
 	
@@ -25,6 +26,7 @@ public class Settings extends Activity {
 	private static ImageView iv = null;
 	private ArrayAdapter<Key> aa = null;
 	private boolean first = true;
+	private LayoutUtils.Language cl = null;
 	
 	@Override
 	public void onCreate(Bundle b){
@@ -65,9 +67,9 @@ public class Settings extends Activity {
 				Intent i = new Intent(Settings.this,SetActivity.class);
 				String a = ((Key)((ArrayAdapter)p1.getAdapter()).getItem(p3)).name();
 				i.putExtra("action",a);
-				i.putExtra("type",a.endsWith("clr") ? 0 : a.endsWith("img") ? 2 : 1);
+				i.putExtra("type",a.endsWith("clr") ? 0 : (a.endsWith("select") ? 3 : (a.endsWith("img") ? 2 : 1)));
 				String s = sd.getString(a,"def");
-				i.putExtra("value",s.equals("def")?s:Integer.valueOf(s)+"");
+				i.putExtra("value",a.endsWith("select") || s.equals("def")?s:Integer.valueOf(s)+"");
 				startActivityForResult(i,RESULT_CANCELED);
 			}
 		});
@@ -155,6 +157,7 @@ public class Settings extends Activity {
 	}
 	
 	private void setAdapter(){
+		cl = LayoutUtils.getLanguage(this,sd.getString(Key.keyboard_lang_select.name(),"def"));
 		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.values()){
 			@Override
 			public View getView(int p,View v,ViewGroup g){
@@ -162,13 +165,14 @@ public class Settings extends Activity {
 				TextView t = (TextView) v.findViewById(android.R.id.text1);
 				t.setText(getItem(p).name());
 				t = (TextView) v.findViewById(android.R.id.text2);
-				st.setTextColor(t.getTextColors().getColorForState(new int[]{android.R.attr.state_enabled},0));
 				if(getItem(p).name().endsWith("img")){
 					t.setText("");
 				} else {
 					String s = sd.getString(getItem(p).name(),"def");
 					t.setText(s.equals("def") 
 							  ? "Varsayılan" 
+							  : getItem(p).name().endsWith("select") 
+							  ? cl.label
 							  : (getItem(p).name().endsWith("clr") 
 							  ? SetActivity.getColorString(Integer.valueOf(s),false) 
 							  : (SetActivity.isNumberNotFloat(getItem(p))
@@ -183,6 +187,7 @@ public class Settings extends Activity {
 				return v;
 			}
 		};
+		st.setTextColor(0xFFDEDEDE);
 		lv.setAdapter(aa);
 	}
 	
@@ -205,6 +210,7 @@ public class Settings extends Activity {
 	}
 	
 	public enum Key {
+		keyboard_lang_select,
 		keyboard_bgimg,
 		keyboard_bgblur,
 		keyboard_height,
@@ -222,7 +228,7 @@ public class Settings extends Activity {
 		key_longpress_duration
 	}
 	
-	private enum Type { color, num, image }
+	private enum Type { color, num, image, selector }
 	
 	private enum Gradient {
 		grad_color1,
@@ -237,6 +243,7 @@ public class Settings extends Activity {
 		private int set;
 		private static Bitmap temp;
 		private static ImageView iv;
+		private static HashMap<String,LayoutUtils.Language> list = null;
 
 		@Override
 		protected void onCreate(Bundle b){
@@ -260,16 +267,25 @@ public class Settings extends Activity {
 									@Override
 									public void onClick(View v){
 										if(v.getId() == 1){
-											if(!type.equals(Type.image)){
-												sd.putInteger(act.name(),set);
-												sd.onlyWrite();
-											} else {
-												try {
-													if(temp != null){
-														temp.compress(Bitmap.CompressFormat.JPEG,85,new FileOutputStream(getBackgroundImageFile(v.getContext())));
-														setColorsFromBitmap(temp);
-													}
-												} catch(Exception e){}
+											switch(type){
+												case color:
+												case num:
+													sd.putInteger(act.name(),set);
+													sd.onlyWrite();
+													break;
+												case image:
+													try {
+														if(temp != null){
+															temp.compress(Bitmap.CompressFormat.JPEG,85,new FileOutputStream(getBackgroundImageFile(v.getContext())));
+															setColorsFromBitmap(temp);
+														}
+													} catch(Exception e){}
+													break;
+												case selector:
+													List<String> lst = LayoutUtils.getKeyListFromLanguageList(list);
+													sd.putString(act.name(),lst.get(set));
+													sd.onlyWrite();
+													break;
 											}
 											restartKeyboard(SetActivity.this);
 										}
@@ -491,6 +507,32 @@ public class Settings extends Activity {
 			
 		};
 		
+		private View generateLanguageSelectorDialog(){
+			try {
+				list = LayoutUtils.getLanguageList(this);
+			} catch(Throwable t){
+				list = new HashMap<String,LayoutUtils.Language>();
+			}
+			RadioGroup rg = new RadioGroup(this);
+			rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+				public void onCheckedChanged(RadioGroup group, int checkedId){
+					set = checkedId;
+				}
+			});
+			int i = 0;
+			LayoutUtils.Language sl = LayoutUtils.getLanguage(this,val);
+			for(String key : list.keySet()){
+				RadioButton rb = new RadioButton(this);
+				rb.setId(i);
+				LayoutUtils.Language l = list.get(key);
+				rb.setChecked(l.language.equals(sl.language));
+				rb.setText(l.label);
+				rg.addView(rb);
+				i++;
+			}
+			return rg;
+		}
+		
 		private View s(){
 			switch(type){
 				case color:
@@ -499,6 +541,8 @@ public class Settings extends Activity {
 					return generateNumberSeekDialog();
 				case image:
 					return generateImageSelectorDialog();
+				case selector:
+					return generateLanguageSelectorDialog();
 				default:
 					return null;
 			}

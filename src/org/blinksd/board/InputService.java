@@ -26,13 +26,13 @@ public class InputService extends InputMethodService {
 	private BoardPopup po = null;
 	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
-	private String kbd[][][] = null/*, popup[][] = null*/;
+	private String kbd[][][] = null;
 	private LinearLayout ll = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
 	private File img = null;
 	private static final boolean IS_OREO = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
-	private int CHILDS = -1;
+	private Language cl;
 
 	@Override
 	public View onCreateInputView(){
@@ -120,13 +120,7 @@ public class InputService extends InputMethodService {
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			String appname = getString(R.string.app_name),abc = "ABC";
 			kbd = new String[][][]{
-				/*{
-					{"1","2","3","4","5","6","7","8","9","0"},
-					{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
-					{"a","s","d","f","g","h","j","k","l","ş","i"},
-					{"","z","x","c","v","b","n","m","ö","ç",""},
-					{"!?#",",",appname,".",""}
-				},*/{
+				{
 					{"[","]","θ","÷","<",">","`","´","{","}"},
 					{"©","£","€","+","®","¥","π","Ω","λ","β"},
 					{"@","#","$","%","&","*","-","=","(",")"},
@@ -145,46 +139,26 @@ public class InputService extends InputMethodService {
 					{"","","","","","","",""},
 					{abc,"🔇","←","↑","↓","→","🔉","🔊"}
 				},{
-					{"𐰱","𐰪","𐰀","𐰺","𐰼","𐱃","𐱅","𐰖","𐰘","𐰇","𐰃","𐰆","𐰯"},
-					{"𐰸","𐰽","𐰾","𐰑","𐰓","𐰶","𐰍","𐰏","𐰴","𐰚","𐰞","𐰠","𐰡"},
-					{"𐰔","𐰨","𐰲","𐰦","𐰉","𐰋","𐰣","𐰤","𐰢","𐰭","𐱁","𐰜",""},
-					{abc,":",""}
-				},{
 					{"1","2","3","+"},
 					{"4","5","6",";"},
 					{"7","8","9",""},
 					{"*","0","#",""}
 				}
 			};
-			
-			/*popup = new String[][]{
-				{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
-				{"bǫⓆ","ʍᴡⓌ","ǝᴇⒺèéëēėęê","ɹʀⓇ","ʇᴛⓉ","ʎʏⓎý","nᴜⓊūùúû","ɪⒾīìíïîį","Ⓞōõóòœô","dᴘⓅ","ƃɢⒼ","nᴜⓊūùúû"},
-				{"ɐᴀⒶâäàáæåāã","Ⓢßśš","pᴅⒹ","ɟꜰⒻ","ƃɢⒼ","ɥʜⒽ","ɾᴊⒿ","ʞᴋⓀ","ʟⓁ","Ⓢßśš","ɪⒾīìíïîį"},
-				{"","Ⓩž","Ⓧ","ɔⒸćč","^Ⓥ","qʙⒷ","uɴⓃñň","ɯᴍⓂ","Ⓞōõóòœô","ɔⒸćč",""},
-				{"","","","?!*&@/\\:;-+=",""}
-			};*/
-			CHILDS = kbd.length - (IS_OREO ? 0 : 1);
+
 			try {
-				List<Language> llist = LayoutUtils.getLanguageList(this);
-				boolean set = false;
-				for(Language l : llist){
-					if(l.language.equals("tr_TR")){
-						sb.setKeyboardLanguage(l.language);
-						String[][] lkeys = LayoutUtils.getLayoutKeysFromList(l.layout);
-						sb.addRows(0,lkeys);
-						sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(l.popup));
-						if(l.midPadding){
-							sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
-						}
-						LayoutUtils.setKeyOpts(l.layout,sb);
-						set = true;
-						break;
-					}
-				}
-				if(!set){
+				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR");
+				cl = LayoutUtils.getLanguage(this,lang);
+				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
 				}
+				String[][] lkeys = LayoutUtils.getLayoutKeysFromList(cl.layout);
+				sb.addRows(0,lkeys);
+				sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(cl.popup));
+				if(cl.midPadding && lkeys != null){
+					sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
+				}
+				LayoutUtils.setKeyOpts(cl.layout,sb);
 			} catch(Throwable e){
 				throw new RuntimeException(e);
 				/*ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -192,30 +166,12 @@ public class InputService extends InputMethodService {
 				e.printStackTrace(ps);
 				Log.e("AndroidRuntime","FATAL "+bos.toString());*/
 			}
-			//sb.addRows(0,kbd[0]);
 			sb.createLayoutWithRows(kbd[0],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[2],KeyboardType.SYMBOL);
-			
-			// add old Turkish characters to Symbol 4 page
-			if(IS_OREO){
-				sb.getKey(3,3,0).setText("S4");
-				sb.setPressEventForKey(3,3,0,Keyboard.KEYCODE_ALT);
-				sb.createLayoutWithRows(kbd[3],KeyboardType.SYMBOL);
-				sb.setPressEventForKey(4,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
-				sb.setPressEventForKey(4,2,-1,Keyboard.KEYCODE_DELETE);
-				sb.setKeyDrawable(4,2,-1,R.drawable.sym_keyboard_delete);
-				sb.setPressEventForKey(4,-1,-1,Keyboard.KEYCODE_DONE);
-				sb.setKeyDrawable(4,-1,-1,R.drawable.sym_keyboard_return);
-				sb.setKeyWidthPercent(4,-1,0,20);
-				sb.setKeyWidthPercent(4,-1,1,70);
-				sb.setKeyWidthPercent(4,-1,-1,20);
-			}
 				
-			sb.createLayoutWithRows(kbd[4],KeyboardType.NUMBER);
+			sb.createLayoutWithRows(kbd[3],KeyboardType.NUMBER);
 			
-			/*sb.setPressEventForKey(0,3,0,Keyboard.KEYCODE_SHIFT);
-			sb.setKeyDrawable(0,3,0,R.drawable.sym_keyboard_shift);*/
 			sb.setPressEventForKey(1,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(2,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(3,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
@@ -253,9 +209,7 @@ public class InputService extends InputMethodService {
 				}
 			}
 			
-			//sb.setLayoutPopup(0,popup);
-			
-			for(int i = 0;i < CHILDS;i++){
+			for(int i = 0;i < kbd.length;i++){
 				if(i != 0 && i < 3){
 					sb.setRowPadding(i,2,sb.wp(2));
 					sb.setKeyRepeat(i,3,-1);
@@ -279,13 +233,7 @@ public class InputService extends InputMethodService {
 			}
 		}
 		
-		if(IS_OREO){
-			if(sb.getEnabledLayoutIndex() != 4){
-				sb.updateKeyState(this);
-			}
-		} else {
-			sb.updateKeyState(this);
-		}
+		sb.updateKeyState(this);
 		
 		if(ll == null){
 			ll = new LinearLayout(this);
@@ -343,17 +291,62 @@ public class InputService extends InputMethodService {
 			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_vibrate_duration.name(),0));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
 			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),13))));
-			for(int i = 0;i < CHILDS;i++){
-				if(i < 3){
-					int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
-					sb.setKeyTintColor(i,3,-1,y);
-					for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
-					sb.setKeyTintColor(i,4,1,y);
-					sb.setKeyTintColor(i,4,3,y);
+			int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
+			int z = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6);
+			for(int i = 0;i < kbd.length;i++){
+				if(i != 0){
+					if(i < 3){
+						sb.setKeyTintColor(i,3,0,y);
+						sb.setKeyTintColor(i,3,-1,y);
+						for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
+						sb.setKeyTintColor(i,4,1,y);
+						sb.setKeyTintColor(i,4,3,y);
+					}
+					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
-				if(i != 3) sb.setKeyTintColor(i,-1,-1,SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6));
 			}
+			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR");
+			if(!lang.equals(cl.language)){
+				setKeyboardLayout(lang);
+			}
+			List<List<KeyOptions>> kOpt = cl.layout;
+			for(int i = 0;i < kOpt.size();i++){
+				List<KeyOptions> subKOpt = kOpt.get(i);
+				for(int g = 0;g < subKOpt.size();g++){
+					KeyOptions ko = subKOpt.get(g);
+					if(ko.darkerKeyTint){
+						sb.setKeyTintColor(sb.getKey(0,i,g),y);
+					}
+					if(ko.pressKeyCode == Keyboard.KEYCODE_DONE){
+						sb.setKeyTintColor(sb.getKey(0,i,g),z);
+					}
+				}
+			}
+			sb.setKeyboardLanguage(cl.language);
 			adjustNavbar(c);
+		}
+	}
+	
+	private void setKeyboardLayout(String lang){
+		try {
+			Language l = LayoutUtils.getLanguage(this,lang);
+			if(!l.language.equals(lang)){
+				throw new RuntimeException("Where is the layout JSON file (in assets)?");
+			}
+			String[][] lkeys = LayoutUtils.getLayoutKeysFromList(l.layout);
+			sb.replaceNormalKeyboard(lkeys);
+			sb.setLayoutPopup(sb.findNormalKeyboardIndex(),LayoutUtils.getLayoutKeysFromList(l.popup));
+			if(l.midPadding && lkeys != null){
+				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,sb.wp(2));
+			}
+			LayoutUtils.setKeyOpts(l.layout,sb);
+			cl = l;
+		} catch(Throwable e){
+			throw new RuntimeException(e);
+			/*ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(bos);
+			e.printStackTrace(ps);
+			Log.e("AndroidRuntime","FATAL "+bos.toString());*/
 		}
 	}
 	
