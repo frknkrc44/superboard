@@ -6,7 +6,7 @@ package org.superdroid.db;
      by Furkan Karcıoğlu
         25.08.2017 Fri
  ----------------------------
-  Last Edit: 20.03.2019 Tue
+  Last Edit: 12.06.2019 Wed
  ----------------------------
 */
 
@@ -428,37 +428,39 @@ public class SuperDB {
 	}
 	
 	public final String getString(String key, String def){
-		return isDBContainsKey(key) ? decode(hm1.get(key)) : def;
+		String s = hm1.get(key);
+		s = isDBContainsKey(key) && s.length() > 0 ? decode(s) : "";
+		return s.length() > 0 ? s : def;
 	}
 	
 	public final long getLong(String key, long def){
-		return isDBContainsKey(key) ? 
-			Long.parseLong(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Long.parseLong(s) : def;
 	}
 
 	public final byte getByte(String key, byte def){
-		return isDBContainsKey(key) ? 
-			Byte.parseByte(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Byte.parseByte(s) : def;
 	}
 
 	public final int getInteger(String key, int def){
-		return isDBContainsKey(key) ? 
-			Integer.parseInt(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Integer.parseInt(s) : def;
 	}
 
 	public final float getFloat(String key, float def){
-		return isDBContainsKey(key) ? 
-			Float.parseFloat(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Float.parseFloat(s) : def;
 	}
 
 	public final double getDouble(String key, double def){
-		return isDBContainsKey(key) ? 
-			Double.parseDouble(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Double.parseDouble(s) : def;
 	}
 
 	public final boolean getBoolean(String key, boolean def){
-		return isDBContainsKey(key) ? 
-			Boolean.parseBoolean(decode(hm1.get(key))) : def;
+		String s = getString(key,"");
+		return s.length() > 0 ? Boolean.parseBoolean(s) : def;
 	}
 
 	public final void putString(String key, String value){
@@ -635,7 +637,10 @@ public class SuperDB {
 		}
 		sr = sq.split(es);
 		for(int i = (sr.length - 1);i >= 0;i--){
-			out += ((char)Integer.parseInt(rev(sr[i]),16))+"";
+			String s = rev(sr[i]);
+			if(s.length() > 0){
+				out += ((char)Integer.parseInt(s,16))+"";
+			}
 		}
 		return out;
 	}
