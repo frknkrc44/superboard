@@ -125,7 +125,9 @@ public class LayoutUtils {
 	public static HashMap<String,Language> getLanguageList(Context ctx) throws Throwable {
 		HashMap<String,Language> langs = new HashMap<String,Language>();
 		AssetManager assets = ctx.getAssets();
-		for(String str : assets.list("")){
+		String[] items = assets.list("");
+		Arrays.sort(items);
+		for(String str : items){
 			if(str.endsWith(".json")){
 				Scanner sc = new Scanner(assets.open(str));
 				String s = "";
@@ -219,6 +221,13 @@ public class LayoutUtils {
 	public static List<String> getKeyListFromLanguageList(HashMap<String,Language> list){
 		List<String> a = new ArrayList<String>(list.keySet());
 		return a;
+	}
+	
+	private static class LanguageListComparator implements Comparator<Language> {
+		@Override
+		public int compare(Language l1, Language l2){
+			return l1.language.compareTo(l2.language);
+		}
 	}
 	
 	public static class Language {
