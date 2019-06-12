@@ -65,7 +65,7 @@ public class Main {
 			{true,false,false,false,false,false,false,false,false,false,true},
 			{true,true,false,true,false}
 		};
-		String y = create("trq","Türkçe Q",true,8,true,"blinksd","tr_TR",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
+		String y = create("trq","Türkçe Q",true,8,true,"blinksd","tr_TR_Q",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
 		try {
 			FileWriter fw = new FileWriter("trq.json");
 			fw.write(y);

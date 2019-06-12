@@ -147,7 +147,7 @@ public class InputService extends InputMethodService {
 			};
 
 			try {
-				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR");
+				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR_Q");
 				cl = LayoutUtils.getLanguage(this,lang);
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
@@ -305,7 +305,7 @@ public class InputService extends InputMethodService {
 					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
 			}
-			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR");
+			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR_Q");
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
 			}
