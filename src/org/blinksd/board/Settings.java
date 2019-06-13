@@ -514,15 +514,17 @@ public class Settings extends Activity {
 				list = new HashMap<String,LayoutUtils.Language>();
 			}
 			RadioGroup rg = new RadioGroup(this);
+			int i = SuperBoard.dp(8);
+			rg.setPadding(i,i,i,i);
 			rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 				public void onCheckedChanged(RadioGroup group, int checkedId){
 					set = checkedId;
 				}
 			});
-			int i = 0;
+			i = 0;
 			LayoutUtils.Language sl = LayoutUtils.getLanguage(this,val);
 			for(String key : list.keySet()){
-				RadioButton rb = new RadioButton(this);
+				CustomRadioButton rb = new CustomRadioButton(this);
 				rb.setId(i);
 				LayoutUtils.Language l = list.get(key);
 				rb.setChecked(l.language.equals(sl.language));
@@ -602,6 +604,41 @@ public class Settings extends Activity {
 		}
 	}
 	
+	private static class CustomRadioButton extends RadioButton {
+		CustomRadioButton(Context c){
+			super(c);
+			int i = SuperBoard.dp(8);
+			setPadding(i,0,i,0);
+			setRadioButton();
+		}
+		
+		void setRadioButton(){
+			StateListDrawable sld = new StateListDrawable();
+			int i = 64;
+			int g = SuperBoard.dp(i);
+			Bitmap b = Bitmap.createBitmap(g,g,Bitmap.Config.ARGB_8888);
+			Canvas c = new Canvas(b);
+			Paint p = new Paint();
+			i = g = SuperBoard.dp(4);
+			p.setStyle(Paint.Style.STROKE);
+			p.setStrokeWidth(i);
+			i *= 3;
+			p.setColor(0xFFDEDEDE);
+			c.drawRoundRect(i,i,b.getWidth()-i,b.getHeight()-i,g,g,p);
+			BitmapDrawable bdn = new BitmapDrawable(b);
+			b = Bitmap.createBitmap(b);
+			c = new Canvas(b);
+			p.setStyle(Paint.Style.FILL);
+			p.setStrokeWidth(0);
+			i *= 2;
+			c.drawRoundRect(i,i,b.getWidth()-i,b.getHeight()-i,g,g,p);
+			BitmapDrawable bdc = new BitmapDrawable(b);
+			sld.addState(new int[]{android.R.attr.state_checked},bdc);
+			sld.addState(new int[]{},bdn);
+			setButtonDrawable(sld);
+		}
+	}
+	
 	private static class CustomSeekBar extends SeekBar {
 		CustomSeekBar(Context c){
 			super(c);
@@ -613,7 +650,7 @@ public class Settings extends Activity {
 			drawSeekBar();
 		}
 		
-		public void drawSeekBar(){
+		void drawSeekBar(){
 			Bitmap b = Bitmap.createBitmap(SuperBoard.dp(48),SuperBoard.dp(48),Bitmap.Config.ARGB_8888);
 			Canvas c = new Canvas(b);
 			Paint p = new Paint();
