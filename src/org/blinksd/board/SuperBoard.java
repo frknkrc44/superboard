@@ -27,6 +27,7 @@ public class SuperBoard extends FrameLayout {
 	private Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
+	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
 	protected Handler h = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
@@ -133,6 +134,10 @@ public class SuperBoard extends FrameLayout {
 	public void afterPopupEvent(){
 		h.removeMessages(0);
 		h.sendEmptyMessage(0);
+	}
+	
+	public void switchLanguage(){
+		
 	}
 	
 	private void trigSystemSuggestions(){
@@ -610,6 +615,9 @@ public class SuperBoard extends FrameLayout {
 		switch(code){
 			case KEYCODE_CLOSE_KEYBOARD:
 				closeKeyboard();
+				break;
+			case KEYCODE_SWITCH_LANGUAGE:
+				switchLanguage();
 				break;
 			default:
 				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0));

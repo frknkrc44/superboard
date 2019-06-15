@@ -32,7 +32,6 @@ public class InputService extends InputMethodService {
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
 	private File img = null;
-	private static final boolean IS_OREO = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
 	private Language cl;
 
 	@Override
@@ -117,6 +116,12 @@ public class InputService extends InputMethodService {
 					if(!shown) super.sendDefaultKeyboardEvent(v);
 					else shown = false;
 				}
+				
+				@Override
+				public void switchLanguage(){
+					SuperBoardApplication.getNextLanguage();
+					setPrefs();
+				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			String appname = getString(R.string.app_name),abc = "ABC";
@@ -149,7 +154,7 @@ public class InputService extends InputMethodService {
 
 			try {
 				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR_Q");
-				cl = LayoutUtils.getLanguage(this,lang);
+				cl = SuperBoardApplication.getKeyboardLanguage(lang);
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
 				}

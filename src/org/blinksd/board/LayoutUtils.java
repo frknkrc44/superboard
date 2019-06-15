@@ -235,26 +235,26 @@ public class LayoutUtils {
 	}
 	
 	public static class Language {
-		String name = "";
-		String label = "";
-		boolean enabled;
-		int enabledSdk = 1;
-		boolean midPadding;
-		String author = "";
-		String language = "";
-		List<List<KeyOptions>> layout;
-		List<List<KeyOptions>> popup;
+		public String name = "";
+		public String label = "";
+		public boolean enabled;
+		public int enabledSdk = 1;
+		public boolean midPadding;
+		public String author = "";
+		public String language = "";
+		public List<List<KeyOptions>> layout;
+		public List<List<KeyOptions>> popup;
 	}
 	
 	public static class KeyOptions {
-		String key;
-		int width = 0;
-		int pressKeyCode = 0;
-		int longPressKeyCode = 0;
-		boolean repeat;
-		boolean pressIsNotEvent;
-		boolean longPressIsNotEvent;
-		boolean darkerKeyTint;
+		public String key;
+		public int width = 0;
+		public int pressKeyCode = 0;
+		public int longPressKeyCode = 0;
+		public boolean repeat;
+		public boolean pressIsNotEvent;
+		public boolean longPressIsNotEvent;
+		public boolean darkerKeyTint;
 	}
 	
 }
