@@ -117,6 +117,10 @@ public class LayoutUtils {
 				return llist.get(name);
 			}
 		} catch(Throwable t){}
+		return getEmptyLanguage();
+	}
+	
+	public static Language getEmptyLanguage(){
 		Language l = new Language();
 		l.layout = l.popup = new ArrayList<List<KeyOptions>>();
 		return l;

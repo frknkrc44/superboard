@@ -10,6 +10,7 @@ import android.provider.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
+import org.blinksd.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.toolbar.*;
@@ -31,7 +32,7 @@ public class Settings extends Activity {
 	@Override
 	public void onCreate(Bundle b){
 		super.onCreate(b);
-		sd = SuperDBHelper.getDefault(this);
+		sd = SuperBoardApplication.getApplicationDatabase();
 		sb = new SuperBoard(this){
 			@Override
 			public void sendDefaultKeyboardEvent(View v){}
@@ -157,7 +158,7 @@ public class Settings extends Activity {
 	}
 	
 	private void setAdapter(){
-		cl = LayoutUtils.getLanguage(this,sd.getString(Key.keyboard_lang_select.name(),"def"));
+		cl = SuperBoardApplication.getKeyboardLanguage(sd.getString(Key.keyboard_lang_select.name(),"def"));
 		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.values()){
 			@Override
 			public View getView(int p,View v,ViewGroup g){
@@ -509,7 +510,7 @@ public class Settings extends Activity {
 		
 		private View generateLanguageSelectorDialog(){
 			try {
-				list = LayoutUtils.getLanguageList(this);
+				list = SuperBoardApplication.getKeyboardLanguageList();
 			} catch(Throwable t){
 				list = new HashMap<String,LayoutUtils.Language>();
 			}
@@ -522,7 +523,7 @@ public class Settings extends Activity {
 				}
 			});
 			i = 0;
-			LayoutUtils.Language sl = LayoutUtils.getLanguage(this,val);
+			LayoutUtils.Language sl = SuperBoardApplication.getKeyboardLanguage(val);
 			for(String key : list.keySet()){
 				CustomRadioButton rb = new CustomRadioButton(this);
 				rb.setId(i);

@@ -13,6 +13,7 @@ import android.widget.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import org.blinksd.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
@@ -84,7 +85,7 @@ public class InputService extends InputMethodService {
 	
 	private void setLayout(){
 		if(sd == null){
-			sd = SuperDBHelper.getDefault(this);
+			sd = SuperBoardApplication.getApplicationDatabase();
 			registerReceiver(r,new IntentFilter(COLORIZE_KEYBOARD));
 		}
 		if(sb == null){
@@ -329,7 +330,7 @@ public class InputService extends InputMethodService {
 	
 	private void setKeyboardLayout(String lang){
 		try {
-			Language l = LayoutUtils.getLanguage(this,lang);
+			Language l = SuperBoardApplication.getKeyboardLanguage(lang);
 			if(!l.language.equals(lang)){
 				throw new RuntimeException("Where is the layout JSON file (in assets)?");
 			}
