@@ -37,7 +37,7 @@ public class SuperBoardApplication extends Application {
 	}
 	
 	public static Language getNextLanguage(){
-		ArrayList<String> ll = new ArrayList<String>(langs.keySet());
+		ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(langs);
 		String key = Key.keyboard_lang_select.name();
 		String sel = appDB.getString(key,"");
 		if(!sel.equals("")){

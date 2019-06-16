@@ -1,73 +1,68 @@
 import java.io.*;
 
-public class Main {
+public class MainOTK {
 	public static void main(String[] args){
 		String[][] layout = {
-			{"1","2","3","4","5","6","7","8","9","0"},
-			{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
-			{"a","s","d","f","g","h","j","k","l","ş","i"},
-			{"CAPS","z","x","c","v","b","n","m","ö","ç","DEL"},
-			{"SYM",",","LC","SPACE",".","ENTER"}
+			{"𐰱","𐰪","𐰀","𐰺","𐰼","𐱃","𐱅","𐰖","𐰘","𐰇","𐰃","𐰆","𐰯"},
+			{"𐰸","𐰽","𐰾","𐰑","𐰓","𐰶","𐰍","𐰏","𐰴","𐰚","𐰞","𐰠","𐰡"},
+			{"𐰔","𐰨","𐰲","𐰦","𐰉","𐰋","𐰣","𐰤","𐰢","𐰭","𐱁","𐰜","DEL"},
+			{"SYM","LC",":","ENTER"}
 		};
 		String[][] popup = {
-			{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
-			{"bǫⓆ","ʍᴡⓌ","ǝᴇⒺèéëēėęê","ɹʀⓇ","ʇᴛⓉ","ʎʏⓎý","nᴜⓊūùúû","ɪⒾīìíïîį","Ⓞōõóòœô","dᴘⓅ","ƃɢⒼ","nᴜⓊūùúû"},
-			{"ɐᴀⒶâäàáæåāã","Ⓢßśš","pᴅⒹ","ɟꜰⒻ","ƃɢⒼ","ɥʜⒽ","ɾᴊⒿ","ʞᴋⓀ","ʟⓁ","Ⓢßśš","ɪⒾīìíïîį"},
-			{"","Ⓩž","Ⓧ","ɔⒸćč","^Ⓥ","qʙⒷ","uɴⓃñň","ɯᴍⓂ","Ⓞōõóòœô","ɔⒸćč",""},
-			{"","","","","?!*&@/\\\\:;-+=",""}
+			{"","","","","","","","","","","","",""},
+			{"","","","","","","","","","","","",""},
+			{"","","","","","","","","","","","",""},
+			{"","","",""},
 		};
 		int[][] keyWidths = {
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0},
-			{15,0,0,0,0,0,0,0,0,0,15},
-			{20,15,15,45,15,20}
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{20,20,60,20},
 		};
 		int[][] pressKeyCodes = {
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0},
-			{-1,0,0,0,0,0,0,0,0,0,-5},
-			{-2,0,-101,62,0,-4}
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,-5},
+			{-2,-101,0,-4},
 		};
 		int[][] longPressKeyCodes = {
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0},
-			{-100,9,0,0,0,0}
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{-100,0,0,0},
 		};
 		boolean[][] repeats = {
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,true},
-			{false,false,false,true,false,false}
+			new boolean[13],
+			new boolean[13],
+			new boolean[13],
+			new boolean[4]
 		};
 		boolean[][] pressIsNotEvents = {
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false}
+			new boolean[13],
+			new boolean[13],
+			new boolean[13],
+			new boolean[4]
 		};
 		boolean[][] longPressIsNotEvents = {
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,true,false,false,false,false}
+			new boolean[13],
+			new boolean[13],
+			new boolean[13],
+			new boolean[4]
 		};
 		boolean[][] darkerKeyTints = {
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false,false},
-			{true,false,false,false,false,false,false,false,false,false,true},
-			{true,true,true,false,true,false}
+			new boolean[13],
+			new boolean[13],
+			new boolean[13],
+			new boolean[4]
 		};
-		String y = create("trq","Türkçe Q",true,8,true,"blinksd","tr_TR_Q",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
+		repeats[2][12] = true;
+		for(int i = 0;i < 2;i++)
+			darkerKeyTints[3][i] = true;
+		darkerKeyTints[2][12] = true;
+		String y = create("otk","𐱅𐰇𐰼𐰜",true,26,false,"blinksd","otk_TR",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
 		try {
-			FileWriter fw = new FileWriter("trq.json");
+			FileWriter fw = new FileWriter("otk.json");
 			fw.write(y);
 			fw.flush();
 			fw.close();
@@ -132,4 +127,5 @@ public class Main {
 	static String keyOut(String key){
 		return "\""+key+"\":";
 	}
+	
 }

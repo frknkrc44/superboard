@@ -7,7 +7,6 @@ AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
 ADX=$(BUILDTOOLS)/dx
 AAPT=$(BUILDTOOLS)/aapt
 JAVAC=$(JAVADIR)/javac
-KOTLINC=$(SDK)/plugins/Kotlin/kotlinc/bin/kotlinc
 JARSIGNER=$(JAVADIR)/jarsigner
 APKSIGNER=$(BUILDTOOLS)/apksigner
 ZIPALIGN=$(BUILDTOOLS)/zipalign
@@ -26,11 +25,10 @@ KEYALIAS=Alias
 STOREPASS=123456
 KEYPASS=123456
 
-all: clear mkdirs build rmdirs zipalign jarsign install
+all: clear mkdirs optimize build rmdirs jarsign zipalign install
 build:
 	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/resources.ap_"
 	$(JAVAC) -classpath $(CLASSPATH) -sourcepath $(SRC) -sourcepath bin/aidl/ -sourcepath gen -d bin `find gen -name "*.java"` `find bin/aidl/ -name "*.java"` `find $(SRC) -name "*.java"`
-	#$(KOTLINC) -classpath $(CLASSPATH):bin -d bin `find $(SRC) -name "*.kt"` || true
 	$(ADX) --dex --output=bin/classes.dex bin
 	mv bin/resources.ap_ bin/$(NAME).ap_
 	cd bin ; $(AAPT) add $(NAME).ap_ classes.dex
@@ -43,10 +41,8 @@ optimize:
 	optipng -o7 `find res -name "*.png"`
 sign:
 	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME).apk bin/$(NAME).ap_
-	rm -f bin/$(NAME).ap_
 jarsign:
 	$(JARSIGNER) -keystore $(KEYFILE) -storepass $(STOREPASS) -keypass $(KEYPASS) -signedjar bin/$(NAME).apk bin/$(NAME).ap_ $(KEYALIAS)
-	rm -f bin/$(NAME).ap_
 generate:
 	rm -f $(KEYFILE)
 	$(KEYTOOL) -genkey -noprompt -keyalg RSA -alias $(KEYALIAS) -dname "CN=Hostname, OU=OrganizationalUnit, O=Organization, L=City, S=State, C=Country" -keystore $(KEYFILE) -storepass $(STOREPASS) -keypass $(KEYPASS) -validity 3650

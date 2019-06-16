@@ -2,12 +2,15 @@ package org.blinksd.board;
 
 import android.content.*;
 import android.content.res.*;
+import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.os.*;
 import android.util.*;
 import android.view.*;
 import java.util.*;
+import org.blinksd.board.*;
 import org.json.*;
+import org.superdroid.db.*;
 
 public class LayoutUtils {
 	
@@ -179,59 +182,34 @@ public class LayoutUtils {
 					case Keyboard.KEYCODE_DONE:
 						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_return);
 						break;
+					case SuperBoard.KEYCODE_SWITCH_LANGUAGE:
+						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_language);
 				}
-				/*String key = row[g].toLowerCase();
-				switch(key){
-					case "caps":
-						sb.setPressEventForKey(0,i,g,Keyboard.KEYCODE_SHIFT);
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_shift);
-						sb.setKeyWidthPercent(0,i,g,15);
-						break;
-					case "del":
-						sb.setPressEventForKey(0,i,g,Keyboard.KEYCODE_DELETE);
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_delete);
-						sb.setKeyRepeat(0,i,g);
-						sb.setKeyWidthPercent(0,i,g,15);
-						break;
-					case "sym":
-						sb.setPressEventForKey(0,i,g,Keyboard.KEYCODE_MODE_CHANGE);
-						sb.setLongPressEventForKey(0,i,g,sb.KEYCODE_CLOSE_KEYBOARD);
-						sb.getKey(0,i,g).setText("!?#");
-						sb.setKeyWidthPercent(0,i,g,20);
-						break;
-					case ",":
-						sb.setLongPressEventForKey(0,i,g,'\t',false);
-						sb.setKeyWidthPercent(0,i,g,15);
-						break;
-					case "space":
-						sb.getKey(0,i,g).setText(sb.getContext().getApplicationInfo().loadLabel(sb.getContext().getPackageManager()));
-						sb.setPressEventForKey(0,i,g,KeyEvent.KEYCODE_SPACE);
-						sb.setKeyRepeat(0,i,g);
-						sb.setKeyWidthPercent(0,i,g,50);
-						break;
-					case ".":
-						sb.setKeyWidthPercent(0,i,g,15);
-						break;
-					case "enter":
-						sb.setPressEventForKey(0,i,g,Keyboard.KEYCODE_DONE);
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_return);
-						sb.setKeyWidthPercent(0,i,g,20);
-						break;
-				}*/
 			}
 		}
 	}
 	
-	public static List<String> getKeyListFromLanguageList(HashMap<String,Language> list){
-		List<String> a = new ArrayList<String>(list.keySet());
+	public static ArrayList<String> getKeyListFromLanguageList(HashMap<String,Language> list){
+		ArrayList<String> a = new ArrayList<String>(list.keySet());
 		return a;
 	}
 	
-	private static class LanguageListComparator implements Comparator<Language> {
-		@Override
-		public int compare(Language l1, Language l2){
-			return l1.language.compareTo(l2.language);
+	public static Drawable getKeyBg(SuperDB sd,SuperBoard sb,int clr,boolean pressEffect){
+		GradientDrawable gd = new GradientDrawable();
+		gd.setColor(sb.getColorWithState(clr,false));
+		gd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+		gd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+		if(pressEffect){
+			StateListDrawable d = new StateListDrawable();
+			GradientDrawable pd = new GradientDrawable();
+			pd.setColor(sb.getColorWithState(clr,true));
+			pd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
+			pd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+			d.addState(new int[]{android.R.attr.state_selected},pd);
+			d.addState(new int[]{},gd);
+			return d;
 		}
+		return gd;
 	}
 	
 	public static class Language {

@@ -1,19 +1,19 @@
 import java.io.*;
 
-public class Main {
+public class MainF {
 	public static void main(String[] args){
 		String[][] layout = {
 			{"1","2","3","4","5","6","7","8","9","0"},
-			{"q","w","e","r","t","y","u","ı","o","p","ğ","ü"},
-			{"a","s","d","f","g","h","j","k","l","ş","i"},
-			{"CAPS","z","x","c","v","b","n","m","ö","ç","DEL"},
+			{"f","g","ğ","ı","o","d","r","n","h","p","q","w"},
+			{"u","i","e","a","ü","t","k","m","l","y","ş"},
+			{"CAPS","j","ö","v","c","ç","z","s","b","x","DEL"},
 			{"SYM",",","LC","SPACE",".","ENTER"}
 		};
 		String[][] popup = {
 			{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
-			{"bǫⓆ","ʍᴡⓌ","ǝᴇⒺèéëēėęê","ɹʀⓇ","ʇᴛⓉ","ʎʏⓎý","nᴜⓊūùúû","ɪⒾīìíïîį","Ⓞōõóòœô","dᴘⓅ","ƃɢⒼ","nᴜⓊūùúû"},
-			{"ɐᴀⒶâäàáæåāã","Ⓢßśš","pᴅⒹ","ɟꜰⒻ","ƃɢⒼ","ɥʜⒽ","ɾᴊⒿ","ʞᴋⓀ","ʟⓁ","Ⓢßśš","ɪⒾīìíïîį"},
-			{"","Ⓩž","Ⓧ","ɔⒸćč","^Ⓥ","qʙⒷ","uɴⓃñň","ɯᴍⓂ","Ⓞōõóòœô","ɔⒸćč",""},
+			{"ɟꜰⒻ","ƃɢⒼ","ƃɢⒼ","ɪⒾīìíïîį","Ⓞōõóòœô","pᴅⒹ","ɹʀⓇ","uɴⓃñň","ɥʜⒽ","dᴘⓅ","bǫⓆ","ʍᴡⓌ"},
+			{"nᴜⓊūùúû","ɪⒾīìíïîį","ǝᴇⒺèéëēėęê","ɐᴀⒶâäàáæåāã","nᴜⓊūùúû","ʇᴛⓉ","ʞᴋⓀ","ɯᴍⓂ","ʟⓁ","ʎʏⓎý","Ⓢßśš"},
+			{"","ɾᴊⒿ","Ⓞōõóòœô","^Ⓥ","ɔⒸćč","ɔⒸćč","Ⓩž","Ⓢßśš","qʙⒷ","Ⓧ",""},
 			{"","","","","?!*&@/\\\\:;-+=",""}
 		};
 		int[][] keyWidths = {
@@ -65,9 +65,9 @@ public class Main {
 			{true,false,false,false,false,false,false,false,false,false,true},
 			{true,true,true,false,true,false}
 		};
-		String y = create("trq","Türkçe Q",true,8,true,"blinksd","tr_TR_Q",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
+		String y = create("trf","Türkçe F",true,8,true,"blinksd","tr_TR_F",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
 		try {
-			FileWriter fw = new FileWriter("trq.json");
+			FileWriter fw = new FileWriter("trf.json");
 			fw.write(y);
 			fw.flush();
 			fw.close();
