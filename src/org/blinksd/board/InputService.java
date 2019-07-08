@@ -57,6 +57,9 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onFinishInput(){
 		super.onFinishInput();
+		if(sb != null){
+			sb.updateKeyState(this);
+		}
 		System.gc();
 	}
 	
@@ -221,8 +224,6 @@ public class InputService extends InputMethodService {
 			}
 		}
 		
-		sb.updateKeyState(this);
-		
 		if(ll == null){
 			ll = new LinearLayout(this);
 			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
@@ -262,6 +263,7 @@ public class InputService extends InputMethodService {
 	
 	public void setPrefs(){
 		if(sb != null && sd != null){
+			sb.updateKeyState(this);
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),36));
 			img = Settings.getBackgroundImageFile(this);
 			if(fl != null){

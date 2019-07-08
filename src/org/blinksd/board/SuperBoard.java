@@ -583,7 +583,19 @@ public class SuperBoard extends FrameLayout {
 						updateKeyState();
 					break;
 				case Keyboard.KEYCODE_DONE:
-					sendKeyEvent(KeyEvent.KEYCODE_ENTER);
+					switch(action){
+						case EditorInfo.IME_ACTION_DONE:
+						case EditorInfo.IME_ACTION_GO:
+						case EditorInfo.IME_ACTION_SEARCH:
+						case EditorInfo.IME_ACTION_SEND:
+						case EditorInfo.IME_ACTION_NEXT:
+						case EditorInfo.IME_ACTION_PREVIOUS:
+							performEditorAction(action);
+							break;
+						default:
+							sendKeyEvent(KeyEvent.KEYCODE_ENTER);
+							break;
+					}
 					break;
 				default:
 					if(Boolean.parseBoolean(x[1])){
@@ -622,6 +634,10 @@ public class SuperBoard extends FrameLayout {
 			default:
 				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0));
 		}
+	}
+	
+	private void performEditorAction(int action){
+		getCurrentIC().performEditorAction(action);
 	}
 
 	private void commitText(String text){
@@ -669,6 +685,8 @@ public class SuperBoard extends FrameLayout {
 	private void updateKeyState(){
 		updateKeyState(curr);
 	}
+	
+	int action = 0;
 
 	public void updateKeyState(InputMethodService s){
 		if(!s.equals(curr)){
@@ -708,6 +726,8 @@ public class SuperBoard extends FrameLayout {
 				setShiftState(caps==0?0:1);
 				break;
 		}
+		
+		action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
     }
 
 	@Override
