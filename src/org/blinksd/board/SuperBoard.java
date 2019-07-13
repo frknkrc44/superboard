@@ -738,6 +738,22 @@ public class SuperBoard extends FrameLayout {
 		fixHeight();
 	}
 	
+	public Key findKey(int keyboard, int keyAction){
+		ViewGroup k = getKeyboard(keyboard), r = null;
+		Key t = null;
+		for(int i = 0;i < k.getChildCount();i++){
+			r = getRow(selected,i);
+			for(int g = 0;g < r.getChildCount();g++){
+				t = (Key) r.getChildAt(g);
+				if((t.getText() != null && t.getText().charAt(0) == keyAction) ||
+					(t.getTag(TAG_NP) != null && Integer.parseInt(t.getTag(TAG_NP).toString().split(":")[0]) == keyAction)){
+					return t;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void setRowPadding(int keyboardIndex, int rowIndex, int padding){
 		getRow(keyboardIndex, rowIndex).setPadding(padding,0,padding,0);
 	}

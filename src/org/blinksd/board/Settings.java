@@ -430,7 +430,7 @@ public class Settings extends Activity {
 			l.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			l.setOrientation(LinearLayout.VERTICAL);
 			Button s = new Button(this);
-			s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+			s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 			s.setText("Select image");
 			l.addView(s);
 			iv = new ImageView(this){
@@ -450,13 +450,32 @@ public class Settings extends Activity {
 						startActivityForResult(Intent.createChooser(i,""),1);
 					}
 				});
-			iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+			iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			iv.setAdjustViewBounds(true);
 			final File f = getBackgroundImageFile(this);
 			if(f.exists()){
 				iv.setImageBitmap(temp = BitmapFactory.decodeFile(f.getAbsolutePath()));
 			}
+			Button rb = new Button(this);
+			rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
+			l.addView(rb);
+			rb.setText("Rotate");
+			rb.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View p1){
+						if(temp == null){
+							return;
+						}
+						Matrix matrix = new Matrix();
+						matrix.postRotate(90);
+						if(!temp.isMutable()){
+							temp = temp.copy(Bitmap.Config.ARGB_8888,true);
+						}
+						temp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true);
+						iv.setImageBitmap(temp);
+					}
+				});
 			s.setOnLongClickListener(new View.OnLongClickListener(){
 					@Override
 					public boolean onLongClick(View p1){
@@ -570,7 +589,7 @@ public class Settings extends Activity {
 				super.onPostExecute(result);
 				if(result != null){
 					result = ImageUtils.get512pxBitmap(result);
-					iv.setImageBitmap(result);
+					iv.setImageBitmap(temp = result);
 				}
 			}
 
