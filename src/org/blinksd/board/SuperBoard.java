@@ -906,6 +906,7 @@ public class SuperBoard extends FrameLayout {
 			setKeyShadow(shrad,shclr!=-1?shclr:(shclr=keyclr));
 			setKeyTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
 			setBackground(keybg);
+			setKeyTextStyle(txts);
 			setOnTouchListener(new OnTouchListener(){
 					@Override
 					public boolean onTouch(View v, MotionEvent m){
