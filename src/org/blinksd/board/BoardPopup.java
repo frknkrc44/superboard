@@ -36,6 +36,8 @@ public class BoardPopup extends SuperBoard {
 	public void setKey(Key key, SuperDB sdb){
 		key.clone(mKey);
 		setKeysTextColor(key.getTextColor());
+		setKeysTextType(key.txtst);
+		setKeysShadow(key.shr,key.shc);
 		khp = sdb.getInteger(Settings.Key.keyboard_height.name(),hp(10));
 		int a = sdb.getInteger(Settings.Key.keyboard_bgclr.name(),0xFF000000);
 		a = Color.argb(0xCC,Color.red(a),Color.green(a),Color.blue(a));

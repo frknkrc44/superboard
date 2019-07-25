@@ -873,7 +873,7 @@ public class SuperBoard extends FrameLayout {
 		
 		TextView t = null;
 		ImageView i = null;
-		protected int shr = 0, shc = 0;
+		protected int shr = 0, shc = 0, txtst = 0;
 		
 		public boolean isKeyIconSet(){
 			return i.getDrawable() != null;
@@ -1018,6 +1018,7 @@ public class SuperBoard extends FrameLayout {
 		public void setKeyTextStyle(int style){
 			TextType[] arr = TextType.values();
 			setKeyTextStyle(arr[(arr.length - 1) < style ? 0 : style]);
+			txtst = style;
 		}
 		
 		public void setKeyTextStyle(TextType style){
@@ -1109,6 +1110,7 @@ public class SuperBoard extends FrameLayout {
 			k.getTextView().setSingleLine();
 			k.setId(getId());
 			k.setKeyTextSize(t.getTextSize()/2.5f);
+			k.setKeyTextStyle(txts);
 			if(disableTouchEvent) k.setOnTouchListener(null);
 			if(isKeyIconSet()){
 				k.setKeyIcon(getKeyIcon());
