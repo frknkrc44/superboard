@@ -20,7 +20,7 @@ import android.view.InputDevice.*;
 
 public class SuperBoard extends FrameLayout {
 
-	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP;
+	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP;
 	protected float txtsze = -1;
 	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean clear = false, lng = false, lock = false;
@@ -380,6 +380,32 @@ public class SuperBoard extends FrameLayout {
 					getKey(j,i,g).setKeyShadow(radius,color);
 				}
 			}
+		}
+	}
+	
+	public void setKeysTextType(int style){
+		txts = style;
+		for(int j = 0;j < getChildCount();j++){
+			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
+				for(int g = 0;g < getRow(j,i).getChildCount();g++){
+					getKey(j,i,g).setKeyTextStyle(style);
+				}
+			}
+		}
+	}
+	
+	public void setKeysTextType(TextType style){
+		if(style == null){
+			setKeysTextType(0);
+			return;
+		}
+		int i = 0;
+		for(TextType type : TextType.values()){
+			if(style.name() == type.name()){
+				setKeysTextType(i);
+				break;
+			}
+			i++;
 		}
 	}
 
@@ -877,6 +903,7 @@ public class SuperBoard extends FrameLayout {
 			setGravity(CENTER);
 			t.setGravity(CENTER);
 			t.setHintTextColor(0);
+			setKeyShadow(shrad,shclr!=-1?shclr:(shclr=keyclr));
 			setKeyTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
 			setBackground(keybg);
 			setOnTouchListener(new OnTouchListener(){
@@ -987,9 +1014,67 @@ public class SuperBoard extends FrameLayout {
 			}*/
 		}
 		
-		/*private int gg(int a, int b){
-			return a > b ? a : b;
-		}*/
+		public void setKeyTextStyle(int style){
+			TextType[] arr = TextType.values();
+			setKeyTextStyle(arr[(arr.length - 1) < style ? 0 : style]);
+		}
+		
+		public void setKeyTextStyle(TextType style){
+			if(style == null){
+				t.setTypeface(Typeface.DEFAULT);
+				return;
+			}
+			switch(style){
+				case regular:
+					t.setTypeface(Typeface.DEFAULT);
+					return;
+				case bold:
+					t.setTypeface(Typeface.DEFAULT_BOLD);
+					return;
+				case italic:
+					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
+					return;
+				case bold_italic:
+					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
+					return;
+				case condensed_regular:
+					t.setTypeface(Typeface.create("sans-serif-condensed",0));
+					return;
+				case condensed_bold:
+					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
+					return;
+				case condensed_italic:
+					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
+					return;
+				case condensed_bold_italic:
+					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
+					return;
+				case serif:
+					t.setTypeface(Typeface.SERIF);
+					return;
+				case serif_bold:
+					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
+					return;
+				case serif_italic:
+					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
+					return;
+				case serif_bold_italic:
+					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
+					return;
+				case monospace:
+					t.setTypeface(Typeface.MONOSPACE);
+					return;
+				case monospace_bold:
+					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
+					return;
+				case monospace_italic:
+					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
+					return;
+				case monospace_bold_italic:
+					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
+					return;
+			}
+		}
 		
 		protected TextView getTextView(){
 			return t;
@@ -1031,5 +1116,24 @@ public class SuperBoard extends FrameLayout {
 			}
 			return k;
 		}
+	}
+	
+	public enum TextType {
+		regular,
+		bold,
+		italic,
+		bold_italic,
+		condensed_regular,
+		condensed_bold,
+		condensed_italic,
+		condensed_bold_italic,
+		serif,
+		serif_bold,
+		serif_italic,
+		serif_bold_italic,
+		monospace,
+		monospace_bold,
+		monospace_italic,
+		monospace_bold_italic
 	}
 }

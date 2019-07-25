@@ -18,6 +18,8 @@ import org.superdroid.db.*;
 import android.view.View.*;
 import java.util.*;
 
+import org.blinksd.board.SuperBoard.*;
+
 public class Settings extends Activity {
 	
 	private ListView lv = null;
@@ -131,6 +133,7 @@ public class Settings extends Activity {
 		sb.setBackgroundColor(sd.getInteger(Key.keyboard_bgclr.name(),0));
 		sb.setKeysTextColor(sd.getInteger(Key.key_textclr.name(),0));
 		sb.setKeysTextSize(sb.mp(a(sd.getInteger(Key.key_textsize.name(),0))));
+		sb.setKeysTextType(sd.getInteger(Key.keyboard_texttype_select.name(),0));
 	}
 	
 	private View p(){
@@ -159,6 +162,16 @@ public class Settings extends Activity {
 	
 	private void setAdapter(){
 		cl = SuperBoardApplication.getKeyboardLanguage(sd.getString(Key.keyboard_lang_select.name(),"def"));
+		TextType[] arr = TextType.values();
+		String s = sd.getString(Key.keyboard_texttype_select.name(),"def");
+		if(s.equals("def")){
+			s = "0";
+		}
+		int tv = 0;
+		try {
+			tv = Integer.parseInt(s);
+		} catch(Throwable t){}
+		final TextType tt = arr[(arr.length - 1) < tv ? 0 : tv];
 		aa = new ArrayAdapter<Key>(this,android.R.layout.simple_list_item_2,android.R.id.text1,Key.values()){
 			@Override
 			public View getView(int p,View v,ViewGroup g){
@@ -173,7 +186,8 @@ public class Settings extends Activity {
 					t.setText(s.equals("def") 
 							  ? "Varsayılan" 
 							  : getItem(p).name().endsWith("select") 
-							  ? cl.label
+							  ? (getItem(p) == Key.keyboard_lang_select 
+							  ? cl.label : tt.name())
 							  : (getItem(p).name().endsWith("clr") 
 							  ? SetActivity.getColorString(Integer.valueOf(s),false) 
 							  : (SetActivity.isNumberNotFloat(getItem(p))
@@ -212,6 +226,7 @@ public class Settings extends Activity {
 	
 	public enum Key {
 		keyboard_lang_select,
+		keyboard_texttype_select,
 		keyboard_bgimg,
 		keyboard_bgblur,
 		keyboard_height,
@@ -283,9 +298,17 @@ public class Settings extends Activity {
 													} catch(Exception e){}
 													break;
 												case selector:
-													List<String> lst = LayoutUtils.getKeyListFromLanguageList(list);
-													sd.putString(act.name(),lst.get(set));
-													sd.onlyWrite();
+													switch(act){
+														case keyboard_lang_select:
+															List<String> lst = LayoutUtils.getKeyListFromLanguageList(list);
+															sd.putString(act.name(),lst.get(set));
+															sd.onlyWrite();
+															break;
+														case keyboard_texttype_select:
+															sd.putInteger(act.name(),set);
+															sd.onlyWrite();
+															break;
+													}
 													break;
 											}
 											restartKeyboard(SetActivity.this);
@@ -482,6 +505,7 @@ public class Settings extends Activity {
 						f.delete();
 						Settings.iv.setImageDrawable(null);
 						finish();
+						restartKeyboard(p1.getContext());
 						return false;
 					}
 				});
@@ -555,6 +579,26 @@ public class Settings extends Activity {
 			return rg;
 		}
 		
+		private View generateTextTypeSelectorDialog(){
+			int textType = sd.getInteger(Key.keyboard_texttype_select.name(),0);
+			RadioGroup rg = new RadioGroup(this);
+			rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+					public void onCheckedChanged(RadioGroup group, int checkedId){
+						set = checkedId;
+					}
+				});
+			int i = 0;
+			for(TextType type : TextType.values()){
+				CustomRadioButton rb = new CustomRadioButton(this);
+				rb.setId(i);
+				rb.setChecked(i == textType);
+				rb.setText(type.name());
+				rg.addView(rb);
+				i++;
+			}
+			return rg;
+		}
+		
 		private View s(){
 			switch(type){
 				case color:
@@ -564,7 +608,14 @@ public class Settings extends Activity {
 				case image:
 					return generateImageSelectorDialog();
 				case selector:
-					return generateLanguageSelectorDialog();
+					switch(act){
+						case keyboard_lang_select:
+							return generateLanguageSelectorDialog();
+						case keyboard_texttype_select:
+							return generateTextTypeSelectorDialog();
+						default:
+							return null;
+					}
 				default:
 					return null;
 			}
