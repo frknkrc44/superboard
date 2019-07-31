@@ -197,14 +197,14 @@ public class LayoutUtils {
 	public static Drawable getKeyBg(SuperDB sd,SuperBoard sb,int clr,boolean pressEffect){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(clr,false));
-		gd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
-		gd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+		gd.setCornerRadius(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_radius.name(),10))));
+		gd.setStroke(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_padding.name(),10))),0);
 		if(pressEffect){
 			StateListDrawable d = new StateListDrawable();
 			GradientDrawable pd = new GradientDrawable();
 			pd.setColor(sb.getColorWithState(clr,true));
-			pd.setCornerRadius(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_radius.name(),10))));
-			pd.setStroke(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_padding.name(),10))),0);
+			pd.setCornerRadius(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_radius.name(),10))));
+			pd.setStroke(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_padding.name(),10))),0);
 			d.addState(new int[]{android.R.attr.state_selected},pd);
 			d.addState(new int[]{},gd);
 			return d;

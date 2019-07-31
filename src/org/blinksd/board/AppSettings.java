@@ -19,8 +19,9 @@ import android.view.View.*;
 import java.util.*;
 
 import org.blinksd.board.SuperBoard.*;
+import android.content.pm.*;
 
-public class Settings extends Activity {
+public class AppSettings extends Activity {
 	
 	private ListView lv = null;
 	private SuperToolbar st = null;
@@ -56,9 +57,9 @@ public class Settings extends Activity {
 				sd.removeDB();
 				File img = getBackgroundImageFile(v.getContext());
 				if(img.exists()) img.delete();
-				restartKeyboard(Settings.this);
+				restartKeyboard(AppSettings.this);
 				finish();
-				startActivity(new Intent(Settings.this,Settings.class));
+				startActivity(new Intent(AppSettings.this,AppSettings.class));
 			}
 		});
 		lv = new ListView(this);
@@ -67,7 +68,7 @@ public class Settings extends Activity {
 		lv.setOnItemClickListener(new ListView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> p1,View p2,int p3,long p4){
-				Intent i = new Intent(Settings.this,SetActivity.class);
+				Intent i = new Intent(AppSettings.this,SetActivity.class);
 				String a = ((Key)((ArrayAdapter)p1.getAdapter()).getItem(p3)).name();
 				i.putExtra("action",a);
 				i.putExtra("type",a.endsWith("clr") ? 0 : (a.endsWith("select") ? 3 : (a.endsWith("img") ? 2 : 1)));
@@ -99,7 +100,6 @@ public class Settings extends Activity {
 	
 	private void resume(){
 		if(!first){
-			sd.onlyRead();
 			setAdapter();
 			setKeyPrefs();
 		} else first = false;
@@ -112,18 +112,18 @@ public class Settings extends Activity {
 	
 	private void setKeyPrefs(){
 		File img = getBackgroundImageFile(this);
-		int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);
+		int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_bgblur.name(),0);
 		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
 		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),false));
 		gd.setCornerRadius(sb.mp(a(sd.getInteger(Key.key_radius.name(),0))));
-		gd.setStroke(sb.mp(a(sd.getInteger(Settings.Key.key_padding.name(),0))),0);
+		gd.setStroke(sb.mp(a(sd.getInteger(AppSettings.Key.key_padding.name(),0))),0);
 		GradientDrawable pd = new GradientDrawable();
 		pd.setColor(sb.getColorWithState(sd.getInteger(Key.key_bgclr.name(),0),true));
 		pd.setCornerRadius(sb.mp(a(sd.getInteger(Key.key_radius.name(),0))));
-		pd.setStroke(sb.mp(a(sd.getInteger(Settings.Key.key_padding.name(),0))),0);
+		pd.setStroke(sb.mp(a(sd.getInteger(AppSettings.Key.key_padding.name(),0))),0);
 		d.addState(new int[]{android.R.attr.state_selected},pd);
 		d.addState(new int[]{},gd);
 		sb.setKeysBackground(d);
@@ -430,13 +430,13 @@ public class Settings extends Activity {
 				sb.setMax(40);
 			}
 			sb.setProgress((set = Integer.valueOf(val))-min);
-			setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
+			setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : AppSettings.a(set)+"")+")");
 			final int m = min;
 			sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 					@Override
 					public void onProgressChanged(SeekBar p1,int p2,boolean p3){
 						set = p2 + m;
-						setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : Settings.a(set)+"")+")");
+						setTitle(act.name()+" ("+(isNumberNotFloat(act) ? set+"" : AppSettings.a(set)+"")+")");
 					}
 
 					@Override
@@ -456,6 +456,10 @@ public class Settings extends Activity {
 			s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 			s.setText("Select image");
 			l.addView(s);
+			Button w = new Button(this);
+			w.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
+			w.setText("Get wallpaper");
+			l.addView(w);
 			iv = new ImageView(this){
 				@Override
 				public void setImageBitmap(Bitmap b){
@@ -471,6 +475,24 @@ public class Settings extends Activity {
 						i.setType("image/*");
 						i.setAction(Intent.ACTION_GET_CONTENT);
 						startActivityForResult(Intent.createChooser(i,""),1);
+					}
+				});
+			w.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View p1){
+						int pm = checkCallingOrSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+						if(pm == PackageManager.PERMISSION_GRANTED){
+							WallpaperManager wm = (WallpaperManager) getSystemService(WALLPAPER_SERVICE);
+							Drawable d = wm.getDrawable();
+							if(d instanceof BitmapDrawable){
+								Bitmap b = ((BitmapDrawable) d).getBitmap();
+								b = ImageUtils.get512pxBitmap(b);
+								iv.setImageBitmap(b);
+							}
+						} else {
+							Toast.makeText(p1.getContext(),"Enable storage access for get system wallpaper",Toast.LENGTH_LONG).show();
+							startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:"+getPackageName())));
+						}
 					}
 				});
 			iv.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -503,7 +525,7 @@ public class Settings extends Activity {
 					@Override
 					public boolean onLongClick(View p1){
 						f.delete();
-						Settings.iv.setImageDrawable(null);
+						AppSettings.iv.setImageDrawable(null);
 						finish();
 						restartKeyboard(p1.getContext());
 						return false;

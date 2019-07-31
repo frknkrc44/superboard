@@ -60,6 +60,10 @@ public class InputService extends InputMethodService {
 		if(sb != null){
 			sb.updateKeyState(this);
 		}
+		if(po != null){
+			po.showPopup(false);
+			po.clear();
+		}
 		System.gc();
 	}
 	
@@ -138,7 +142,7 @@ public class InputService extends InputMethodService {
 			};
 
 			try {
-				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR_Q");
+				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_lang_select.name(),"tr_TR_Q");
 				cl = SuperBoardApplication.getKeyboardLanguage(lang);
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
@@ -254,7 +258,6 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
 		try {
-			sd.onlyRead();
 			setPrefs();
 		} catch(Throwable t){
 			System.exit(0);
@@ -264,26 +267,26 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.updateKeyState(this);
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_height.name(),36));
-			img = Settings.getBackgroundImageFile(this);
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_height.name(),36));
+			img = AppSettings.getBackgroundImageFile(this);
 			if(fl != null){
-				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgblur.name(),0);
+				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_bgblur.name(),0);
 				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
 				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 			}
-			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_bgclr.name(),0xFF282D31);
+			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_bgclr.name(),0xFF282D31);
 			sb.setBackgroundColor(c);
-			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_bgclr.name(),0xFF474B4C));
-			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowsize.name(),0),
-				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_shadowclr.name(),0xFFDDE1E2);
+			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_bgclr.name(),0xFF474B4C));
+			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_shadowsize.name(),0),
+				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_shadowclr.name(),0xFFDDE1E2);
 			sb.setKeysShadow(shr,shc);
-			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_longpress_duration.name(),1));
-			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_vibrate_duration.name(),0));
-			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textclr.name(),0xFFDDE1E2));
-			sb.setKeysTextSize(sb.mp(Settings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key_textsize.name(),13))));
-			sb.setKeysTextType(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_texttype_select.name(),0));
-			int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.key2_bgclr.name(),0xFF373C40);
-			int z = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,Settings.Key.enter_bgclr.name(),0xFF5F97F6);
+			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_longpress_duration.name(),1));
+			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_vibrate_duration.name(),0));
+			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_textclr.name(),0xFFDDE1E2));
+			sb.setKeysTextSize(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_textsize.name(),13))));
+			sb.setKeysTextType(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_texttype_select.name(),0));
+			int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key2_bgclr.name(),0xFF373C40);
+			int z = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.enter_bgclr.name(),0xFF5F97F6);
 			for(int i = 0;i < kbd.length;i++){
 				if(i != 0){
 					if(i < 3){
@@ -296,7 +299,7 @@ public class InputService extends InputMethodService {
 					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
 			}
-			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,Settings.Key.keyboard_lang_select.name(),"tr_TR_Q");
+			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_lang_select.name(),"tr_TR_Q");
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
 			}
@@ -412,7 +415,6 @@ public class InputService extends InputMethodService {
 	BroadcastReceiver r = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context p1,Intent p2){
-			sd.onlyRead();
 			setPrefs();
 		}
 	};

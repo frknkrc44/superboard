@@ -20,7 +20,7 @@ public class BoardPopup extends SuperBoard {
 		updateKeyState((InputMethodService)root.getContext());
 		popupFilter = new View(root.getContext());
 		popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1,getKeyboardHeight()));
-		popupFilter.setVisibility(View.INVISIBLE);
+		popupFilter.setVisibility(View.GONE);
 		mKey = new Key(getContext());
 		mKey.setOnTouchListener(null);
 		root.addView(popupFilter);
@@ -38,13 +38,13 @@ public class BoardPopup extends SuperBoard {
 		setKeysTextColor(key.getTextColor());
 		setKeysTextType(key.txtst);
 		setKeysShadow(key.shr,key.shc);
-		khp = sdb.getInteger(Settings.Key.keyboard_height.name(),hp(10));
-		int a = sdb.getInteger(Settings.Key.keyboard_bgclr.name(),0xFF000000);
+		khp = sdb.getInteger(AppSettings.Key.keyboard_height.name(),hp(10));
+		int a = sdb.getInteger(AppSettings.Key.keyboard_bgclr.name(),0xFF000000);
 		a = Color.argb(0xCC,Color.red(a),Color.green(a),Color.blue(a));
 		setBackground(LayoutUtils.getKeyBg(sdb,this,a,false));
 		setBackground(LayoutUtils.getKeyBg(sdb,this,a,true));
 		popupFilter.setBackgroundColor(a-0x33000000);
-		mKey.setVisibility(INVISIBLE);
+		mKey.setVisibility(GONE);
 		key.getLocationInWindow(pos);
 		mKey.setX(pos[0]);
 		mKey.setY(pos[1] - (pos[1] >= (a = mKey.getLayoutParams().height) ? a : 0));
@@ -55,7 +55,7 @@ public class BoardPopup extends SuperBoard {
 	}
 	
 	public void hideCharacter(){
-		mKey.setVisibility(INVISIBLE);
+		mKey.setVisibility(GONE);
 	}
 	
 	public void showPopup(){

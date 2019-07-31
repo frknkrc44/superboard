@@ -7,7 +7,7 @@ import org.superdroid.db.SuperDB;
 import org.superdroid.db.SuperDBHelper;
 import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.LayoutUtils.Language;
-import org.blinksd.board.Settings.Key;
+import org.blinksd.board.AppSettings.Key;
 
 public class SuperBoardApplication extends Application {
 	
