@@ -245,7 +245,6 @@ public class InputService extends InputMethodService {
 		}
 		if(emoji == null){
 			emoji = new EmojiView(sb,emojiClick);
-			emoji.setPadding(0,0,0,x() ? navbarH() : 0);
 			emoji.setVisibility(View.GONE);
 			emoji.setBackgroundDrawable(sb.getBackground());
 		}
@@ -255,7 +254,7 @@ public class InputService extends InputMethodService {
 			iv = new ImageView(this);
 			fl.addView(iv);
 			fl.addView(emoji);
-			emoji.getLayoutParams().height = iv.getLayoutParams().height;
+			emoji.getLayoutParams().height = sb.getKeyboardHeight();
 			fl.addView(ll);
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
@@ -337,7 +336,7 @@ public class InputService extends InputMethodService {
 			adjustNavbar(c);
 			if(emoji != null){
 				emoji.applyTheme(sb);
-				emoji.getLayoutParams().height = iv.getLayoutParams().height;
+				emoji.getLayoutParams().height = sb.getKeyboardHeight();
 			}
 		}
 	}
