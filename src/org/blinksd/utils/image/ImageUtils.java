@@ -31,11 +31,13 @@ public class ImageUtils {
 		return null;
 	}
 	
-	public static final Bitmap get512pxBitmap(Bitmap b){
+	private static final float minSize = 720.0f;
+	
+	public static final Bitmap getMinimizedBitmap(Bitmap b){
 		if(b != null){
 			int a = getLongDimensionOfPicture(b);
-			if(a > 512){
-				float f = 512.0f/a;
+			if(a > minSize){
+				float f = minSize/a;
 				return getScaledBitmap(b,f);
 			}
 			return b;

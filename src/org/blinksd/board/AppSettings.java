@@ -486,7 +486,7 @@ public class AppSettings extends Activity {
 							Drawable d = wm.getDrawable();
 							if(d instanceof BitmapDrawable){
 								Bitmap b = ((BitmapDrawable) d).getBitmap();
-								b = ImageUtils.get512pxBitmap(b);
+								b = ImageUtils.getMinimizedBitmap(b);
 								iv.setImageBitmap(b);
 							}
 						} else {
@@ -661,7 +661,7 @@ public class AppSettings extends Activity {
 			protected void onPostExecute(Bitmap result){
 				super.onPostExecute(result);
 				if(result != null){
-					result = ImageUtils.get512pxBitmap(result);
+					result = ImageUtils.getMinimizedBitmap(result);
 					iv.setImageBitmap(temp = result);
 				}
 			}
