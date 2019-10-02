@@ -65,6 +65,9 @@ public class InputService extends InputMethodService {
 			po.showPopup(false);
 			po.clear();
 		}
+		if(emoji != null){
+			showEmojiView(false);
+		}
 		System.gc();
 	}
 	
@@ -437,6 +440,7 @@ public class InputService extends InputMethodService {
 		if(po != null && po.isShown()){
 			po.showPopup(false);
 		}
+		showEmojiView(false);
 		return super.onKeyDown(keyCode,event);
 	}
 	
@@ -448,7 +452,8 @@ public class InputService extends InputMethodService {
 	
 	public void showEmojiView(boolean value){
 		if(showEmoji != value){
-			emoji.setVisibility(value ? View.VISIBLE : View.GONE);
+			emoji.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
+			sb.setVisibility(value ? View.INVISIBLE : View.VISIBLE);
 			showEmoji = value;
 		}
 	}

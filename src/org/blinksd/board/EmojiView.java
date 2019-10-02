@@ -13,6 +13,7 @@ public class EmojiView extends LinearLayout {
 	private float txtsze;
 	private int keyclr;
 	private Drawable drw;
+	private TabWidget tw;
 	
 	public EmojiView(SuperBoard sb, View.OnClickListener ocl){
 		super(sb.getContext());
@@ -25,10 +26,9 @@ public class EmojiView extends LinearLayout {
 	private int curTab = 0;
 	
 	private void apply(View.OnClickListener ocl){
-		setBackgroundColor(0xFF000000);
 		final TabHost th = new TabHost(getContext());
 		th.setLayoutParams(new LayoutParams(-1,-2,1));
-		final TabWidget tw = new TabWidget(getContext());
+		tw = new TabWidget(getContext());
 		tw.setId(android.R.id.tabs);
 		tw.setLayoutParams(new LayoutParams(-1,-1,1));
 		FrameLayout fl = new FrameLayout(getContext());
@@ -37,8 +37,8 @@ public class EmojiView extends LinearLayout {
 		th.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
 			@Override
 			public void onTabChanged(String p1){
-				tw.getChildTabViewAt(curTab).setBackgroundColor(0);
-				tw.getChildTabViewAt(curTab = th.getCurrentTab()).setBackgroundColor(0xFF212121);
+				tw.getChildTabViewAt(curTab).setSelected(false);
+				tw.getChildTabViewAt(curTab = th.getCurrentTab()).setSelected(true);
 			}
 		});
 		final LinearLayout ll = new LinearLayout(getContext());
@@ -64,6 +64,7 @@ public class EmojiView extends LinearLayout {
 			tv.setGravity(Gravity.CENTER);
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP,8);
 			ts.setIndicator(tv);
+			tv.setBackground(drw.getConstantState().newDrawable());
 			final int x = i;
 			ts.setContent(new TabContentFactory(){
 					@Override
