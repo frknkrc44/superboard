@@ -33,6 +33,7 @@ public class InputService extends InputMethodService {
 	private ImageView iv = null;
 	private File img = null;
 	private Language cl;
+	private EmojiView emoji = null;
 
 	@Override
 	public View onCreateInputView(){
@@ -110,6 +111,11 @@ public class InputService extends InputMethodService {
 				public void switchLanguage(){
 					SuperBoardApplication.getNextLanguage();
 					setPrefs();
+				}
+				
+				@Override
+				public void openEmojiLayout(){
+					showEmojiView(true);
 				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -253,6 +259,13 @@ public class InputService extends InputMethodService {
 			fl.addView(po);
 		}
 		setPrefs();
+		if(emoji == null){
+			emoji = new EmojiView(sb,emojiClick);
+			emoji.getLayoutParams().height = iv.getLayoutParams().height;
+			emoji.setPadding(0,0,0,x() ? navbarH() : 0);
+			emoji.setVisibility(View.GONE);
+			fl.addView(emoji);
+		}
 	}
 
 	@Override
@@ -426,4 +439,31 @@ public class InputService extends InputMethodService {
 		}
 		return super.onKeyDown(keyCode,event);
 	}
+	
+	public void onEmojiText(String text){
+		sb.commitText(text);
+	}
+	
+	private boolean showEmoji = false;
+	
+	public void showEmojiView(boolean value){
+		if(showEmoji != value){
+			emoji.setVisibility(value ? View.VISIBLE : View.GONE);
+			showEmoji = value;
+		}
+	}
+	
+	private View.OnClickListener emojiClick = new View.OnClickListener(){
+		public void onClick(View v){
+			final int num = Integer.parseInt(v.getTag().toString());
+			switch(num){
+				case -1:
+					showEmojiView(false);
+					break;
+				case 10:
+					sb.sendKeyEvent(KeyEvent.KEYCODE_DEL);
+					break;
+			}
+		}
+	};
 }

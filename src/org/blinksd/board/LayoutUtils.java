@@ -184,6 +184,10 @@ public class LayoutUtils {
 						break;
 					case SuperBoard.KEYCODE_SWITCH_LANGUAGE:
 						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_language);
+						break;
+					case SuperBoard.KEYCODE_OPEN_EMOJI_LAYOUT:
+						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_emoji);
+						break;
 				}
 			}
 		}

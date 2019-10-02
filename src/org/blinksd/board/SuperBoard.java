@@ -24,10 +24,13 @@ public class SuperBoard extends FrameLayout {
 	protected float txtsze = -1;
 	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean clear = false, lng = false, lock = false;
-	private Drawable keybg = null;
+	protected Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
+	
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
 	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
+	public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
+	
 	protected Handler h = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
@@ -137,6 +140,10 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public void switchLanguage(){
+		
+	}
+	
+	public void openEmojiLayout(){
 		
 	}
 	
@@ -649,13 +656,16 @@ public class SuperBoard extends FrameLayout {
 		return getServiceContext().getCurrentInputConnection();
 	}
 
-	private void sendKeyEvent(int code){
+	public void sendKeyEvent(int code){
 		switch(code){
 			case KEYCODE_CLOSE_KEYBOARD:
 				closeKeyboard();
 				break;
 			case KEYCODE_SWITCH_LANGUAGE:
 				switchLanguage();
+				break;
+			case KEYCODE_OPEN_EMOJI_LAYOUT:
+				openEmojiLayout();
 				break;
 			default:
 				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0));
@@ -666,7 +676,7 @@ public class SuperBoard extends FrameLayout {
 		getCurrentIC().performEditorAction(action);
 	}
 
-	private void commitText(String text){
+	public final void commitText(String text){
 		if(text == null) return;
 		getCurrentIC().commitText(text,text.length());
 	}
