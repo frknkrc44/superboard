@@ -1,0 +1,6 @@
+# Ignored files
+*.jks
+
+# Ignored folders
+bin/
+gen/
