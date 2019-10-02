@@ -243,11 +243,19 @@ public class InputService extends InputMethodService {
 			ll.setOrientation(LinearLayout.VERTICAL);
 			ll.addView(sb);
 		}
+		if(emoji == null){
+			emoji = new EmojiView(sb,emojiClick);
+			emoji.setPadding(0,0,0,x() ? navbarH() : 0);
+			emoji.setVisibility(View.GONE);
+			emoji.setBackgroundDrawable(sb.getBackground());
+		}
 		if(fl == null){
 			fl = new RelativeLayout(this);
 			fl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 			iv = new ImageView(this);
 			fl.addView(iv);
+			fl.addView(emoji);
+			emoji.getLayoutParams().height = iv.getLayoutParams().height;
 			fl.addView(ll);
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
@@ -262,13 +270,6 @@ public class InputService extends InputMethodService {
 			fl.addView(po);
 		}
 		setPrefs();
-		if(emoji == null){
-			emoji = new EmojiView(sb,emojiClick);
-			emoji.getLayoutParams().height = iv.getLayoutParams().height;
-			emoji.setPadding(0,0,0,x() ? navbarH() : 0);
-			emoji.setVisibility(View.GONE);
-			fl.addView(emoji);
-		}
 	}
 
 	@Override
@@ -334,6 +335,10 @@ public class InputService extends InputMethodService {
 			}
 			sb.setKeyboardLanguage(cl.language);
 			adjustNavbar(c);
+			if(emoji != null){
+				emoji.applyTheme(sb);
+				emoji.getLayoutParams().height = iv.getLayoutParams().height;
+			}
 		}
 	}
 	

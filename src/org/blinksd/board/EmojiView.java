@@ -14,19 +14,31 @@ public class EmojiView extends LinearLayout {
 	private int keyclr;
 	private Drawable drw;
 	private TabWidget tw;
+	private TabHost th;
+	private View.OnClickListener oclick;
 	
 	public EmojiView(SuperBoard sb, View.OnClickListener ocl){
 		super(sb.getContext());
+		oclick = ocl;
+		applyTheme(sb);
+	}
+	
+	public void applyTheme(SuperBoard sb){
 		txtsze = sb.txtsze;
 		keyclr = sb.keyclr;
-		drw = sb.keybg.getConstantState().newDrawable();
-		apply(ocl);
+		drw = sb.keybg;
+		if(drw == null){
+			drw = new ColorDrawable(0);
+		}
+		removeAllViewsInLayout();
+		apply(oclick);
+		System.gc();
 	}
 	
 	private int curTab = 0;
 	
 	private void apply(View.OnClickListener ocl){
-		final TabHost th = new TabHost(getContext());
+		th = new TabHost(getContext());
 		th.setLayoutParams(new LayoutParams(-1,-2,1));
 		tw = new TabWidget(getContext());
 		tw.setId(android.R.id.tabs);
@@ -44,7 +56,7 @@ public class EmojiView extends LinearLayout {
 		final LinearLayout ll = new LinearLayout(getContext());
 		ll.setLayoutParams(new LayoutParams(-1,-1));
 		ll.setOrientation(VERTICAL);
-		setLayoutParams(new LayoutParams(-1,-1));
+		setLayoutParams(new RelativeLayout.LayoutParams(-1,-1));
 		final LinearLayout tl = new LinearLayout(getContext());
 		int l = getResources().getDisplayMetrics().widthPixels / emojis.length;
 		tl.setLayoutParams(new LayoutParams(-1,l));
@@ -58,18 +70,19 @@ public class EmojiView extends LinearLayout {
 		for(int i = 0;i < emojis.length;i++){
 			TabSpec ts = th.newTabSpec(emojis[i][0]);
 			TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1,tw,false);
-			tv.setLayoutParams(new LayoutParams(-1,-2,1));
+			tv.setLayoutParams(new LayoutParams(-1,l,1));
 			tv.setText(emojis[i][0]);
 			tv.setTextColor(keyclr);
 			tv.setGravity(Gravity.CENTER);
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP,8);
+			tv.setPadding(0,0,0,0);
+			tv.setTextSize(txtsze);
 			ts.setIndicator(tv);
 			tv.setBackground(drw.getConstantState().newDrawable());
 			final int x = i;
 			ts.setContent(new TabContentFactory(){
 					@Override
 					public View createTabContent(String p1){
-						return emojiList(x,tw.getHeight());
+						return emojiList(x);
 					}
 				});
 			th.addTab(ts);
@@ -109,7 +122,7 @@ public class EmojiView extends LinearLayout {
 	private EmojiView(Context c, AttributeSet a, int d){ super(c,a,d); }
 	private EmojiView(Context c, AttributeSet a, int d, int r){ super(c,a,d,r); }
 	
-	private GridView emojiList(final int index, int margin){
+	private GridView emojiList(final int index){
 		final GridView gv = new GridView(getContext());
 		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
 		gv.setLayoutParams(new LayoutParams(-1,-1));
@@ -118,7 +131,7 @@ public class EmojiView extends LinearLayout {
 		gv.setOnItemClickListener(new GridView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4){
-				((InputService)getContext()).onEmojiText(gv.getItemAtPosition(p3).toString());
+				((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString());
 			}
 		});
 		ArrayAdapter<String> aa = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,android.R.id.text1){
