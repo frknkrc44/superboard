@@ -20,6 +20,7 @@ import org.blinksd.utils.image.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
+import org.blinksd.utils.system.*;
 
 public class InputService extends InputMethodService {
 	
@@ -404,6 +405,9 @@ public class InputService extends InputMethodService {
 	}
 	
 	private boolean x(){
+		if(SystemUtils.isNotColorizeNavbar()){
+			return false;
+		}
 		return !isLand() || isTablet();
 	}
 	
