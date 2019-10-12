@@ -375,9 +375,11 @@ public class InputService extends InputMethodService {
 				if(x()){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
+					w.setNavigationBarColor(0);
 					ll.addView(createNavbarLayout(c));
 				} else {
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					w.setNavigationBarColor(0xFF000000);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 				}
 			} else {
@@ -426,10 +428,17 @@ public class InputService extends InputMethodService {
 				IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
 				Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
 				Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
-				Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
-				return (boolean) hasNavigationBar.invoke(windowManagerService);
+				Method hasNavigationBar = null;
+				if(Build.VERSION.SDK_INT < 29){
+					hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
+					return (boolean) hasNavigationBar.invoke(windowManagerService);
+				}
+				hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar",int.class);
+				WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+				Display dsp = wm.getDefaultDisplay();
+				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
 			} catch(Exception e){
-				return ViewConfiguration.get(this).hasPermanentMenuKey();
+				Log.e("Navbar","Navbar not detected because ...",e);
 			}
 		}
 		return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && 
