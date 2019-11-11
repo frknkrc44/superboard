@@ -48,6 +48,9 @@ public class Insets {
 	 */
 	public Insets(Object insObj){
 		try {
+			if(!insObj.getClass().getName().equals("android.graphics.Insets")){
+				throw new RuntimeException("Invalid class name: "+insObj.getClass().getName());
+			}
 			String[] fields = {"left","top","right","bottom"};
 			for(String field : fields){
 				Field f = insObj.getClass().getDeclaredField(field);
@@ -67,7 +70,9 @@ public class Insets {
 						break;
 				}
 			}
-		} catch(Throwable t){}
+		} catch(Throwable t){
+			throw new RuntimeException(t);
+		}
 	}
 
     Insets(int left, int top, int right, int bottom) {

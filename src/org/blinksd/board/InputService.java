@@ -22,6 +22,7 @@ import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
 import static android.media.AudioManager.*;
+import static android.provider.Settings.Secure.getInt;
 
 public class InputService extends InputMethodService {
 	
@@ -42,19 +43,6 @@ public class InputService extends InputMethodService {
 	@Override
 	public View onCreateInputView(){
 		setLayout();
-		sb.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(){
-				@Override
-				public WindowInsets onApplyWindowInsets(View p1, WindowInsets p2){
-					try {
-						if(Build.VERSION.SDK_INT >= 29){
-							Method mt = WindowInsets.class.getMethod("getSystemGestureInsets");
-							yandroid.graphics.Insets insets = new yandroid.graphics.Insets(mt.invoke(p2));
-							gestureHeight = insets.bottom;
-						}
-					} catch(Throwable t){}
-					return p2;
-				}
-		});
 		return fl;
 	}
 
@@ -67,7 +55,17 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting){
 		super.onStartInput(attribute, restarting);
+		
+		try {
+			gestureHeight = Build.VERSION.SDK_INT >= 29 && getInt(getContentResolver(),"navigation_mode") == 2 
+						? org.blinksd.utils.layout.DensityUtils.dpInt(48) 
+						: 0;
+		} catch(Throwable t){
+			gestureHeight = 0;
+		}
+		
 		if(sb != null){
+			setPrefs();
 			sb.updateKeyState(this);
 		}
 	}
