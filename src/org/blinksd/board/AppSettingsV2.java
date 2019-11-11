@@ -293,22 +293,22 @@ public class AppSettingsV2 extends Activity {
 						nums[0] = 0;
 						switch(key){
 							case "keyboard_bgblur":
-								nums[1] = 40;
+								nums[1] = Constants.MAX_OTHER_VAL;
 								break;
 							case "key_vibrate_duration":
-								nums[1] = 100;
+								nums[1] = Constants.MAX_VIBR_DUR;
 								break;
 						}
 						break;
 					case MM_DECIMAL_NUMBER:
 						switch(key){
 							case "keyboard_height":
-								nums[0] = 20;
-								nums[1] = 80;
+								nums[0] = Constants.MIN_KEYBD_HGT;
+								nums[1] = Constants.MAX_KEYBD_HGT;
 								break;
 							case "key_longpress_duration":
-								nums[0] = 1;
-								nums[1] = 3;
+								nums[0] = Constants.MIN_LPRESS_DUR;
+								nums[1] = Constants.MAX_LPRESS_DUR;
 								break;
 						}
 						break;
@@ -317,14 +317,14 @@ public class AppSettingsV2 extends Activity {
 						switch(key){
 							case "key_padding":
 							case "key_shadowsize":
-								nums[1] = 40;
+								nums[1] = Constants.MAX_OTHER_VAL;
 								break;
 							case "key_radius":
-								nums[1] = 100;
+								nums[1] = Constants.MAX_RADS_DUR;
 								break;
 							case "key_textsize":
-								nums[0] = 6;
-								nums[1] = 60;
+								nums[0] = Constants.MIN_TEXT_SIZE;
+								nums[1] = Constants.MAX_TEXT_SIZE;
 								break;
 						}
 						break;
