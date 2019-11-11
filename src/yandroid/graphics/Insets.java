@@ -75,7 +75,7 @@ public class Insets {
 		}
 	}
 
-    Insets(int left, int top, int right, int bottom) {
+    public Insets(int left, int top, int right, int bottom) {
         this.left = left;
         this.top = top;
         this.right = right;
@@ -87,7 +87,7 @@ public class Insets {
 	 *
 	 * @author frknkrc44
 	 */
-	Insets(Rect rect){
+	public Insets(Rect rect){
 		left = rect.left;
 		top = rect.top;
 		right = rect.right;
