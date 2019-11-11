@@ -31,7 +31,7 @@ public class ImageUtils {
 		return null;
 	}
 	
-	private static final float minSize = 720.0f;
+	public static final float minSize = 720.0f;
 	
 	public static final Bitmap getMinimizedBitmap(Bitmap b){
 		if(b != null){

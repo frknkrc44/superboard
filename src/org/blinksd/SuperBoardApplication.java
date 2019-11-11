@@ -13,15 +13,21 @@ public class SuperBoardApplication extends Application {
 	
 	static HashMap<String,Language> langs = null;
 	static SuperDB appDB = null;
+	static SuperBoardApplication app = null;
 	
 	@Override
 	public void onCreate(){
+		app = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		try {
 			langs = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
 			langs = new HashMap<String,LayoutUtils.Language>();
 		}
+	}
+	
+	public static SuperBoardApplication getApplication(){
+		return app;
 	}
 	
 	public static SuperDB getApplicationDatabase(){

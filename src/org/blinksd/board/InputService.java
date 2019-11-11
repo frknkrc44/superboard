@@ -3,10 +3,9 @@ package org.blinksd.board;
 import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
-import android.graphics.drawable.*;
 import android.inputmethodservice.*;
+import android.media.AudioManager;
 import android.os.*;
-import android.util.*;
 import android.view.*;
 import android.view.inputmethod.*;
 import android.widget.*;
@@ -17,10 +16,11 @@ import org.blinksd.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
+import org.blinksd.utils.system.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import org.blinksd.utils.system.*;
+import static android.media.AudioManager.*;
 
 public class InputService extends InputMethodService {
 	
@@ -35,10 +35,25 @@ public class InputService extends InputMethodService {
 	private File img = null;
 	private Language cl;
 	private EmojiView emoji = null;
+	
+	int gestureHeight = 0;
 
 	@Override
 	public View onCreateInputView(){
 		setLayout();
+		sb.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(){
+				@Override
+				public WindowInsets onApplyWindowInsets(View p1, WindowInsets p2){
+					try {
+						if(Build.VERSION.SDK_INT >= 29){
+							Method mt = WindowInsets.class.getMethod("getSystemGestureInsets");
+							yandroid.graphics.Insets insets = new yandroid.graphics.Insets(mt.invoke(p2));
+							gestureHeight = insets.bottom;
+						}
+					} catch(Throwable t){}
+					return p2;
+				}
+		});
 		return fl;
 	}
 
@@ -92,7 +107,9 @@ public class InputService extends InputMethodService {
 						return;
 					}
 					po.setKey((SuperBoard.Key)v,sd);
-					po.showCharacter();
+					if(sd.getBoolean("keyboard_show_popup",false)){
+						po.showCharacter();
+					}
 				}
 				
 				public void onPopupEvent(){
@@ -103,7 +120,9 @@ public class InputService extends InputMethodService {
 				@Override
 				public void afterKeyboardEvent(){
 					super.afterKeyboardEvent();
-					po.hideCharacter();
+					if(sd.getBoolean("keyboard_show_popup",false)){
+						po.hideCharacter();
+					}
 				}
 				
 				public void sendDefaultKeyboardEvent(View v){
@@ -113,13 +132,37 @@ public class InputService extends InputMethodService {
 				
 				@Override
 				public void switchLanguage(){
-					SuperBoardApplication.getNextLanguage();
-					setPrefs();
+					if(sd.getBoolean("keyboard_lc_on_emoji",false)){
+						SuperBoardApplication.getNextLanguage();
+						setPrefs();
+					} else {
+						openEmojiLayout();
+					}
 				}
 				
 				@Override
 				public void openEmojiLayout(){
 					showEmojiView(true);
+				}
+				
+				@Override
+				public void playSound(int event){
+					if(!sd.getBoolean("play_snd_press",false)) return;
+					AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
+					switch(event){
+						case Keyboard.KEYCODE_DONE:
+							audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+							break;
+						case Keyboard.KEYCODE_DELETE:
+							audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+							break;
+						case KeyEvent.KEYCODE_SPACE:
+							audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+							break;
+						default:
+							audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+							break;
+					}
 				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -140,8 +183,8 @@ public class InputService extends InputMethodService {
 				},{
 					{"F1","F2","F3","F4","F5","F6","F7","F8"},
 					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
-					{"TAB","ENTER","","ESC","PREV","PL/PA","STOP","NEXT"},
-					{"","","","","","","",""},
+					{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
+					{"","","END","","","PAUSE","",""},
 					{abc,"🔇","←","↑","↓","→","🔉","🔊"}
 				},{
 					{"1","2","3","+"},
@@ -193,11 +236,15 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(3,1,7,KeyEvent.KEYCODE_DEL);
 			sb.setPressEventForKey(3,2,0,KeyEvent.KEYCODE_TAB);
 			sb.setPressEventForKey(3,2,1,'\n',false);
+			sb.setPressEventForKey(3,2,2,KeyEvent.KEYCODE_MOVE_HOME);
 			sb.setPressEventForKey(3,2,3,KeyEvent.KEYCODE_ESCAPE);
 			sb.setPressEventForKey(3,2,4,KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-			sb.setPressEventForKey(3,2,5,KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+			sb.setPressEventForKey(3,2,5,KeyEvent.KEYCODE_MEDIA_PLAY);
 			sb.setPressEventForKey(3,2,6,KeyEvent.KEYCODE_MEDIA_STOP);
 			sb.setPressEventForKey(3,2,7,KeyEvent.KEYCODE_MEDIA_NEXT);
+			
+			sb.setPressEventForKey(3,3,2,KeyEvent.KEYCODE_MOVE_END);
+			sb.setPressEventForKey(3,3,5,KeyEvent.KEYCODE_MEDIA_PAUSE);
 			
 			sb.setPressEventForKey(3,-1,1,KeyEvent.KEYCODE_MUTE);
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
@@ -209,7 +256,7 @@ public class InputService extends InputMethodService {
 			
 			for(int i = 0;i < 2;i++){
 				for(int g = 0;g < 8;g++){
-					if(i >= 1 && g >= 4) break;
+					if(i > 0 && g > 3) break;
 					sb.setPressEventForKey(3,i,g,KeyEvent.KEYCODE_F1+(g+(i*8)));
 				}
 			}
@@ -265,6 +312,11 @@ public class InputService extends InputMethodService {
 				@Override
 				public void afterKeyboardEvent(){
 					sb.afterPopupEvent();
+				}
+				
+				@Override
+				public void playSound(int event){
+					sb.playSound(event);
 				}
 			};
 			fl.addView(po);
@@ -375,11 +427,9 @@ public class InputService extends InputMethodService {
 				if(x()){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
-					w.setNavigationBarColor(0);
 					ll.addView(createNavbarLayout(c));
 				} else {
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-					w.setNavigationBarColor(0xFF000000);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 				}
 			} else {
@@ -400,6 +450,7 @@ public class InputService extends InputMethodService {
 	
 	private int navbarH(){
 		if(x()){
+			if(gestureHeight > 0) return gestureHeight;
 			int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
 			return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
 		}
@@ -438,14 +489,14 @@ public class InputService extends InputMethodService {
 				Display dsp = wm.getDefaultDisplay();
 				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
 			} catch(Exception e){
-				Log.e("Navbar","Navbar not detected because ...",e);
+				Log.e("Navbar","Navbar detection failed by internal system APIs because ...",e);
 			}
 		}
 		return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && 
 			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 	
-	BroadcastReceiver r = new BroadcastReceiver(){
+	private BroadcastReceiver r = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context p1,Intent p2){
 			setPrefs();
@@ -467,7 +518,7 @@ public class InputService extends InputMethodService {
 	
 	private boolean showEmoji = false;
 	
-	public void showEmojiView(boolean value){
+	private void showEmojiView(boolean value){
 		if(showEmoji != value){
 			emoji.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
 			sb.setVisibility(value ? View.INVISIBLE : View.VISIBLE);
