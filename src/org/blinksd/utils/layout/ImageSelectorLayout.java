@@ -223,7 +223,7 @@ public class ImageSelectorLayout {
 		int size = ar.length == 1 ? 2 : ar.length;
 		int[] out = new int[size];
 		for(int i = 0;i < ar.length;i++){
-			out[i] = ar[i];
+			out[i] = (int) ar[i];
 		}
 		if(ar.length == 1){
 			out[1] = out[0];

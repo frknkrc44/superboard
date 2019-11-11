@@ -6,6 +6,7 @@ import android.graphics.*;
 import android.inputmethodservice.*;
 import android.media.AudioManager;
 import android.os.*;
+import android.util.*;
 import android.view.*;
 import android.view.inputmethod.*;
 import android.widget.*;

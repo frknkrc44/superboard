@@ -68,7 +68,7 @@ public class ColorSelectorLayout {
 				@Override
 				public void onTabChanged(String p1){
 					a.setVisibility(p1.equals(stra[2]) ? View.GONE : View.VISIBLE);
-					int tag = widget.getTag();
+					int tag = (int) widget.getTag();
 					switch(host.getCurrentTab()){
 						case 0:
 							r.setProgress(Color.red(tag));

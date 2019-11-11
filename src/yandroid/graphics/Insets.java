@@ -54,16 +54,16 @@ public class Insets {
 				f.setAccessible(true);
 				switch(field){
 					case "left":
-						left = f.get(insObj);
+						left = (int) f.get(insObj);
 						break;
 					case "top":
-						top = f.get(insObj);
+						top = (int) f.get(insObj);
 						break;
 					case "right":
-						right = f.get(insObj);
+						right = (int) f.get(insObj);
 						break;
 					case "bottom":
-						bottom = f.get(insObj);
+						bottom = (int) f.get(insObj);
 						break;
 				}
 			}
