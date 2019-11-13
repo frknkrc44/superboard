@@ -11,6 +11,7 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.utils.image.*;
@@ -37,7 +38,7 @@ public class AppSettingsV2 extends Activity {
 		try {
 			createMainView();
 		} catch(Throwable e){
-			// do nothing
+			Log.e("MainView","Error:",e);
 		}
 	}
 	
@@ -56,7 +57,8 @@ public class AppSettingsV2 extends Activity {
 					main.addView(createColorSelector(key));
 					break;
 				case SELECTOR:
-					main.addView(createRadioSelector(key));
+					String[] selectorKeys = getArrayFromKeyToArray(key);
+					main.addView(createRadioSelector(key,selectorKeys));
 					break;
 				case DECIMAL_NUMBER:
 				case MM_DECIMAL_NUMBER:
@@ -113,8 +115,13 @@ public class AppSettingsV2 extends Activity {
 		return swtch;
 	}
 	
-	private final View createRadioSelector(String key) throws Throwable {
+	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
+	
+	private final View createRadioSelector(String key, String[] items) throws Throwable {
 		View base = createImageSelector(key);
+		String value = sdb.getString(key,"");
+		base.setTag(TAG1,value);
+		base.setTag(TAG2,items);
 		base.setOnClickListener(radioSelectorListener);
 		return base;
 	}
@@ -186,10 +193,41 @@ public class AppSettingsV2 extends Activity {
 
 		@Override
 		public void onClick(View p1){
-			
+			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+			build.setTitle(getTranslation(p1.getTag().toString()));
+			final View layout = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,p1.getId(),(String[])p1.getTag(TAG2));
+			build.setView(layout);
+			build.show();
 		}
 		
 	};
+	
+	private final String[] getArrayFromKeyToArray(String key) throws Throwable {
+		List<String> items = getArrayFromKey(key);
+		String[] itemOut = new String[items.size()];
+		for(int i = 0;i < items.size();i++){
+			itemOut[i] = items.get(i);
+		}
+		return itemOut;
+	}
+	
+	private final List<String> getArrayFromKey(String key) throws Throwable {
+		List<String> list = new ArrayList<String>();
+		String settingKey = "settings_" + key;
+		Field[] fields = R.string.class.getFields();
+		
+		for(Field field : fields){
+			if(field.getName().startsWith(settingKey)){
+				list.add(field.getName());
+			}
+		}
+		
+		if(list.size() < 1){
+			list.add(settingKey);
+		}
+		
+		return list;
+	}
 	
 	public final float getListPreferredItemHeight(){
 		TypedValue value = new TypedValue();

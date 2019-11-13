@@ -1,6 +1,6 @@
 SDK=$(HOME)/Android/Sdk
-TARGET=28
-TOOL=28.0.3
+TARGET=29
+TOOL=29.0.2
 JAVADIR= 
 BUILDTOOLS=$(SDK)/build-tools/$(TOOL)
 AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
