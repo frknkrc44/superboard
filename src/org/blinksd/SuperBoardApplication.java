@@ -1,13 +1,11 @@
 package org.blinksd;
 
-import android.app.Application;
-import java.util.ArrayList;
-import java.util.HashMap;
-import org.superdroid.db.SuperDB;
-import org.superdroid.db.SuperDBHelper;
-import org.blinksd.board.LayoutUtils;
-import org.blinksd.board.LayoutUtils.Language;
-import org.blinksd.board.AppSettings.Key;
+import android.app.*;
+import java.util.*;
+import org.blinksd.board.*;
+import org.blinksd.board.AppSettings.*;
+import org.blinksd.board.LayoutUtils.*;
+import org.superdroid.db.*;
 
 public class SuperBoardApplication extends Application {
 	
@@ -63,6 +61,19 @@ public class SuperBoardApplication extends Application {
 			}
 		}
 		return LayoutUtils.getEmptyLanguage();
+	}
+	
+	/**
+	 * Returns human readable language name list
+	 */
+	public static List<String> getLanguageHRNames(){
+		List<String> langKeys = new ArrayList<String>(langs.keySet());
+		List<String> out = new ArrayList<String>();
+		for(String key : langKeys){
+			Language lang = langs.get(key);
+			out.add(lang.label);
+		}
+		return out;
 	}
 	
 }

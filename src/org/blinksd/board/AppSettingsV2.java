@@ -21,6 +21,7 @@ import yandroid.widget.*;
 
 public class AppSettingsV2 extends Activity {
 	
+	ScrollView scroller;
 	LinearLayout main;
 	SuperDB sdb;
 	static View dialogView;
@@ -32,7 +33,10 @@ public class AppSettingsV2 extends Activity {
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
 		int dp = DensityUtils.dpInt(16);
 		main.setPadding(dp,dp,dp,dp);
-		setContentView(main);
+		scroller = new ScrollView(this);
+		scroller.setLayoutParams(new FrameLayout.LayoutParams(-1,-1));
+		scroller.addView(main);
+		setContentView(scroller);
 		sdb = SuperBoardApplication.getApplicationDatabase();
 		sMap = new SettingMap();
 		try {
@@ -56,8 +60,12 @@ public class AppSettingsV2 extends Activity {
 				case COLOR_SELECTOR:
 					main.addView(createColorSelector(key));
 					break;
+				case LANG_SELECTOR:
+					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
+					main.addView(createRadioSelector(key,keySet));
+					break;
 				case SELECTOR:
-					String[] selectorKeys = getArrayFromKeyToArray(key);
+					List<String> selectorKeys = getArrayFromKey(key);
 					main.addView(createRadioSelector(key,selectorKeys));
 					break;
 				case DECIMAL_NUMBER:
@@ -117,7 +125,7 @@ public class AppSettingsV2 extends Activity {
 	
 	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
 	
-	private final View createRadioSelector(String key, String[] items) throws Throwable {
+	private final View createRadioSelector(String key, List<String> items) throws Throwable {
 		View base = createImageSelector(key);
 		String value = sdb.getString(key,"");
 		base.setTag(TAG1,value);
@@ -195,21 +203,21 @@ public class AppSettingsV2 extends Activity {
 		public void onClick(View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			build.setTitle(getTranslation(p1.getTag().toString()));
-			final View layout = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,p1.getId(),(String[])p1.getTag(TAG2));
+			final View layout = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,p1.getId(),(List<String>)p1.getTag(TAG2));
 			build.setView(layout);
 			build.show();
 		}
 		
 	};
 	
-	private final String[] getArrayFromKeyToArray(String key) throws Throwable {
+	/*private final String[] getArrayFromKeyToArray(String key) throws Throwable {
 		List<String> items = getArrayFromKey(key);
 		String[] itemOut = new String[items.size()];
 		for(int i = 0;i < items.size();i++){
 			itemOut[i] = items.get(i);
 		}
 		return itemOut;
-	}
+	}*/
 	
 	private final List<String> getArrayFromKey(String key) throws Throwable {
 		List<String> list = new ArrayList<String>();
@@ -243,8 +251,12 @@ public class AppSettingsV2 extends Activity {
 		return requestedKey;
 	}
 	
-	public static float a(int i){
+	public static float getFloatNumberFromInt(int i){
 		return i / 10.0f;
+	}
+	
+	public static int getIntNumberFromFloat(float i){
+		return (int)(i * 10);
 	}
 
 	public static void restartKeyboard(){
@@ -289,7 +301,7 @@ public class AppSettingsV2 extends Activity {
 	private class SettingMap extends TreeMap<String,SettingType> {
 
 		public SettingMap(){
-			put("keyboard_lang_select",SettingType.SELECTOR);
+			put("keyboard_lang_select",SettingType.LANG_SELECTOR);
 			put("keyboard_texttype_select",SettingType.SELECTOR);
 			put("keyboard_bgimg",SettingType.IMAGE);
 			put("keyboard_bgblur",SettingType.DECIMAL_NUMBER);
@@ -376,6 +388,7 @@ public class AppSettingsV2 extends Activity {
 	public static enum SettingType {
 		BOOL,
 		COLOR_SELECTOR,
+		LANG_SELECTOR,
 		SELECTOR,
 		DECIMAL_NUMBER,
 		FLOAT_NUMBER,

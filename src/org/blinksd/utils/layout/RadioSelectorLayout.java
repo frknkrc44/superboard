@@ -10,15 +10,15 @@ public class RadioSelectorLayout {
 	
 	private RadioSelectorLayout(){}
 	
-	public static final View getRadioSelectorLayout(Context ctx, int selection, List<String> items){
-		String[] itemOut = new String[items.size()];
-		for(int i = 0;i < items.size();i++){
-			itemOut[i] = items.get(i);
+	public static final View getRadioSelectorLayout(Context ctx, int selection, String[] items){
+		List<String> itemOut = new ArrayList<String>();
+		for(String item : items){
+			itemOut.add(item);
 		}
 		return getRadioSelectorLayout(ctx, selection, itemOut);
 	}
 	
-	public static final View getRadioSelectorLayout(Context ctx, int selection, String[] items){
+	public static final View getRadioSelectorLayout(Context ctx, int selection, List<String> items){
 		final RadioGroup rg = new RadioGroup(ctx);
 		int i = DensityUtils.dpInt(8);
 		rg.setPadding(i,i,i,i);
