@@ -11,6 +11,8 @@ public class Defaults {
 	public static final int ENTER_BACKGROUND_COLOR = 0xFF5F97F6;
 	public static final int KEY_TEXT_COLOR = 0xFFDDE1E2;
 	public static final int KEY_TEXT_SHADOW_COLOR = KEY_TEXT_COLOR;
+	public static final int KEY_PADDING = 10;
+	public static final int KEY_RADIUS = 10;
 	
 	public static final int KEY_TEXT_SIZE = 13;
 	public static final int KEY_TEXT_SHADOW_SIZE = 0;
@@ -20,4 +22,7 @@ public class Defaults {
 	
 	public static final String KEYBOARD_LANGUAGE_KEY = "tr_TR_Q";
 	
+	public static final boolean KEYBOARD_SHOW_POPUP = true;
+	public static final boolean KEYBOARD_LC_ON_EMOJI = false;
+	public static final boolean KEYBOARD_TOUCH_SOUND = true;
 }

@@ -5,10 +5,9 @@ import android.content.res.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.os.*;
-import android.util.*;
 import android.view.*;
 import java.util.*;
-import org.blinksd.board.*;
+import org.blinksd.*;
 import org.json.*;
 import org.superdroid.db.*;
 
@@ -191,6 +190,10 @@ public class LayoutUtils {
 				}
 			}
 		}
+	}
+	
+	public static ArrayList<String> getKeyListFromLanguageList(){
+		return getKeyListFromLanguageList(SuperBoardApplication.getKeyboardLanguageList());
 	}
 	
 	public static ArrayList<String> getKeyListFromLanguageList(HashMap<String,Language> list){
