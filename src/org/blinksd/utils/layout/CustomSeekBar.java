@@ -8,6 +8,9 @@ import android.widget.*;
 import org.blinksd.board.*;
 
 class CustomSeekBar extends SeekBar {
+	
+	private int mMinValue = 0;
+	
 	CustomSeekBar(Context c){
 		super(c);
 		setLayoutParams(new LinearLayout.LayoutParams(SuperBoard.mp(50),-2,0));
@@ -30,4 +33,5 @@ class CustomSeekBar extends SeekBar {
 		ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
 		setProgressDrawable(ld);
 	}
+	
 }

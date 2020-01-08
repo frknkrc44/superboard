@@ -67,7 +67,6 @@ public class AppSettingsV2 extends Activity {
 					main.addView(createRadioSelector(key,val,keySet));
 					break;
 				case SELECTOR:
-					
 					List<String> selectorKeys = getArrayAsList(key);
 					int x = sdb.getInteger(key,(int)sMap.getDefaults(key));
 					main.addView(createRadioSelector(key,x,selectorKeys));
@@ -86,6 +85,7 @@ public class AppSettingsV2 extends Activity {
 		LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,this);
 		numSelector.getLayoutParams().height = -2;
 		TextView img = LayoutCreator.createTextView(this);
+		img.setId(android.R.id.text1);
 		int height = (int) getListPreferredItemHeight();
 		img.setGravity(Gravity.CENTER);
 		img.setTextColor(0xFFFFFFFF);
@@ -100,7 +100,7 @@ public class AppSettingsV2 extends Activity {
 		btn.setText(getTranslation(key));
 		numSelector.setTag(key);
 		numSelector.setMinimumHeight(height);
-		//numSelector.setOnClickListener(colorSelectorListener);
+		numSelector.setOnClickListener(numberSelectorListener);
 		numSelector.addView(img);
 		numSelector.addView(btn);
 		return numSelector;
@@ -169,6 +169,47 @@ public class AppSettingsV2 extends Activity {
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			build.setTitle(getTranslation(p1.getTag().toString()));
 			build.setView(ColorSelectorLayout.getColorSelectorLayout(AppSettingsV2.this,p1.getTag().toString()));
+			build.show();
+		}
+
+	};
+	
+	private final View.OnClickListener numberSelectorListener = new View.OnClickListener(){
+
+		@Override
+		public void onClick(final View p1){
+			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+			final String tag = p1.getTag().toString();
+			build.setTitle(getTranslation(tag));
+			AppSettingsV2 act = (AppSettingsV2) p1.getContext();
+			final boolean isFloat = sMap.get(tag) == SettingType.FLOAT_NUMBER;
+			int[] minMax = sMap.getMinMaxNumbers(tag);
+			final int val = sdb.getInteger(tag,sMap.getDefaults(tag));
+			dialogView = NumberSelectorLayout.getNumberSelectorLayout(act,isFloat,minMax[0],minMax[1],val);
+			build.setView(dialogView);
+			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						p1.dismiss();
+					}
+
+				});
+			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) dialogView.getTag();
+						if(tagVal != val){
+							sdb.putInteger(tag,tagVal);
+							sdb.onlyWrite();
+						}
+						TextView tv = p1.findViewById(android.R.id.text1);
+						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+						d1.dismiss();
+					}
+
+				});
 			build.show();
 		}
 
