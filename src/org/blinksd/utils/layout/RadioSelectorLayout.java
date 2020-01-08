@@ -22,11 +22,11 @@ public class RadioSelectorLayout {
 		final RadioGroup rg = new RadioGroup(ctx);
 		int i = DensityUtils.dpInt(8);
 		rg.setPadding(i,i,i,i);
-		rg.setId(selection);
+		rg.setTag(selection);
 		rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId){
-				rg.setId(checkedId);
+				rg.setTag(checkedId);
 			}
 		});
 		i = 0;

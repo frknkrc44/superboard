@@ -189,14 +189,14 @@ public class AppSettingsV2 extends Activity {
 						if(tagVal != val){
 							sdb.putInteger(tag,tagVal);
 							sdb.onlyWrite();
+							ImageView img = p1.findViewById(android.R.id.icon);
+							GradientDrawable gd = new GradientDrawable();
+							gd.setColor(tagVal);
+							gd.setCornerRadius(1000);
+							img.setImageDrawable(gd);
+							restartKeyboard();
 						}
-						ImageView img = p1.findViewById(android.R.id.icon);
-						GradientDrawable gd = new GradientDrawable();
-						gd.setColor(tagVal);
-						gd.setCornerRadius(1000);
-						img.setImageDrawable(gd);
 						d1.dismiss();
-						restartKeyboard();
 					}
 
 				});
@@ -234,11 +234,11 @@ public class AppSettingsV2 extends Activity {
 						if(tagVal != val){
 							sdb.putInteger(tag,tagVal);
 							sdb.onlyWrite();
+							TextView tv = p1.findViewById(android.R.id.text1);
+							tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+							restartKeyboard();
 						}
-						TextView tv = p1.findViewById(android.R.id.text1);
-						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
 						d1.dismiss();
-						restartKeyboard();
 					}
 
 				});
@@ -304,11 +304,46 @@ public class AppSettingsV2 extends Activity {
 	private final View.OnClickListener radioSelectorListener = new View.OnClickListener(){
 
 		@Override
-		public void onClick(View p1){
+		public void onClick(final View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-			build.setTitle(getTranslation(p1.getTag().toString()));
-			final View layout = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,(int)p1.getTag(TAG1),(List<String>)p1.getTag(TAG2));
-			build.setView(layout);
+			final String tag = p1.getTag().toString();
+			int val;
+			final boolean langSelector = sMap.get(tag) == SettingType.LANG_SELECTOR;
+			if(langSelector){
+				String value = sdb.getString(tag,(String)sMap.getDefaults(tag));
+				val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
+			} else {
+				val = sdb.getInteger(tag,(int) sMap.getDefaults(tag));
+			}
+			build.setTitle(getTranslation(tag));
+			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,(int)p1.getTag(TAG1),(List<String>)p1.getTag(TAG2));
+			build.setView(dialogView);
+			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						p1.dismiss();
+					}
+
+				});
+			final int xval = val;
+			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						int tagVal = (int) dialogView.getTag();
+						if(tagVal != xval){
+							if(langSelector){
+								String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
+								sdb.putString(tag,index);
+							} else sdb.putInteger(tag,tagVal);
+							sdb.onlyWrite();
+							restartKeyboard();
+						}
+						p1.dismiss();
+					}
+
+				});
 			build.show();
 		}
 		
