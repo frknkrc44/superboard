@@ -25,7 +25,7 @@ public class SetupActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 		if(isInputMethodEnabled() && isInputMethodSelected()){
-			startActivity(new Intent(this,AppSettings.class));
+			startActivity(new Intent(this,AppSettingsV2.class));
 			finish();
 			return;
 		}

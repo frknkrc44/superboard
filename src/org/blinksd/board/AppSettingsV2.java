@@ -11,9 +11,9 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 import org.blinksd.*;
+import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.layout.*;
 import org.superdroid.db.*;
@@ -111,6 +111,7 @@ public class AppSettingsV2 extends Activity {
 		LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,this);
 		colSelector.getLayoutParams().height = -2;
 		ImageView img = LayoutCreator.createImageView(this);
+		img.setId(android.R.id.icon);
 		int height = (int) getListPreferredItemHeight();
 		img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class,height,height));
 		img.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -165,10 +166,40 @@ public class AppSettingsV2 extends Activity {
 	private final View.OnClickListener colorSelectorListener = new View.OnClickListener(){
 
 		@Override
-		public void onClick(View p1){
+		public void onClick(final View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-			build.setTitle(getTranslation(p1.getTag().toString()));
-			build.setView(ColorSelectorLayout.getColorSelectorLayout(AppSettingsV2.this,p1.getTag().toString()));
+			final String tag = p1.getTag().toString();
+			build.setTitle(getTranslation(tag));
+			final int val = sdb.getInteger(tag, (int)sMap.getDefaults(tag));
+			dialogView = ColorSelectorLayout.getColorSelectorLayout(AppSettingsV2.this,p1.getTag().toString());
+			build.setView(dialogView);
+			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						p1.dismiss();
+					}
+
+				});
+			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) dialogView.findViewById(android.R.id.tabs).getTag();
+						if(tagVal != val){
+							sdb.putInteger(tag,tagVal);
+							sdb.onlyWrite();
+						}
+						ImageView img = p1.findViewById(android.R.id.icon);
+						GradientDrawable gd = new GradientDrawable();
+						gd.setColor(tagVal);
+						gd.setCornerRadius(1000);
+						img.setImageDrawable(gd);
+						d1.dismiss();
+						restartKeyboard();
+					}
+
+				});
 			build.show();
 		}
 
@@ -207,6 +238,7 @@ public class AppSettingsV2 extends Activity {
 						TextView tv = p1.findViewById(android.R.id.text1);
 						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
 						d1.dismiss();
+						restartKeyboard();
 					}
 
 				});
@@ -238,10 +270,12 @@ public class AppSettingsV2 extends Activity {
 						if(d != null){
 							try {
 								Bitmap bmp = ((BitmapDrawable) d).getBitmap();
+								setColorsFromBitmap(bmp);
 								FileOutputStream fos = new FileOutputStream(getBackgroundImageFile());
 								bmp.compress(Bitmap.CompressFormat.PNG,100,fos);
 							} catch(Throwable e){}
 							restartKeyboard();
+							recreate();
 						}
 						p1.dismiss();
 					}
@@ -262,6 +296,7 @@ public class AppSettingsV2 extends Activity {
 			String str = (String) buttonView.getTag();
 			sdb.putBoolean(str,isChecked);
 			sdb.onlyWrite();
+			restartKeyboard();
 		}
 		
 	};
@@ -278,6 +313,20 @@ public class AppSettingsV2 extends Activity {
 		}
 		
 	};
+	
+	private void setColorsFromBitmap(Bitmap b){
+		if(b == null) return;
+		int c = ColorUtils.getBitmapColor(b);
+		sdb.putInteger(SettingMap.SET_KEYBOARD_BGCLR,c-0xAA000000);
+		int keyClr = c-0xAA000000;
+		sdb.putInteger(SettingMap.SET_KEY_BGCLR,keyClr);
+		sdb.putInteger(SettingMap.SET_KEY2_BGCLR,SuperBoard.getColorWithState(c,true));
+		sdb.putInteger(SettingMap.SET_ENTER_BGCLR,ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(keyClr,true) : 0xFFFFFFFF);
+		keyClr = ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
+		sdb.putInteger(SettingMap.SET_KEY_TEXTCLR,keyClr);
+		sdb.putInteger(SettingMap.SET_KEY_SHADOWCLR,keyClr);
+		sdb.onlyWrite();
+	}
 	
 	private List<String> getArrayAsList(String key){
 		int id = getResources().getIdentifier("settings_" + key, "array", getPackageName());
@@ -370,7 +419,8 @@ public class AppSettingsV2 extends Activity {
 		SET_KEY_TEXTSIZE = "key_textsize",
 		SET_KEY_SHADOWSIZE = "key_shadowsize",
 		SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
-		SET_KEY_LONGPRESS_DURATION = "key_longpress_duration";
+		SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
+		SET_KEY_TEXTCLR = "key_textclr";
 
 		public SettingMap(){
 			put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -386,6 +436,7 @@ public class AppSettingsV2 extends Activity {
 			put(SET_KEY2_BGCLR,SettingType.COLOR_SELECTOR);
 			put(SET_ENTER_BGCLR,SettingType.COLOR_SELECTOR);
 			put(SET_KEY_SHADOWCLR,SettingType.COLOR_SELECTOR);
+			put(SET_KEY_TEXTCLR,SettingType.COLOR_SELECTOR);
 			put(SET_KEY_PADDING,SettingType.FLOAT_NUMBER);
 			put(SET_KEY_RADIUS,SettingType.FLOAT_NUMBER);
 			put(SET_KEY_TEXTSIZE,SettingType.FLOAT_NUMBER);
@@ -446,6 +497,8 @@ public class AppSettingsV2 extends Activity {
 						return Defaults.ENTER_BACKGROUND_COLOR;
 					case SET_KEY_SHADOWCLR:
 						return Defaults.KEY_TEXT_SHADOW_COLOR;
+					case SET_KEY_TEXTCLR:
+						return Defaults.KEY_TEXT_COLOR;
 				}
 			}
 			return null;
