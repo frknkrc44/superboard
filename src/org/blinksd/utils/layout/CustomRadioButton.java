@@ -3,7 +3,9 @@ package org.blinksd.utils.layout;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import android.os.*;
 import android.widget.*;
+import android.content.res.*;
 
 public class CustomRadioButton extends RadioButton {
 	
@@ -11,10 +13,21 @@ public class CustomRadioButton extends RadioButton {
 		super(c);
 		int i = DensityUtils.dpInt(8);
 		setPadding(i,0,i,0);
-		setRadioButton();
+		if(Build.VERSION.SDK_INT < 21){
+			Drawable drw = getButtonDrawable();
+			if(drw != null){
+				drw.setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_IN);
+			}
+		} else {
+			setButtonTintList(ColorStateList.valueOf(0xFFDEDEDE));
+			setButtonTintMode(PorterDuff.Mode.SRC_IN);
+			setBackgroundDrawable(null);
+		}
+		
+		//setRadioButton();
 	}
 	
-	void setRadioButton(){
+	/*void setRadioButton(){
 		StateListDrawable sld = new StateListDrawable();
 		int i = 64;
 		int g = DensityUtils.dpInt(i);
@@ -38,6 +51,6 @@ public class CustomRadioButton extends RadioButton {
 		sld.addState(new int[]{android.R.attr.state_checked},bdc);
 		sld.addState(new int[]{},bdn);
 		setButtonDrawable(sld);
-	}
+	}*/
 	
 }

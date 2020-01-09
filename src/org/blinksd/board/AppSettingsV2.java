@@ -26,6 +26,8 @@ public class AppSettingsV2 extends Activity {
 	SuperDB sdb;
 	static View dialogView;
 	SettingMap sMap;
+	
+	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
 
 	@Override
 	protected void onCreate(Bundle b){
@@ -62,14 +64,11 @@ public class AppSettingsV2 extends Activity {
 					break;
 				case LANG_SELECTOR:
 					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
-					String value = sdb.getString(key,(String)sMap.getDefaults(key));
-					int val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
-					main.addView(createRadioSelector(key,val,keySet));
+					main.addView(createRadioSelector(key,keySet));
 					break;
 				case SELECTOR:
 					List<String> selectorKeys = getArrayAsList(key);
-					int x = sdb.getInteger(key,(int)sMap.getDefaults(key));
-					main.addView(createRadioSelector(key,x,selectorKeys));
+					main.addView(createRadioSelector(key,selectorKeys));
 					break;
 				case DECIMAL_NUMBER:
 				case MM_DECIMAL_NUMBER:
@@ -153,11 +152,9 @@ public class AppSettingsV2 extends Activity {
 		return swtch;
 	}
 	
-	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
-	
-	private final View createRadioSelector(String key, int value, List<String> items) throws Throwable {
+	private final View createRadioSelector(String key, List<String> items) throws Throwable {
 		View base = createImageSelector(key);
-		base.setTag(TAG1,value);
+		base.setTag(TAG1,key);
 		base.setTag(TAG2,items);
 		base.setOnClickListener(radioSelectorListener);
 		return base;
@@ -306,7 +303,7 @@ public class AppSettingsV2 extends Activity {
 		@Override
 		public void onClick(final View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-			final String tag = p1.getTag().toString();
+			final String tag = p1.getTag(TAG1).toString();
 			int val;
 			final boolean langSelector = sMap.get(tag) == SettingType.LANG_SELECTOR;
 			if(langSelector){
@@ -316,7 +313,7 @@ public class AppSettingsV2 extends Activity {
 				val = sdb.getInteger(tag,(int) sMap.getDefaults(tag));
 			}
 			build.setTitle(getTranslation(tag));
-			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,(int)p1.getTag(TAG1),(List<String>)p1.getTag(TAG2));
+			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,val,(List<String>)p1.getTag(TAG2));
 			build.setView(dialogView);
 			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
 
