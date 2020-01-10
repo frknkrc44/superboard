@@ -51,7 +51,7 @@ public class SetupActivity extends Activity {
 		private ImageView tv,tn;
 
 		public SetupResources(){
-			textSize = dpInt(8);
+			textSize = dpInt(12);
 		}
 
 		private int dpInt(int px){
@@ -59,11 +59,10 @@ public class SetupActivity extends Activity {
 		}
 
 		private float dp(int px){
-			if(width() > 400) return px * (width() / (width() / 3));
-			return (Resources.getSystem().getDisplayMetrics().density * px)/1.5f;
+			return Resources.getSystem().getDisplayMetrics().density * px;
 		}
 
-		private int width(){
+		private int getWidth(){
 			return Resources.getSystem().getDisplayMetrics().widthPixels;
 		}
 
@@ -81,7 +80,7 @@ public class SetupActivity extends Activity {
 				ml.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
 				ml.setOrientation(LinearLayout.VERTICAL);
 				LinearLayout ll = new LinearLayout(SetupActivity.this);
-				ll.setLayoutParams(new LinearLayout.LayoutParams(width() * tabs.length,-1,1));
+				ll.setLayoutParams(new LinearLayout.LayoutParams(getWidth() * tabs.length,-1,1));
 				for(View v : tabs) ll.addView(v);
 				ml.addView(ll);
 				ml.addView(bottomBar());
@@ -104,13 +103,15 @@ public class SetupActivity extends Activity {
 			ll.setGravity(Gravity.CENTER);
 			ll.setOrientation(LinearLayout.VERTICAL);
 			ImageView iv = new ImageView(SetupActivity.this);
-			iv.setLayoutParams(new LinearLayout.LayoutParams(-2,dpInt(96)));
+			int imgSize = dpInt(128);
+			iv.setLayoutParams(new LinearLayout.LayoutParams(imgSize,imgSize));
 			iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			String label = "";
 			try {
-				Drawable d = getPackageManager().getActivityInfo(getComponentName(),0).loadIcon(getPackageManager());
+				ApplicationInfo info = getPackageManager().getApplicationInfo(getPackageName(),0);
+				Drawable d = info.loadIcon(getPackageManager());
 				iv.setImageDrawable(d);
-				label = getPackageManager().getApplicationInfo(getPackageName(),0).loadLabel(getPackageManager()).toString();
+				label = info.loadLabel(getPackageManager()).toString();
 			} catch(Throwable t){}
 			TextView tv = new TextView(SetupActivity.this);
 			tv.setLayoutParams(new LinearLayout.LayoutParams(-2,-2));
@@ -203,7 +204,7 @@ public class SetupActivity extends Activity {
 				tn.setBackgroundDrawable(getSelectableItemBg());
 				tn.setPadding(p,p,p,p);
 				ll.addView(tv);
-				ll.addView(dot.getDotView(textColor));
+				ll.addView(dot.getDotView());
 				ll.addView(tn);
 				bottom = ll;
 			}
@@ -244,7 +245,7 @@ public class SetupActivity extends Activity {
 			switch(seek){
 				case SEEK_BACK:
 					if(seek(false)){
-						lastScroll = (width() + lastScroll);
+						lastScroll = (getWidth() + lastScroll);
 						if(Build.VERSION.SDK_INT > 14)
 							scroll.animate().translationX(lastScroll).setDuration(200);
 						else scroll.setTranslationX(lastScroll);
@@ -254,7 +255,7 @@ public class SetupActivity extends Activity {
 					break;
 				case SEEK_NEXT:
 					if(seek(true)){
-						lastScroll = (-width() + lastScroll);
+						lastScroll = (-getWidth() + lastScroll);
 						if(Build.VERSION.SDK_INT > 14)
 							scroll.animate().translationX(lastScroll).setDuration(200);
 						else scroll.setTranslationX(lastScroll);
@@ -269,7 +270,7 @@ public class SetupActivity extends Activity {
 					((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
 					break;
 				case KEYBOARD_SETTINGS:
-					startActivity(new Intent(SetupActivity.this,AppSettings.class));
+					startActivity(new Intent(SetupActivity.this,AppSettingsV2.class));
 					break;
 				case WIZARD_DONE:
 					// bottom.setVisibility(View.INVISIBLE);
@@ -341,18 +342,17 @@ public class SetupActivity extends Activity {
 	public class Dots {
 		
 		private LinearLayout dotView;
-		private int dot,text;
+		private int dot;
 		
 		public Dots(int dots){
 			dot = dots;
 		}
 		
-		public View getDotView(int textColor){
-			return getDotView(false,textColor);
+		public View getDotView(){
+			return getDotView(false);
 		}
 		
-		public View getDotView(boolean first,int textColor){
-			text = textColor;
+		public View getDotView(boolean first){
 			dotView = new LinearLayout(getBaseContext());
 			dotView.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,0.33f));
 			dotView.setGravity(Gravity.CENTER);
