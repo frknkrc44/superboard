@@ -406,7 +406,7 @@ public class AppSettingsV2 extends Activity {
 		sdb.putInteger(SettingMap.SET_ENTER_BGCLR,ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(keyClr,true) : 0xFFFFFFFF);
 		keyClr = ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
 		sdb.putInteger(SettingMap.SET_KEY_TEXTCLR,keyClr);
-		sdb.putInteger(SettingMap.SET_KEY_SHADOWCLR,keyClr);
+		sdb.putInteger(SettingMap.SET_KEY_SHADOWCLR,keyClr ^ 0x00FFFFFF);
 		sdb.onlyWrite();
 	}
 	
