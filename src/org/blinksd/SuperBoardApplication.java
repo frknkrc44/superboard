@@ -3,7 +3,6 @@ package org.blinksd;
 import android.app.*;
 import java.util.*;
 import org.blinksd.board.*;
-import org.blinksd.board.AppSettings.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.superdroid.db.*;
 
@@ -12,11 +11,13 @@ public class SuperBoardApplication extends Application {
 	static HashMap<String,Language> langs = null;
 	static SuperDB appDB = null;
 	static SuperBoardApplication app = null;
+	static SettingMap sMap = null;
 	
 	@Override
 	public void onCreate(){
 		app = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
+		sMap = new SettingMap();
 		try {
 			langs = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
@@ -42,8 +43,8 @@ public class SuperBoardApplication extends Application {
 	
 	public static Language getNextLanguage(){
 		ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(langs);
-		String key = Key.keyboard_lang_select.name();
-		String sel = appDB.getString(key,"");
+		String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
+		String sel = appDB.getString(key,(String)sMap.getDefaults(key));
 		if(!sel.equals("")){
 			int index = -1;
 			for(int i = 0;i < ll.size();i++){
@@ -74,6 +75,10 @@ public class SuperBoardApplication extends Application {
 			out.add(lang.label);
 		}
 		return out;
+	}
+	
+	public static SettingMap getSettings(){
+		return sMap;
 	}
 	
 }

@@ -648,6 +648,16 @@ public class SuperBoard extends FrameLayout {
 		if(vib > 0) vb.vibrate(vib);
 	}
 	
+	public void fakeKeyboardEvent(Key v){
+		if(v.getTag(TAG_NP) != null){
+			x = v.getTag(TAG_NP).toString().split(":");
+			y = Integer.parseInt(x[0]);
+			playSound(y);
+			return;
+		}
+		playSound(0);
+	}
+	
 	protected InputMethodService getServiceContext(){
 		return curr;
 	}

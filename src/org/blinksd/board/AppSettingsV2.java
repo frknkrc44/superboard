@@ -4,6 +4,8 @@ import android.app.*;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import android.inputmethodservice.*;
+import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.*;
@@ -19,13 +21,17 @@ import org.blinksd.utils.layout.*;
 import org.superdroid.db.*;
 import yandroid.widget.*;
 
+import static android.media.AudioManager.*;
+
 public class AppSettingsV2 extends Activity {
 	
-	ScrollView scroller;
-	LinearLayout main;
-	SuperDB sdb;
-	static View dialogView;
-	SettingMap sMap;
+	private ScrollView scroller;
+	private LinearLayout main, sets;
+	private SuperDB sdb;
+	private static View dialogView;
+	private SettingMap sMap;
+	private SuperBoard sb;
+	private static ImageView iv;
 	
 	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
 
@@ -33,54 +39,98 @@ public class AppSettingsV2 extends Activity {
 	protected void onCreate(Bundle b){
 		super.onCreate(b);
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
-		int dp = DensityUtils.dpInt(16);
-		main.setPadding(dp,dp,dp,dp);
-		scroller = new ScrollView(this);
-		scroller.setLayoutParams(new FrameLayout.LayoutParams(-1,-1));
-		scroller.addView(main);
-		setContentView(scroller);
+		sets = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,this);
 		sdb = SuperBoardApplication.getApplicationDatabase();
-		sMap = new SettingMap();
+		sMap = SuperBoardApplication.getSettings();
+		int dp = DensityUtils.dpInt(16);
+		sets.setPadding(dp,dp,dp,dp);
 		try {
 			createMainView();
 		} catch(Throwable e){
 			Log.e("MainView","Error:",e);
 		}
+		setKeyPrefs();
+		scroller = new ScrollView(this);
+		scroller.setLayoutParams(new FrameLayout.LayoutParams(-1,-1));
+		scroller.addView(sets);
+		main.addView(scroller);
+		setContentView(main);
+	}
+	
+	private void createPreviewView(){
+		FrameLayout ll = (FrameLayout) LayoutCreator.getHFilledView(FrameLayout.class, LinearLayout.class, this);
+		sb = new SuperBoard(this){
+			@Override
+			public void sendDefaultKeyboardEvent(View v){
+				playSound(v.getId());
+			}
+			
+			@Override
+			public void playSound(int event){
+				if(!sdb.getBoolean(SettingMap.SET_PLAY_SND_PRESS,false)) return;
+				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
+				switch(event){
+					case 2:
+						audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+						break;
+					case 1:
+						audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+						break;
+					default:
+						audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+						break;
+				}
+			}
+		};
+		iv = new ImageView(this);
+		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+		sb.addRow(0,new String[]{"1","2","3"});
+		for(int i = 0;i <= 2;i++) sb.getKey(0,0,i).setId(i);
+		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
+		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_return);
+		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
+		sb.setKeyboardHeight(20);
+		sb.setKeysPadding(sb.mp(4));
+		ll.addView(iv);
+		ll.addView(sb);
+		main.addView(ll);
 	}
 	
 	private void createMainView() throws Throwable {
+		createPreviewView();
 		ArrayList<String> keys = new ArrayList<String>(sMap.keySet());
 		for(String key : keys){
 			SettingType z = sMap.get(key);
 			switch(z){
 				case BOOL:
-					main.addView(createBoolSelector(key));
+					sets.addView(createBoolSelector(key));
 					break;
 				case IMAGE:
-					main.addView(createImageSelector(key));
+					sets.addView(createImageSelector(key));
 					break;
 				case COLOR_SELECTOR:
-					main.addView(createColorSelector(key));
+					sets.addView(createColorSelector(key));
 					break;
 				case LANG_SELECTOR:
 					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
-					main.addView(createRadioSelector(key,keySet));
+					sets.addView(createRadioSelector(key,keySet));
 					break;
 				case SELECTOR:
 					List<String> selectorKeys = getArrayAsList(key);
-					main.addView(createRadioSelector(key,selectorKeys));
+					sets.addView(createRadioSelector(key,selectorKeys));
 					break;
 				case DECIMAL_NUMBER:
 				case MM_DECIMAL_NUMBER:
 				case FLOAT_NUMBER:
-					main.addView(createNumberSelector(key,z == SettingType.FLOAT_NUMBER));
+					sets.addView(createNumberSelector(key,z == SettingType.FLOAT_NUMBER));
 					break;
 			}
 		}
 	}
 	
 	private final View createNumberSelector(String key, boolean isFloat){
-		int num = sdb.getInteger(key,(int) sMap.getDefaults(key));
+		int num = getIntOrDefault(key);
 		LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,this);
 		numSelector.getLayoutParams().height = -2;
 		TextView img = LayoutCreator.createTextView(this);
@@ -106,7 +156,7 @@ public class AppSettingsV2 extends Activity {
 	}
 	
 	private final View createColorSelector(String key){
-		int color = sdb.getInteger(key,(int) sMap.getDefaults(key));
+		int color = getIntOrDefault(key);
 		LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,this);
 		colSelector.getLayoutParams().height = -2;
 		ImageView img = LayoutCreator.createImageView(this);
@@ -167,7 +217,7 @@ public class AppSettingsV2 extends Activity {
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			final String tag = p1.getTag().toString();
 			build.setTitle(getTranslation(tag));
-			final int val = sdb.getInteger(tag, (int)sMap.getDefaults(tag));
+			final int val = getIntOrDefault(tag);
 			dialogView = ColorSelectorLayout.getColorSelectorLayout(AppSettingsV2.this,p1.getTag().toString());
 			build.setView(dialogView);
 			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
@@ -212,7 +262,7 @@ public class AppSettingsV2 extends Activity {
 			AppSettingsV2 act = (AppSettingsV2) p1.getContext();
 			final boolean isFloat = sMap.get(tag) == SettingType.FLOAT_NUMBER;
 			int[] minMax = sMap.getMinMaxNumbers(tag);
-			final int val = sdb.getInteger(tag,sMap.getDefaults(tag));
+			final int val = getIntOrDefault(tag);
 			dialogView = NumberSelectorLayout.getNumberSelectorLayout(act,isFloat,minMax[0],minMax[1],val);
 			build.setView(dialogView);
 			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
@@ -310,7 +360,7 @@ public class AppSettingsV2 extends Activity {
 				String value = sdb.getString(tag,(String)sMap.getDefaults(tag));
 				val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
 			} else {
-				val = sdb.getInteger(tag,(int) sMap.getDefaults(tag));
+				val = getIntOrDefault(tag);
 			}
 			build.setTitle(getTranslation(tag));
 			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,val,(List<String>)p1.getTag(TAG2));
@@ -370,6 +420,36 @@ public class AppSettingsV2 extends Activity {
 		return out;
 	}
 	
+	private void setKeyPrefs(){
+		File img = getBackgroundImageFile();
+		int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
+		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
+		StateListDrawable d = new StateListDrawable();
+		GradientDrawable gd = new GradientDrawable();
+		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));
+		gd.setCornerRadius(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS))));
+		gd.setStroke(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))),0);
+		GradientDrawable pd = new GradientDrawable();
+		pd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),true));
+		pd.setCornerRadius(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))));
+		pd.setStroke(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))),0);
+		d.addState(new int[]{android.R.attr.state_selected},pd);
+		d.addState(new int[]{},gd);
+		sb.setKeysBackground(d);
+		sb.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
+		sb.setKeyTintColor(0,0,1,getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
+		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
+		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
+		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+		sb.setKeysTextSize(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+	}
+	
+	private int getIntOrDefault(String key){
+		return sdb.getInteger(key,sMap.getDefaults(key));
+	}
+	
 	private final float getListPreferredItemHeight(){
 		TypedValue value = new TypedValue();
 		getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);	
@@ -392,8 +472,9 @@ public class AppSettingsV2 extends Activity {
 		return (int)(i * 10);
 	}
 
-	public static void restartKeyboard(){
-		SuperBoardApplication.getApplication().sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
+	public void restartKeyboard(){
+		setKeyPrefs();
+		sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
 	}
 	
 	public static File getBackgroundImageFile(){
@@ -427,161 +508,6 @@ public class AppSettingsV2 extends Activity {
 				ImageView img = dialogView.findViewById(android.R.id.custom);
 				img.setImageBitmap(result);
 			}
-		}
-
-	}
-	
-	private class SettingMap extends TreeMap<String,SettingType> {
-		
-		private static final String SET_KEYBOARD_LANG_SELECT = "keyboard_lang_select",
-		SET_KEYBOARD_TEXTTYPE_SELECT = "keyboard_texttype_select",
-		SET_KEYBOARD_BGIMG = "keyboard_bgimg",
-		SET_KEYBOARD_BGBLUR = "keyboard_bgblur",
-		SET_KEYBOARD_HEIGHT = "keyboard_height",
-		SET_KEYBOARD_BGCLR = "keyboard_bgclr",
-		SET_KEYBOARD_SHOW_POPUP = "keyboard_show_popup",
-		SET_KEYBOARD_LC_ON_EMOJI = "keyboard_lc_on_emoji",
-		SET_PLAY_SND_PRESS = "play_snd_press",
-		SET_KEY_BGCLR = "key_bgclr",
-		SET_KEY2_BGCLR = "key2_bgclr",
-		SET_ENTER_BGCLR = "enter_bgclr",
-		SET_KEY_SHADOWCLR = "key_shadowclr",
-		SET_KEY_PADDING = "key_padding",
-		SET_KEY_RADIUS = "key_radius",
-		SET_KEY_TEXTSIZE = "key_textsize",
-		SET_KEY_SHADOWSIZE = "key_shadowsize",
-		SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
-		SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
-		SET_KEY_TEXTCLR = "key_textclr";
-
-		public SettingMap(){
-			put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
-			put(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
-			put(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
-			put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
-			put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
-			put(SET_KEYBOARD_BGCLR,SettingType.COLOR_SELECTOR);
-			put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
-			put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
-			put(SET_PLAY_SND_PRESS,SettingType.BOOL);
-			put(SET_KEY_BGCLR,SettingType.COLOR_SELECTOR);
-			put(SET_KEY2_BGCLR,SettingType.COLOR_SELECTOR);
-			put(SET_ENTER_BGCLR,SettingType.COLOR_SELECTOR);
-			put(SET_KEY_SHADOWCLR,SettingType.COLOR_SELECTOR);
-			put(SET_KEY_TEXTCLR,SettingType.COLOR_SELECTOR);
-			put(SET_KEY_PADDING,SettingType.FLOAT_NUMBER);
-			put(SET_KEY_RADIUS,SettingType.FLOAT_NUMBER);
-			put(SET_KEY_TEXTSIZE,SettingType.FLOAT_NUMBER);
-			put(SET_KEY_SHADOWSIZE,SettingType.FLOAT_NUMBER);
-			put(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
-			put(SET_KEY_LONGPRESS_DURATION,SettingType.MM_DECIMAL_NUMBER);
-		}
-		
-		public ArrayList<String> getSelector(final String key) throws Throwable {
-			switch(key){
-				case SET_KEYBOARD_LANG_SELECT:
-					return new ArrayList<String>(LayoutUtils.getLanguageList(SuperBoardApplication.getApplication()).keySet());
-				case SET_KEYBOARD_TEXTTYPE_SELECT:
-					ArrayList<String> textTypes = new ArrayList<String>();
-					for(SuperBoard.TextType type : SuperBoard.TextType.values())
-						textTypes.add(type.name());
-					return textTypes;
-			}
-			return new ArrayList<String>();
-		}
-		
-		public Object getDefaults(final String key){
-			if(containsKey(key)){
-				switch(key){
-					case SET_KEYBOARD_BGBLUR:
-						return Defaults.KEYBOARD_BACKGROUND_BLUR;
-					case SET_KEY_VIBRATE_DURATION:
-						return Defaults.KEY_VIBRATE_DURATION;
-					case SET_KEYBOARD_HEIGHT:
-						return Defaults.KEYBOARD_HEIGHT;
-					case SET_KEY_LONGPRESS_DURATION:
-						return Defaults.KEY_LONGPRESS_DURATION;
-					case SET_KEY_PADDING:
-						return Defaults.KEY_PADDING;
-					case SET_KEY_SHADOWSIZE:
-						return Defaults.KEY_TEXT_SHADOW_SIZE;
-					case SET_KEY_RADIUS:
-						return Defaults.KEY_RADIUS;
-					case SET_KEY_TEXTSIZE:
-						return Defaults.KEY_TEXT_SIZE;
-					case SET_KEYBOARD_LANG_SELECT:
-						return Defaults.KEYBOARD_LANGUAGE_KEY;
-					case SET_KEYBOARD_TEXTTYPE_SELECT:
-						return Defaults.KEY_FONT_TYPE;
-					case SET_KEYBOARD_BGCLR:
-						return Defaults.KEYBOARD_BACKGROUND_COLOR;
-					case SET_KEYBOARD_SHOW_POPUP:
-						return Defaults.KEYBOARD_SHOW_POPUP;
-					case SET_KEYBOARD_LC_ON_EMOJI:
-						return Defaults.KEYBOARD_LC_ON_EMOJI;
-					case SET_PLAY_SND_PRESS:
-						return Defaults.KEYBOARD_TOUCH_SOUND;
-					case SET_KEY_BGCLR:
-						return Defaults.KEY_BACKGROUND_COLOR;
-					case SET_KEY2_BGCLR:
-						return Defaults.KEY2_BACKGROUND_COLOR;
-					case SET_ENTER_BGCLR:
-						return Defaults.ENTER_BACKGROUND_COLOR;
-					case SET_KEY_SHADOWCLR:
-						return Defaults.KEY_TEXT_SHADOW_COLOR;
-					case SET_KEY_TEXTCLR:
-						return Defaults.KEY_TEXT_COLOR;
-				}
-			}
-			return null;
-		}
-		
-		public int[] getMinMaxNumbers(final String key){
-			int[] nums = new int[2];
-			if(containsKey(key)){
-				switch(get(key)){
-					case DECIMAL_NUMBER:
-						nums[0] = 0;
-						switch(key){
-							case SET_KEYBOARD_BGBLUR:
-								nums[1] = Constants.MAX_OTHER_VAL;
-								break;
-							case SET_KEY_VIBRATE_DURATION:
-								nums[1] = Constants.MAX_VIBR_DUR;
-								break;
-						}
-						break;
-					case MM_DECIMAL_NUMBER:
-						switch(key){
-							case SET_KEYBOARD_HEIGHT:
-								nums[0] = Constants.MIN_KEYBD_HGT;
-								nums[1] = Constants.MAX_KEYBD_HGT;
-								break;
-							case SET_KEY_LONGPRESS_DURATION:
-								nums[0] = Constants.MIN_LPRESS_DUR;
-								nums[1] = Constants.MAX_LPRESS_DUR;
-								break;
-						}
-						break;
-					case FLOAT_NUMBER:
-						nums[0] = 0;
-						switch(key){
-							case SET_KEY_PADDING:
-							case SET_KEY_SHADOWSIZE:
-								nums[1] = Constants.MAX_OTHER_VAL;
-								break;
-							case SET_KEY_RADIUS:
-								nums[1] = Constants.MAX_RADS_DUR;
-								break;
-							case SET_KEY_TEXTSIZE:
-								nums[0] = Constants.MIN_TEXT_SIZE;
-								nums[1] = Constants.MAX_TEXT_SIZE;
-								break;
-						}
-						break;
-				}
-			}
-			return nums;
 		}
 
 	}

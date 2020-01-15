@@ -9,7 +9,7 @@ import yandroid.widget.*;
 
 public class LayoutCreator {
 	
-	public static final View getView(Class<?> clazz, Context ctx){
+	public static View getView(Class<?> clazz, Context ctx){
 		try {
 			Constructor cs = clazz.getConstructor(Context.class);
 			cs.setAccessible(true);
@@ -18,29 +18,47 @@ public class LayoutCreator {
 		return null;
 	}
 	
-	public static final LinearLayout createHorizontalLayout(Context ctx){
+	public static View getFilledView(Class<?> clazz, Class<?> rootViewClass, Context ctx){
+		View v = getView(clazz, ctx);
+		v.setLayoutParams(createLayoutParams(rootViewClass, -1, -1));
+		return v;
+	}
+	
+	public static View getHFilledView(Class<?> clazz, Class<?> rootViewClass, Context ctx){
+		View v = getFilledView(clazz, rootViewClass, ctx);
+		v.getLayoutParams().height = -2;
+		return v;
+	}
+	
+	public static View getVFilledView(Class<?> clazz, Class<?> rootViewClass, Context ctx){
+		View v = getFilledView(clazz, rootViewClass, ctx);
+		v.getLayoutParams().width = -2;
+		return v;
+	}
+	
+	public static LinearLayout createHorizontalLayout(Context ctx){
 		return (LinearLayout) getView(LinearLayout.class,ctx);
 	}
 	
-	public static final LinearLayout createVerticalLayout(Context ctx){
+	public static LinearLayout createVerticalLayout(Context ctx){
 		LinearLayout ll = createHorizontalLayout(ctx);
 		ll.setOrientation(LinearLayout.VERTICAL);
 		return ll;
 	}
 	
-	public static final LinearLayout createFilledHorizontalLayout(Class<?> rootViewClass, Context ctx){
+	public static LinearLayout createFilledHorizontalLayout(Class<?> rootViewClass, Context ctx){
 		LinearLayout ll = createHorizontalLayout(ctx);
 		ll.setLayoutParams(createLayoutParams(rootViewClass, -1, -1));
 		return ll;
 	}
 	
-	public static final LinearLayout createFilledVerticalLayout(Class<?> rootViewClass, Context ctx){
+	public static LinearLayout createFilledVerticalLayout(Class<?> rootViewClass, Context ctx){
 		LinearLayout ll = createFilledHorizontalLayout(rootViewClass, ctx);
 		ll.setOrientation(LinearLayout.VERTICAL);
 		return ll;
 	}
 	
-	public static final LinearLayout createGridBox(Context ctx, int rowCount, int columnCount){
+	public static LinearLayout createGridBox(Context ctx, int rowCount, int columnCount){
 		LinearLayout main = createVerticalLayout(ctx);
 		for(int i = 0;i < rowCount;i++){
 			LinearLayout hor = createHorizontalLayout(ctx);
@@ -58,34 +76,34 @@ public class LayoutCreator {
 		return main;
 	}
 	
-	public static final LinearLayout createFilledGridBox(Class<?> rootViewClass, Context ctx, int rowCount, int columnCount){
+	public static LinearLayout createFilledGridBox(Class<?> rootViewClass, Context ctx, int rowCount, int columnCount){
 		LinearLayout main = createGridBox(ctx, rowCount, columnCount);
 		main.setLayoutParams(createLayoutParams(rootViewClass, -1, -1));
 		return main;
 	}
 	
-	public static final ScrollView createScrollableGridBox(Context ctx, int rowCount, int columnCount){
+	public static ScrollView createScrollableGridBox(Context ctx, int rowCount, int columnCount){
 		ScrollView main = new ScrollView(ctx);
 		main.addView(createGridBox(ctx, rowCount, columnCount));
 		return main;
 	}
 	
-	public static final ScrollView createScrollableFilledGridBox(Class<?> rootViewClass, Context ctx, int rowCount, int columnCount){
+	public static ScrollView createScrollableFilledGridBox(Class<?> rootViewClass, Context ctx, int rowCount, int columnCount){
 		ScrollView main = createScrollableGridBox(ctx, rowCount, columnCount);
 		main.setLayoutParams(createLayoutParams(rootViewClass, -1, -1));
 		return main;
 	}
 	
-	public static final Button createButton(Context ctx){
+	public static Button createButton(Context ctx){
 		return (Button) getView(Button.class, ctx);
 	}
 	
-	public static final Button getButtonFromGridBox(ViewGroup box, int row, int column){
+	public static Button getButtonFromGridBox(ViewGroup box, int row, int column){
 		ViewGroup group = (ViewGroup) box.getChildAt(row);
 		return (Button) group.getChildAt(column);
 	}
 	
-	public static final ArrayList<Button> getButtonsFromGridBox(ViewGroup box){
+	public static ArrayList<Button> getButtonsFromGridBox(ViewGroup box){
 		ArrayList<Button> btnList = new ArrayList<Button>();
 		for(int i = 0;i < box.getChildCount();i++){
 			ViewGroup group = (ViewGroup) box.getChildAt(i);
@@ -97,17 +115,17 @@ public class LayoutCreator {
 		return btnList;
 	}
 	
-	public static final Button getButtonFromScrollableGridBox(ViewGroup box, int row, int column){
+	public static Button getButtonFromScrollableGridBox(ViewGroup box, int row, int column){
 		ViewGroup group = (ViewGroup) box.getChildAt(0);
 		return getButtonFromGridBox(group, row, column);
 	}
 	
-	public static final ArrayList<Button> getButtonsFromScrollableGridBox(ViewGroup box){
+	public static ArrayList<Button> getButtonsFromScrollableGridBox(ViewGroup box){
 		ViewGroup group = (ViewGroup) box.getChildAt(0);
 		return getButtonsFromGridBox(group);
 	}
 	
-	public static final ViewGroup.LayoutParams createLayoutParams(Class<?> rootViewClass, int width, int height){
+	public static ViewGroup.LayoutParams createLayoutParams(Class<?> rootViewClass, int width, int height){
 		try {
 			if(rootViewClass == null){
 				rootViewClass = ViewGroup.class;
@@ -121,7 +139,7 @@ public class LayoutCreator {
 		return null;
 	}
 	
-	public static final YSwitch createYSwitch(Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener){
+	public static YSwitch createYSwitch(Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener){
 		YSwitch sw = (YSwitch) getView(YSwitch.class, ctx);
 		sw.setText(text);
 		sw.setChecked(on);
@@ -129,17 +147,17 @@ public class LayoutCreator {
 		return sw;
 	}
 	
-	public static final YSwitch createFilledYSwitch(Class<?> rootViewClass, Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener){
+	public static YSwitch createFilledYSwitch(Class<?> rootViewClass, Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener){
 		YSwitch view = createYSwitch(ctx, text, on, listener);
 		view.setLayoutParams(createLayoutParams(rootViewClass, -1, -2));
 		return view;
 	}
 	
-	public static final TextView createTextView(Context ctx){
+	public static TextView createTextView(Context ctx){
 		return (TextView) getView(TextView.class, ctx);
 	}
 	
-	public static final ImageView createImageView(Context ctx){
+	public static ImageView createImageView(Context ctx){
 		return (ImageView) getView(ImageView.class, ctx);
 	}
 	
