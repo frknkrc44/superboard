@@ -345,7 +345,7 @@ public class InputService extends InputMethodService {
 				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_SHADOWCLR);
 			sb.setKeysShadow(shr,shc);
 			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_LONGPRESS_DURATION));
-			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_LONGPRESS_DURATION));
+			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_VIBRATE_DURATION));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_TEXTCLR));
 			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
