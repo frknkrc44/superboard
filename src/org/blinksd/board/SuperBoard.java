@@ -5,18 +5,21 @@ import android.content.res.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
+import android.media.*;
 import android.os.*;
 import android.text.*;
 import android.util.*;
 import android.view.*;
+import android.view.InputDevice.*;
 import android.view.inputmethod.*;
 import android.widget.*;
+
 import java.util.*;
+
+import org.blinksd.utils.image.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
-import org.blinksd.utils.image.*;
-import android.view.InputDevice.*;
 
 public class SuperBoard extends FrameLayout {
 
@@ -64,6 +67,7 @@ public class SuperBoard extends FrameLayout {
 								} else {
 									commitText((char)y+"");
 								}
+								playSound(y);
 								removeMessages(3);
 								sendEmptyMessage(3);
 							} else {
@@ -264,7 +268,7 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public boolean isKeyHasEvent(Key k){
-		return isKeyRepeat(k) || k.getTag(TAG_LP) != null || k.getTag(TAG_NP) != null || k.getText().toString().length() > 0;
+		return isKeyRepeat(k) || k.getTag(TAG_LP) != null || k.getTag(TAG_NP) != null;
 	}
 
 	private boolean isKeyRepeat(View v){
@@ -505,6 +509,7 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public ViewGroup getKeyboard(int keyboardIndex){
+		if(keyboardIndex < 0) keyboardIndex += getChildCount();
 		return (ViewGroup)getChildAt(keyboardIndex);
 	}
 	
@@ -522,16 +527,11 @@ public class SuperBoard extends FrameLayout {
 	}
 	
 	public void removeRowFromKeyboard(int keyboardIndex, int rowIndex){
-		if(keyboardIndex < 0) keyboardIndex += getChildCount();
-		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
 		getRow(keyboardIndex, rowIndex).removeAllViewsInLayout();
 		getKeyboard(keyboardIndex).removeViewAt(rowIndex);
 	}
 	
 	public void removeKeyFromRow(int keyboardIndex, int rowIndex, int keyIndex){
-		if(keyboardIndex < 0) keyboardIndex += getChildCount();
-		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
-		if(keyIndex < 0) keyIndex += getRow(keyboardIndex,rowIndex).getChildCount();
 		getRow(keyboardIndex,rowIndex).removeViewAt(keyIndex);
 	}
 
@@ -541,8 +541,6 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	public Key getKey(int keyboardIndex, int rowIndex, int keyIndex){
-		if(keyboardIndex < 0) keyboardIndex += getChildCount();
-		if(rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
 		if(keyIndex < 0) keyIndex += getRow(keyboardIndex,rowIndex).getChildCount();
 		return (Key)getRow(keyboardIndex,rowIndex).getChildAt(keyIndex);
 	}
@@ -640,12 +638,24 @@ public class SuperBoard extends FrameLayout {
 						updateKeyState();
 					break;
 			}
+			playSound(y);
 		} else {
 			commitText(v.getText().toString());
 			if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
 				updateKeyState();
+			playSound(0);
 		}
 		if(vib > 0) vb.vibrate(vib);
+	}
+	
+	public void fakeKeyboardEvent(Key v){
+		if(v.getTag(TAG_NP) != null){
+			x = v.getTag(TAG_NP).toString().split(":");
+			y = Integer.parseInt(x[0]);
+			playSound(y);
+			return;
+		}
+		playSound(0);
 	}
 	
 	protected InputMethodService getServiceContext(){
@@ -693,13 +703,11 @@ public class SuperBoard extends FrameLayout {
 			r = getRow(selected,i);
 			for(int g = 0;g < r.getChildCount();g++){
 				t = (Key) r.getChildAt(g);
-				if(t.getTag(TAG_NP) == null && t.getTag(TAG_LP) == null){
-					if(t.getText() != null){
-						if(state > 0){
-							t.setText(t.getText().toString().toUpperCase(loc));
-						} else {
-							t.setText(t.getText().toString().toLowerCase(loc));
-						}
+				if(!isKeyHasEvent(t) && t.getText() != null){
+					if(state > 0){
+						t.setText(t.getText().toString().toUpperCase(loc));
+					} else {
+						t.setText(t.getText().toString().toLowerCase(loc));
 					}
 				}
 			}
@@ -728,34 +736,18 @@ public class SuperBoard extends FrameLayout {
 		if(!s.equals(curr)){
 			curr = s;
 		}
+		
 		EditorInfo ei = s.getCurrentInputEditorInfo();
-		/*Row t = null;
-		Key k = null;*/
+		
+		action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+		
 		switch (ei.inputType & InputType.TYPE_MASK_CLASS){
 			case InputType.TYPE_CLASS_NUMBER:
             case InputType.TYPE_CLASS_PHONE:
 				setEnabledLayout(findNumberKeyboardIndex());
 				break;
-			//case /*InputType.TYPE_MASK_VARIATION & */InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS:
-			//case /*InputType.TYPE_MASK_VARIATION & */InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
-				//setEnabledLayout(0);
-				/*t = (Row) getRow(0,-1);
-				k = null;
-				for(int i = 0;i < t.getChildCount();i++){
-					if((k = (Key)t.getChildAt(i)).getText().toString().equals(",")){
-						k.setText("@");
-					}
-				}*/
-				//break;
 			default:
 				setEnabledLayout(findNormalKeyboardIndex());
-				/*t = (Row) getRow(0,-1);
-				k = null;
-				for(int i = 0;i < t.getChildCount();i++){
-					if((k = (Key)t.getChildAt(i)).getText().toString().equals("@")){
-						k.setText(",");
-					}
-				}*/
 				int caps = ei.inputType != InputType.TYPE_NULL 
 					? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
 					: 0;
@@ -763,14 +755,35 @@ public class SuperBoard extends FrameLayout {
 				break;
 		}
 		
-		action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+		Row r = getRow(0,-1);
+		
+		if(r == null){
+			return;
+		}
+		
+		Key k;
+		
+		switch(ei.inputType & InputType.TYPE_MASK_VARIATION){
+			case InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
+			case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS:
+				for(int i = 0;i < r.getChildCount();i++){
+					if((k = (Key)r.getChildAt(i)).getText().toString().equals(",")){
+						k.setText("@");
+					}
+				}
+				break;
+			default:
+				for(int i = 0;i < r.getChildCount();i++){
+					if((k = (Key)r.getChildAt(i)).getText().toString().equals("@")){
+						k.setText(",");
+					}
+				}
+				break;
+		}
     }
 
 	@Override
 	protected void onConfigurationChanged(Configuration newConfig){
-		/*if(ori != newConfig.orientation){
-			ori = newConfig.orientation;
-		}*/
 		fixHeight();
 	}
 	
@@ -812,12 +825,10 @@ public class SuperBoard extends FrameLayout {
 	
 	public void setLongPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode, boolean isEvent){
 		getKey(keyboardIndex, rowIndex, keyIndex).setTag(TAG_LP,keyCode+":"+isEvent);
-		//getKey(keyboardIndex, rowIndex, keyIndex).setId(keyCode);
 	}
 	
 	public void closeKeyboard(){
 		getServiceContext().requestHideSelf(0);
-		//System.exit(0);
 	}
 	
 	public int findSymbolKeyboardIndex(){
@@ -851,6 +862,11 @@ public class SuperBoard extends FrameLayout {
 		Log.e(getClass().getSimpleName(),"No number keyboard set, falling back to normal keyboard ...");
 		return findNormalKeyboardIndex();
 	}
+	
+	public void playSound(int event){
+		
+	}
+	
 	
 	public static enum KeyboardType { TEXT, SYMBOL, NUMBER }
 
@@ -896,7 +912,7 @@ public class SuperBoard extends FrameLayout {
 		protected int getTextColor(){
 			return keyclr;
 		}
-
+		
 		Key(Context c){
 			super(c);
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -1016,13 +1032,6 @@ public class SuperBoard extends FrameLayout {
 		
 		private void setKeyShadow(int radius, int color){
 			t.setShadowLayer(shr=radius,0,0,shc=color);
-			/*if(isKeyIconSet()){
-				Bitmap b = Bitmap.createBitmap(128,128,Bitmap.Config.ARGB_8888);
-				Canvas c = new Canvas(b);
-				getKeyIcon().draw(c);
-				//b = ImageUtils.fastblur(b,1,radius);
-				setKeyIcon(new BitmapDrawable(b));
-			}*/
 		}
 		
 		public void setKeyTextStyle(int style){
@@ -1039,52 +1048,64 @@ public class SuperBoard extends FrameLayout {
 			switch(style){
 				case regular:
 					t.setTypeface(Typeface.DEFAULT);
-					return;
+					break;
 				case bold:
 					t.setTypeface(Typeface.DEFAULT_BOLD);
-					return;
+					break;
 				case italic:
 					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
-					return;
+					break;
 				case bold_italic:
 					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
-					return;
-				case condensed_regular:
+					break;
+				case condensed:
 					t.setTypeface(Typeface.create("sans-serif-condensed",0));
-					return;
+					break;
 				case condensed_bold:
 					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
-					return;
+					break;
 				case condensed_italic:
 					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
-					return;
+					break;
 				case condensed_bold_italic:
 					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
-					return;
+					break;
 				case serif:
 					t.setTypeface(Typeface.SERIF);
-					return;
+					break;
 				case serif_bold:
 					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
-					return;
+					break;
 				case serif_italic:
 					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
-					return;
+					break;
 				case serif_bold_italic:
 					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
-					return;
+					break;
 				case monospace:
 					t.setTypeface(Typeface.MONOSPACE);
-					return;
+					break;
 				case monospace_bold:
 					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
-					return;
+					break;
 				case monospace_italic:
 					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
-					return;
+					break;
 				case monospace_bold_italic:
 					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
-					return;
+					break;
+				case serif_monospace:
+					t.setTypeface(Typeface.create("serif-monospace",Typeface.NORMAL));
+					break;
+				case serif_monospace_bold:
+					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD));
+					break;
+				case serif_monospace_italic:
+					t.setTypeface(Typeface.create("serif-monospace",Typeface.ITALIC));
+					break;
+				case serif_monospace_bold_italic:
+					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
+					break;
 			}
 		}
 		
@@ -1136,7 +1157,7 @@ public class SuperBoard extends FrameLayout {
 		bold,
 		italic,
 		bold_italic,
-		condensed_regular,
+		condensed,
 		condensed_bold,
 		condensed_italic,
 		condensed_bold_italic,
@@ -1147,6 +1168,10 @@ public class SuperBoard extends FrameLayout {
 		monospace,
 		monospace_bold,
 		monospace_italic,
-		monospace_bold_italic
+		monospace_bold_italic,
+		serif_monospace,
+		serif_monospace_bold,
+		serif_monospace_italic,
+		serif_monospace_bold_italic
 	}
 }

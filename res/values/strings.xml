@@ -2,6 +2,73 @@
 <resources>
 
     <string name="app_name">SuperBoard</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="hello_world">@string/app_name</string>
+	
+	<!-- Setup wizard resources -->
+	<string name="wizard_welcome">Welcome to %s setup wizard!</string>
+	<string name="wizard_enable">Enable keyboard from settings</string>
+	<string name="wizard_enablebtn">Open system settings</string>
+	<string name="wizard_select">Select %s as your default keyboard</string>
+	<string name="wizard_selectbtn">Open keyboard selection popup</string>
+	<string name="wizard_settings">Customize your keyboard</string>
+	<string name="wizard_settingsbtn">Open keyboard settings</string>
+	<string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
+	<string name="wizard_finishbtn">Finish</string>
+	
+	<!-- Settings resources -->
+	<string name="settings_keyboard_bgimg">Keyboard background image</string>
+	<string name="settings_keyboard_show_popup">Show character while typing</string>
+	<string name="settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
+	<string name="settings_enter_bgclr">Enter key background color</string>
+	<string name="settings_key_shadowclr">Key text shadow color</string>
+	<string name="settings_key_bgclr">First key background color</string>
+	<string name="settings_key2_bgclr">Second key background color</string>
+	<string name="settings_keyboard_bgclr">Keyboard background color</string>
+	<string name="settings_play_snd_press">Play sound on key press events</string>
+	
+	<!-- Color selector layout resources -->
+	<string name="settings_color_selector_rgb">ARGB</string>
+	<string name="settings_color_selector_hsv">AHSV</string>
+	<string name="settings_color_selector_hex">HEX</string>
+	
+	<!-- Image selector resources -->
+	<string name="settings_image_selector_photo">Photo</string>
+	<string name="settings_image_selector_gradient">Gradient</string>
+	<string name="settings_image_selector_gradient_item">Color</string>
+	<string name="settings_image_selector_gradient_add_item">Add color</string>
+	<string name="settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
+	<string name="settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
+	
+	<!-- Radio selector resources -->
+	<string name="settings_keyboard_lang_select">Keyboard language</string>
+	<string name="settings_keyboard_texttype_select">Keyboard font</string>
+	
+	<!-- Number selector resources -->
+	<string name="settings_keyboard_bgblur">Keyboard background image blur</string>
+	<string name="settings_key_vibrate_duration">Key press vibrate duration</string>
+	<string name="settings_keyboard_height">Keyboard height</string>
+	
+	<string-array name="settings_keyboard_texttype_select">
+		<item>regular</item>
+		<item>bold</item>
+		<item>italic</item>
+		<item>bold_italic</item>
+		<item>condensed</item>
+		<item>condensed_bold</item>
+		<item>condensed_italic</item>
+		<item>condensed_bold_italic</item>
+		<item>serif</item>
+		<item>serif_bold</item>
+		<item>serif_italic</item>
+		<item>serif_bold_italic</item>
+		<item>monospace</item>
+		<item>monospace_bold</item>
+		<item>monospace_italic</item>
+		<item>monospace_bold_italic</item>
+		<item>serif_monospace</item>
+		<item>serif_monospace_bold</item>
+		<item>serif_monospace_italic</item>
+		<item>serif_monospace_bold_italic</item>
+	</string-array>
+	
 </resources>

@@ -3,8 +3,8 @@ package org.blinksd.board;
 import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
-import android.graphics.drawable.*;
 import android.inputmethodservice.*;
+import android.media.AudioManager;
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -17,10 +17,12 @@ import org.blinksd.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
+import org.blinksd.utils.system.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
-import org.blinksd.utils.system.*;
+import static android.media.AudioManager.*;
+import static android.provider.Settings.Secure.getInt;
 
 public class InputService extends InputMethodService {
 	
@@ -35,6 +37,8 @@ public class InputService extends InputMethodService {
 	private File img = null;
 	private Language cl;
 	private EmojiView emoji = null;
+	
+	int gestureHeight = 0;
 
 	@Override
 	public View onCreateInputView(){
@@ -51,7 +55,17 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onStartInput(EditorInfo attribute, boolean restarting){
 		super.onStartInput(attribute, restarting);
+		
+		try {
+			gestureHeight = Build.VERSION.SDK_INT >= 29 && getInt(getContentResolver(),"navigation_mode") == 2 
+						? org.blinksd.utils.layout.DensityUtils.dpInt(48) 
+						: 0;
+		} catch(Throwable t){
+			gestureHeight = 0;
+		}
+		
 		if(sb != null){
+			setPrefs();
 			sb.updateKeyState(this);
 		}
 	}
@@ -91,8 +105,10 @@ public class InputService extends InputMethodService {
 						po.clear();
 						return;
 					}
-					po.setKey((SuperBoard.Key)v,sd);
-					po.showCharacter();
+					po.setKey((SuperBoard.Key)v);
+					if(SuperDBHelper.getBooleanValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+						po.showCharacter();
+					}
 				}
 				
 				public void onPopupEvent(){
@@ -103,7 +119,9 @@ public class InputService extends InputMethodService {
 				@Override
 				public void afterKeyboardEvent(){
 					super.afterKeyboardEvent();
-					po.hideCharacter();
+					if(SuperDBHelper.getBooleanValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+						po.hideCharacter();
+					}
 				}
 				
 				public void sendDefaultKeyboardEvent(View v){
@@ -113,13 +131,37 @@ public class InputService extends InputMethodService {
 				
 				@Override
 				public void switchLanguage(){
-					SuperBoardApplication.getNextLanguage();
-					setPrefs();
+					if(SuperDBHelper.getBooleanValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_LC_ON_EMOJI)){
+						SuperBoardApplication.getNextLanguage();
+						setPrefs();
+					} else {
+						openEmojiLayout();
+					}
 				}
 				
 				@Override
 				public void openEmojiLayout(){
 					showEmojiView(true);
+				}
+				
+				@Override
+				public void playSound(int event){
+					if(!sd.getBoolean(SettingMap.SET_PLAY_SND_PRESS,false)) return;
+					AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
+					switch(event){
+						case Keyboard.KEYCODE_DONE:
+							audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+							break;
+						case Keyboard.KEYCODE_DELETE:
+							audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+							break;
+						case KeyEvent.KEYCODE_SPACE:
+							audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+							break;
+						default:
+							audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+							break;
+					}
 				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -140,8 +182,8 @@ public class InputService extends InputMethodService {
 				},{
 					{"F1","F2","F3","F4","F5","F6","F7","F8"},
 					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
-					{"TAB","ENTER","","ESC","PREV","PL/PA","STOP","NEXT"},
-					{"","","","","","","",""},
+					{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
+					{"","","END","","","PAUSE","",""},
 					{abc,"🔇","←","↑","↓","→","🔉","🔊"}
 				},{
 					{"1","2","3","+"},
@@ -152,7 +194,7 @@ public class InputService extends InputMethodService {
 			};
 
 			try {
-				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_lang_select.name(),"tr_TR_Q");
+				String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_LANG_SELECT);
 				cl = SuperBoardApplication.getKeyboardLanguage(lang);
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
@@ -166,10 +208,6 @@ public class InputService extends InputMethodService {
 				LayoutUtils.setKeyOpts(cl.layout,sb);
 			} catch(Throwable e){
 				throw new RuntimeException(e);
-				/*ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				PrintStream ps = new PrintStream(bos);
-				e.printStackTrace(ps);
-				Log.e("AndroidRuntime","FATAL "+bos.toString());*/
 			}
 			sb.createLayoutWithRows(kbd[0],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
@@ -193,11 +231,15 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(3,1,7,KeyEvent.KEYCODE_DEL);
 			sb.setPressEventForKey(3,2,0,KeyEvent.KEYCODE_TAB);
 			sb.setPressEventForKey(3,2,1,'\n',false);
+			sb.setPressEventForKey(3,2,2,KeyEvent.KEYCODE_MOVE_HOME);
 			sb.setPressEventForKey(3,2,3,KeyEvent.KEYCODE_ESCAPE);
 			sb.setPressEventForKey(3,2,4,KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-			sb.setPressEventForKey(3,2,5,KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+			sb.setPressEventForKey(3,2,5,KeyEvent.KEYCODE_MEDIA_PLAY);
 			sb.setPressEventForKey(3,2,6,KeyEvent.KEYCODE_MEDIA_STOP);
 			sb.setPressEventForKey(3,2,7,KeyEvent.KEYCODE_MEDIA_NEXT);
+			
+			sb.setPressEventForKey(3,3,2,KeyEvent.KEYCODE_MOVE_END);
+			sb.setPressEventForKey(3,3,5,KeyEvent.KEYCODE_MEDIA_PAUSE);
 			
 			sb.setPressEventForKey(3,-1,1,KeyEvent.KEYCODE_MUTE);
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
@@ -209,7 +251,7 @@ public class InputService extends InputMethodService {
 			
 			for(int i = 0;i < 2;i++){
 				for(int g = 0;g < 8;g++){
-					if(i >= 1 && g >= 4) break;
+					if(i > 0 && g > 3) break;
 					sb.setPressEventForKey(3,i,g,KeyEvent.KEYCODE_F1+(g+(i*8)));
 				}
 			}
@@ -266,6 +308,11 @@ public class InputService extends InputMethodService {
 				public void afterKeyboardEvent(){
 					sb.afterPopupEvent();
 				}
+				
+				@Override
+				public void playSound(int event){
+					sb.playSound(event);
+				}
 			};
 			fl.addView(po);
 		}
@@ -284,26 +331,26 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.updateKeyState(this);
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_height.name(),36));
-			img = AppSettings.getBackgroundImageFile(this);
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_HEIGHT));
+			img = AppSettingsV2.getBackgroundImageFile();
 			if(fl != null){
-				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_bgblur.name(),0);
+				int blur = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_BGBLUR);
 				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
 				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 			}
-			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_bgclr.name(),0xFF282D31);
+			int c = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
-			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_bgclr.name(),0xFF474B4C));
-			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_shadowsize.name(),0),
-				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_shadowclr.name(),0xFFDDE1E2);
+			setKeyBg(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_BGCLR));
+			int shr = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_SHADOWSIZE),
+				shc = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_SHADOWCLR);
 			sb.setKeysShadow(shr,shc);
-			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_longpress_duration.name(),1));
-			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_vibrate_duration.name(),0));
-			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_textclr.name(),0xFFDDE1E2));
-			sb.setKeysTextSize(sb.mp(AppSettings.a(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key_textsize.name(),13))));
-			sb.setKeysTextType(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_texttype_select.name(),0));
-			int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.key2_bgclr.name(),0xFF373C40);
-			int z = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.enter_bgclr.name(),0xFF5F97F6);
+			sb.setLongPressMultiplier(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_LONGPRESS_DURATION));
+			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_LONGPRESS_DURATION));
+			sb.setKeysTextColor(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_TEXTCLR));
+			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_TEXTSIZE))));
+			sb.setKeysTextType(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+			int y = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY2_BGCLR);
+			int z = SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_ENTER_BGCLR);
 			for(int i = 0;i < kbd.length;i++){
 				if(i != 0){
 					if(i < 3){
@@ -316,7 +363,7 @@ public class InputService extends InputMethodService {
 					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
 			}
-			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,AppSettings.Key.keyboard_lang_select.name(),"tr_TR_Q");
+			String lang = SuperDBHelper.getValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
 			}
@@ -358,10 +405,6 @@ public class InputService extends InputMethodService {
 			cl = l;
 		} catch(Throwable e){
 			throw new RuntimeException(e);
-			/*ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(bos);
-			e.printStackTrace(ps);
-			Log.e("AndroidRuntime","FATAL "+bos.toString());*/
 		}
 	}
 	
@@ -375,11 +418,9 @@ public class InputService extends InputMethodService {
 				if(x()){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
-					w.setNavigationBarColor(0);
 					ll.addView(createNavbarLayout(c));
 				} else {
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-					w.setNavigationBarColor(0xFF000000);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 				}
 			} else {
@@ -400,6 +441,7 @@ public class InputService extends InputMethodService {
 	
 	private int navbarH(){
 		if(x()){
+			if(gestureHeight > 0) return gestureHeight;
 			int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
 			return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
 		}
@@ -438,14 +480,14 @@ public class InputService extends InputMethodService {
 				Display dsp = wm.getDefaultDisplay();
 				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
 			} catch(Exception e){
-				Log.e("Navbar","Navbar not detected because ...",e);
+				Log.e("Navbar","Navbar detection failed by internal system APIs because ...",e);
 			}
 		}
 		return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && 
 			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 	
-	BroadcastReceiver r = new BroadcastReceiver(){
+	private BroadcastReceiver r = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context p1,Intent p2){
 			setPrefs();
@@ -467,7 +509,7 @@ public class InputService extends InputMethodService {
 	
 	private boolean showEmoji = false;
 	
-	public void showEmojiView(boolean value){
+	private void showEmojiView(boolean value){
 		if(showEmoji != value){
 			emoji.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
 			sb.setVisibility(value ? View.INVISIBLE : View.VISIBLE);

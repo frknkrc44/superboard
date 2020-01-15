@@ -40,9 +40,7 @@ public class EmojiView extends LinearLayout {
 	private void apply(View.OnClickListener ocl){
 		th = new TabHost(getContext());
 		th.setLayoutParams(new LayoutParams(-1,-2,1));
-		th.setBackgroundColor(0);
 		tw = new TabWidget(getContext());
-		tw.setBackgroundColor(0);
 		tw.setId(android.R.id.tabs);
 		tw.setLayoutParams(new LayoutParams(-1,-1,1));
 		FrameLayout fl = new FrameLayout(getContext());

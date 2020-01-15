@@ -6,6 +6,7 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 import org.superdroid.db.*;
+import org.blinksd.*;
 
 public class BoardPopup extends SuperBoard {
 	
@@ -33,16 +34,16 @@ public class BoardPopup extends SuperBoard {
 		popupFilter.getLayoutParams().height = h;
 	}
 	
-	public void setKey(Key key, SuperDB sdb){
+	public void setKey(Key key){
 		key.clone(mKey);
 		setKeysTextColor(key.getTextColor());
 		setKeysTextType(key.txtst);
 		setKeysShadow(key.shr,key.shc);
-		khp = sdb.getInteger(AppSettings.Key.keyboard_height.name(),hp(10));
-		int a = sdb.getInteger(AppSettings.Key.keyboard_bgclr.name(),0xFF000000);
+		khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
+		int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 		a = Color.argb(0xCC,Color.red(a),Color.green(a),Color.blue(a));
-		setBackground(LayoutUtils.getKeyBg(sdb,this,a,false));
-		setBackground(LayoutUtils.getKeyBg(sdb,this,a,true));
+		setBackground(LayoutUtils.getKeyBg(getDB(),this,a,false));
+		setBackground(LayoutUtils.getKeyBg(getDB(),this,a,true));
 		popupFilter.setBackgroundColor(a-0x33000000);
 		mKey.setVisibility(GONE);
 		key.getLocationInWindow(pos);
@@ -128,5 +129,13 @@ public class BoardPopup extends SuperBoard {
 	public void clear(){
 		super.clear();
 		mKey.setHint(null);
+	}
+	
+	private SuperDB getDB(){
+		return SuperBoardApplication.getApplicationDatabase();
+	}
+	
+	public int getIntOrDefault(String key){
+		return getDB().getInteger(key, SuperBoardApplication.getSettings().getDefaults(key));
 	}
 }
