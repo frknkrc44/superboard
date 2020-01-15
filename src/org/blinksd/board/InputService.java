@@ -87,7 +87,7 @@ public class InputService extends InputMethodService {
 	}
 	
 	private void setKeyBg(int clr){
-		sb.setKeysBackground(LayoutUtils.getKeyBg(sd,sb,clr,true));
+		sb.setKeysBackground(LayoutUtils.getKeyBg(sb,clr,true));
 	}
 	
 	private void setLayout(){
@@ -146,7 +146,7 @@ public class InputService extends InputMethodService {
 				
 				@Override
 				public void playSound(int event){
-					if(!sd.getBoolean(SettingMap.SET_PLAY_SND_PRESS,false)) return;
+					if(!SuperDBHelper.getBooleanValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_PLAY_SND_PRESS)) return;
 					AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 					switch(event){
 						case Keyboard.KEYCODE_DONE:

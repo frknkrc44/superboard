@@ -428,12 +428,12 @@ public class AppSettingsV2 extends Activity {
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));
-		gd.setCornerRadius(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS))));
-		gd.setStroke(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))),0);
+		gd.setCornerRadius(getFloatPercentOrDefault(SettingMap.SET_KEY_RADIUS));
+		gd.setStroke(getFloatPercentOrDefault(SettingMap.SET_KEY_PADDING),0);
 		GradientDrawable pd = new GradientDrawable();
 		pd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),true));
-		pd.setCornerRadius(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))));
-		pd.setStroke(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))),0);
+		pd.setCornerRadius(getFloatPercentOrDefault(SettingMap.SET_KEY_RADIUS));
+		pd.setStroke(getFloatPercentOrDefault(SettingMap.SET_KEY_PADDING),0);
 		d.addState(new int[]{android.R.attr.state_selected},pd);
 		d.addState(new int[]{},gd);
 		sb.setKeysBackground(d);
@@ -442,8 +442,12 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
 		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-		sb.setKeysTextSize(sb.mp(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+	}
+	
+	private int getFloatPercentOrDefault(String key){
+		return sb.mp(getFloatNumberFromInt(getIntOrDefault(key)));
 	}
 	
 	private int getIntOrDefault(String key){

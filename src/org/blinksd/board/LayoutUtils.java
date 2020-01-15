@@ -201,7 +201,8 @@ public class LayoutUtils {
 		return a;
 	}
 	
-	public static Drawable getKeyBg(SuperDB sd,SuperBoard sb,int clr,boolean pressEffect){
+	public static Drawable getKeyBg(SuperBoard sb,int clr,boolean pressEffect){
+		SuperDB sd = SuperBoardApplication.getApplicationDatabase();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(clr,false));
 		gd.setCornerRadius(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_RADIUS))));
