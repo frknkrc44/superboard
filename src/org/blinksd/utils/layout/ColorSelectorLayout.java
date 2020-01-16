@@ -114,7 +114,7 @@ public class ColorSelectorLayout {
 	}
 	
 	public static View getColorSelectorLayout(final AppSettingsV2 ctx, String key){
-		int val = db.getInteger(key,0);
+		int val = db.getInteger(key,SuperBoardApplication.getSettings().getDefaults(key));
 		
 		return getColorSelectorLayout(ctx, val);
 	}

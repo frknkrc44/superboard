@@ -81,7 +81,8 @@ public class AppSettingsV2 extends Activity {
 			
 			@Override
 			public void playSound(int event){
-				if(!sdb.getBoolean(SettingMap.SET_PLAY_SND_PRESS,false)) return;
+				if(!sdb.getBoolean(SettingMap.SET_PLAY_SND_PRESS,
+					sMap.getDefaults(SettingMap.SET_PLAY_SND_PRESS))) return;
 				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 				switch(event){
 					case 2:
