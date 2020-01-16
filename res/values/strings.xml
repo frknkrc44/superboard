@@ -38,6 +38,7 @@
 	<string name="settings_image_selector_gradient_add_item">Add color</string>
 	<string name="settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
 	<string name="settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
+	<string name="settings_image_selector_gradient_change_orientation">Change orientation</string>
 	
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Keyboard language</string>
@@ -48,6 +49,7 @@
 	<string name="settings_key_vibrate_duration">Key press vibrate duration</string>
 	<string name="settings_keyboard_height">Keyboard height</string>
 	
+	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
 		<item>regular</item>
 		<item>bold</item>

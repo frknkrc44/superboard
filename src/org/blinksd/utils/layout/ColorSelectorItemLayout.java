@@ -33,15 +33,22 @@ public class ColorSelectorItemLayout extends LinearLayout {
 		addView(img);
 		addView(btn);
 		setMinimumHeight(height);
-		if(index < 0){
-			img.setImageResource(android.R.drawable.ic_input_add);
-			img.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-			btn.setText(ctx.getTranslation("image_selector_gradient_add_item"));
-			setOnClickListener(gradientAddColorListener);
-			return;
+		setId(index);
+		switch(index){
+			case -1:
+				img.setImageResource(android.R.drawable.ic_input_add);
+				img.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
+				btn.setText(ctx.getTranslation("image_selector_gradient_add_item"));
+				setOnClickListener(gradientAddColorListener);
+				return;
+			case -2:
+				img.setImageResource(android.R.drawable.ic_media_next);
+				img.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
+				btn.setText(ctx.getTranslation("image_selector_gradient_change_orientation"));
+				setOnClickListener(gradientAddColorListener);
+				return;
 		}
 		colorList = colors;
-		setId(index);
 		int color = 0xFF000000;
 		updateColorView(color);
 		btn.setText(ctx.getTranslation("image_selector_gradient_item"));
