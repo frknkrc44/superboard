@@ -29,11 +29,6 @@
 		<activity
 			android:launchMode="singleTask"
 			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
-            android:name=".AppSettings"
-            android:label="Ayarlar"/>
-		<activity
-			android:launchMode="singleTask"
-			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
             android:name=".AppSettingsV2"
             android:label="Ayarlar"/>
 		<activity
