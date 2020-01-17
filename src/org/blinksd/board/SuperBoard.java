@@ -29,6 +29,7 @@ public class SuperBoard extends FrameLayout {
 	private boolean clear = false, lng = false, lock = false;
 	protected Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
+	private Typeface cFont = Typeface.DEFAULT;
 	
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
 	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
@@ -164,6 +165,10 @@ public class SuperBoard extends FrameLayout {
 
 	public static int dp(int px){
 		return (int)(Resources.getSystem().getDisplayMetrics().density * px);
+	}
+	
+	public void setCustomFont(Typeface type){
+		cFont = type;
 	}
 	
 	public int getKeyboardHeight(){
@@ -1107,13 +1112,8 @@ public class SuperBoard extends FrameLayout {
 					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
 					break;
 				case custom:
-					String file = getContext().getExternalCacheDir()+"/font.ttf";
-					try {
-						t.setTypeface(Typeface.createFromFile(file));
-					} catch(Throwable t){
-						Toast.makeText(getContext(),"ERROR, falling back to standard font\n"+file,Toast.LENGTH_LONG).show();
-						setKeyTextStyle(TextType.regular);
-					}
+					// FIXME: returns custom font at second attempt
+					t.setTypeface(cFont);
 					break;
 			}
 		}

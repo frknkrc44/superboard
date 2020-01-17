@@ -460,6 +460,8 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+		SuperBoardApplication.clearCustomFont();
+		sb.setCustomFont(SuperBoardApplication.getCustomFont());
 	}
 	
 	private int getFloatPercentOrDefault(String key){

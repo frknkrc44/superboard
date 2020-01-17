@@ -4,7 +4,7 @@ import android.content.*;
 import android.content.res.*;
 import android.graphics.*;
 import android.inputmethodservice.*;
-import android.media.AudioManager;
+import android.media.*;
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -17,11 +17,13 @@ import org.blinksd.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
+import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
 import static android.media.AudioManager.*;
+import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.Secure.getInt;
 
 public class InputService extends InputMethodService {
@@ -57,8 +59,8 @@ public class InputService extends InputMethodService {
 		super.onStartInput(attribute, restarting);
 		
 		try {
-			gestureHeight = Build.VERSION.SDK_INT >= 29 && getInt(getContentResolver(),"navigation_mode") == 2 
-						? org.blinksd.utils.layout.DensityUtils.dpInt(48) 
+			gestureHeight = SDK_INT >= 29 && getInt(getContentResolver(),"navigation_mode") == 2 
+						? DensityUtils.dpInt(48) 
 						: 0;
 		} catch(Throwable t){
 			gestureHeight = 0;
@@ -386,6 +388,8 @@ public class InputService extends InputMethodService {
 				emoji.applyTheme(sb);
 				emoji.getLayoutParams().height = sb.getKeyboardHeight();
 			}
+			SuperBoardApplication.clearCustomFont();
+			sb.setCustomFont(SuperBoardApplication.getCustomFont());
 		}
 	}
 	
@@ -409,7 +413,7 @@ public class InputService extends InputMethodService {
 	}
 	
 	private void adjustNavbar(int c){
-		if(Build.VERSION.SDK_INT > 20){
+		if(SDK_INT > 20){
 			Window w = getWindow().getWindow();
 			if(detectNavbar()){
 				if(ll.getChildCount() > 1){
@@ -464,14 +468,14 @@ public class InputService extends InputMethodService {
 	}
 	
 	private boolean detectNavbar(){
-		if(Build.VERSION.SDK_INT >= 14){
+		if(SDK_INT >= 14){
 			try {
 				Class<?> serviceManager = Class.forName("android.os.ServiceManager");
 				IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
 				Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
 				Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
 				Method hasNavigationBar = null;
-				if(Build.VERSION.SDK_INT < 29){
+				if(SDK_INT < 29){
 					hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
 					return (boolean) hasNavigationBar.invoke(windowManagerService);
 				}

@@ -1,6 +1,9 @@
 package org.blinksd;
 
 import android.app.*;
+import android.graphics.*;
+import android.util.*;
+import java.io.*;
 import java.util.*;
 import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
@@ -8,16 +11,21 @@ import org.superdroid.db.*;
 
 public class SuperBoardApplication extends Application {
 	
-	static HashMap<String,Language> langs = null;
-	static SuperDB appDB = null;
-	static SuperBoardApplication app = null;
-	static SettingMap sMap = null;
+	private static HashMap<String,Language> langs = null;
+	private static SuperDB appDB = null;
+	private static SuperBoardApplication app = null;
+	private static SettingMap sMap = null;
+	private static Typeface cFont = null;
+	private static File fontFile = null;
+	private static String fontPath = null;
 	
 	@Override
 	public void onCreate(){
 		app = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		sMap = new SettingMap();
+		fontPath = app.getExternalCacheDir()+"/font.ttf";
+		
 		try {
 			langs = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
@@ -35,6 +43,29 @@ public class SuperBoardApplication extends Application {
 	
 	public static HashMap<String,Language> getKeyboardLanguageList(){
 		return langs;
+	}
+	
+	public static Typeface getCustomFont(){
+		if(cFont == null){
+			try {
+				if(fontFile == null) fontFile = new File(fontPath);
+				if(fontFile.exists()) cFont = Typeface.createFromFile(fontFile);
+				else throw new Throwable();
+			} catch(Throwable t){
+				Log.e("SuperBoardApplication","Exception: ",t);
+				fontFile = null;
+				cFont = null;
+				return Typeface.DEFAULT;
+			}
+		}
+		return cFont;
+	}
+	
+	public static void clearCustomFont(){
+		File newFile = new File(fontPath);
+		if(fontFile == null || fontFile.lastModified() != newFile.lastModified()){
+			cFont = null;
+		}
 	}
 	
 	public static Language getKeyboardLanguage(String name){
