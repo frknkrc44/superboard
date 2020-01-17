@@ -16,25 +16,15 @@ public class SuperDBCenterConnector {
 	}
 	
 	private ISuperDBConnection sdbc = null;
-	private ISuperMiniDBConnection smdbc = null;
 	private Context ctx = null;
 	
 	public final void connectToSuperDB(){
 		checkPermissions();
-		ctx.bindService(getSuperDBConnectorIntent(false),sdbconn,Context.BIND_AUTO_CREATE);
-	}
-	
-	public final void connectToSuperMiniDB(){
-		checkPermissions();
-		ctx.bindService(getSuperDBConnectorIntent(true),smdbconn,Context.BIND_AUTO_CREATE);
+		ctx.bindService(getSuperDBConnectorIntent(),sdbconn,Context.BIND_AUTO_CREATE);
 	}
 	
 	public final ISuperDBConnection getSuperDBConnection(){
 		return sdbc;
-	}
-	
-	public final ISuperMiniDBConnection getSuperMiniDBConnection(){
-		return smdbc;
 	}
 	
 	private final void checkPermissions(){
@@ -44,9 +34,9 @@ public class SuperDBCenterConnector {
 		}
 	}
 	
-	private final Intent getSuperDBConnectorIntent(boolean mini){
+	private final Intent getSuperDBConnectorIntent(){
 		String conn = getConnectorPackageName();
-		Class<?> clazz = mini ? ISuperMiniDBConnection.class : ISuperDBConnection.class;
+		Class<?> clazz = ISuperDBConnection.class;
 		Intent out = new Intent(clazz.getName());
 		ComponentName name = new ComponentName(conn,clazz.getName().replace("IS","S"));
 		out.setComponent(name);
@@ -71,21 +61,6 @@ public class SuperDBCenterConnector {
 			connectToSuperDB();
 		}
 		
-	};
-	
-	private final ServiceConnection smdbconn = new ServiceConnection(){
-
-		@Override
-		public void onServiceConnected(ComponentName p1, IBinder p2){
-			smdbc = ISuperMiniDBConnection.Stub.asInterface(p2);
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName p1){
-			smdbc = null;
-			connectToSuperMiniDB();
-		}
-
 	};
 	
 }

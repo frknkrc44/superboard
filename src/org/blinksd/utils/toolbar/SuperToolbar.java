@@ -37,6 +37,7 @@ public class SuperToolbar extends LinearLayout {
 		nav.setLayoutParams(new LayoutParams(dp(56),-1,0));
 		nav.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		setDefaultIcon();
+		setTextColor(getTextColor());
 		getViewParams(nav).rightMargin = dp(8);
 		menu = new LinearLayout(getContext());
 		menu.setLayoutParams(new LayoutParams(-2,-1,0));
@@ -90,10 +91,11 @@ public class SuperToolbar extends LinearLayout {
 	
 	public void addMenuItem(MenuItem item){
 		menu.addView(item.create(getContext()));
+		setTextColor(getTextColor());
 	}
 	
 	public void addMenuItem(Drawable icon, View.OnClickListener action){
-		menu.addView(new MenuItem(icon,action).create(getContext()));
+		addMenuItem(new MenuItem(icon,action));
 	}
 	
 	public void removeMenuItem(int index){

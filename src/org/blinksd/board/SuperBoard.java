@@ -1106,6 +1106,15 @@ public class SuperBoard extends FrameLayout {
 				case serif_monospace_bold_italic:
 					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
 					break;
+				case custom:
+					String file = getContext().getExternalCacheDir()+"/font.ttf";
+					try {
+						t.setTypeface(Typeface.createFromFile(file));
+					} catch(Throwable t){
+						Toast.makeText(getContext(),"ERROR, falling back to standard font\n"+file,Toast.LENGTH_LONG).show();
+						setKeyTextStyle(TextType.regular);
+					}
+					break;
 			}
 		}
 		
@@ -1172,6 +1181,7 @@ public class SuperBoard extends FrameLayout {
 		serif_monospace,
 		serif_monospace_bold,
 		serif_monospace_italic,
-		serif_monospace_bold_italic
+		serif_monospace_bold_italic,
+		custom
 	}
 }

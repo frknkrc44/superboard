@@ -71,6 +71,7 @@
 		<item>serif_monospace_bold</item>
 		<item>serif_monospace_italic</item>
 		<item>serif_monospace_bold_italic</item>
+		<item>custom</item>
 	</string-array>
 	
 </resources>

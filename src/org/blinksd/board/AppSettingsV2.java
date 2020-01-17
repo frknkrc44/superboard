@@ -81,8 +81,7 @@ public class AppSettingsV2 extends Activity {
 			
 			@Override
 			public void playSound(int event){
-				if(!sdb.getBoolean(SettingMap.SET_PLAY_SND_PRESS,
-					sMap.getDefaults(SettingMap.SET_PLAY_SND_PRESS))) return;
+				if(!SuperDBHelper.getBooleanValueAndSetItToDefaultIsNotSet(sdb,SettingMap.SET_PLAY_SND_PRESS)) return;
 				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 				switch(event){
 					case 2:
@@ -378,8 +377,10 @@ public class AppSettingsV2 extends Activity {
 				val = getIntOrDefault(tag);
 			}
 			build.setTitle(getTranslation(tag));
+			ScrollView dialogScroller = new ScrollView(p1.getContext());
 			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,val,(List<String>)p1.getTag(TAG2));
-			build.setView(dialogView);
+			dialogScroller.addView(dialogView);
+			build.setView(dialogScroller);
 			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
 
 					@Override
