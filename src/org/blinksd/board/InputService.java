@@ -108,7 +108,7 @@ public class InputService extends InputMethodService {
 						return;
 					}
 					po.setKey((SuperBoard.Key)v);
-					if(SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
 						po.showCharacter();
 					}
 				}
@@ -121,7 +121,7 @@ public class InputService extends InputMethodService {
 				@Override
 				public void afterKeyboardEvent(){
 					super.afterKeyboardEvent();
-					if(SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
 						po.hideCharacter();
 					}
 				}
@@ -133,7 +133,7 @@ public class InputService extends InputMethodService {
 				
 				@Override
 				public void switchLanguage(){
-					if(SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_KEYBOARD_LC_ON_EMOJI)){
+					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_LC_ON_EMOJI)){
 						SuperBoardApplication.getNextLanguage();
 						setPrefs();
 					} else {
@@ -148,7 +148,7 @@ public class InputService extends InputMethodService {
 				
 				@Override
 				public void playSound(int event){
-					if(!SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_PLAY_SND_PRESS)) return;
+					if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
 					AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 					switch(event){
 						case Keyboard.KEYCODE_DONE:
@@ -196,7 +196,7 @@ public class InputService extends InputMethodService {
 			};
 
 			try {
-				String lang = SuperDBHelper.getValueOrDefault(sd,SettingMap.SET_KEYBOARD_LANG_SELECT);
+				String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 				cl = SuperBoardApplication.getKeyboardLanguage(lang);
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
@@ -327,26 +327,26 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.updateKeyState(this);
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEYBOARD_HEIGHT));
+			sb.setKeyboardHeight(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
 			img = AppSettingsV2.getBackgroundImageFile();
 			if(fl != null){
-				int blur = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEYBOARD_BGBLUR);
+				int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
 				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
 			}
-			int c = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEYBOARD_BGCLR);
+			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
-			setKeyBg(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_BGCLR));
-			int shr = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_SHADOWSIZE),
-				shc = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_SHADOWCLR);
+			setKeyBg(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR));
+			int shr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
+				shc = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWCLR);
 			sb.setKeysShadow(shr,shc);
-			sb.setLongPressMultiplier(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_LONGPRESS_DURATION));
-			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_VIBRATE_DURATION));
-			sb.setKeysTextColor(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_TEXTCLR));
-			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY_TEXTSIZE))));
-			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
-			int y = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_KEY2_BGCLR);
-			int z = SuperDBHelper.getIntValueOrDefault(sd,SettingMap.SET_ENTER_BGCLR);
+			sb.setLongPressMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
+			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
+			sb.setKeysTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
+			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+			int y = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
+			int z = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_BGCLR);
 			for(int i = 0;i < kbd.length;i++){
 				if(i != 0){
 					if(i < 3){
@@ -359,7 +359,7 @@ public class InputService extends InputMethodService {
 					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
 			}
-			String lang = SuperDBHelper.getValueOrDefault(sd,SettingMap.SET_KEYBOARD_LANG_SELECT);
+			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
 			}
@@ -447,7 +447,7 @@ public class InputService extends InputMethodService {
 	}
 	
 	private boolean x(){
-		if(SystemUtils.isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_COLORIZE_NAVBAR)){
+		if(SystemUtils.isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR)){
 			return false;
 		}
 		return !isLand() || isTablet();
