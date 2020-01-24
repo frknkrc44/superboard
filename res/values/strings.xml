@@ -26,6 +26,8 @@
 	<string name="settings_keyboard_bgclr">Keyboard background color</string>
 	<string name="settings_play_snd_press">Play sound on key press events</string>
 	
+	<string name="settings_return_defaults">(↻)</string>
+	
 	<!-- Color selector layout resources -->
 	<string name="settings_color_selector_rgb">ARGB</string>
 	<string name="settings_color_selector_hsv">AHSV</string>

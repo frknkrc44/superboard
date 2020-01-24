@@ -242,6 +242,23 @@ public class AppSettingsV2 extends Activity {
 					}
 
 				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) sMap.getDefaults(tag);
+						sdb.putInteger(tag,tagVal);
+						sdb.onlyWrite();
+						ImageView img = p1.findViewById(android.R.id.icon);
+						GradientDrawable gd = new GradientDrawable();
+						gd.setColor(tagVal);
+						gd.setCornerRadius(1000);
+						img.setImageDrawable(gd);
+						restartKeyboard();
+						d1.dismiss();
+					}
+				
+				});
 			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 
 					@Override
@@ -284,6 +301,20 @@ public class AppSettingsV2 extends Activity {
 					@Override
 					public void onClick(DialogInterface p1, int p2){
 						p1.dismiss();
+					}
+
+				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) sMap.getDefaults(tag);
+						sdb.putInteger(tag,tagVal);
+						sdb.onlyWrite();
+						TextView tv = p1.findViewById(android.R.id.text1);
+						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+						restartKeyboard();
+						d1.dismiss();
 					}
 
 				});
@@ -389,6 +420,18 @@ public class AppSettingsV2 extends Activity {
 					}
 
 				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						if(langSelector) sdb.putString(tag,(String)sMap.getDefaults(tag));
+						else sdb.putInteger(tag,(int)sMap.getDefaults(tag));
+						sdb.onlyWrite();
+						restartKeyboard();
+						p1.dismiss();
+					}
+
+				});
 			final int xval = val;
 			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 
@@ -469,7 +512,7 @@ public class AppSettingsV2 extends Activity {
 	}
 	
 	private int getIntOrDefault(String key){
-		return sdb.getInteger(key,sMap.getDefaults(key));
+		return sdb.getInteger(key,(int)sMap.getDefaults(key));
 	}
 	
 	private final float getListPreferredItemHeight(){

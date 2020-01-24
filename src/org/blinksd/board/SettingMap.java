@@ -1,8 +1,11 @@
 package org.blinksd.board;
 
+import android.os.*;
 import java.util.*;
 import org.blinksd.*;
-import org.blinksd.board.AppSettingsV2.SettingType;
+import org.blinksd.board.AppSettingsV2.*;
+import android.content.res.*;
+import android.util.*;
 
 public class SettingMap extends LinkedHashMap<String,SettingType> {
 
@@ -99,7 +102,12 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 				case SET_KEY2_BGCLR:
 					return Defaults.KEY2_BACKGROUND_COLOR;
 				case SET_ENTER_BGCLR:
-					return Defaults.ENTER_BACKGROUND_COLOR;
+					if(Build.VERSION.SDK_INT < 21)
+						return Defaults.ENTER_BACKGROUND_COLOR;
+					TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
+					int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
+					arr.recycle();
+					return color;
 				case SET_KEY_SHADOWCLR:
 					return Defaults.KEY_TEXT_SHADOW_COLOR;
 				case SET_KEY_TEXTCLR:

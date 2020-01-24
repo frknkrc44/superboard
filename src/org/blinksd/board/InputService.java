@@ -186,7 +186,7 @@ public class InputService extends InputMethodService {
 					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
 					{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
 					{"","","END","","","PAUSE","",""},
-					{abc,"🔇","←","↑","↓","→","🔉","🔊"}
+					{abc,"","←","↑","↓","→","",""}
 				},{
 					{"1","2","3","+"},
 					{"4","5","6",";"},
@@ -243,13 +243,10 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(3,3,2,KeyEvent.KEYCODE_MOVE_END);
 			sb.setPressEventForKey(3,3,5,KeyEvent.KEYCODE_MEDIA_PAUSE);
 			
-			sb.setPressEventForKey(3,-1,1,KeyEvent.KEYCODE_MUTE);
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
 			sb.setPressEventForKey(3,-1,3,KeyEvent.KEYCODE_DPAD_UP);
 			sb.setPressEventForKey(3,-1,4,KeyEvent.KEYCODE_DPAD_DOWN);
 			sb.setPressEventForKey(3,-1,5,KeyEvent.KEYCODE_DPAD_RIGHT);
-			sb.setPressEventForKey(3,-1,6,KeyEvent.KEYCODE_VOLUME_DOWN);
-			sb.setPressEventForKey(3,-1,7,KeyEvent.KEYCODE_VOLUME_UP);
 			
 			for(int i = 0;i < 2;i++){
 				for(int g = 0;g < 8;g++){
@@ -258,27 +255,24 @@ public class InputService extends InputMethodService {
 				}
 			}
 			
-			for(int i = 0;i < kbd.length;i++){
-				if(i != 0 && i < 3){
-					sb.setRowPadding(i,2,sb.wp(2));
-					sb.setKeyRepeat(i,3,-1);
-					sb.setKeyRepeat(i,4,2);
-					sb.setPressEventForKey(i,3,-1,Keyboard.KEYCODE_DELETE);
-					sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
-					sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
-					sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
-					sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
-					sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
-					sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
-					sb.setLongPressEventForKey(i,4,1,'\t',false);
-					sb.setKeyWidthPercent(i,3,0,15);
-					sb.setKeyWidthPercent(i,3,-1,15);
-					sb.setKeyWidthPercent(i,4,0,20);
-					sb.setKeyWidthPercent(i,4,1,15);
-					sb.setKeyWidthPercent(i,4,2,50);
-					sb.setKeyWidthPercent(i,4,3,15);
-					sb.setKeyWidthPercent(i,4,-1,20);
-				}
+			for(int i = 1;i < 3;i++){
+				sb.setRowPadding(i,2,sb.wp(2));
+				sb.setKeyRepeat(i,3,-1);
+				sb.setKeyRepeat(i,4,2);
+				sb.setPressEventForKey(i,3,-1,Keyboard.KEYCODE_DELETE);
+				sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
+				sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
+				sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
+				sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
+				sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
+				sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
+				sb.setKeyWidthPercent(i,3,0,15);
+				sb.setKeyWidthPercent(i,3,-1,15);
+				sb.setKeyWidthPercent(i,4,0,20);
+				sb.setKeyWidthPercent(i,4,1,15);
+				sb.setKeyWidthPercent(i,4,2,50);
+				sb.setKeyWidthPercent(i,4,3,15);
+				sb.setKeyWidthPercent(i,4,-1,20);
 			}
 		}
 		
