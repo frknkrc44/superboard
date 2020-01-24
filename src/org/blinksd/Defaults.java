@@ -25,4 +25,5 @@ public class Defaults {
 	public static final boolean KEYBOARD_SHOW_POPUP = true;
 	public static final boolean KEYBOARD_LC_ON_EMOJI = false;
 	public static final boolean KEYBOARD_TOUCH_SOUND = true;
+	public static final boolean COLORIZE_NAVBAR = true;
 }

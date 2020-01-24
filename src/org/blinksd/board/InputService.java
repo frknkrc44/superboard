@@ -447,7 +447,7 @@ public class InputService extends InputMethodService {
 	}
 	
 	private boolean x(){
-		if(SystemUtils.isNotColorizeNavbar()){
+		if(SystemUtils.isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(sd,SettingMap.SET_COLORIZE_NAVBAR)){
 			return false;
 		}
 		return !isLand() || isTablet();

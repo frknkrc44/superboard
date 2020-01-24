@@ -28,7 +28,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_KEY_SHADOWSIZE = "key_shadowsize",
 	SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
 	SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
-	SET_KEY_TEXTCLR = "key_textclr";
+	SET_KEY_TEXTCLR = "key_textclr",
+	SET_COLORIZE_NAVBAR = "colorize_navbar";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -37,6 +38,7 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
 		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
+		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
 		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
 		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
 		put(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
@@ -112,6 +114,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.KEY_TEXT_SHADOW_COLOR;
 				case SET_KEY_TEXTCLR:
 					return Defaults.KEY_TEXT_COLOR;
+				case SET_COLORIZE_NAVBAR:
+					return Defaults.COLORIZE_NAVBAR;
 			}
 		}
 		return null;
