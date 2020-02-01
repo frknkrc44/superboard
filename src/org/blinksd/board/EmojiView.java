@@ -49,8 +49,10 @@ public class EmojiView extends LinearLayout {
 		th.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
 			@Override
 			public void onTabChanged(String p1){
-				tw.getChildTabViewAt(curTab).setSelected(false);
-				tw.getChildTabViewAt(curTab = th.getCurrentTab()).setSelected(true);
+				try {
+					tw.getChildTabViewAt(curTab).setSelected(false);
+					tw.getChildTabViewAt(curTab = th.getCurrentTab()).setSelected(true);
+				} catch(Throwable t){}
 			}
 		});
 		final LinearLayout ll = new LinearLayout(getContext());
