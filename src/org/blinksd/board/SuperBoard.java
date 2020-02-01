@@ -25,7 +25,7 @@ public class SuperBoard extends FrameLayout {
 
 	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP;
 	protected float txtsze = -1;
-	private static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
+	protected static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean clear = false, lng = false, lock = false;
 	protected Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
@@ -1112,7 +1112,8 @@ public class SuperBoard extends FrameLayout {
 					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
 					break;
 				case custom:
-					// FIXME: returns custom font at second attempt
+					// Contains a system problem about custom font files,
+					// Custom fonts applying too slowly and I can't fix it!
 					t.setTypeface(cFont);
 					break;
 			}

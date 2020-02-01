@@ -96,9 +96,7 @@ public class AppSettingsV2 extends Activity {
 				}
 			}
 		};
-		iv = new ImageView(this);
-		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+		
 		sb.addRow(0,new String[]{"1","2","3"});
 		for(int i = 0;i <= 2;i++) sb.getKey(0,0,i).setId(i);
 		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
@@ -106,6 +104,9 @@ public class AppSettingsV2 extends Activity {
 		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
+		iv = new ImageView(this);
+		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 		ll.addView(iv);
 		ll.addView(sb);
 		main.addView(ll);
