@@ -46,7 +46,6 @@ public class SuperBoard extends FrameLayout {
 				case 0:
 					removeMessages(3);
 					sendEmptyMessage(3);
-					sendEmptyMessage(4);
 					break;
 				case 1:
 					removeMessages(1);
@@ -94,13 +93,6 @@ public class SuperBoard extends FrameLayout {
 					removeMessages(3);
 					lock = lng = false;
 					afterKeyboardEvent();
-					break;
-				case 4:
-					for(int i = 0;i <= 4;i++){
-						if(i != 3){
-							removeMessages(i);
-						}
-					}
 					break;
 				case 5:
 					setEnabled(false);
@@ -697,11 +689,15 @@ public class SuperBoard extends FrameLayout {
 	}
 
 	private void setShiftState(){
-		setShiftState(shift = (shift+1) % 3);
+		setShiftState((shift+1) % 3);
 	}
 
 	public void setShiftState(int state){
 		shift = state;
+		if(!confirmState(shift)){
+			return;
+		}
+		
 		ViewGroup k = getCurrentKeyboard(),r = null;
 		Key t = null;
 		for(int i = 0;i < k.getChildCount();i++){
@@ -719,6 +715,20 @@ public class SuperBoard extends FrameLayout {
 		}
 	}
 	
+	private boolean confirmState(int state){
+		if(getCurrentKeyboard().getChildCount() > 1){
+			Key k = getKey(0,1,0);
+			String t = k.getText().toString();
+			if(state > 0 && t.toLowerCase().equals(t)){
+				return true;
+			} else if(state <= 0 && t.toUpperCase().equals(t)){
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
 	private static Locale loc = new Locale("tr","TR");
 	
 	public void setKeyboardLanguage(String lang){
@@ -727,6 +737,12 @@ public class SuperBoard extends FrameLayout {
 			loc = la.length > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
 			trigSystemSuggestions();
 		}
+	}
+	
+	private boolean shiftDetect = true;
+	
+	public void setShiftDetection(boolean detect){
+		shiftDetect = detect;
 	}
 	
 	InputMethodService curr = null;
@@ -738,10 +754,6 @@ public class SuperBoard extends FrameLayout {
 	int action = 0;
 
 	public void updateKeyState(InputMethodService s){
-		if(!s.equals(curr)){
-			curr = s;
-		}
-		
 		EditorInfo ei = s.getCurrentInputEditorInfo();
 		
 		action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
@@ -753,10 +765,12 @@ public class SuperBoard extends FrameLayout {
 				break;
 			default:
 				setEnabledLayout(findNormalKeyboardIndex());
-				int caps = ei.inputType != InputType.TYPE_NULL 
-					? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
-					: 0;
-				setShiftState(caps==0?0:1);
+				if(shiftDetect){
+					int caps = ei.inputType != InputType.TYPE_NULL 
+						? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
+						: 0;
+					setShiftState(caps==0?0:1);
+				} else setShiftState(0);
 				break;
 		}
 		

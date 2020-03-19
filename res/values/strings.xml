@@ -53,27 +53,27 @@
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
-		<item>regular</item>
-		<item>bold</item>
-		<item>italic</item>
-		<item>bold_italic</item>
-		<item>condensed</item>
-		<item>condensed_bold</item>
-		<item>condensed_italic</item>
-		<item>condensed_bold_italic</item>
-		<item>serif</item>
-		<item>serif_bold</item>
-		<item>serif_italic</item>
-		<item>serif_bold_italic</item>
-		<item>monospace</item>
-		<item>monospace_bold</item>
-		<item>monospace_italic</item>
-		<item>monospace_bold_italic</item>
-		<item>serif_monospace</item>
-		<item>serif_monospace_bold</item>
-		<item>serif_monospace_italic</item>
-		<item>serif_monospace_bold_italic</item>
-		<item>custom</item>
+		<item>Regular</item>
+		<item>Bold</item>
+		<item>Italic</item>
+		<item>Bold Italic</item>
+		<item>Condensed</item>
+		<item>Condensed Bold</item>
+		<item>Condensed Italic</item>
+		<item>Condensed Bold Italic</item>
+		<item>Serif</item>
+		<item>Serif Bold</item>
+		<item>Serif Italic</item>
+		<item>Serif Bold Italic</item>
+		<item>Monospace</item>
+		<item>Monospace Bold</item>
+		<item>Monospace Italic</item>
+		<item>Monospace Bold Italic</item>
+		<item>Serif Monospace</item>
+		<item>Serif Monospace Bold</item>
+		<item>Serif Monospace Italic</item>
+		<item>Serif Monospace Bold Italic</item>
+		<item>Custom (in app data folder)</item>
 	</string-array>
 	
 </resources>

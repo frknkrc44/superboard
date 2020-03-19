@@ -29,7 +29,9 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
 	SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
 	SET_KEY_TEXTCLR = "key_textclr",
-	SET_COLORIZE_NAVBAR = "colorize_navbar";
+	SET_COLORIZE_NAVBAR = "colorize_navbar",
+	SET_DETECT_CAPSLOCK = "detect_capslock",
+	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -39,6 +41,9 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
 		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
 		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
+		if(Build.VERSION.SDK_INT >= 28)
+			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
+		put(SET_DETECT_CAPSLOCK,SettingType.BOOL);
 		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
 		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
 		put(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
@@ -116,6 +121,10 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.KEY_TEXT_COLOR;
 				case SET_COLORIZE_NAVBAR:
 					return Defaults.COLORIZE_NAVBAR;
+				case SET_DETECT_CAPSLOCK:
+					return Defaults.DETECT_CAPSLOCK;
+				case SET_COLORIZE_NAVBAR_ALT:
+					return Defaults.COLORIZE_NAVBAR_ALT;
 			}
 		}
 		return null;

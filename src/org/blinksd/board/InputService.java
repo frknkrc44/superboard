@@ -326,6 +326,7 @@ public class InputService extends InputMethodService {
 	
 	public void setPrefs(){
 		if(sb != null && sd != null){
+			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
 			sb.updateKeyState(this);
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
 			img = AppSettingsV2.getBackgroundImageFile();
@@ -413,11 +414,20 @@ public class InputService extends InputMethodService {
 				if(ll.getChildCount() > 1){
 					ll.removeViewAt(1);
 				}
-				if(x()){
+				if(SDK_INT >= 28 && SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT)){
+					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+					int color = Color.rgb(Color.red(c),Color.green(c),Color.blue(c));
+					w.setNavigationBarColor(color);
+					w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
+																		? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+																		: View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+				} else if(x()){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
 					ll.addView(createNavbarLayout(c));
 				} else {
+					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 				}
