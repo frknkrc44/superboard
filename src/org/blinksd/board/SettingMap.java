@@ -31,7 +31,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_KEY_TEXTCLR = "key_textclr",
 	SET_COLORIZE_NAVBAR = "colorize_navbar",
 	SET_DETECT_CAPSLOCK = "detect_capslock",
-	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt";
+	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
+	SET_DISABLE_POPUP = "disable_popup";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -43,6 +44,7 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 28)
 			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
+		put(SET_DISABLE_POPUP,SettingType.BOOL);
 		put(SET_DETECT_CAPSLOCK,SettingType.BOOL);
 		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
 		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
@@ -125,6 +127,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.DETECT_CAPSLOCK;
 				case SET_COLORIZE_NAVBAR_ALT:
 					return Defaults.COLORIZE_NAVBAR_ALT;
+				case SET_DISABLE_POPUP:
+					return Defaults.DISABLE_POPUP;
 			}
 		}
 		return null;
@@ -132,10 +136,10 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 
 	public int[] getMinMaxNumbers(final String key){
 		int[] nums = new int[2];
+		nums[0] = 0;
 		if(containsKey(key)){
 			switch(get(key)){
 				case DECIMAL_NUMBER:
-					nums[0] = 0;
 					switch(key){
 						case SET_KEYBOARD_BGBLUR:
 							nums[1] = Constants.MAX_OTHER_VAL;
@@ -158,7 +162,6 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					}
 					break;
 				case FLOAT_NUMBER:
-					nums[0] = 0;
 					switch(key){
 						case SET_KEY_PADDING:
 						case SET_KEY_SHADOWSIZE:

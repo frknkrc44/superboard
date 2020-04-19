@@ -147,7 +147,8 @@ public class LayoutUtils {
 		return langs;
 	}
 	
-	public static void setKeyOpts(List<List<KeyOptions>> langPack, SuperBoard sb){
+	public static void setKeyOpts(Language lang, SuperBoard sb){
+		List<List<KeyOptions>> langPack = lang.layout;
 		for(int i = 0;i < langPack.size();i++){
 			List<KeyOptions> subList = langPack.get(i);
 			for(int g = 0;g < subList.size();g++){
@@ -175,8 +176,7 @@ public class LayoutUtils {
 						sb.getKey(0,i,g).setText("!?#");
 						break;
 					case KeyEvent.KEYCODE_SPACE:
-						Context ctx = sb.getContext();
-						sb.getKey(0,i,g).setText(ctx.getApplicationInfo().loadLabel(ctx.getPackageManager()));
+						sb.getKey(0,i,g).setText(lang.label);
 						break;
 					case Keyboard.KEYCODE_DONE:
 						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_return);

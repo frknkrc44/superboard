@@ -207,7 +207,7 @@ public class InputService extends InputMethodService {
 				if(cl.midPadding && lkeys != null){
 					sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
 				}
-				LayoutUtils.setKeyOpts(cl.layout,sb);
+				LayoutUtils.setKeyOpts(cl,sb);
 			} catch(Throwable e){
 				throw new RuntimeException(e);
 			}
@@ -360,6 +360,7 @@ public class InputService extends InputMethodService {
 					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
 				}
 			}
+			sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
 			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
@@ -400,7 +401,7 @@ public class InputService extends InputMethodService {
 			if(l.midPadding && lkeys != null){
 				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,sb.wp(2));
 			}
-			LayoutUtils.setKeyOpts(l.layout,sb);
+			LayoutUtils.setKeyOpts(l,sb);
 			cl = l;
 		} catch(Throwable e){
 			throw new RuntimeException(e);

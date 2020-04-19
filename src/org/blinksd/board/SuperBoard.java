@@ -21,12 +21,12 @@ import org.blinksd.utils.image.*;
 import static android.view.View.*;
 import static android.view.Gravity.*;
 
-public class SuperBoard extends FrameLayout {
+public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP;
 	protected float txtsze = -1;
 	protected static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
-	private boolean clear = false, lng = false, lock = false;
+	private boolean clear = false, lng = false, lock = false, dpopup = false;
 	protected Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
 	private Typeface cFont = Typeface.DEFAULT;
@@ -470,10 +470,9 @@ public class SuperBoard extends FrameLayout {
 		if(keyboardIndex < 0) keyboardIndex += getChildCount();
 		if(keyboardIndex < getChildCount() && keyboardIndex >= 0){
 			if(getChildCount() == 1 || keyboardIndex == selected) return;
+			getChildAt(selected).setVisibility(GONE);
 			selected = keyboardIndex;
-			for(int i = 0;i < getChildCount();i++){
-				getChildAt(i).setVisibility(i == keyboardIndex ? VISIBLE : GONE);
-			}
+			getChildAt(selected).setVisibility(VISIBLE);
 		} else throw new RuntimeException("Invalid keyboard index number");
 	}
 	
@@ -846,6 +845,10 @@ public class SuperBoard extends FrameLayout {
 		getKey(keyboardIndex, rowIndex, keyIndex).setTag(TAG_LP,keyCode+":"+isEvent);
 	}
 	
+	public void setDisablePopup(boolean val){
+		dpopup = val;
+	}
+	
 	public void closeKeyboard(){
 		getServiceContext().requestHideSelf(0);
 	}
@@ -952,47 +955,7 @@ public class SuperBoard extends FrameLayout {
 			setKeyTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
 			setBackground(keybg);
 			setKeyTextStyle(txts);
-			setOnTouchListener(new OnTouchListener(){
-					@Override
-					public boolean onTouch(View v, MotionEvent m){
-						v.setSelected(m.getAction() != MotionEvent.ACTION_UP);
-						if(isHasPopup(v) || isHasLongPressEvent(v) || isKeyRepeat(v)){
-							switch(m.getAction()){
-								case MotionEvent.ACTION_UP:
-									act = MotionEvent.ACTION_UP;
-									if(isKeyRepeat(v) == false && h.hasMessages(1)){
-										sendDefaultKeyboardEvent(v);
-									}
-									h.removeMessages(3);
-									h.sendEmptyMessage(3);
-									break;
-								case MotionEvent.ACTION_DOWN:
-									act = MotionEvent.ACTION_DOWN;
-									h.removeMessages(1);
-									onKeyboardEvent(v);
-									Message x = h.obtainMessage(1,v);
-									if(isKeyRepeat(v)){
-										h.sendMessage(x);
-									} else {
-										h.sendMessageDelayed(x,250*mult);
-									}
-									break;
-							}
-						} else {
-							switch(m.getAction()){
-								case MotionEvent.ACTION_UP:
-									h.removeMessages(3);
-									h.sendEmptyMessage(3);
-									break;
-								case MotionEvent.ACTION_DOWN:
-									sendDefaultKeyboardEvent(v);
-									onKeyboardEvent(v);
-									break;
-							}
-						}
-						return true;
-					}
-				});
+			setOnTouchListener(SuperBoard.this);
 		}
 
 		public void setBackground(Drawable b){
@@ -1198,5 +1161,53 @@ public class SuperBoard extends FrameLayout {
 		serif_monospace_italic,
 		serif_monospace_bold_italic,
 		custom
+	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent m){
+		v.setSelected(m.getAction() != MotionEvent.ACTION_UP);
+		if(isHasPopup(v) || isHasLongPressEvent(v) || isKeyRepeat(v)){
+			if(isHasPopup(v) && dpopup){
+				normalPress(v,m);
+				return true;
+			}
+			switch(m.getAction()){
+				case MotionEvent.ACTION_UP:
+					act = MotionEvent.ACTION_UP;
+					if(isKeyRepeat(v) == false && h.hasMessages(1)){
+						sendDefaultKeyboardEvent(v);
+					}
+					h.removeMessages(3);
+					h.sendEmptyMessage(3);
+					break;
+				case MotionEvent.ACTION_DOWN:
+					act = MotionEvent.ACTION_DOWN;
+					h.removeMessages(1);
+					onKeyboardEvent(v);
+					Message x = h.obtainMessage(1,v);
+					if(isKeyRepeat(v)){
+						h.sendMessage(x);
+					} else {
+						h.sendMessageDelayed(x,250*mult);
+					}
+					break;
+			}
+		} else {
+			normalPress(v,m);
+		}
+		return true;
+	}
+	
+	private void normalPress(View v, MotionEvent m){
+		switch(m.getAction()){
+			case MotionEvent.ACTION_UP:
+				h.removeMessages(3);
+				h.sendEmptyMessage(3);
+				break;
+			case MotionEvent.ACTION_DOWN:
+				sendDefaultKeyboardEvent(v);
+				onKeyboardEvent(v);
+				break;
+		}
 	}
 }

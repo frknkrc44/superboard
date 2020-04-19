@@ -142,7 +142,14 @@ public class ImageSelectorLayout {
 					int pm = ctx.checkCallingOrSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
 					if(pm == PackageManager.PERMISSION_GRANTED){
 						WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
-						Drawable d = wm.getDrawable();
+						Drawable d;
+						if(wm.getWallpaperInfo() != null){
+							Toast.makeText(p1.getContext(),"You're using live wallpaper, loading thumbnail ...",Toast.LENGTH_SHORT).show();
+							d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
+						} else {
+							d = wm.getDrawable();
+						}
+						
 						if(d instanceof BitmapDrawable){
 							Bitmap b = ((BitmapDrawable) d).getBitmap();
 							b = ImageUtils.getMinimizedBitmap(b);
