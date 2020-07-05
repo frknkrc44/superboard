@@ -47,6 +47,9 @@
 	<string name="settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
 	<string name="settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
 	<string name="settings_image_selector_gradient_change_orientation">Change orientation</string>
+	<string name="settings_image_selector_select">Select image</string>
+	<string name="settings_image_selector_wp">Get wallpaper</string>
+	<string name="settings_image_selector_rotate">Rotate</string>
 	
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Keyboard language</string>

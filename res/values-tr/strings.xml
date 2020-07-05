@@ -36,6 +36,9 @@
 	<string name="settings_image_selector_gradient_add_item_error">Hoopp! En yüksek sınır %s</string>
 	<string name="settings_image_selector_gradient_remove_item_error">Hoopp! En az sınır %s</string>
 	<string name="settings_image_selector_gradient_change_orientation">Yön değiştir</string>
+	<string name="settings_image_selector_select">Resim seç</string>
+	<string name="settings_image_selector_wp">Duvar kağıdını getir</string>
+	<string name="settings_image_selector_rotate">Döndür</string>
 	
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Klavye dili</string>

@@ -121,11 +121,11 @@ public class ImageSelectorLayout {
 		LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,ctx);
 		Button s = LayoutCreator.createButton(ctx);
 		s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		s.setText("Select image");
+		s.setText(ctx.getTranslation("image_selector_select"));
 		l.addView(s);
 		Button w = LayoutCreator.createButton(ctx);
 		w.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		w.setText("Get wallpaper");
+		w.setText(ctx.getTranslation("image_selector_wp"));
 		l.addView(w);
 		s.setOnClickListener(new View.OnClickListener(){
 				@Override
@@ -169,7 +169,7 @@ public class ImageSelectorLayout {
 		Button rb = LayoutCreator.createButton(ctx);
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
-		rb.setText("Rotate");
+		rb.setText(ctx.getTranslation("image_selector_rotate"));
 		rb.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View p1){
