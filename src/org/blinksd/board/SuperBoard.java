@@ -83,10 +83,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 						removeMessages(3);
 						sendEmptyMessage(3);
 					} else {
-						Message n = obtainMessage(1,msg.obj);
-						sendMessageDelayed(n,((mult>1?15:20)*mult)*(lng?1:20));
-						if(!lng) lng = true;
 						sendDefaultKeyboardEvent(v);
+						if(isRepeat){
+							Message n = obtainMessage(1,msg.obj);
+							sendMessageDelayed(n,((mult>1?15:20)*mult)*(lng?1:20));
+							if(!lng) lng = true;
+						} else {
+							removeMessages(3);
+							sendEmptyMessage(3);
+						}
 					}
 					break;
 				case 3:
@@ -692,10 +697,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	}
 
 	public void setShiftState(int state){
-		shift = state;
-		if(!confirmState(shift)){
+		if(state == shift){
 			return;
 		}
+
+		shift = state;
 		
 		ViewGroup k = getCurrentKeyboard(),r = null;
 		Key t = null;
@@ -714,20 +720,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 	}
 	
-	private boolean confirmState(int state){
-		if(getCurrentKeyboard().getChildCount() > 1){
-			Key k = getKey(0,1,0);
-			String t = k.getText().toString();
-			if(state > 0 && t.toLowerCase().equals(t)){
-				return true;
-			} else if(state <= 0 && t.toUpperCase().equals(t)){
-				return true;
-			}
-			return false;
-		}
-		return true;
-	}
-	
 	private static Locale loc = new Locale("tr","TR");
 	
 	public void setKeyboardLanguage(String lang){
@@ -736,6 +728,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			loc = la.length > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
 			trigSystemSuggestions();
 		}
+	}
+	
+	private boolean isRepeat = true;
+	
+	public void setRepeating(boolean repeat){
+		isRepeat = repeat;
 	}
 	
 	private boolean shiftDetect = true;

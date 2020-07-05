@@ -484,7 +484,7 @@ public class AppSettingsV2 extends Activity {
 		File img = getBackgroundImageFile();
 		int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
+		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.getBlur(b,blur) : b):null);
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));

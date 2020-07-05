@@ -43,6 +43,11 @@
             </intent-filter> 
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
+		<activity
+			android:theme="@android:style/Theme.NoDisplay"
+			android:excludeFromRecents="true"
+			android:noHistory="true"
+			android:name=".CheckPermissionsActivity" />
     </application>
 
 </manifest>

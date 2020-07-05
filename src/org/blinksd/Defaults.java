@@ -29,4 +29,5 @@ public class Defaults {
 	public static final boolean DETECT_CAPSLOCK = true;
 	public static final boolean COLORIZE_NAVBAR_ALT = true;
 	public static final boolean DISABLE_POPUP = false;
+	public static final boolean DISABLE_REPEAT = false;
 }

@@ -327,13 +327,14 @@ public class InputService extends InputMethodService {
 	public void setPrefs(){
 		if(sb != null && sd != null){
 			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
+			sb.setRepeating(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_REPEAT));
 			sb.updateKeyState(this);
 			sb.setKeyboardHeight(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
 			img = AppSettingsV2.getBackgroundImageFile();
 			if(fl != null){
 				int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
+				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.getBlur(b,blur) : b):null);
 			}
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
@@ -485,7 +486,7 @@ public class InputService extends InputMethodService {
 					return (boolean) hasNavigationBar.invoke(windowManagerService);
 				}
 				hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar",int.class);
-				WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+				WindowManager wm = getWindow().getWindow().getWindowManager();
 				Display dsp = wm.getDefaultDisplay();
 				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
 			} catch(Exception e){

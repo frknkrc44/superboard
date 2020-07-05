@@ -19,19 +19,11 @@ public class SuperDBCenterConnector {
 	private Context ctx = null;
 	
 	public final void connectToSuperDB(){
-		checkPermissions();
 		ctx.bindService(getSuperDBConnectorIntent(),sdbconn,Context.BIND_AUTO_CREATE);
 	}
 	
 	public final ISuperDBConnection getSuperDBConnection(){
 		return sdbc;
-	}
-	
-	private final void checkPermissions(){
-		String perm = "org.blinksd.sdbcenter.permission.MANAGE_DATABASE";
-		if(ctx.checkCallingOrSelfPermission(perm) != PackageManager.PERMISSION_GRANTED){
-			ctx.startActivity(new Intent(ctx, CheckPermissionsActivity.class).putExtra("perm",perm));
-		}
 	}
 	
 	private final Intent getSuperDBConnectorIntent(){

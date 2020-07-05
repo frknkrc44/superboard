@@ -18,13 +18,24 @@
 	<!-- Settings resources -->
 	<string name="settings_keyboard_bgimg">Keyboard background image</string>
 	<string name="settings_keyboard_show_popup">Show character while typing</string>
+	<string name="settings_colorize_navbar">Use transparent background at navbar</string>
+	<string name="settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
+	<string name="settings_disable_popup">Disable popup menu</string>
+	<string name="settings_disable_repeat">Disable character repeating on long press</string>
+	<string name="settings_detect_capslock">Detect capslock status automatically</string>
 	<string name="settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
 	<string name="settings_enter_bgclr">Enter key background color</string>
 	<string name="settings_key_shadowclr">Key text shadow color</string>
 	<string name="settings_key_bgclr">First key background color</string>
 	<string name="settings_key2_bgclr">Second key background color</string>
 	<string name="settings_keyboard_bgclr">Keyboard background color</string>
+	<string name="settings_key_textclr">Key text color</string>
 	<string name="settings_play_snd_press">Play sound on key press events</string>
+	<string name="settings_key_longpress_duration">Longpress duration demultiplier</string>
+	<string name="settings_key_padding">Key padding</string>
+	<string name="settings_key_radius">Key radius</string>
+	<string name="settings_key_textsize">Key text size</string>
+	<string name="settings_key_shadowsize">Key shadow size</string>
 	
 	<string name="settings_return_defaults">(↻)</string>
 	

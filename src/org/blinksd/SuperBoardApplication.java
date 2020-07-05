@@ -1,12 +1,14 @@
 package org.blinksd;
 
 import android.app.*;
+import android.content.*;
 import android.graphics.*;
 import android.util.*;
 import java.io.*;
 import java.util.*;
 import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
+import org.blinksd.utils.database.*;
 import org.superdroid.db.*;
 
 public class SuperBoardApplication extends Application {
@@ -18,6 +20,7 @@ public class SuperBoardApplication extends Application {
 	private static Typeface cFont = null;
 	private static File fontFile = null;
 	private static String fontPath = null;
+	private static SuperDBCenterConnector dbSync;
 	
 	@Override
 	public void onCreate(){
@@ -31,6 +34,16 @@ public class SuperBoardApplication extends Application {
 		} catch(Throwable t){
 			langs = new HashMap<String,LayoutUtils.Language>();
 		}
+		
+		// initSyncServer();
+	}
+	
+	private void initSyncServer(){
+		try {
+			if(dbSync == null)
+				dbSync = new SuperDBCenterConnector(this);
+			dbSync.connectToSuperDB();
+		} catch(Throwable t){}
 	}
 	
 	public static SuperBoardApplication getApplication(){

@@ -32,7 +32,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_COLORIZE_NAVBAR = "colorize_navbar",
 	SET_DETECT_CAPSLOCK = "detect_capslock",
 	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
-	SET_DISABLE_POPUP = "disable_popup";
+	SET_DISABLE_POPUP = "disable_popup",
+	SET_DISABLE_REPEAT = "disable_repeat";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -45,6 +46,7 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		if(Build.VERSION.SDK_INT >= 28)
 			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
 		put(SET_DISABLE_POPUP,SettingType.BOOL);
+		put(SET_DISABLE_REPEAT,SettingType.BOOL);
 		put(SET_DETECT_CAPSLOCK,SettingType.BOOL);
 		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
 		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
@@ -129,6 +131,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.COLORIZE_NAVBAR_ALT;
 				case SET_DISABLE_POPUP:
 					return Defaults.DISABLE_POPUP;
+				case SET_DISABLE_REPEAT:
+					return Defaults.DISABLE_REPEAT;
 			}
 		}
 		return null;
