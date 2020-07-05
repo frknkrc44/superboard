@@ -31,12 +31,7 @@
 	<string name="settings_keyboard_bgclr">Keyboard background color</string>
 	<string name="settings_key_textclr">Key text color</string>
 	<string name="settings_play_snd_press">Play sound on key press events</string>
-	<string name="settings_key_longpress_duration">Longpress duration demultiplier</string>
-	<string name="settings_key_padding">Key padding</string>
-	<string name="settings_key_radius">Key radius</string>
-	<string name="settings_key_textsize">Key text size</string>
-	<string name="settings_key_shadowsize">Key shadow size</string>
-	
+
 	<string name="settings_return_defaults">(↻)</string>
 	
 	<!-- Color selector layout resources -->
@@ -61,6 +56,11 @@
 	<string name="settings_keyboard_bgblur">Keyboard background image blur</string>
 	<string name="settings_key_vibrate_duration">Key press vibrate duration</string>
 	<string name="settings_keyboard_height">Keyboard height</string>
+	<string name="settings_key_longpress_duration">Longpress duration multiplier</string>
+	<string name="settings_key_padding">Key padding</string>
+	<string name="settings_key_radius">Key radius</string>
+	<string name="settings_key_textsize">Key text size</string>
+	<string name="settings_key_shadowsize">Key shadow size</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
