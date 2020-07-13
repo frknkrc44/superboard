@@ -679,7 +679,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				openEmojiLayout();
 				break;
 			default:
-				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0));
+				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0,KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE,InputDevice.SOURCE_KEYBOARD));
 		}
 	}
 	
@@ -1164,6 +1164,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	@Override
 	public boolean onTouch(View v, MotionEvent m){
 		v.setSelected(m.getAction() != MotionEvent.ACTION_UP);
+
+		if(m.getAction() == MotionEvent.ACTION_UP){
+			h.removeMessages(3);
+		}
+
 		if(isHasPopup(v) || isHasLongPressEvent(v) || isKeyRepeat(v)){
 			if(isHasPopup(v) && dpopup){
 				normalPress(v,m);
