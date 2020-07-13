@@ -54,6 +54,7 @@
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Keyboard language</string>
 	<string name="settings_keyboard_texttype_select">Keyboard font</string>
+	<string name="settings_keyboard_icon_theme">Icon theme</string>
 	
 	<!-- Number selector resources -->
 	<string name="settings_keyboard_bgblur">Keyboard background image blur</string>
@@ -88,6 +89,12 @@
 		<item>Serif Monospace Italic</item>
 		<item>Serif Monospace Bold Italic</item>
 		<item>Custom (in app data folder)</item>
+	</string-array>
+	
+	<string-array name="settings_keyboard_icon_theme">
+		<item>Default</item>
+		<item>Daisy</item>
+		<item>Material</item>
 	</string-array>
 	
 </resources>

@@ -1006,7 +1006,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		private void setKeyTextSize(float size){
 			t.setTextSize(txtsze=size);
 			ViewGroup.LayoutParams vp = i.getLayoutParams();
-			vp.width = (int)(size*3);
+			vp.width = -1;
 			vp.height = (int)(size*3);
 		}
 		

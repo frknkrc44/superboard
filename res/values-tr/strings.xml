@@ -43,7 +43,8 @@
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Klavye dili</string>
 	<string name="settings_keyboard_texttype_select">Klavye yazı tipi</string>
-
+	<string name="settings_keyboard_icon_theme">Simge teması</string>
+	
 	<!-- Number selector resources -->
 	<string name="settings_keyboard_bgblur">Klavye arkaplan resmi bulanıklığı</string>
 	<string name="settings_key_vibrate_duration">Tuş titreme süresi</string>
@@ -53,4 +54,12 @@
 	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
 	<string name="settings_key_textsize">Tuş metin boyutu</string>
 	<string name="settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
+	
+	<!-- List selector resources -->
+	<string-array name="settings_keyboard_icon_theme">
+		<item>Varsayılan</item>
+		<item>Papatya</item>
+		<item>Materyal</item>
+	</string-array>
+
 </resources>

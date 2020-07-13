@@ -33,11 +33,13 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_DETECT_CAPSLOCK = "detect_capslock",
 	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
 	SET_DISABLE_POPUP = "disable_popup",
-	SET_DISABLE_REPEAT = "disable_repeat";
+	SET_DISABLE_REPEAT = "disable_repeat",
+	SET_ICON_THEME = "keyboard_icon_theme";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
 		put(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		put(SET_ICON_THEME,SettingType.ICON_SELECTOR);
 		put(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
 		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
@@ -73,6 +75,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())
 					textTypes.add(type.name());
 				return textTypes;
+			case SET_ICON_THEME:
+				return SuperBoardApplication.getIconThemes().getThemeList();
 		}
 		return new ArrayList<String>();
 	}
@@ -133,6 +137,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.DISABLE_POPUP;
 				case SET_DISABLE_REPEAT:
 					return Defaults.DISABLE_REPEAT;
+				case SET_ICON_THEME:
+					return Defaults.ICON_THEME;
 			}
 		}
 		return null;

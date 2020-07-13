@@ -207,7 +207,6 @@ public class InputService extends InputMethodService {
 				if(cl.midPadding && lkeys != null){
 					sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
 				}
-				LayoutUtils.setKeyOpts(cl,sb);
 			} catch(Throwable e){
 				throw new RuntimeException(e);
 			}
@@ -318,18 +317,24 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
 		try {
-			setPrefs();
+			setPrefs(newConfig);
 		} catch(Throwable t){
 			System.exit(0);
 		}
 	}
 	
 	public void setPrefs(){
+		setPrefs(getResources().getConfiguration());
+	}
+	
+	public void setPrefs(Configuration conf){
 		if(sb != null && sd != null){
+			LayoutUtils.setKeyOpts(cl,sb);
 			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
 			sb.setRepeating(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_REPEAT));
 			sb.updateKeyState(this);
-			sb.setKeyboardHeight(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
+			float ori = conf.orientation == Configuration.ORIENTATION_LANDSCAPE ? 1.3f : 1;
+			sb.setKeyboardHeight((int)(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
 			img = AppSettingsV2.getBackgroundImageFile();
 			if(fl != null){
 				int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);

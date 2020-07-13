@@ -10,6 +10,7 @@ import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.utils.database.*;
 import org.superdroid.db.*;
+import org.blinksd.utils.icon.*;
 
 public class SuperBoardApplication extends Application {
 	
@@ -21,11 +22,13 @@ public class SuperBoardApplication extends Application {
 	private static File fontFile = null;
 	private static String fontPath = null;
 	private static SuperDBCenterConnector dbSync;
+	private static IconThemeUtils icons;
 	
 	@Override
 	public void onCreate(){
 		app = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
+		icons = new IconThemeUtils();
 		sMap = new SettingMap();
 		fontPath = app.getExternalCacheDir()+"/font.ttf";
 		
@@ -56,6 +59,10 @@ public class SuperBoardApplication extends Application {
 	
 	public static HashMap<String,Language> getKeyboardLanguageList(){
 		return langs;
+	}
+	
+	public static IconThemeUtils getIconThemes(){
+		return icons;
 	}
 	
 	public static Typeface getCustomFont(){
