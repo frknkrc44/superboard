@@ -25,6 +25,7 @@ import static org.blinksd.board.SuperBoard.*;
 import static android.media.AudioManager.*;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.Secure.getInt;
+import org.blinksd.utils.icon.*;
 
 public class InputService extends InputMethodService {
 	
@@ -32,7 +33,7 @@ public class InputService extends InputMethodService {
 	private BoardPopup po = null;
 	private SuperDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
-	private String kbd[][][] = null;
+	private String kbd[][][] = null, appname;
 	private LinearLayout ll = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
@@ -167,7 +168,8 @@ public class InputService extends InputMethodService {
 				}
 			};
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-			String appname = getString(R.string.app_name),abc = "ABC";
+			appname = getString(R.string.app_name);
+			String abc = "ABC";
 			kbd = new String[][][]{
 				{
 					{"[","]","θ","÷","<",">","`","´","{","}"},
@@ -222,9 +224,7 @@ public class InputService extends InputMethodService {
 			
 			sb.setPressEventForKey(-1,2,-1,Keyboard.KEYCODE_DELETE);
 			sb.setKeyRepeat(-1,2,-1);
-			sb.setKeyDrawable(-1,2,-1,R.drawable.sym_keyboard_delete);
 			sb.setPressEventForKey(-1,3,-1,Keyboard.KEYCODE_DONE);
-			sb.setKeyDrawable(-1,3,-1,R.drawable.sym_keyboard_return);
 			
 			sb.setPressEventForKey(3,1,4,KeyEvent.KEYCODE_PAGE_DOWN);
 			sb.setPressEventForKey(3,1,5,KeyEvent.KEYCODE_PAGE_UP);
@@ -259,11 +259,9 @@ public class InputService extends InputMethodService {
 				sb.setKeyRepeat(i,3,-1);
 				sb.setKeyRepeat(i,4,2);
 				sb.setPressEventForKey(i,3,-1,Keyboard.KEYCODE_DELETE);
-				sb.setKeyDrawable(i,3,-1,R.drawable.sym_keyboard_delete);
 				sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
 				sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
 				sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
-				sb.setKeyDrawable(i,4,-1,R.drawable.sym_keyboard_return);
 				sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
 				sb.setKeyWidthPercent(i,3,0,15);
 				sb.setKeyWidthPercent(i,3,-1,15);
@@ -330,6 +328,18 @@ public class InputService extends InputMethodService {
 	public void setPrefs(Configuration conf){
 		if(sb != null && sd != null){
 			LayoutUtils.setKeyOpts(cl,sb);
+			IconThemeUtils icons = SuperBoardApplication.getIconThemes();
+			sb.setKeyDrawable(-1,2,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+			sb.setKeyDrawable(-1,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+			for(int i = 1;i < 3;i++){
+				sb.setKeyDrawable(i,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+				sb.setKeyDrawable(i,4,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+				int item = icons.getIconResource(IconThemeUtils.SYM_TYPE_SPACE);
+				if(item != android.R.color.transparent)
+					sb.setKeyDrawable(i,4,2,item);
+				else
+					sb.getKey(i,4,2).setText(appname);
+			}
 			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
 			sb.setRepeating(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_REPEAT));
 			sb.updateKeyState(this);

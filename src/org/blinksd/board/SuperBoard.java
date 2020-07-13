@@ -1165,8 +1165,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	public boolean onTouch(View v, MotionEvent m){
 		v.setSelected(m.getAction() != MotionEvent.ACTION_UP);
 
-		if(m.getAction() == MotionEvent.ACTION_UP){
-			h.removeMessages(3);
+		switch(m.getAction()){
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_SCROLL:
+			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_OUTSIDE:
+				h.removeMessages(3);
+				break;
 		}
 
 		if(isHasPopup(v) || isHasLongPressEvent(v) || isKeyRepeat(v)){
