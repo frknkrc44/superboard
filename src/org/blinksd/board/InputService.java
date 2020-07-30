@@ -50,9 +50,11 @@ public class InputService extends InputMethodService {
 	}
 
 	@Override
-	public void onUnbindInput(){
-		requestHideSelf(0);
-		super.onUnbindInput();
+	public void onWindowHidden(){
+		if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KILL_BACKGROUND)){
+			System.exit(0);
+		}
+		super.onWindowHidden();
 	}
 
 	@Override

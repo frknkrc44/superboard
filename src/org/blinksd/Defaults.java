@@ -31,4 +31,5 @@ public class Defaults {
 	public static final boolean COLORIZE_NAVBAR_ALT = true;
 	public static final boolean DISABLE_POPUP = false;
 	public static final boolean DISABLE_REPEAT = false;
+	public static final boolean KILL_BACKGROUND = false;
 }
