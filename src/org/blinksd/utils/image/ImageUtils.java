@@ -1,6 +1,11 @@
 package org.blinksd.utils.image;
 
+import android.content.*;
 import android.graphics.*;
+import android.renderscript.*;
+import java.io.*;
+import java.lang.reflect.*;
+import org.blinksd.*;
 
 public class ImageUtils {
 	private ImageUtils(){}
@@ -45,7 +50,39 @@ public class ImageUtils {
 		return null;
 	}
 	
-	public static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius){
+	public static Bitmap getBlur(Bitmap bmp, int radius){
+		try {
+			// try blur processing with built-in renderscript
+			Context ctx = SuperBoardApplication.getApplication();
+			setupDiskCache(ctx); 
+			RenderScript rs = RenderScript.create(ctx); 
+			ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs)); 
+			blur.setInput(Allocation.createFromBitmap(rs, bmp));  
+			Allocation alloc = Allocation.createFromBitmap(rs, bmp); 
+			blur.setRadius((float)radius);
+			blur.forEach(alloc); 
+			alloc.copyTo(bmp); 
+			blur.destroy(); 
+			rs.finish(); 
+			rs.destroy(); 
+			return bmp; 
+		} catch(Throwable t){
+			// switch to old method on exception
+			return fastblur(bmp, 1, radius);
+		}
+	}
+
+	private static void setupDiskCache(Context ctx){
+		// Reflection is lifesaver ^-^
+		try {
+			Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
+			Method mt = clazz.getMethod("setupDiskCache", File.class);
+			mt.setAccessible(true);
+			mt.invoke(null, ctx.getCacheDir());
+		} catch(Throwable t){}
+	}
+	
+	private static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius){
 		if(sentBitmap == null) return null;
 		try{
 			int width = Math.round(sentBitmap.getWidth() * scale);
@@ -184,5 +221,6 @@ public class ImageUtils {
 		} catch(Exception e){
 			return sentBitmap;
 		}
+		
 	}
 }

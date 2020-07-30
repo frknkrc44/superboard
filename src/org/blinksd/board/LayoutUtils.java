@@ -10,6 +10,7 @@ import java.util.*;
 import org.blinksd.*;
 import org.json.*;
 import org.superdroid.db.*;
+import org.blinksd.utils.icon.*;
 
 public class LayoutUtils {
 	
@@ -147,7 +148,8 @@ public class LayoutUtils {
 		return langs;
 	}
 	
-	public static void setKeyOpts(List<List<KeyOptions>> langPack, SuperBoard sb){
+	public static void setKeyOpts(Language lang, SuperBoard sb){
+		List<List<KeyOptions>> langPack = lang.layout;
 		for(int i = 0;i < langPack.size();i++){
 			List<KeyOptions> subList = langPack.get(i);
 			for(int g = 0;g < subList.size();g++){
@@ -164,28 +166,33 @@ public class LayoutUtils {
 				if(ko.repeat){
 					sb.setKeyRepeat(0,i,g);
 				}
+				IconThemeUtils icons = SuperBoardApplication.getIconThemes();
+				String theme = SuperDBHelper.getValueOrDefault(SettingMap.SET_ICON_THEME);
 				switch(ko.pressKeyCode){
 					case Keyboard.KEYCODE_SHIFT:
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_shift);
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_SHIFT));
 						break;
 					case Keyboard.KEYCODE_DELETE:
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_delete);
+						sb.setKeyDrawable(0,i,g, icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_DELETE));
 						break;
 					case Keyboard.KEYCODE_MODE_CHANGE:
 						sb.getKey(0,i,g).setText("!?#");
 						break;
 					case KeyEvent.KEYCODE_SPACE:
-						Context ctx = sb.getContext();
-						sb.getKey(0,i,g).setText(ctx.getApplicationInfo().loadLabel(ctx.getPackageManager()));
+						int item = icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_SPACE);
+						if(item == android.R.color.transparent)
+							sb.getKey(0,i,g).setText(lang.label);
+						else
+							sb.setKeyDrawable(0,i,g,item);
 						break;
 					case Keyboard.KEYCODE_DONE:
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_return);
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_ENTER));
 						break;
 					case SuperBoard.KEYCODE_SWITCH_LANGUAGE:
 						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_language);
 						break;
 					case SuperBoard.KEYCODE_OPEN_EMOJI_LAYOUT:
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_emoji);
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_EMOJI));
 						break;
 				}
 			}
@@ -202,17 +209,16 @@ public class LayoutUtils {
 	}
 	
 	public static Drawable getKeyBg(SuperBoard sb,int clr,boolean pressEffect){
-		SuperDB sd = SuperBoardApplication.getApplicationDatabase();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(clr,false));
-		gd.setCornerRadius(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_RADIUS))));
-		gd.setStroke(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_PADDING))),0);
+		gd.setCornerRadius(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS))));
+		gd.setStroke(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING))),0);
 		if(pressEffect){
 			StateListDrawable d = new StateListDrawable();
 			GradientDrawable pd = new GradientDrawable();
 			pd.setColor(sb.getColorWithState(clr,true));
-			pd.setCornerRadius(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_RADIUS))));
-			pd.setStroke(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueAndSetItToDefaultIsNotSet(sd,SettingMap.SET_KEY_PADDING))),0);
+			pd.setCornerRadius(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS))));
+			pd.setStroke(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING))),0);
 			d.addState(new int[]{android.R.attr.state_selected},pd);
 			d.addState(new int[]{},gd);
 			return d;

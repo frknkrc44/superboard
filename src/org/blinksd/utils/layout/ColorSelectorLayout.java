@@ -1,7 +1,10 @@
 package org.blinksd.utils.layout;
 
-import android.app.*;
+import android.content.*;
 import android.graphics.*;
+import android.graphics.drawable.*;
+import android.media.*;
+import android.text.*;
 import android.util.*;
 import android.view.*;
 import android.widget.*;
@@ -11,6 +14,9 @@ import org.blinksd.board.*;
 import org.blinksd.utils.color.*;
 import org.superdroid.db.*;
 
+import static android.media.AudioManager.*;
+import android.inputmethodservice.*;
+
 public class ColorSelectorLayout {
 	
 	private ColorSelectorLayout(){}
@@ -19,6 +25,7 @@ public class ColorSelectorLayout {
 	private static TabWidget widget;
 	private static TextView prev;
 	private static CustomSeekBar a,r,g,b,h,s,v;
+	private static EditText hexIn;
 	
 	static {
 		db = SuperBoardApplication.getApplicationDatabase();
@@ -81,6 +88,9 @@ public class ColorSelectorLayout {
 							s.setProgress(hsv[1]);
 							v.setProgress(hsv[2]);
 							break;
+						case 2:
+							hexIn.setText(getColorString(tag,false,true));
+							break;
 					}
 				}
 
@@ -114,8 +124,7 @@ public class ColorSelectorLayout {
 	}
 	
 	public static View getColorSelectorLayout(final AppSettingsV2 ctx, String key){
-		int val = db.getInteger(key,0);
-		
+		int val = db.getInteger(key,SuperBoardApplication.getSettings().getDefaults(key));
 		return getColorSelectorLayout(ctx, val);
 	}
 	
@@ -222,8 +231,93 @@ public class ColorSelectorLayout {
 		return ll;
 	}
 	
-	private static View getHexSelector(AppSettingsV2 ctx){
-		return LayoutCreator.createVerticalLayout(ctx);
+	private static View getHexSelector(final AppSettingsV2 ctx){
+		LinearLayout ll = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);
+		hexIn = new EditText(ctx);
+		hexIn.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
+		hexIn.setEnabled(false);
+		hexIn.setGravity(Gravity.CENTER);
+		hexIn.addTextChangedListener(new TextWatcher(){
+
+				@Override
+				public void beforeTextChanged(CharSequence p1, int start, int count, int after){}
+
+				@Override
+				public void onTextChanged(CharSequence p1, int start, int before, int count){}
+
+				@Override
+				public void afterTextChanged(Editable p1){
+					try {
+						int color = Color.parseColor("#"+p1.toString());
+						widget.setTag(color);
+						q(prev,color);
+					} catch(Throwable t){}
+					if(p1.length() > 8){
+						hexIn.setText(getColorString((int)widget.getTag(),false,true));
+					}
+				}
+			
+		});
+		
+		SuperBoard sb = new SuperBoard(ctx){
+			@Override
+			public void sendDefaultKeyboardEvent(View v){
+				if(v.getTag(TAG_NP) != null){
+					String[] x = v.getTag(TAG_NP).toString().split(":");
+					switch(Integer.parseInt(x[0])){
+						case Keyboard.KEYCODE_DELETE:
+							String s = hexIn.getText().toString();
+							hexIn.setText(s.substring(0,s.length()-1));
+							break;
+						case Keyboard.KEYCODE_CANCEL:
+							hexIn.setText("");
+							break;
+					}
+					playSound(1);
+				} else {
+					hexIn.setText(hexIn.getText()+((SuperBoard.Key)v).getText().toString());
+					playSound(0);
+				}
+			}
+
+			@Override
+			public void playSound(int event){
+				if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+				AudioManager audMgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+				switch(event){
+					case 1:
+						audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+						break;
+					case 0:
+						audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+						break;
+				}
+				
+			}
+		};
+		sb.addRows(0, new String[][]{
+			{"1","2","3","4","5",""},
+			{"6","7","8","9","0",""},
+			{"A","B","C","D","E","F"}
+		});
+		sb.setKeyboardHeight(20);
+		sb.setKeysTextSize(20);
+		sb.setKeysPadding(DensityUtils.dpInt(4));
+		sb.setKeyDrawable(0,1,-1,R.drawable.sym_keyboard_delete);
+		sb.setPressEventForKey(0,1,-1,Keyboard.KEYCODE_DELETE);
+		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_close);
+		sb.setPressEventForKey(0,0,-1,Keyboard.KEYCODE_CANCEL);
+		StateListDrawable d = new StateListDrawable();
+		GradientDrawable gd = new GradientDrawable();
+		gd.setColor(sb.getColorWithState(Defaults.KEY_BACKGROUND_COLOR,false));
+		GradientDrawable pd = new GradientDrawable();
+		pd.setColor(sb.getColorWithState(Defaults.KEY_BACKGROUND_COLOR,true));
+		d.addState(new int[]{android.R.attr.state_selected},pd);
+		d.addState(new int[]{},gd);
+		sb.setKeysBackground(d);
+		ll.addView(hexIn);
+		ll.addView(sb);
+		return ll;
 	}
 	
 	private static int[] getHSV(int color){
@@ -240,17 +334,17 @@ public class ColorSelectorLayout {
 	}
 	
 	private static void q(TextView x,int color){
-		x.setText(getColorString(color,true));
+		x.setText(getColorString(color,true,false));
 		x.setTextColor(ColorUtils.satisfiesTextContrast(color) ? 0xFF212121 : 0XFFDEDEDE);
 		x.setBackgroundColor(color);
 	}
 	
-	private static String getColorString(int color, boolean l){
-		return getColorString(Color.alpha(color),Color.red(color),Color.green(color),Color.blue(color),l);
+	private static String getColorString(int color, boolean l, boolean oc){
+		return getColorString(Color.alpha(color),Color.red(color),Color.green(color),Color.blue(color),l,oc);
 	}
 
-	private static String getColorString(int a, int r, int g, int b, boolean l){
-		return ("#"+z(a)+z(r)+z(g)+z(b)+(l?"\n("+a+", "+r+", "+g+", "+b+")":"")).toUpperCase();
+	private static String getColorString(int a, int r, int g, int b, boolean l, boolean oc){
+		return ((oc?"":"#")+z(a)+z(r)+z(g)+z(b)+(l?"\n("+a+", "+r+", "+g+", "+b+")":"")).toUpperCase();
 	}
 	
 	private static String z(int x){

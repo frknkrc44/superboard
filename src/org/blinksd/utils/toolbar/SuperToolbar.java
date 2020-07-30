@@ -90,10 +90,11 @@ public class SuperToolbar extends LinearLayout {
 	
 	public void addMenuItem(MenuItem item){
 		menu.addView(item.create(getContext()));
+		setTextColor(getTextColor());
 	}
 	
 	public void addMenuItem(Drawable icon, View.OnClickListener action){
-		menu.addView(new MenuItem(icon,action).create(getContext()));
+		addMenuItem(new MenuItem(icon,action));
 	}
 	
 	public void removeMenuItem(int index){

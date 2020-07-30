@@ -501,6 +501,7 @@ public class SuperDB {
 	public final void removeDB(){
 		hm1.clear();
 		removeRecursive(folder);
+		read();
 	}
 	
 	private final void removeRecursive(File f){

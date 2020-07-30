@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Setup wizard resources -->
+	<string name="wizard_welcome">%s kurulum sihirbazına hoş geldiniz!</string>
+	<string name="wizard_enable">Klavyeyi sistem ayarlarından etkinleştirin</string>
+	<string name="wizard_enablebtn">Sistem ayarlarını aç</string>
+	<string name="wizard_select">%s\'ı varsayılan klavyeniz yapın</string>
+	<string name="wizard_selectbtn">Klavye seçim penceresini aç</string>
+	<string name="wizard_settings">Klavyenizi kişiselleştirin</string>
+	<string name="wizard_settingsbtn">Klavye ayarlarını aç</string>
+	<string name="wizard_finish">Tebrikler, kurulum sihirbazını tamamladınız!</string>
+	<string name="wizard_finishbtn">Bitir</string>
+
+	<!-- Settings resources -->
+	<string name="settings_keyboard_bgimg">Klavye arkaplan resmi</string>
+	<string name="settings_keyboard_show_popup">Yazarken basılan karakteri göster</string>
+	<string name="settings_colorize_navbar">Gezinme çubuğunu şeffaflaştır</string>
+	<string name="settings_colorize_navbar_alt">Gezinme çubuğuna renk uygula (Android 9+)</string>
+	<string name="settings_disable_popup">Açılır pencereleri kapat</string>
+	<string name="settings_disable_repeat">Basılı tutunca karakter tekrarlamayı kapat</string>
+	<string name="settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
+	<string name="settings_keyboard_lc_on_emoji">Gülücük tuşuna basılı tutunca klavye dilini değiştir</string>
+	<string name="settings_enter_bgclr">Enter tuşu arkaplan rengi</string>
+	<string name="settings_key_shadowclr">Tuş metni gölgesi rengi</string>
+	<string name="settings_key_bgclr">Birincil tuş arkaplan rengi</string>
+	<string name="settings_key2_bgclr">İkincil tuş arkaplan rengi</string>
+	<string name="settings_keyboard_bgclr">Klavye arkaplan rengi</string>
+	<string name="settings_key_textclr">Tuş metin rengi</string>
+	<string name="settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
+	
+	<!-- Image selector resources -->
+	<string name="settings_image_selector_photo">Fotoğraf</string>
+	<string name="settings_image_selector_gradient">Gradyan</string>
+	<string name="settings_image_selector_gradient_item">Renk</string>
+	<string name="settings_image_selector_gradient_add_item">Renk ekle</string>
+	<string name="settings_image_selector_gradient_add_item_error">Hoopp! En yüksek sınır %s</string>
+	<string name="settings_image_selector_gradient_remove_item_error">Hoopp! En az sınır %s</string>
+	<string name="settings_image_selector_gradient_change_orientation">Yön değiştir</string>
+	<string name="settings_image_selector_select">Resim seç</string>
+	<string name="settings_image_selector_wp">Duvar kağıdını getir</string>
+	<string name="settings_image_selector_rotate">Döndür</string>
+	
+	<!-- Radio selector resources -->
+	<string name="settings_keyboard_lang_select">Klavye dili</string>
+	<string name="settings_keyboard_texttype_select">Klavye yazı tipi</string>
+	<string name="settings_keyboard_icon_theme">Simge teması</string>
+	
+	<!-- Number selector resources -->
+	<string name="settings_keyboard_bgblur">Klavye arkaplan resmi bulanıklığı</string>
+	<string name="settings_key_vibrate_duration">Tuş titreme süresi</string>
+	<string name="settings_keyboard_height">Klavye yüksekliği</string>
+	<string name="settings_key_longpress_duration">Tuşa uzun basma süresi arttırıcı</string>
+	<string name="settings_key_padding">Tuş içe girintisi</string>
+	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
+	<string name="settings_key_textsize">Tuş metin boyutu</string>
+	<string name="settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
+	
+	<!-- List selector resources -->
+	<string-array name="settings_keyboard_icon_theme">
+		<item>Varsayılan</item>
+		<item>Papatya</item>
+		<item>Materyal</item>
+	</string-array>
+
+</resources>

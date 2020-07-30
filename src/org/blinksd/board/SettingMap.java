@@ -1,8 +1,11 @@
 package org.blinksd.board;
 
+import android.os.*;
 import java.util.*;
 import org.blinksd.*;
-import org.blinksd.board.AppSettingsV2.SettingType;
+import org.blinksd.board.AppSettingsV2.*;
+import android.content.res.*;
+import android.util.*;
 
 public class SettingMap extends LinkedHashMap<String,SettingType> {
 
@@ -25,15 +28,30 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_KEY_SHADOWSIZE = "key_shadowsize",
 	SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
 	SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
-	SET_KEY_TEXTCLR = "key_textclr";
+	SET_KEY_TEXTCLR = "key_textclr",
+	SET_COLORIZE_NAVBAR = "colorize_navbar",
+	SET_DETECT_CAPSLOCK = "detect_capslock",
+	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
+	SET_DISABLE_POPUP = "disable_popup",
+	SET_DISABLE_REPEAT = "disable_repeat",
+	SET_ICON_THEME = "keyboard_icon_theme",
+	SET_KILL_BACKGROUND = "keyboard_kill_background";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
 		put(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		put(SET_ICON_THEME,SettingType.ICON_SELECTOR);
 		put(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
 		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
 		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
+		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
+		if(Build.VERSION.SDK_INT >= 28)
+			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
+		put(SET_DISABLE_POPUP,SettingType.BOOL);
+		put(SET_DISABLE_REPEAT,SettingType.BOOL);
+		put(SET_DETECT_CAPSLOCK,SettingType.BOOL);
+		put(SET_KILL_BACKGROUND,SettingType.BOOL);
 		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
 		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
 		put(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
@@ -59,6 +77,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())
 					textTypes.add(type.name());
 				return textTypes;
+			case SET_ICON_THEME:
+				return SuperBoardApplication.getIconThemes().getThemeList();
 		}
 		return new ArrayList<String>();
 	}
@@ -99,11 +119,30 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 				case SET_KEY2_BGCLR:
 					return Defaults.KEY2_BACKGROUND_COLOR;
 				case SET_ENTER_BGCLR:
-					return Defaults.ENTER_BACKGROUND_COLOR;
+					if(Build.VERSION.SDK_INT < 21)
+						return Defaults.ENTER_BACKGROUND_COLOR;
+					TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
+					int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
+					arr.recycle();
+					return color;
 				case SET_KEY_SHADOWCLR:
 					return Defaults.KEY_TEXT_SHADOW_COLOR;
 				case SET_KEY_TEXTCLR:
 					return Defaults.KEY_TEXT_COLOR;
+				case SET_COLORIZE_NAVBAR:
+					return Defaults.COLORIZE_NAVBAR;
+				case SET_DETECT_CAPSLOCK:
+					return Defaults.DETECT_CAPSLOCK;
+				case SET_COLORIZE_NAVBAR_ALT:
+					return Defaults.COLORIZE_NAVBAR_ALT;
+				case SET_DISABLE_POPUP:
+					return Defaults.DISABLE_POPUP;
+				case SET_DISABLE_REPEAT:
+					return Defaults.DISABLE_REPEAT;
+				case SET_ICON_THEME:
+					return Defaults.ICON_THEME;
+				case SET_KILL_BACKGROUND:
+					return Defaults.KILL_BACKGROUND;
 			}
 		}
 		return null;
@@ -111,10 +150,10 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 
 	public int[] getMinMaxNumbers(final String key){
 		int[] nums = new int[2];
+		nums[0] = 0;
 		if(containsKey(key)){
 			switch(get(key)){
 				case DECIMAL_NUMBER:
-					nums[0] = 0;
 					switch(key){
 						case SET_KEYBOARD_BGBLUR:
 							nums[1] = Constants.MAX_OTHER_VAL;
@@ -137,7 +176,6 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					}
 					break;
 				case FLOAT_NUMBER:
-					nums[0] = 0;
 					switch(key){
 						case SET_KEY_PADDING:
 						case SET_KEY_SHADOWSIZE:

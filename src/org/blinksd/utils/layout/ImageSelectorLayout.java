@@ -52,11 +52,9 @@ public class ImageSelectorLayout {
 				temp = b;
 			}
 		};
-		prev.setMaxHeight(DensityUtils.hpInt(25));
 		prev.setId(android.R.id.custom);
 		int dp = DensityUtils.hpInt(25);
-		prev.setLayoutParams(new LinearLayout.LayoutParams(-1,dp,1));
-		prev.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
+		prev.setLayoutParams(new LinearLayout.LayoutParams(-1,dp,0));
 		prev.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		prev.setAdjustViewBounds(true);
 		holder.addView(prev);
@@ -123,11 +121,11 @@ public class ImageSelectorLayout {
 		LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,ctx);
 		Button s = LayoutCreator.createButton(ctx);
 		s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		s.setText("Select image");
+		s.setText(ctx.getTranslation("image_selector_select"));
 		l.addView(s);
 		Button w = LayoutCreator.createButton(ctx);
 		w.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		w.setText("Get wallpaper");
+		w.setText(ctx.getTranslation("image_selector_wp"));
 		l.addView(w);
 		s.setOnClickListener(new View.OnClickListener(){
 				@Override
@@ -144,7 +142,14 @@ public class ImageSelectorLayout {
 					int pm = ctx.checkCallingOrSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
 					if(pm == PackageManager.PERMISSION_GRANTED){
 						WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
-						Drawable d = wm.getDrawable();
+						Drawable d;
+						if(wm.getWallpaperInfo() != null){
+							Toast.makeText(p1.getContext(),"You're using live wallpaper, loading thumbnail ...",Toast.LENGTH_SHORT).show();
+							d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
+						} else {
+							d = wm.getDrawable();
+						}
+						
 						if(d instanceof BitmapDrawable){
 							Bitmap b = ((BitmapDrawable) d).getBitmap();
 							b = ImageUtils.getMinimizedBitmap(b);
@@ -164,7 +169,7 @@ public class ImageSelectorLayout {
 		Button rb = LayoutCreator.createButton(ctx);
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
-		rb.setText("Rotate");
+		rb.setText(ctx.getTranslation("image_selector_rotate"));
 		rb.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View p1){
@@ -204,17 +209,25 @@ public class ImageSelectorLayout {
 		
 		gradientSel = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,ctx);
 		gradientSel.addView(getColorSelectorItem(ctx,-1));
-		return gradientSel;
+		gradientSel.addView(getColorSelectorItem(ctx,-2));
+		ScrollView gradientSelScr = new ScrollView(ctx);
+		gradientSelScr.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+		gradientSelScr.addView(gradientSel);
+		return gradientSelScr;
 	}
 	
 	public static View getColorSelectorItem(AppSettingsV2 ctx, int index){
 		return new ColorSelectorItemLayout(ctx, index, colorList, gradientAddColorListener, gradientDelColorListener, colorSelectorListener);
 	}
 	
-	private static int indexNum = 0;
+	private static int indexNum = 0, gradientType = 0;
 	
 	private static int getNextEmptyItemIndex(){
 		return indexNum++;
+	}
+	
+	private static GradientDrawable.Orientation getGradientOrientation(){
+		return GradientOrientation.getFromIndex(gradientType);
 	}
 	
 	private static int[] getGradientColors(){
@@ -236,6 +249,7 @@ public class ImageSelectorLayout {
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColors(getGradientColors());
 		gd.setBounds(0,0,size,size);
+		gd.setOrientation(getGradientOrientation());
 		Bitmap out = Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888);
 		Canvas drw = new Canvas(out);
 		gd.draw(drw);
@@ -288,16 +302,17 @@ public class ImageSelectorLayout {
 		@Override
 		public void onClick(View p1){
 			AppSettingsV2 ctx = (AppSettingsV2) p1.getContext();
-			if(colorList.size() > 6){
-				String out = String.format(ctx.getTranslation("image_selector_gradient_add_item_error"),colorList.size());
-				Toast.makeText(ctx,out,Toast.LENGTH_SHORT).show();
-				return;
+			if(p1.getId() == -2){
+				gradientType++;
+				prev.setImageBitmap(convertGradientToBitmap());
+				System.gc();
+			} else {
+				int index = getNextEmptyItemIndex();
+				View v = getColorSelectorItem(ctx,index);
+				int count = gradientSel.getChildCount();
+				gradientSel.addView(v,count - 2);
+				colorSelectorListener.onClick(v);
 			}
-			int index = getNextEmptyItemIndex();
-			View v = getColorSelectorItem(ctx,index);
-			int count = gradientSel.getChildCount();
-			gradientSel.addView(v,count > 1 ? count - 1 : 0);
-			colorSelectorListener.onClick(v);
 		}
 
 	};
@@ -319,5 +334,27 @@ public class ImageSelectorLayout {
 		}
 
 	};
+	
+	private static class GradientOrientation {
+		
+		private GradientOrientation(){}
+		
+		public static GradientDrawable.Orientation getFromIndex(int index){
+			return getAll()[index % getCount()];
+		}
+		
+		public static int getCount(){
+			return getAll().length;
+		}
+		
+		public static String getNameFromIndex(int index){
+			return getFromIndex(index).name();
+		}
+		
+		public static GradientDrawable.Orientation[] getAll(){
+			return GradientDrawable.Orientation.values();
+		}
+		
+	}
 	
 }

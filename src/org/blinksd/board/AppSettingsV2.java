@@ -22,6 +22,8 @@ import org.superdroid.db.*;
 import yandroid.widget.*;
 
 import static android.media.AudioManager.*;
+import org.blinksd.utils.toolbar.*;
+import org.blinksd.utils.icon.*;
 
 public class AppSettingsV2 extends Activity {
 	
@@ -38,10 +40,23 @@ public class AppSettingsV2 extends Activity {
 	@Override
 	protected void onCreate(Bundle b){
 		super.onCreate(b);
-		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
-		sets = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,this);
 		sdb = SuperBoardApplication.getApplicationDatabase();
 		sMap = SuperBoardApplication.getSettings();
+		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
+		SuperToolbar toolbar = new SuperToolbar(this);
+		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_close), new View.OnClickListener(){
+
+				@Override
+				public void onClick(View p1){
+					sdb.removeDB();
+					getBackgroundImageFile().delete();
+					recreate();
+				}
+			
+		});
+		toolbar.setTextColor(0xFFFFFFFF);
+		main.addView(toolbar);
+		sets = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,this);
 		int dp = DensityUtils.dpInt(16);
 		sets.setPadding(dp,dp,dp,dp);
 		try {
@@ -67,7 +82,7 @@ public class AppSettingsV2 extends Activity {
 			
 			@Override
 			public void playSound(int event){
-				if(!sdb.getBoolean(SettingMap.SET_PLAY_SND_PRESS,false)) return;
+				if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
 				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 				switch(event){
 					case 2:
@@ -82,16 +97,15 @@ public class AppSettingsV2 extends Activity {
 				}
 			}
 		};
-		iv = new ImageView(this);
-		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+		
 		sb.addRow(0,new String[]{"1","2","3"});
 		for(int i = 0;i <= 2;i++) sb.getKey(0,0,i).setId(i);
-		sb.setKeyDrawable(0,0,1,R.drawable.sym_keyboard_delete);
-		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_return);
 		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
+		iv = new ImageView(this);
+		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
 		ll.addView(iv);
 		ll.addView(sb);
 		main.addView(ll);
@@ -116,6 +130,7 @@ public class AppSettingsV2 extends Activity {
 					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
 					sets.addView(createRadioSelector(key,keySet));
 					break;
+				case ICON_SELECTOR:
 				case SELECTOR:
 					List<String> selectorKeys = getArrayAsList(key);
 					sets.addView(createRadioSelector(key,selectorKeys));
@@ -228,6 +243,23 @@ public class AppSettingsV2 extends Activity {
 					}
 
 				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) sMap.getDefaults(tag);
+						sdb.putInteger(tag,tagVal);
+						sdb.onlyWrite();
+						ImageView img = p1.findViewById(android.R.id.icon);
+						GradientDrawable gd = new GradientDrawable();
+						gd.setColor(tagVal);
+						gd.setCornerRadius(1000);
+						img.setImageDrawable(gd);
+						restartKeyboard();
+						d1.dismiss();
+					}
+				
+				});
 			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 
 					@Override
@@ -270,6 +302,20 @@ public class AppSettingsV2 extends Activity {
 					@Override
 					public void onClick(DialogInterface p1, int p2){
 						p1.dismiss();
+					}
+
+				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface d1, int p2){
+						int tagVal = (int) sMap.getDefaults(tag);
+						sdb.putInteger(tag,tagVal);
+						sdb.onlyWrite();
+						TextView tv = p1.findViewById(android.R.id.text1);
+						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+						restartKeyboard();
+						d1.dismiss();
 					}
 
 				});
@@ -356,19 +402,37 @@ public class AppSettingsV2 extends Activity {
 			final String tag = p1.getTag(TAG1).toString();
 			int val;
 			final boolean langSelector = sMap.get(tag) == SettingType.LANG_SELECTOR;
+			final boolean iconSelector = sMap.get(tag) == SettingType.ICON_SELECTOR;
 			if(langSelector){
 				String value = sdb.getString(tag,(String)sMap.getDefaults(tag));
 				val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
+			} else if(iconSelector){
+				String value = SuperDBHelper.getValueOrDefault(tag);
+				val = SuperBoardApplication.getIconThemes().indexOf(value);
 			} else {
 				val = getIntOrDefault(tag);
 			}
 			build.setTitle(getTranslation(tag));
+			ScrollView dialogScroller = new ScrollView(p1.getContext());
 			dialogView = RadioSelectorLayout.getRadioSelectorLayout(AppSettingsV2.this,val,(List<String>)p1.getTag(TAG2));
-			build.setView(dialogView);
+			dialogScroller.addView(dialogView);
+			build.setView(dialogScroller);
 			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
 
 					@Override
 					public void onClick(DialogInterface p1, int p2){
+						p1.dismiss();
+					}
+
+				});
+			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface p1, int p2){
+						if(langSelector) sdb.putString(tag,(String)sMap.getDefaults(tag));
+						else sdb.putInteger(tag,(int)sMap.getDefaults(tag));
+						sdb.onlyWrite();
+						restartKeyboard();
 						p1.dismiss();
 					}
 
@@ -382,6 +446,9 @@ public class AppSettingsV2 extends Activity {
 						if(tagVal != xval){
 							if(langSelector){
 								String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
+								sdb.putString(tag,index);
+							} else if(iconSelector){
+								String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
 								sdb.putString(tag,index);
 							} else sdb.putInteger(tag,tagVal);
 							sdb.onlyWrite();
@@ -410,21 +477,24 @@ public class AppSettingsV2 extends Activity {
 		sdb.onlyWrite();
 	}
 	
-	private List<String> getArrayAsList(String key){
+	private List<String> getArrayAsList(String key) throws Throwable {
 		int id = getResources().getIdentifier("settings_" + key, "array", getPackageName());
-		String[] arr = getResources().getStringArray(id);
-		List<String> out = new ArrayList<String>();
-		for(String str : arr){
-			out.add(str);
+		if(id > 0){
+			String[] arr = getResources().getStringArray(id);
+			List<String> out = new ArrayList<String>();
+			for(String str : arr){
+				out.add(str);
+			}
+			return out;
 		}
-		return out;
+		return sMap.getSelector(key);
 	}
 	
 	private void setKeyPrefs(){
 		File img = getBackgroundImageFile();
 		int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.fastblur(b,1,blur) : b):null);
+		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.getBlur(b,blur) : b):null);
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));
@@ -444,6 +514,13 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+		IconThemeUtils icons = SuperBoardApplication.getIconThemes();
+		sb.setKeyDrawable(0,0,1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+		sb.setKeyDrawable(0,0,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+		try {
+			SuperBoardApplication.clearCustomFont();
+			sb.setCustomFont(SuperBoardApplication.getCustomFont());
+		} catch(Throwable t){}
 	}
 	
 	private int getFloatPercentOrDefault(String key){
@@ -451,7 +528,7 @@ public class AppSettingsV2 extends Activity {
 	}
 	
 	private int getIntOrDefault(String key){
-		return sdb.getInteger(key,sMap.getDefaults(key));
+		return sdb.getInteger(key,(int)sMap.getDefaults(key));
 	}
 	
 	private final float getListPreferredItemHeight(){
@@ -520,6 +597,7 @@ public class AppSettingsV2 extends Activity {
 		BOOL,
 		COLOR_SELECTOR,
 		LANG_SELECTOR,
+		ICON_SELECTOR,
 		SELECTOR,
 		DECIMAL_NUMBER,
 		FLOAT_NUMBER,
