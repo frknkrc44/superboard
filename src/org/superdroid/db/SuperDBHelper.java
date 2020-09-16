@@ -2,26 +2,26 @@ package org.superdroid.db;
 
 import android.content.*;
 import org.blinksd.*;
+import org.blinksd.sdb.*;
 
 public class SuperDBHelper {
 	
 	private SuperDBHelper(){}
 	
-	public static SuperDB getDefault(Context c){
-		return new SuperDB(c.getPackageName(),c.getFilesDir());
+	public static SuperMiniDB getDefault(Context c){
+		return new SuperMiniDB(c.getPackageName(),c.getFilesDir());
 	}
 
-	public static SuperDB getDefault(Context c, String key){
-		return new SuperDB(c.getPackageName(),c.getFilesDir(),key);
+	public static SuperMiniDB getDefault(Context c, String key){
+		return new SuperMiniDB(c.getPackageName(),c.getFilesDir(),key);
 	}
 	
 	public static String getValueOrDefault(String key){
-		SuperDB db = SuperBoardApplication.getApplicationDatabase();
-		if(db.isRAMClean()) db.onlyRead();
+		SuperMiniDB db = SuperBoardApplication.getApplicationDatabase();
 		String ret = "";
 		if(!db.isDBContainsKey(key)){
 			db.putString(key,""+SuperBoardApplication.getSettings().getDefaults(key));
-			db.writeKey(key);
+			db.refreshKey(key);
 		}
 		return db.getString(key,ret);
 	}

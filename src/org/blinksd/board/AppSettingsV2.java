@@ -18,6 +18,8 @@ import org.blinksd.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.layout.*;
+import org.blinksd.sdb.*;
+import org.superdroid.db.*;
 import org.superdroid.db.*;
 import yandroid.widget.*;
 
@@ -29,7 +31,7 @@ public class AppSettingsV2 extends Activity {
 	
 	private ScrollView scroller;
 	private LinearLayout main, sets;
-	private SuperDB sdb;
+	private SuperMiniDB sdb;
 	private static View dialogView;
 	private SettingMap sMap;
 	private SuperBoard sb;

@@ -8,20 +8,21 @@ import java.io.*;
 import java.util.*;
 import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
-import org.blinksd.utils.database.*;
+import org.blinksd.sdb.*;
+import org.superdroid.db.*;
+import org.superdroid.db.*;
 import org.superdroid.db.*;
 import org.blinksd.utils.icon.*;
 
 public class SuperBoardApplication extends Application {
 	
 	private static HashMap<String,Language> langs = null;
-	private static SuperDB appDB = null;
+	private static SuperMiniDB appDB = null;
 	private static SuperBoardApplication app = null;
 	private static SettingMap sMap = null;
 	private static Typeface cFont = null;
 	private static File fontFile = null;
 	private static String fontPath = null;
-	private static SuperDBCenterConnector dbSync;
 	private static IconThemeUtils icons;
 	
 	@Override
@@ -37,23 +38,13 @@ public class SuperBoardApplication extends Application {
 		} catch(Throwable t){
 			langs = new HashMap<String,LayoutUtils.Language>();
 		}
-		
-		// initSyncServer();
-	}
-	
-	private void initSyncServer(){
-		try {
-			if(dbSync == null)
-				dbSync = new SuperDBCenterConnector(this);
-			dbSync.connectToSuperDB();
-		} catch(Throwable t){}
 	}
 	
 	public static SuperBoardApplication getApplication(){
 		return app;
 	}
 	
-	public static SuperDB getApplicationDatabase(){
+	public static SuperMiniDB getApplicationDatabase(){
 		return appDB;
 	}
 	

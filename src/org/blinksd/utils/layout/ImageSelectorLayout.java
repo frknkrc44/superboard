@@ -15,13 +15,13 @@ import java.util.*;
 import org.blinksd.*;
 import org.blinksd.board.*;
 import org.blinksd.utils.image.*;
-import org.superdroid.db.*;
+import org.blinksd.sdb.*;
 
 public class ImageSelectorLayout {
 	
 	private ImageSelectorLayout(){}
 	
-	private static SuperDB db;
+	private static SuperMiniDB db;
 	private static TabWidget widget;
 	private static ImageView prev;
 	private static Bitmap temp;

@@ -19,6 +19,8 @@ import org.blinksd.utils.color.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
+import org.blinksd.sdb.*;
+import org.superdroid.db.*;
 import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
@@ -31,7 +33,7 @@ public class InputService extends InputMethodService {
 	
 	private SuperBoard sb = null;
 	private BoardPopup po = null;
-	private SuperDB sd = null;
+	private SuperMiniDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
 	private String kbd[][][] = null, appname;
 	private LinearLayout ll = null;
