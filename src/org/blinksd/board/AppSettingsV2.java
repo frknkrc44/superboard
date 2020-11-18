@@ -16,6 +16,7 @@ import java.io.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.utils.color.*;
+import org.blinksd.utils.color.ThemeUtils.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.layout.*;
 import org.blinksd.sdb.*;
@@ -124,6 +125,10 @@ public class AppSettingsV2 extends Activity {
 					break;
 				case IMAGE:
 					sets.addView(createImageSelector(key));
+					break;
+				case THEME_SELECTOR:
+					List<String> themeKeys = ThemeUtils.getThemeNames(SuperBoardApplication.getThemes());
+					sets.addView(createRadioSelector(key,themeKeys));
 					break;
 				case COLOR_SELECTOR:
 					sets.addView(createColorSelector(key));
@@ -405,12 +410,15 @@ public class AppSettingsV2 extends Activity {
 			int val;
 			final boolean langSelector = sMap.get(tag) == SettingType.LANG_SELECTOR;
 			final boolean iconSelector = sMap.get(tag) == SettingType.ICON_SELECTOR;
+			final boolean themeSelector = sMap.get(tag) == SettingType.THEME_SELECTOR;
 			if(langSelector){
-				String value = sdb.getString(tag,(String)sMap.getDefaults(tag));
+				String value = SuperDBHelper.getValueOrDefault(tag);
 				val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
 			} else if(iconSelector){
 				String value = SuperDBHelper.getValueOrDefault(tag);
 				val = SuperBoardApplication.getIconThemes().indexOf(value);
+			} else if (themeSelector){
+				val = -1;
 			} else {
 				val = getIntOrDefault(tag);
 			}
@@ -427,18 +435,19 @@ public class AppSettingsV2 extends Activity {
 					}
 
 				});
-			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
+			if(!themeSelector)
+				build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
 
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						if(langSelector) sdb.putString(tag,(String)sMap.getDefaults(tag));
-						else sdb.putInteger(tag,(int)sMap.getDefaults(tag));
-						sdb.onlyWrite();
-						restartKeyboard();
-						p1.dismiss();
-					}
+						@Override
+						public void onClick(DialogInterface p1, int p2){
+							if(langSelector || iconSelector || themeSelector) sdb.putString(tag,(String)sMap.getDefaults(tag));
+							else sdb.putInteger(tag,(int)sMap.getDefaults(tag));
+							sdb.onlyWrite();
+							restartKeyboard();
+							p1.dismiss();
+						}
 
-				});
+					});
 			final int xval = val;
 			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 
@@ -452,6 +461,10 @@ public class AppSettingsV2 extends Activity {
 							} else if(iconSelector){
 								String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
 								sdb.putString(tag,index);
+							} else if (themeSelector) {
+								List<ThemeHolder> themes = SuperBoardApplication.getThemes();
+								ThemeHolder theme = themes.get(tagVal);
+								theme.applyTheme();
 							} else sdb.putInteger(tag,tagVal);
 							sdb.onlyWrite();
 							restartKeyboard();
@@ -597,6 +610,7 @@ public class AppSettingsV2 extends Activity {
 	
 	public static enum SettingType {
 		BOOL,
+		THEME_SELECTOR,
 		COLOR_SELECTOR,
 		LANG_SELECTOR,
 		ICON_SELECTOR,

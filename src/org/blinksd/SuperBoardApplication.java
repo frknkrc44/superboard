@@ -10,8 +10,8 @@ import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
 import org.blinksd.sdb.*;
 import org.superdroid.db.*;
-import org.superdroid.db.*;
-import org.superdroid.db.*;
+import org.blinksd.utils.color.ThemeUtils;
+import org.blinksd.utils.color.ThemeUtils.*;
 import org.blinksd.utils.icon.*;
 
 public class SuperBoardApplication extends Application {
@@ -24,6 +24,7 @@ public class SuperBoardApplication extends Application {
 	private static File fontFile = null;
 	private static String fontPath = null;
 	private static IconThemeUtils icons;
+	private static List<ThemeHolder> themes;
 	
 	@Override
 	public void onCreate(){
@@ -36,7 +37,14 @@ public class SuperBoardApplication extends Application {
 		try {
 			langs = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
-			langs = new HashMap<String,LayoutUtils.Language>();
+			throw new RuntimeException(t);
+			// langs = new HashMap<String,LayoutUtils.Language>();
+		}
+
+		try {
+			themes = ThemeUtils.getThemes();
+		} catch(Throwable t){
+			themes = new ArrayList<>();
 		}
 	}
 	
@@ -50,6 +58,10 @@ public class SuperBoardApplication extends Application {
 	
 	public static HashMap<String,Language> getKeyboardLanguageList(){
 		return langs;
+	}
+
+	public static List<ThemeHolder> getThemes(){
+		return themes;
 	}
 	
 	public static IconThemeUtils getIconThemes(){

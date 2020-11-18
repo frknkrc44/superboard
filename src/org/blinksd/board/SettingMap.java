@@ -35,17 +35,20 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_DISABLE_POPUP = "disable_popup",
 	SET_DISABLE_REPEAT = "disable_repeat",
 	SET_ICON_THEME = "keyboard_icon_theme",
-	SET_KILL_BACKGROUND = "keyboard_kill_background";
+	SET_KILL_BACKGROUND = "keyboard_kill_background",
+	SET_THEME_PRESET = "keyboard_theme_preset";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
 		put(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		put(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
 		put(SET_ICON_THEME,SettingType.ICON_SELECTOR);
 		put(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
 		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
 		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
-		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
+		if(Build.VERSION.SDK_INT < 30)
+			put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 28)
 			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
 		put(SET_DISABLE_POPUP,SettingType.BOOL);
@@ -143,6 +146,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.ICON_THEME;
 				case SET_KILL_BACKGROUND:
 					return Defaults.KILL_BACKGROUND;
+				case SET_THEME_PRESET:
+					return Defaults.THEME_PRESET;
 			}
 		}
 		return null;

@@ -43,6 +43,7 @@
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select">Klavye dili</string>
 	<string name="settings_keyboard_texttype_select">Klavye yazı tipi</string>
+	<string name="settings_keyboard_theme_preset">Klavye teması</string>
 	<string name="settings_keyboard_icon_theme">Simge teması</string>
 	
 	<!-- Number selector resources -->

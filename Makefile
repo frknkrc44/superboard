@@ -1,6 +1,6 @@
 SDK=$(HOME)/Android/Sdk
-TARGET=29
-TOOL=$(shell ls $(SDK)/build-tools | grep $(TARGET))
+TARGET=30
+TOOL=$(shell ls $(SDK)/build-tools | grep $(TARGET) | tail -n 1)
 JAVADIR= 
 BUILDTOOLS=$(SDK)/build-tools/$(TOOL)
 AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
@@ -28,7 +28,8 @@ KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
 JAVAC_DEBUG_FLAGS = 
 
-all: clear mkdirs build rmdirs zipalign jarsign install
+all: clear mkdirs build rmdirs zipalign sign
+build-install: all install
 build:
 	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/resources.ap_"
 	$(JAVAC) -classpath $(CLASSPATH) -source 7 -g:none -nowarn -sourcepath $(SRC) -sourcepath bin/aidl/ -sourcepath gen -d bin $(JAVAC_DEBUG_FLAGS) `find gen -name "*.java"` `find bin/aidl/ -name "*.java"` `find $(SRC) -name "*.java"`

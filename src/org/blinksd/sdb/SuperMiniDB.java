@@ -120,31 +120,63 @@ public class SuperMiniDB {
 	}
 
 	public final void putString(String key, String value){
+		putString(key, value, false);
+	}
+
+	public final void putString(String key, String value, boolean permanent){
 		hm1.put(key,encode(value));
+		if(permanent){
+			writeKey(key);
+			readKey(key);
+		}
+	}
+
+	public final void putLong(String key, long value){
+		putLong(key, value, false);
 	}
 	
-	public final void putLong(String key, long value){
-		putString(key, value+"");
+	public final void putLong(String key, long value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 
 	public final void putByte(String key, byte value){
-		putString(key, value+"");
+		putByte(key, value, false);
+	}
+
+	public final void putByte(String key, byte value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 
 	public final void putInteger(String key, int value){
-		putString(key, value+"");
+		putInteger(key, value, false);
+	}
+
+	public final void putInteger(String key, int value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 
 	public final void putFloat(String key, float value){
-		putString(key, value+"");
+		putFloat(key, value, false);
+	}
+
+	public final void putFloat(String key, float value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 
 	public final void putDouble(String key, double value){
-		putString(key, value+"");
+		putDouble(key, value, false);
+	}
+
+	public final void putDouble(String key, double value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 
 	public final void putBoolean(String key, boolean value){
-		putString(key, value+"");
+		putBoolean(key, value, false);
+	}
+
+	public final void putBoolean(String key, boolean value, boolean permanent){
+		putString(key, value+"", permanent);
 	}
 	
 	public final Map getDatabaseDump(){

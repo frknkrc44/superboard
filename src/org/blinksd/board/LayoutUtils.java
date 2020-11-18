@@ -132,13 +132,15 @@ public class LayoutUtils {
 	public static HashMap<String,Language> getLanguageList(Context ctx) throws Throwable {
 		HashMap<String,Language> langs = new HashMap<String,Language>();
 		AssetManager assets = ctx.getAssets();
-		String[] items = assets.list("");
+		String subdir = "langpacks";
+		String[] items = assets.list(subdir);
 		Arrays.sort(items);
 		for(String str : items){
 			if(str.endsWith(".json")){
-				Scanner sc = new Scanner(assets.open(str));
+				Scanner sc = new Scanner(assets.open(subdir + "/" + str));
 				String s = "";
 				while(sc.hasNext()) s += sc.nextLine();
+				sc.close();
 				Language l = getLanguage(s);
 				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
 					langs.put(l.language,l);
