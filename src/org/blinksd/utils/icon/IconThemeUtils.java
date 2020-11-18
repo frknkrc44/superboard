@@ -30,6 +30,13 @@ public class IconThemeUtils extends LinkedHashMap<String, int[]> {
 				R.drawable.sym_board_return,
 				R.drawable.sym_board_delete
 			});
+		put("theme_ay", new int[]{
+				R.drawable.sym_ay_shift,
+				R.drawable.sym_board_emoji,
+				android.R.color.transparent,
+				R.drawable.sym_board_return,
+				R.drawable.sym_ay_delete
+			});
 	}
 	
 	public ArrayList<String> getThemeList(){
