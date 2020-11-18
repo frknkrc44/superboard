@@ -12,6 +12,7 @@ import android.widget.TabHost.*;
 import org.blinksd.*;
 import org.blinksd.board.*;
 import org.blinksd.utils.color.*;
+import org.blinksd.sdb.*;
 import org.superdroid.db.*;
 
 import static android.media.AudioManager.*;
@@ -21,7 +22,7 @@ public class ColorSelectorLayout {
 	
 	private ColorSelectorLayout(){}
 	
-	private static SuperDB db;
+	private static SuperMiniDB db;
 	private static TabWidget widget;
 	private static TextView prev;
 	private static CustomSeekBar a,r,g,b,h,s,v;
@@ -124,7 +125,7 @@ public class ColorSelectorLayout {
 	}
 	
 	public static View getColorSelectorLayout(final AppSettingsV2 ctx, String key){
-		int val = db.getInteger(key,SuperBoardApplication.getSettings().getDefaults(key));
+		int val = db.getInteger(key, (int) SuperBoardApplication.getSettings().getDefaults(key));
 		return getColorSelectorLayout(ctx, val);
 	}
 	

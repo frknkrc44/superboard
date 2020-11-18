@@ -8,21 +8,23 @@ import java.io.*;
 import java.util.*;
 import org.blinksd.board.*;
 import org.blinksd.board.LayoutUtils.*;
-import org.blinksd.utils.database.*;
+import org.blinksd.sdb.*;
 import org.superdroid.db.*;
+import org.blinksd.utils.color.ThemeUtils;
+import org.blinksd.utils.color.ThemeUtils.*;
 import org.blinksd.utils.icon.*;
 
 public class SuperBoardApplication extends Application {
 	
 	private static HashMap<String,Language> langs = null;
-	private static SuperDB appDB = null;
+	private static SuperMiniDB appDB = null;
 	private static SuperBoardApplication app = null;
 	private static SettingMap sMap = null;
 	private static Typeface cFont = null;
 	private static File fontFile = null;
 	private static String fontPath = null;
-	private static SuperDBCenterConnector dbSync;
 	private static IconThemeUtils icons;
+	private static List<ThemeHolder> themes;
 	
 	@Override
 	public void onCreate(){
@@ -35,30 +37,31 @@ public class SuperBoardApplication extends Application {
 		try {
 			langs = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
-			langs = new HashMap<String,LayoutUtils.Language>();
+			throw new RuntimeException(t);
+			// langs = new HashMap<String,LayoutUtils.Language>();
 		}
-		
-		// initSyncServer();
-	}
-	
-	private void initSyncServer(){
+
 		try {
-			if(dbSync == null)
-				dbSync = new SuperDBCenterConnector(this);
-			dbSync.connectToSuperDB();
-		} catch(Throwable t){}
+			themes = ThemeUtils.getThemes();
+		} catch(Throwable t){
+			themes = new ArrayList<>();
+		}
 	}
 	
 	public static SuperBoardApplication getApplication(){
 		return app;
 	}
 	
-	public static SuperDB getApplicationDatabase(){
+	public static SuperMiniDB getApplicationDatabase(){
 		return appDB;
 	}
 	
 	public static HashMap<String,Language> getKeyboardLanguageList(){
 		return langs;
+	}
+
+	public static List<ThemeHolder> getThemes(){
+		return themes;
 	}
 	
 	public static IconThemeUtils getIconThemes(){

@@ -5,13 +5,13 @@ import android.view.*;
 import android.widget.*;
 import org.blinksd.*;
 import org.blinksd.board.*;
-import org.superdroid.db.*;
+import org.blinksd.sdb.*;
 
 public class NumberSelectorLayout {
 
 	private NumberSelectorLayout(){}
 	
-	private static SuperDB db;
+	private static SuperMiniDB db;
 	
 	static {
 		db = SuperBoardApplication.getApplicationDatabase();

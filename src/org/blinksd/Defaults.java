@@ -22,6 +22,7 @@ public class Defaults {
 	
 	public static final String KEYBOARD_LANGUAGE_KEY = "tr_TR_Q";
 	public static final String ICON_THEME = "theme_default";
+	public static final String THEME_PRESET = "default";
 	
 	public static final boolean KEYBOARD_SHOW_POPUP = true;
 	public static final boolean KEYBOARD_LC_ON_EMOJI = false;
