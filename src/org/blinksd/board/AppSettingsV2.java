@@ -465,6 +465,7 @@ public class AppSettingsV2 extends Activity {
 								List<ThemeHolder> themes = SuperBoardApplication.getThemes();
 								ThemeHolder theme = themes.get(tagVal);
 								theme.applyTheme();
+								recreate();
 							} else sdb.putInteger(tag,tagVal);
 							sdb.onlyWrite();
 							restartKeyboard();
