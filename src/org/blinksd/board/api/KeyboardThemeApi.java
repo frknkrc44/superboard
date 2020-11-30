@@ -23,6 +23,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             checkMandatoryKeys(obj);
             if(!isThemeImported(obj.getString("code"))) {
                 importThemeInternal(obj);
+                SuperBoardApplication.reloadThemeCache();
                 return THEME_IMPORT_SUCCESS;
             }
             return THEME_IMPORT_FAILED_EXISTS;
@@ -59,6 +60,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             JSONObject obj = new JSONObject(jsonStr);
             checkMandatoryKeys(obj);
             importThemeInternal(obj);
+            SuperBoardApplication.reloadThemeCache();
             return THEME_IMPORT_SUCCESS;
         } catch(JSONException e) {
             // do nothing

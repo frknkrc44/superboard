@@ -41,12 +41,7 @@ public class SuperBoardApplication extends Application {
 			// langs = new HashMap<String,LayoutUtils.Language>();
 		}
 
-		try {
-			themes = ThemeUtils.getThemes();
-		} catch(Throwable t){
-			throw new RuntimeException(t);
-			// themes = new ArrayList<>();
-		}
+		reloadThemeCache();
 	}
 	
 	public static SuperBoardApplication getApplication(){
@@ -63,6 +58,15 @@ public class SuperBoardApplication extends Application {
 
 	public static List<ThemeHolder> getThemes(){
 		return themes;
+	}
+
+	public static void reloadThemeCache(){
+		try {
+			themes = ThemeUtils.getThemes();
+		} catch(Throwable t){
+			throw new RuntimeException(t);
+			// themes = new ArrayList<>();
+		}
 	}
 	
 	public static IconThemeUtils getIconThemes(){
