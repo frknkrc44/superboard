@@ -71,8 +71,8 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 	@Override
     public boolean isThemeImported(String name){
 		List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getApplication().getThemes();
-        Object theme = ThemeUtils.getUserThemeFromCodeName(themes, name);
-        System.out.println("NAME: " + name + " OBJ: " + theme);
+        ThemeUtils.ThemeHolder theme = ThemeUtils.getUserThemeFromCodeName(themes, name);
+        // System.out.println("NAME: " + name + " OBJ: " + theme);
         return theme != null;
 	}
     	
