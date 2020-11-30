@@ -44,7 +44,8 @@ public class SuperBoardApplication extends Application {
 		try {
 			themes = ThemeUtils.getThemes();
 		} catch(Throwable t){
-			themes = new ArrayList<>();
+			throw new RuntimeException(t);
+			// themes = new ArrayList<>();
 		}
 	}
 	

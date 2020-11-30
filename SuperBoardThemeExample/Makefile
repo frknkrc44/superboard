@@ -21,7 +21,7 @@ CLASSPATH=$(AJAR):$(subst $(space),:,$(shell find include/ -name "*.jar"))
 SRC=src/
 NAME=$(shell basename $(CURDIR))
 
-KEYFILE=key.jks
+KEYFILE=../key.jks
 KEYALIAS=Alias
 STOREPASS=123456
 KEYPASS=123456

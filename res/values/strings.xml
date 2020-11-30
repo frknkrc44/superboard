@@ -14,6 +14,8 @@
 	<string name="wizard_settingsbtn">Open keyboard settings</string>
 	<string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
 	<string name="wizard_finishbtn">Finish</string>
+
+	<string name="keyboard_theme_api_perm_label">SuperBoard User Theme API Access</string>
 	
 	<!-- Settings resources -->
 	<string name="settings_keyboard_bgimg">Keyboard background image</string>

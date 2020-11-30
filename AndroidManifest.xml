@@ -10,6 +10,11 @@
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
 
+	<permission
+		android:name="org.blinksd.board.BIND_THEME_API"
+		android:label="@string/keyboard_theme_api_perm_label"
+		android:protectionLevel="normal" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -43,11 +48,10 @@
             </intent-filter> 
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
-		<activity
-			android:theme="@android:style/Theme.NoDisplay"
-			android:excludeFromRecents="true"
-			android:noHistory="true"
-			android:name=".CheckPermissionsActivity" />
+		<service
+			android:exported="true"
+			android:name=".api.KeyboardThemeService"
+			android:permission="org.blinksd.board.BIND_THEME_API" />
     </application>
 
 </manifest>

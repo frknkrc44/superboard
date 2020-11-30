@@ -15,9 +15,18 @@ import org.superdroid.db.*;
 public class ThemeUtils {
     private ThemeUtils() {}
 
+    public static ThemeHolder getUserThemeFromCodeName(List<ThemeHolder> themes, String name){
+        for(ThemeHolder holder : themes){
+            if(holder.codeName.equals(name) && holder.isUserTheme){
+                return holder;
+            }
+        }
+        return null;
+    }
+
     public static ThemeHolder getThemeFromCodeName(List<ThemeHolder> themes, String name){
         for(ThemeHolder holder : themes){
-            if(holder.codeName == name){
+            if(holder.codeName.equals(name)){
                 return holder;
             }
         }
@@ -44,8 +53,20 @@ public class ThemeUtils {
         return themeNames;
     }
 
+    public static File getUserThemesDir() {
+        File themesDir = new File(SuperBoardApplication.getApplication().getFilesDir() + "/themes");
+
+        if(!themesDir.exists()){
+            themesDir.mkdirs();
+        }
+
+        return themesDir;
+    }
+
     public static List<ThemeHolder> getThemes() throws IOException, JSONException {
         List<ThemeHolder> holders = new ArrayList<>();
+        
+        // Import default themes
         AssetManager assets = SuperBoardApplication.getApplication().getAssets();
 		String subdir = "themes";
 		String[] items = assets.list(subdir);
@@ -56,26 +77,51 @@ public class ThemeUtils {
 				String s = "";
 				while(sc.hasNext()) s += sc.nextLine();
 				sc.close();
-                holders.add(new ThemeHolder(s));
+                holders.add(new ThemeHolder(s, false));
             }
         }
+
+        // Import themes by using keyboard theme api
+        File themesDir = getUserThemesDir();
+
+        for(String file : themesDir.list()) {
+            Scanner sc = new Scanner(new File(themesDir + "/" + file));
+			String s = "";
+			while(sc.hasNext()) s += sc.nextLine();
+			sc.close();
+            holders.add(new ThemeHolder(s, true));
+        }
+
         return holders;
     }
 
     public static class ThemeHolder {
         public final String name, codeName, fontType, iconTheme, backgroundColor, primaryColor, secondaryColor, enterColor, textShadowColor, textColor;
         public final int keyPadding, keyRadius, textSize, textShadow;
+        public final boolean isUserTheme;
 
         public ThemeHolder() throws JSONException {
-            this("{}");
+            this(true);
         }
 
         public ThemeHolder(String str) throws JSONException {
-            this(new JSONObject(str));
+            this(new JSONObject(str), true);
         }
 
         public ThemeHolder(JSONObject json) {
-            this.name = getString(json, "name");
+            this(json, true);
+        }
+
+        private ThemeHolder(boolean userTheme) throws JSONException {
+            this("{}", userTheme);
+        }
+
+        private ThemeHolder(String str, boolean userTheme) throws JSONException {
+            this(new JSONObject(str), userTheme);
+        }
+
+        private ThemeHolder(JSONObject json, boolean userTheme) {
+            this.name = getString(json, "name", userTheme ? " (USER)" : "");
             this.codeName = getString(json, "code");
             this.fontType = getString(json, "fnTyp");
             this.iconTheme = getString(json, "icnThm");
@@ -89,11 +135,16 @@ public class ThemeUtils {
             this.keyRadius = getInt(json, "keyRad");
             this.textSize = getInt(json, "txtSize");
             this.textShadow = getInt(json, "txtShadow");
+            this.isUserTheme = userTheme;
         }
 
         private String getString(JSONObject json, String key) {
+            return getString(json, key, "");
+        }
+
+        private String getString(JSONObject json, String key, String userAttr) {
             try {
-                return json.has(key) ? json.getString(key) : "";
+                return json.has(key) ? (json.getString(key) + userAttr) : "";
             } catch(Throwable t) {
                 return "";
             }
