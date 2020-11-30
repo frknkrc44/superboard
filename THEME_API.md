@@ -72,6 +72,7 @@ Easy way to create themes for SuperBoard
 
 ### TODO
 - Add custom font installation support
+- Add background image installation support
 
 ## Example App
 Please check SuperBoardThemeExample folder
