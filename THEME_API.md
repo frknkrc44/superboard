@@ -58,15 +58,20 @@ Easy way to create themes for SuperBoard
 | serif_bold | Serif bold font |
 | serif_italic | Serif italic font |
 | serif_bold_italic | Serif bold italic font |
-| monospace | Monospace font |
-| monospace_bold | Monospace bold font (like terminal font) |
+| monospace | Monospace font (like terminal font) |
+| monospace_bold | Monospace bold font |
 | monospace_italic | Monospace italic font |
 | monospace_bold_italic | Monospace bold italic font |
 | serif_monospace | Serif monospace font |
 | serif_monospace bold | Serif monospace bold font |
 | serif_monospace_italic | Serif monospace italic font |
 | serif_monospace_bold_italic | Serif monospace bold italic font |
-| custom | Custom font (copy to /sdcard/Android/data/org.blinksd.board/files/font.ttf) |
+| custom* | Custom font |
+
+\* Please copy a font to /sdcard/Android/data/org.blinksd.board/files/font.ttf, otherwise app using the "regular" font.
+
+### TODO
+- Add custom font installation support
 
 ## Example App
 Please check SuperBoardThemeExample folder
