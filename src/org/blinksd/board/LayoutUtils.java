@@ -6,6 +6,7 @@ import android.graphics.drawable.*;
 import android.inputmethodservice.*;
 import android.os.*;
 import android.view.*;
+import java.io.*;
 import java.util.*;
 import org.blinksd.*;
 import org.json.*;
@@ -64,12 +65,6 @@ public class LayoutUtils {
 					}
 					
 					try {
-						ko.longPressIsNotEvent = jox.getBoolean("lpine");
-					} catch(Throwable e){
-						ko.longPressIsNotEvent = false;
-					}
-					
-					try {
 						ko.darkerKeyTint = jox.getBoolean("dkt");
 					} catch(Throwable e){
 						ko.darkerKeyTint = false;
@@ -98,7 +93,7 @@ public class LayoutUtils {
 		return null;
 	}
 	
-	private static Language getLanguage(String fileData) throws JSONException {
+	public static Language createLanguage(String fileData, boolean userTheme) throws JSONException {
 		Language l = new Language();
 		JSONObject main = new JSONObject(fileData);
 		l.name = main.getString("name");
@@ -110,14 +105,25 @@ public class LayoutUtils {
 		l.language = main.getString("language");
 		l.layout = createLayoutFromJSON(main.getJSONArray("layout"));
 		l.popup = createLayoutFromJSON(main.getJSONArray("popup"));
+		l.userTheme = userTheme;
 		return l;
 	}
-	
+
 	public static Language getLanguage(Context ctx, String name){
+		return getLanguage(ctx, name, false);
+	}
+	
+	public static Language getLanguage(Context ctx, String name, boolean onlyUser){
 		try {
 			HashMap<String,Language> llist = getLanguageList(ctx);
 			if(llist.containsKey(name)){
-				return llist.get(name);
+				Language lang = llist.get(name);
+				if(onlyUser){
+					if(lang.userTheme)
+						return lang;
+					return getEmptyLanguage();
+				}
+				return lang;
 			}
 		} catch(Throwable t){}
 		return getEmptyLanguage();
@@ -127,6 +133,13 @@ public class LayoutUtils {
 		Language l = new Language();
 		l.layout = l.popup = new ArrayList<List<KeyOptions>>();
 		return l;
+	}
+
+	public static File getUserLanguageFilesDir(){
+		File file = new File(SuperBoardApplication.getApplication().getFilesDir() + "/langpacks");
+		if(!file.exists())
+			file.mkdirs();
+		return file;
 	}
 	
 	public static HashMap<String,Language> getLanguageList(Context ctx) throws Throwable {
@@ -141,12 +154,25 @@ public class LayoutUtils {
 				String s = "";
 				while(sc.hasNext()) s += sc.nextLine();
 				sc.close();
-				Language l = getLanguage(s);
+				Language l = createLanguage(s, false);
 				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
 					langs.put(l.language,l);
 				}
 			}
 		}
+
+		File langFilesDir = getUserLanguageFilesDir();
+
+        for(String file : langFilesDir.list()) {
+            Scanner sc = new Scanner(new File(langFilesDir + "/" + file));
+			String s = "";
+			while(sc.hasNext()) s += sc.nextLine();
+			sc.close();
+            Language l = createLanguage(s, true);
+			if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
+				langs.put(l.language,l);
+			}
+        }
 		return langs;
 	}
 	
@@ -234,6 +260,7 @@ public class LayoutUtils {
 		public boolean enabled;
 		public int enabledSdk = 1;
 		public boolean midPadding;
+		public boolean userTheme;
 		public String author = "";
 		public String language = "";
 		public List<List<KeyOptions>> layout;
