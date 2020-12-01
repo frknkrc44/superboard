@@ -127,13 +127,13 @@ Keys using a JSON object for store options.
 | -101 | Change keyboard layout |
 | -102 | Open emoji layout |
 
-\*             You must implement these lines in your JSON file
-\*\*           Must be true if you want to import this pack, otherwise you'll get LANG_PKG_IMPORT_FAILED_NOT_ENABLED
-\*\*\*         Import failed with LANG_PKG_IMPORT_FAILED_SDK if SDK is not compatible
-\*\*\*\*       You can see Old Turkic layout for example, I disabled it in this layout
-\*\*\*\*\*     If you implemented a key as enter key, this key colored with enter key color
-\*\*\*\*\*\*   If you implemented a key press as "is not event", "pkc" is forced to print as text
-\*\*\*\*\*\*\* If you implemented a key long-press as "is not event", "lpkc" is forced to print as text
+- \*             You must implement these lines in your JSON file
+- \*\*           Must be true if you want to import this pack, otherwise you'll get LANG_PKG_IMPORT_FAILED_NOT_ENABLED
+- \*\*\*         Import failed with LANG_PKG_IMPORT_FAILED_SDK if SDK is not compatible
+- \*\*\*\*       You can see Old Turkic layout for example, I disabled it in this layout
+- \*\*\*\*\*     If you implemented a key as enter key, this key colored with enter key color
+- \*\*\*\*\*\*   If you implemented a key press as "is not event", "pkc" is forced to print as text
+- \*\*\*\*\*\*\* If you implemented a key long-press as "is not event", "lpkc" is forced to print as text
 
 ## TODO
 - Add custom font installation support
