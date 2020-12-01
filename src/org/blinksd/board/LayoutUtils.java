@@ -170,6 +170,7 @@ public class LayoutUtils {
 			sc.close();
             Language l = createLanguage(s, true);
 			if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
+				l.label += " (USER)";
 				langs.put(l.language,l);
 			}
         }
