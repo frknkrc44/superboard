@@ -117,7 +117,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			curr = (InputMethodService) c;
 		}
 		vb = (Vibrator) c.getSystemService(c.VIBRATOR_SERVICE);
-		trigSystemSuggestions();
+		// trigSystemSuggestions();
 		setLayoutParams(new LayoutParams(-1,-1));
 		setBackgroundColor(0xFF212121);
 		createEmptyLayout();
@@ -149,12 +149,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		
 	}
 	
+	/*
 	private void trigSystemSuggestions(){
 		Locale.setDefault(loc);
 		Configuration c = new Configuration();
 		c.locale = loc;
 		getResources().updateConfiguration(c,null);
 	}
+	*/
 	
 	public void setPadding(int p){
 		setPadding(p,p,p,p);
@@ -726,7 +728,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		if(lang != null){
 			String[] la = lang.split("_");
 			loc = la.length > 1 ? new Locale(la[0],la[1]) : new Locale(la[0].toLowerCase(),la[0].toUpperCase());
-			trigSystemSuggestions();
+			// trigSystemSuggestions();
 		}
 	}
 	

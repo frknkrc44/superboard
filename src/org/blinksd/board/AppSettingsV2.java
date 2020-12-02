@@ -47,6 +47,14 @@ public class AppSettingsV2 extends Activity {
 		sMap = SuperBoardApplication.getSettings();
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
 		SuperToolbar toolbar = new SuperToolbar(this);
+		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_backup), new View.OnClickListener(){
+
+				@Override
+				public void onClick(View p1){
+					startActivity(new Intent(AppSettingsV2.this, BackupRestoreActivity.class));
+				}
+
+		});
 		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_close), new View.OnClickListener(){
 
 				@Override
@@ -55,7 +63,7 @@ public class AppSettingsV2 extends Activity {
 					getBackgroundImageFile().delete();
 					recreate();
 				}
-			
+
 		});
 		toolbar.setTextColor(0xFFFFFFFF);
 		main.addView(toolbar);

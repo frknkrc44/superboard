@@ -12,6 +12,7 @@
 	<string name="wizard_finishbtn">Bitir</string>
 
 	<!-- Settings resources -->
+	<string name="settings_activity">Ayarlar</string>
 	<string name="settings_keyboard_bgimg">Klavye arkaplan resmi</string>
 	<string name="settings_keyboard_show_popup">Yazarken basılan karakteri göster</string>
 	<string name="settings_colorize_navbar">Gezinme çubuğunu şeffaflaştır</string>

@@ -35,11 +35,16 @@
 			android:launchMode="singleTask"
 			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
             android:name=".AppSettingsV2"
-            android:label="Ayarlar"/>
+            android:label="@string/settings_activity"/>
 		<activity
 			android:launchMode="singleTask"
 			android:theme="@android:style/Theme.DeviceDefault.Dialog"
             android:name=".AppSettings$SetActivity"/>
+		<activity
+			android:launchMode="singleTask"
+			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:name=".BackupRestoreActivity"
+            android:label="@string/settings_activity"/>
 		<service
 			android:name=".InputService"
 			android:permission="android.permission.BIND_INPUT_METHOD">

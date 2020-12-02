@@ -18,6 +18,7 @@
 	<string name="keyboard_theme_api_perm_label">SuperBoard User Theme API Access</string>
 	
 	<!-- Settings resources -->
+	<string name="settings_activity">Settings</string>
 	<string name="settings_keyboard_bgimg">Keyboard background image</string>
 	<string name="settings_keyboard_show_popup">Show character while typing</string>
 	<string name="settings_colorize_navbar">Use transparent background at navbar</string>
