@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SuperBoard</string>
+    <string name="app_name">FBoard</string>
     <string name="hello_world">@string/app_name</string>
 	
 	<!-- Setup wizard resources -->
