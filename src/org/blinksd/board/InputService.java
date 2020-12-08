@@ -27,6 +27,7 @@ import static org.blinksd.board.SuperBoard.*;
 import static android.media.AudioManager.*;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.Secure.getInt;
+import static org.blinksd.utils.system.SystemUtils.*;
 import org.blinksd.utils.icon.*;
 
 public class InputService extends InputMethodService {
@@ -56,6 +57,7 @@ public class InputService extends InputMethodService {
 		if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KILL_BACKGROUND)){
 			System.exit(0);
 		}
+		onFinishInput();
 		super.onWindowHidden();
 	}
 
@@ -431,7 +433,7 @@ public class InputService extends InputMethodService {
 	private void adjustNavbar(int c){
 		if(SDK_INT > 20){
 			Window w = getWindow().getWindow();
-			if(detectNavbar()){
+			if(detectNavbar(this)){
 				if(ll.getChildCount() > 1){
 					ll.removeViewAt(1);
 				}
@@ -443,10 +445,10 @@ public class InputService extends InputMethodService {
 					w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
 																		? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 																		: View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-				} else if(x()){
+				} else if(isColorized(this)){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH()));
-					ll.addView(createNavbarLayout(c));
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH(this, gestureHeight)));
+					ll.addView(createNavbarLayout(this, gestureHeight, c));
 				} else {
 					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -459,61 +461,6 @@ public class InputService extends InputMethodService {
 			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 		}
 		po.setFilterHeight(iv.getLayoutParams().height);
-	}
-	
-	private View createNavbarLayout(int color){
-		View v = new View(this);
-		v.setLayoutParams(new ViewGroup.LayoutParams(-1,x() ? navbarH() : -1));
-		v.setBackgroundColor(sb.getColorWithState(color,ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)))));
-		return v;
-	}
-	
-	private int navbarH(){
-		if(x()){
-			if(gestureHeight > 0) return gestureHeight;
-			int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-			return resourceId > 0 ? getResources().getDimensionPixelSize(resourceId) : 0;
-		}
-		return 0;
-	}
-	
-	private boolean x(){
-		if(SystemUtils.isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR)){
-			return false;
-		}
-		return !isLand() || isTablet();
-	}
-	
-	private boolean isTablet(){
-		return isLand() && getResources().getConfiguration().smallestScreenWidthDp >= 600;
-	}
-	
-	private boolean isLand(){
-		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-	}
-	
-	private boolean detectNavbar(){
-		if(SDK_INT >= 14){
-			try {
-				Class<?> serviceManager = Class.forName("android.os.ServiceManager");
-				IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
-				Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
-				Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
-				Method hasNavigationBar = null;
-				if(SDK_INT < 29){
-					hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
-					return (boolean) hasNavigationBar.invoke(windowManagerService);
-				}
-				hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar",int.class);
-				WindowManager wm = getWindow().getWindow().getWindowManager();
-				Display dsp = wm.getDefaultDisplay();
-				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
-			} catch(Exception e){
-				Log.e("Navbar","Navbar detection failed by internal system APIs because ...",e);
-			}
-		}
-		return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) && 
-			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 	
 	private BroadcastReceiver r = new BroadcastReceiver(){

@@ -28,6 +28,7 @@
 	<string name="settings_keyboard_bgclr">Klavye arkaplan rengi</string>
 	<string name="settings_key_textclr">Tuş metin rengi</string>
 	<string name="settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
+	<string name="settings_keyboard_kill_background">RAM kullanımını düşür (açılış gecikmesini arttırır)</string>
 	
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo">Fotoğraf</string>

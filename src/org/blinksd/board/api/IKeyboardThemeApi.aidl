@@ -15,7 +15,7 @@ interface IKeyboardThemeApi {
     int importIconThemeForced(String jsonStr, in byte[] icons);
     boolean isIconThemeImported(String name);
 
-    /* TODO: Language pack */
+    /* Language pack */
     int importLangPkg(String jsonStr);
     int importLangPkgForced(String jsonStr);
     boolean isLangPkgImported(String name);

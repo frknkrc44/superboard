@@ -34,6 +34,7 @@
 	<string name="settings_keyboard_bgclr">Keyboard background color</string>
 	<string name="settings_key_textclr">Key text color</string>
 	<string name="settings_play_snd_press">Play sound on key press events</string>
+	<string name="settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
 
 	<string name="settings_return_defaults">(↻)</string>
 	
