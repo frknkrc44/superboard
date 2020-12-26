@@ -70,6 +70,13 @@
 	<string name="settings_key_radius">Key radius</string>
 	<string name="settings_key_textsize">Key text size</string>
 	<string name="settings_key_shadowsize">Key shadow size</string>
+
+	<!-- Backup/Restore options -->
+	<string name="settings_backup_menu_backup">Backup</string>
+	<string name="settings_backup_menu_restore">Restore</string>
+	<string name="settings_backup_type_all">All items</string>
+	<string name="settings_backup_type_theme">Theme (icon theme, background image, colors, ...)</string>
+	<string name="settings_backup_type_other">Others</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">

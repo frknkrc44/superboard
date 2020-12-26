@@ -25,6 +25,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -84,7 +85,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 
     public YCompoundButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
 
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, Styleable.getStyleable("CompoundButton"), defStyleAttr, defStyleRes);
@@ -94,15 +95,17 @@ public abstract class YCompoundButton extends Button implements Checkable {
             setButtonDrawable(d);
         }
 
-        if (a.hasValue(Styleable.getKey("CompoundButton_buttonTintMode"))) {
+        if(Build.VERSION.SDK_INT >= 21) {
+            if (a.hasValue(Styleable.getKey("CompoundButton_buttonTintMode"))) {
             mButtonTintMode = parseTintMode(a.getInt(
                     Styleable.getKey("CompoundButton_buttonTintMode"), -1), mButtonTintMode);
             mHasButtonTintMode = true;
         }
 
-        if (a.hasValue(Styleable.getKey("CompoundButton_buttonTint"))) {
-            mButtonTintList = a.getColorStateList(Styleable.getKey("CompoundButton_buttonTint"));
-            mHasButtonTint = true;
+            if (a.hasValue(Styleable.getKey("CompoundButton_buttonTint"))) {
+                mButtonTintList = a.getColorStateList(Styleable.getKey("CompoundButton_buttonTint"));
+                mHasButtonTint = true;
+            }
         }
 
         final boolean checked = a.getBoolean(
@@ -111,7 +114,9 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
         a.recycle();
 		
-        applyButtonTint();
+        if(Build.VERSION.SDK_INT >= 21) {
+            applyButtonTint();
+        }
     }
 	
 	private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {

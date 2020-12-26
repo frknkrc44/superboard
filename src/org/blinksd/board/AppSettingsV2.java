@@ -224,9 +224,22 @@ public class AppSettingsV2 extends Activity {
 		return btn;
 	}
 	
-	private final YSwitch createBoolSelector(String key){
+	private final View createBoolSelector(String key){
 		boolean val = sdb.getBoolean(key,(boolean) sMap.getDefaults(key));
-		YSwitch swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,this,getTranslation(key),val,switchListener);
+		if(Build.VERSION.SDK_INT >= 21) {
+			TextView swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,this,getTranslation(key),val,switchListener);
+			swtch.setMinHeight((int) getListPreferredItemHeight());
+			swtch.setTag(key);
+			return swtch;
+		}
+		Switch swtch = new Switch(this);
+		swtch.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+		swtch.setChecked(val);
+		swtch.setText(getTranslation(key));
+		swtch.setOnCheckedChangeListener(switchListenerAPI19);
+		swtch.setTextOn("");
+		swtch.setTextOff("");
+		swtch.setSwitchMinWidth(DensityUtils.dpInt(64));
 		swtch.setMinHeight((int) getListPreferredItemHeight());
 		swtch.setTag(key);
 		return swtch;
@@ -401,6 +414,18 @@ public class AppSettingsV2 extends Activity {
 
 		@Override
 		public void onCheckedChanged(YCompoundButton buttonView, boolean isChecked){
+			String str = (String) buttonView.getTag();
+			sdb.putBoolean(str,isChecked);
+			sdb.onlyWrite();
+			restartKeyboard();
+		}
+		
+	};
+
+	private final Switch.OnCheckedChangeListener switchListenerAPI19 = new Switch.OnCheckedChangeListener(){
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
 			String str = (String) buttonView.getTag();
 			sdb.putBoolean(str,isChecked);
 			sdb.onlyWrite();

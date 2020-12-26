@@ -57,6 +57,13 @@
 	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
 	<string name="settings_key_textsize">Tuş metin boyutu</string>
 	<string name="settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
+
+	<!-- Backup/Restore options -->
+	<string name="settings_backup_menu_backup">Yedekle</string>
+	<string name="settings_backup_menu_restore">Geri yükle</string>
+	<string name="settings_backup_type_all">Bütün öğeler</string>
+	<string name="settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, ...)</string>
+	<string name="settings_backup_type_other">Diğerleri</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_icon_theme">

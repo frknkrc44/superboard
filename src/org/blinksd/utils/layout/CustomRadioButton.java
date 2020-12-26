@@ -6,10 +6,11 @@ import android.graphics.drawable.*;
 import android.os.*;
 import android.widget.*;
 import android.content.res.*;
+import java.lang.reflect.*;
 
 public class CustomRadioButton extends RadioButton {
 	
-	CustomRadioButton(Context c){
+	public CustomRadioButton(Context c){
 		super(c);
 		int i = DensityUtils.dpInt(8);
 		setPadding(i,0,i,0);
@@ -25,6 +26,20 @@ public class CustomRadioButton extends RadioButton {
 		}
 		
 		//setRadioButton();
+	}
+
+	public Drawable getButtonDrawable() {
+		if(Build.VERSION.SDK_INT >= 23) {
+			return super.getButtonDrawable();
+		}
+
+		try {
+			Field field = CompoundButton.class.getDeclaredField("mButtonDrawable");
+			field.setAccessible(true);
+			return (Drawable) field.get(this);
+		} catch(Throwable t) {
+			return null;
+		}
 	}
 	
 	/*void setRadioButton(){

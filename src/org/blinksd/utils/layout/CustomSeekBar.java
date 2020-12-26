@@ -22,12 +22,13 @@ class CustomSeekBar extends SeekBar {
 	}
 
 	void drawSeekBar(){
-		Bitmap b = Bitmap.createBitmap(SuperBoard.dp(48),SuperBoard.dp(48),Bitmap.Config.ARGB_8888);
+		Bitmap b = Bitmap.createBitmap(SuperBoard.dp(36),SuperBoard.dp(36),Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(b);
 		Paint p = new Paint();
 		p.setStyle(Paint.Style.FILL);
 		p.setColor(0xFFDEDEDE);
-		c.drawOval(0,0,b.getWidth(),b.getHeight(),p);
+		RectF r = new RectF(0,0,b.getWidth(),b.getHeight());
+		c.drawOval(r,p);
 		setThumb(new BitmapDrawable(b));
 		Drawable ld = getResources().getDrawable(R.drawable.pbar);
 		ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);

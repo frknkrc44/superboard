@@ -14,8 +14,10 @@ public class LayoutCreator {
 			Constructor cs = clazz.getConstructor(Context.class);
 			cs.setAccessible(true);
 			return (View) cs.newInstance(ctx);
-		} catch(Throwable t){}
-		return null;
+		} catch(Throwable t){
+			throw new RuntimeException(t);
+		}
+		// return null;
 	}
 	
 	public static View getFilledView(Class<?> clazz, Class<?> rootViewClass, Context ctx){
