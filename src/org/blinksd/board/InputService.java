@@ -285,7 +285,7 @@ public class InputService extends InputMethodService {
 			ll.setOrientation(LinearLayout.VERTICAL);
 			ll.addView(sb);
 		}
-		if(emoji == null){
+		if(Build.VERSION.SDK_INT >= 16 && emoji == null){
 			emoji = new EmojiView(sb,emojiClick);
 			emoji.setVisibility(View.GONE);
 			emoji.setBackgroundDrawable(sb.getBackground());
@@ -295,8 +295,10 @@ public class InputService extends InputMethodService {
 			fl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 			iv = new ImageView(this);
 			fl.addView(iv);
-			fl.addView(emoji);
-			emoji.getLayoutParams().height = sb.getKeyboardHeight();
+			if(emoji != null){
+				fl.addView(emoji);
+				emoji.getLayoutParams().height = sb.getKeyboardHeight();
+			}
 			fl.addView(ll);
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
@@ -486,6 +488,9 @@ public class InputService extends InputMethodService {
 	private boolean showEmoji = false;
 	
 	private void showEmojiView(boolean value){
+		if(Build.VERSION.SDK_INT < 16){
+			return;
+		}
 		if(showEmoji != value){
 			emoji.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
 			sb.setVisibility(value ? View.INVISIBLE : View.VISIBLE);

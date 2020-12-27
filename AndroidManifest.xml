@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.blinksd.board"
-    android:versionCode="7"
-    android:versionName="3.2">
+    android:versionCode="8"
+    android:versionName="3.3">
 	
-	<uses-sdk android:minSdkVersion="14" 
-		android:targetSdkVersion="28" />
+	<uses-sdk android:minSdkVersion="8" 
+		android:targetSdkVersion="29" />
 	
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
@@ -24,8 +24,7 @@
 		android:resizeableActivity="true">
 		<activity
 			android:launchMode="singleTask"
-			android:name=".SetupActivity" 
-			android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+			android:name=".SetupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -33,16 +32,13 @@
         </activity>
 		<activity
 			android:launchMode="singleTask"
-			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
             android:name=".AppSettingsV2"
             android:label="@string/settings_activity"/>
 		<activity
 			android:launchMode="singleTask"
-			android:theme="@android:style/Theme.DeviceDefault.Dialog"
             android:name=".AppSettings$SetActivity"/>
 		<activity
 			android:launchMode="singleTask"
-			android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
             android:name=".BackupRestoreActivity"
             android:label="@string/settings_activity"/>
 		<service

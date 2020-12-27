@@ -41,6 +41,15 @@ public class AppSettingsV2 extends Activity {
 	
 	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
 
+	public void recreate() {
+		if(Build.VERSION.SDK_INT >= 11) {
+			super.recreate();
+			return;
+		}
+		
+		onCreate(getIntent().getExtras());
+	}
+	
 	@Override
 	protected void onCreate(Bundle b){
 		super.onCreate(b);
@@ -114,7 +123,8 @@ public class AppSettingsV2 extends Activity {
 		
 		sb.addRow(0,new String[]{"1","2","3"});
 		for(int i = 0;i <= 2;i++) sb.getKey(0,0,i).setId(i);
-		sb.createEmptyLayout(SuperBoard.KeyboardType.NUMBER);
+		sb.createEmptyLayout();
+		sb.setEnabledLayout(0);
 		sb.setKeyboardHeight(20);
 		sb.setKeysPadding(sb.mp(4));
 		iv = new ImageView(this);
@@ -234,27 +244,41 @@ public class AppSettingsV2 extends Activity {
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);
 			return swtch;
+		} else if(Build.VERSION.SDK_INT >= 14) {
+			Switch swtch = new Switch(this);
+			swtch.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+			swtch.setChecked(val);
+			swtch.setText(getTranslation(key));
+			swtch.setOnCheckedChangeListener(switchListenerAPI19);
+			swtch.setTextOn("");
+			swtch.setTextOff("");
+			int minW = DensityUtils.dpInt(64);
+			if(Build.VERSION.SDK_INT >= 16)
+				swtch.setSwitchMinWidth(minW);
+			else {
+				try {
+					Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
+					minWidth.setAccessible(true);
+					minWidth.set(swtch, minW);
+				} catch(Throwable t) {}
+			}
+			swtch.setMinHeight((int) getListPreferredItemHeight());
+			swtch.setTag(key);
+			return swtch;
 		}
-		Switch swtch = new Switch(this);
-		swtch.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-		swtch.setChecked(val);
-		swtch.setText(getTranslation(key));
-		swtch.setOnCheckedChangeListener(switchListenerAPI19);
-		swtch.setTextOn("");
-		swtch.setTextOff("");
-		int minW = DensityUtils.dpInt(64);
-		if(Build.VERSION.SDK_INT >= 16)
-			swtch.setSwitchMinWidth(minW);
-		else {
-			try {
-				Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
-				minWidth.setAccessible(true);
-				minWidth.set(swtch, minW);
-			} catch(Throwable t) {}
-		}
-		swtch.setMinHeight((int) getListPreferredItemHeight());
-		swtch.setTag(key);
-		return swtch;
+		
+		LinearLayout ll = LayoutCreator.createHorizontalLayout(this);
+		ll.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+		TextView tv = new TextView(this);
+		tv.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
+		tv.setText(getTranslation(key));
+		ll.addView(tv);
+		ToggleButton tb = new ToggleButton(this);
+		tb.setLayoutParams(new LinearLayout.LayoutParams(-2, -2, 0));
+		tb.setChecked(val);
+		tb.setOnCheckedChangeListener(switchListenerAPI19);
+		ll.addView(tb);
+		return ll;
 	}
 	
 	private final View createRadioSelector(String key, List<String> items) throws Throwable {
@@ -434,13 +458,13 @@ public class AppSettingsV2 extends Activity {
 		
 	};
 
-	private final Switch.OnCheckedChangeListener switchListenerAPI19 = new Switch.OnCheckedChangeListener(){
+	private final CompoundButton.OnCheckedChangeListener switchListenerAPI19 = new CompoundButton.OnCheckedChangeListener(){
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
 			String str = (String) buttonView.getTag();
 			sdb.putBoolean(str,isChecked);
-			sdb.onlyWrite();
+			sdb.writeKey(str);
 			restartKeyboard();
 		}
 		

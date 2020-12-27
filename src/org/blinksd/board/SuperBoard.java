@@ -1137,6 +1137,36 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			}
 			return k;
 		}
+
+		public float getX() {
+			if(Build.VERSION.SDK_INT >= 11) {
+				return super.getX();
+			}
+
+			return 0;
+		}
+
+		public float getY() {
+			if(Build.VERSION.SDK_INT >= 11) {
+				return super.getY();
+			}
+
+			return 0;
+		}
+
+		public void setX(float x) {
+			if(Build.VERSION.SDK_INT >= 11) {
+				super.setX(x);
+				return;
+			}
+		}
+
+		public void setY(float y) {
+			if(Build.VERSION.SDK_INT >= 11) {
+				super.setY(y);
+				return;
+			}
+		}
 	}
 	
 	public enum TextType {
@@ -1162,6 +1192,36 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		serif_monospace_bold_italic,
 		custom
 	}
+
+	public float getX() {
+			if(Build.VERSION.SDK_INT >= 11) {
+				return super.getX();
+			}
+
+			return 0;
+		}
+
+		public float getY() {
+			if(Build.VERSION.SDK_INT >= 11) {
+				return super.getY();
+			}
+
+			return 0;
+		}
+
+		public void setX(float x) {
+			if(Build.VERSION.SDK_INT >= 11) {
+				super.setX(x);
+				return;
+			}
+		}
+
+		public void setY(float y) {
+			if(Build.VERSION.SDK_INT >= 11) {
+				super.setY(y);
+				return;
+			}
+		}
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent m){

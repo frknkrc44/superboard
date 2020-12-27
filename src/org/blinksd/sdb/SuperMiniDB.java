@@ -327,9 +327,16 @@ public class SuperMiniDB {
 		else sv += c;
 		return i == 0 ? sq : i == 1 ? su : sv;
 	}
-	
+
 	public Object[] getKeys(boolean descending){
+		return getKeys(false, descending);
+	}
+	
+	public Object[] getKeys(boolean sort, boolean descending){
 		Set<String> s = hm1.keySet();
+		if(!sort) {
+			return s.toArray();
+		}
 		TreeSet<String> x = new TreeSet<String>(s);
 		if(descending){
 			s = x.descendingSet();

@@ -80,7 +80,7 @@ public class SuperBoardApplication extends Application {
 				if(fontFile.exists()) cFont = Typeface.createFromFile(fontFile);
 				else throw new Throwable();
 			} catch(Throwable t){
-				Log.e("SuperBoardApplication","Exception: ",t);
+				// Log.e("SuperBoardApplication","Exception: ",t);
 				fontFile = null;
 				cFont = null;
 				return Typeface.DEFAULT;

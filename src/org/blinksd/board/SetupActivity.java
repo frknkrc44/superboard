@@ -24,15 +24,24 @@ public class SetupActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-		if(isInputMethodEnabled() && isInputMethodSelected()){
-			startActivity(new Intent(this,AppSettingsV2.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-			finish();
+		if(Build.VERSION.SDK_INT <= 11) {
+			if(!(isInputMethodEnabled() && isInputMethodSelected()))
+				Toast.makeText(this, R.string.wizard_api8_warning, Toast.LENGTH_LONG).show();
+			startSettings();
+			return;
+		} else if(isInputMethodEnabled() && isInputMethodSelected()){
+			startSettings();
 			return;
 		}
         sr = new SetupResources();
         setContentView(sr.mainView());
 		h.sendEmptyMessage(0);
     }
+
+	private void startSettings() {
+		startActivity(new Intent(this,AppSettingsV2.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		finish();
+	}
 
 	Handler h = new Handler(){
 		@Override
@@ -77,7 +86,7 @@ public class SetupActivity extends Activity {
 				};
 				dot = new Dots(tabs.length);
 				ml = new LinearLayout(SetupActivity.this);
-				ml.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
+				ml.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,0));
 				ml.setOrientation(LinearLayout.VERTICAL);
 				LinearLayout ll = new LinearLayout(SetupActivity.this);
 				ll.setLayoutParams(new LinearLayout.LayoutParams(getWidth() * tabs.length,-1,1));
@@ -212,6 +221,9 @@ public class SetupActivity extends Activity {
 		}
 		
 		public Drawable getSelectableItemBg(){
+			if(Build.VERSION.SDK_INT < 14)
+				return null;
+		
 			return csibg(getResources().getDrawable(
 							 getTheme().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground}
 																 ).getResourceId(0,0)),false);
@@ -248,6 +260,8 @@ public class SetupActivity extends Activity {
 						lastScroll = (getWidth() + lastScroll);
 						if(Build.VERSION.SDK_INT > 14)
 							scroll.animate().translationX(lastScroll).setDuration(200);
+						else if (Build.VERSION.SDK_INT < 11)
+							setScrollXAPI8(scroll, lastScroll);
 						else scroll.setTranslationX(lastScroll);
 						lscr--;
 						skip(seek);
@@ -258,6 +272,8 @@ public class SetupActivity extends Activity {
 						lastScroll = (-getWidth() + lastScroll);
 						if(Build.VERSION.SDK_INT > 14)
 							scroll.animate().translationX(lastScroll).setDuration(200);
+						else if (Build.VERSION.SDK_INT < 11)
+							setScrollXAPI8(scroll, lastScroll);
 						else scroll.setTranslationX(lastScroll);
 						lscr++;
 						skip(seek);
@@ -285,6 +301,14 @@ public class SetupActivity extends Activity {
 			tv.setVisibility(seek(false) ? View.VISIBLE : View.INVISIBLE);
 			tn.setVisibility((lscr == 0) || (lscr == (scroll.getChildCount() - 2)) ? View.VISIBLE : View.INVISIBLE);
 			return 0;
+		}
+
+		private void setScrollXAPI8(View view, int scroll) {
+			try {
+				Field scrollX = View.class.getDeclaredField("mScrollX");
+				scrollX.setAccessible(true);
+				scrollX.set(view, scroll);
+			} catch(Throwable t) {}
 		}
 
 		private boolean seek(boolean next){
