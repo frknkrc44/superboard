@@ -5,6 +5,7 @@ import android.content.pm.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.net.*;
+import android.os.*;
 import android.provider.*;
 import android.util.*;
 import android.view.*;
@@ -140,7 +141,7 @@ public class ImageSelectorLayout {
 				@Override
 				public void onClick(View p1){
 					int pm = ctx.checkCallingOrSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
-					if(pm == PackageManager.PERMISSION_GRANTED){
+					if(Build.VERSION.SDK_INT < 23 || pm == PackageManager.PERMISSION_GRANTED){
 						WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
 						Drawable d;
 						if(wm.getWallpaperInfo() != null){
@@ -266,10 +267,10 @@ public class ImageSelectorLayout {
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			build.setTitle(((TextView) p1.findViewById(android.R.id.text1)).getText());
 			build.setView(px);
-			build.setOnDismissListener(new DialogInterface.OnDismissListener(){
+			build.setOnCancelListener(new DialogInterface.OnCancelListener(){
 
 					@Override
-					public void onDismiss(DialogInterface p1){
+					public void onCancel(DialogInterface p1){
 						prev.setImageBitmap(convertGradientToBitmap());
 						System.gc();
 					}

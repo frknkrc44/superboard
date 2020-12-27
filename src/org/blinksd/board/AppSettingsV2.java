@@ -13,6 +13,7 @@ import android.util.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.utils.color.*;
@@ -241,7 +242,16 @@ public class AppSettingsV2 extends Activity {
 		swtch.setOnCheckedChangeListener(switchListenerAPI19);
 		swtch.setTextOn("");
 		swtch.setTextOff("");
-		swtch.setSwitchMinWidth(DensityUtils.dpInt(64));
+		int minW = DensityUtils.dpInt(64);
+		if(Build.VERSION.SDK_INT >= 16)
+			swtch.setSwitchMinWidth(minW);
+		else {
+			try {
+				Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
+				minWidth.setAccessible(true);
+				minWidth.set(swtch, minW);
+			} catch(Throwable t) {}
+		}
 		swtch.setMinHeight((int) getListPreferredItemHeight());
 		swtch.setTag(key);
 		return swtch;

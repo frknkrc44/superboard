@@ -13,7 +13,7 @@ public class CustomRadioButton extends RadioButton {
 	public CustomRadioButton(Context c){
 		super(c);
 		int i = DensityUtils.dpInt(8);
-		setPadding(i,0,i,0);
+		setPadding(Build.VERSION.SDK_INT < 16 ? (i*4) : i,0,i,0);
 		if(Build.VERSION.SDK_INT < 21){
 			Drawable drw = getButtonDrawable();
 			if(drw != null){

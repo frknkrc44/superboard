@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.graphics.drawable.*;
 import android.os.*;
 import android.widget.*;
+import java.lang.reflect.*;
 import org.blinksd.board.*;
 
 class CustomSeekBar extends SeekBar {
@@ -33,6 +34,19 @@ class CustomSeekBar extends SeekBar {
 		Drawable ld = getResources().getDrawable(R.drawable.pbar);
 		ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
 		setProgressDrawable(ld);
+	}
+
+	public Drawable getThumb() {
+		if(Build.VERSION.SDK_INT >= 16)
+			return super.getThumb();
+		
+		try {
+			Field thumb = AbsSeekBar.class.getDeclaredField("mThumb");
+			thumb.setAccessible(true);
+			return (Drawable) thumb.get(this);
+		} catch(Throwable t) {}
+
+		return null;
 	}
 	
 }

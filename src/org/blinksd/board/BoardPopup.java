@@ -42,8 +42,8 @@ public class BoardPopup extends SuperBoard {
 		khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
 		int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 		a = Color.argb(0xCC,Color.red(a),Color.green(a),Color.blue(a));
-		setBackground(LayoutUtils.getKeyBg(this,a,false));
-		setBackground(LayoutUtils.getKeyBg(this,a,true));
+		setBackgroundDrawable(LayoutUtils.getKeyBg(this,a,false));
+		setBackgroundDrawable(LayoutUtils.getKeyBg(this,a,true));
 		popupFilter.setBackgroundColor(a-0x33000000);
 		mKey.setVisibility(GONE);
 		key.getLocationInWindow(pos);

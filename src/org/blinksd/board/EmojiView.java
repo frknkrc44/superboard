@@ -83,7 +83,7 @@ public class EmojiView extends LinearLayout {
 			tv.setPadding(0,0,0,0);
 			tv.setTextSize(txtsze);
 			ts.setIndicator(tv);
-			tv.setBackground(drw.getConstantState().newDrawable());
+			tv.setBackgroundDrawable(drw.getConstantState().newDrawable());
 			final int x = i;
 			ts.setContent(new TabContentFactory(){
 					@Override
