@@ -17,17 +17,17 @@ public class BackupRestoreActivity extends Activity {
         super.onRestart();
         LinearLayout main = LayoutCreator.createVerticalLayout(this);
         SuperToolbar toolbar = new SuperToolbar(this);
+        BackupRestoreListView expandable = new BackupRestoreListView(this);
         toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_board_return), new View.OnClickListener(){
 
 				@Override
 				public void onClick(View p1){
-					
+
 				}
 
 		});
         toolbar.setTextColor(0xFFFFFFFF);
         main.addView(toolbar);
-        BackupRestoreListView expandable = new BackupRestoreListView(this);
         main.addView(expandable);
         setContentView(main);
     }
