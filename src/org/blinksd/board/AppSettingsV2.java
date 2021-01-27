@@ -239,7 +239,7 @@ public class AppSettingsV2 extends Activity {
 	
 	private final View createBoolSelector(String key){
 		boolean val = sdb.getBoolean(key,(boolean) sMap.getDefaults(key));
-		if(Build.VERSION.SDK_INT >= 21) {
+		if(Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 30) {
 			TextView swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,this,getTranslation(key),val,switchListener);
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);
@@ -252,16 +252,19 @@ public class AppSettingsV2 extends Activity {
 			swtch.setOnCheckedChangeListener(switchListenerAPI19);
 			swtch.setTextOn("");
 			swtch.setTextOff("");
-			int minW = DensityUtils.dpInt(64);
-			if(Build.VERSION.SDK_INT >= 16)
-				swtch.setSwitchMinWidth(minW);
-			else {
-				try {
-					Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
-					minWidth.setAccessible(true);
-					minWidth.set(swtch, minW);
-				} catch(Throwable t) {}
+			if(Build.VERSION.SDK_INT < 30) {
+				int minW = DensityUtils.dpInt(64);
+				if(Build.VERSION.SDK_INT >= 16)
+					swtch.setSwitchMinWidth(minW);
+				else {
+					try {
+						Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
+						minWidth.setAccessible(true);
+						minWidth.set(swtch, minW);
+					} catch(Throwable t) {}
+				}
 			}
+			
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);
 			return swtch;

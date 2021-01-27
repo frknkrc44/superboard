@@ -695,9 +695,12 @@ public class YSwitch extends YCompoundButton {
     }
 
     private Layout makeLayout(CharSequence text) {
-        final CharSequence transformed = (mSwitchTransformationMethod != null)
+        CharSequence transformed = (mSwitchTransformationMethod != null)
                     ? mSwitchTransformationMethod.getTransformation(text, this)
                     : text;
+
+        if(transformed == null)
+            transformed = "";
 
         return new StaticLayout(transformed, mTextPaint,
                 (int) Math.ceil(Layout.getDesiredWidth(transformed, mTextPaint)),
