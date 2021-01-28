@@ -65,10 +65,12 @@ public class BoardPopup extends SuperBoard {
 	
 	public void showPopup(boolean visible){
 		hideCharacter();
-		setVisibility(visible && mKey.getHint() != null && mKey.getHint().length() > 0?VISIBLE:GONE);
+		CharSequence hint = mKey.getHint();
+		String str = hint != null ? hint.toString().trim() : "";
+		setVisibility(visible && str != null && str.length() > 0?VISIBLE:GONE);
 		popupFilter.setVisibility(getVisibility());
 		if(isShown()){
-			setCharacters(mKey.getHint());
+			setCharacters(str);
 		}
 	}
 
@@ -78,13 +80,10 @@ public class BoardPopup extends SuperBoard {
 		mRoot.setFocusable(visibility != VISIBLE);
 	}
 	
-	private void setCharacters(CharSequence chr){
+	private void setCharacters(String chr){
 		clear();
-		String[] u = chr.toString().split(""),y = new String[u.length-1];
-		for(int i = 1;i < u.length;i++){
-			y[i-1] = u[i];
-		}
-		createPopup(y);
+		String[] u = chr.split("");
+		createPopup(u);
 		setKeysShadow(mKey.shr,mKey.shc);
 	}
 	
