@@ -355,9 +355,13 @@ public class InputService extends InputMethodService {
 			sb.setKeyboardHeight((int)(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
 			img = AppSettingsV2.getBackgroundImageFile();
 			if(fl != null){
-				int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
-				Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-				iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.getBlur(b,blur) : b):null);
+				if(img.exists()) {
+					int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
+					Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+					iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
+				} else {
+					iv.setImageBitmap(null);
+				}
 			}
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);

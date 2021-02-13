@@ -72,7 +72,8 @@ public class AppSettingsV2 extends Activity {
 				@Override
 				public void onClick(View p1){
 					sdb.removeDB();
-					getBackgroundImageFile().delete();
+					File bgFile = getBackgroundImageFile();
+					bgFile.delete();
 					recreate();
 				}
 
@@ -429,9 +430,10 @@ public class AppSettingsV2 extends Activity {
 						Drawable d = img.getDrawable();
 						if(d != null){
 							try {
+								File bgFile = getBackgroundImageFile();
 								Bitmap bmp = ((BitmapDrawable) d).getBitmap();
 								setColorsFromBitmap(bmp);
-								FileOutputStream fos = new FileOutputStream(getBackgroundImageFile());
+								FileOutputStream fos = new FileOutputStream(bgFile);
 								bmp.compress(Bitmap.CompressFormat.PNG,100,fos);
 							} catch(Throwable e){}
 							restartKeyboard();
@@ -580,9 +582,13 @@ public class AppSettingsV2 extends Activity {
 	
 	private void setKeyPrefs(){
 		File img = getBackgroundImageFile();
-		int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
-		Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-		iv.setImageBitmap(img.exists()?(blur > 0 ? ImageUtils.getBlur(b,blur) : b):null);
+		if(img.exists()) {
+			int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
+			Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+			iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
+		} else {
+			iv.setImageBitmap(null);
+		}
 		StateListDrawable d = new StateListDrawable();
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));
