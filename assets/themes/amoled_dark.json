@@ -1,1 +1,18 @@
-{"name":"AMOLED Dark","code":"amoled_dark","fnTyp":"bold","bgClr":"#FF000000","priClr":"#FF000000","secClr":"#FF000000","enterClr":"#FF000000","tShdwClr":"#FFD4D6D7","txtClr":"#FFD4D6D7","keyPad":"1.0","keyRad":"1.0","txtSize":"1.9","txtShadow":"0.0"}
+{
+    "name": "AMOLED Dark",
+    "code": "amoled_dark",
+    "fnTyp": "bold",
+    "bgClr": "#FF000000",
+    "priClr": "#FF000000",
+    "priPressClr": "#FF212121",
+    "secClr": "#FF000000",
+    "secPressClr": "#FF212121",
+    "enterClr": "#FF000000",
+    "enterPressClr": "#FF212121",
+    "tShdwClr": "#FFD4D6D7",
+    "txtClr": "#FFD4D6D7",
+    "keyPad": "1.0",
+    "keyRad": "1.0",
+    "txtSize": "1.9",
+    "txtShadow": "0.0"
+}

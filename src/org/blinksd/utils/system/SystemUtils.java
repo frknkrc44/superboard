@@ -55,7 +55,10 @@ public class SystemUtils {
 	public static View createNavbarLayout(Context ctx, int gestureHeight, int color){
 		View v = new View(ctx);
 		v.setLayoutParams(new ViewGroup.LayoutParams(-1,isColorized(ctx) ? navbarH(ctx, gestureHeight) : -1));
-		v.setBackgroundColor(SuperBoard.getColorWithState(color,ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)))));
+		boolean isLight = ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)));
+		if(isLight)
+			color = AppSettingsV2.getDarkerColor(color);
+		v.setBackgroundColor(color);
 		return v;
 	}
 	

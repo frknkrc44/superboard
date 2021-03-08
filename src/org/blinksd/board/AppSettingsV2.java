@@ -558,13 +558,26 @@ public class AppSettingsV2 extends Activity {
 		int c = ColorUtils.getBitmapColor(b);
 		sdb.putInteger(SettingMap.SET_KEYBOARD_BGCLR,c-0xAA000000);
 		int keyClr = c-0xAA000000;
+		int keyPressClr = getDarkerColor(keyClr);
+		int keyPress2Clr = getDarkerColor(keyPressClr);
 		sdb.putInteger(SettingMap.SET_KEY_BGCLR,keyClr);
-		sdb.putInteger(SettingMap.SET_KEY2_BGCLR,SuperBoard.getColorWithState(c,true));
-		sdb.putInteger(SettingMap.SET_ENTER_BGCLR,ColorUtils.satisfiesTextContrast(c) ? SuperBoard.getColorWithState(keyClr,true) : 0xFFFFFFFF);
-		keyClr = ColorUtils.satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
+		sdb.putInteger(SettingMap.SET_KEY2_BGCLR,keyPressClr);
+		sdb.putInteger(SettingMap.SET_KEY_PRESS_BGCLR,keyPressClr);
+		sdb.putInteger(SettingMap.SET_KEY2_PRESS_BGCLR,keyPress2Clr);
+		boolean isLight = ColorUtils.satisfiesTextContrast(c);
+		sdb.putInteger(SettingMap.SET_ENTER_BGCLR,isLight ? keyPressClr : 0xFFFFFFFF);
+		keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
 		sdb.putInteger(SettingMap.SET_KEY_TEXTCLR,keyClr);
 		sdb.putInteger(SettingMap.SET_KEY_SHADOWCLR,keyClr ^ 0x00FFFFFF);
 		sdb.onlyWrite();
+	}
+
+	public static int getDarkerColor(int color) {
+		int[] state = {Color.red(color),Color.green(color),Color.blue(color)};
+		for(int i = 0;i < state.length;i++){
+			state[i] /= 1.2;
+		}
+		return Color.argb(Color.alpha(color),state[0],state[1],state[2]);
 	}
 	
 	private List<String> getArrayAsList(String key) throws Throwable {
@@ -589,21 +602,12 @@ public class AppSettingsV2 extends Activity {
 		} else {
 			iv.setImageBitmap(null);
 		}
-		StateListDrawable d = new StateListDrawable();
-		GradientDrawable gd = new GradientDrawable();
-		gd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),false));
-		gd.setCornerRadius(getFloatPercentOrDefault(SettingMap.SET_KEY_RADIUS));
-		gd.setStroke(getFloatPercentOrDefault(SettingMap.SET_KEY_PADDING),0);
-		GradientDrawable pd = new GradientDrawable();
-		pd.setColor(sb.getColorWithState(getIntOrDefault(SettingMap.SET_KEY_BGCLR),true));
-		pd.setCornerRadius(getFloatPercentOrDefault(SettingMap.SET_KEY_RADIUS));
-		pd.setStroke(getFloatPercentOrDefault(SettingMap.SET_KEY_PADDING),0);
-		d.addState(new int[]{android.R.attr.state_selected},pd);
-		d.addState(new int[]{},gd);
-		sb.setKeysBackground(d);
+		int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
+		int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+		sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
 		sb.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-		sb.setKeyTintColor(0,0,1,getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
-		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
+		sb.setKeyTintColor(0,0,1,getIntOrDefault(SettingMap.SET_KEY2_BGCLR),getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
+		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
 		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));

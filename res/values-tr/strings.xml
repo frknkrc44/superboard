@@ -22,9 +22,12 @@
 	<string name="settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
 	<string name="settings_keyboard_lc_on_emoji">Gülücük tuşuna basılı tutunca klavye dilini değiştir</string>
 	<string name="settings_enter_bgclr">Enter tuşu arkaplan rengi</string>
+	<string name="settings_enter_press_bgclr">Enter tuşu dokunma arkaplan rengi</string>
 	<string name="settings_key_shadowclr">Tuş metni gölgesi rengi</string>
 	<string name="settings_key_bgclr">Birincil tuş arkaplan rengi</string>
 	<string name="settings_key2_bgclr">İkincil tuş arkaplan rengi</string>
+	<string name="settings_key_press_bgclr">Birincil tuş dokunma arkaplan rengi</string>
+	<string name="settings_key2_press_bgclr">İkincil tuş dokunma arkaplan rengi</string>
 	<string name="settings_keyboard_bgclr">Klavye arkaplan rengi</string>
 	<string name="settings_key_textclr">Tuş metin rengi</string>
 	<string name="settings_play_snd_press">Tuşa basıldığında ses çıkar</string>

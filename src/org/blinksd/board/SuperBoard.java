@@ -223,7 +223,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			clear = false;
 		}
 	}
-	
+
+/*
 	public void setKeyTintColor(Key k, int color){
 		Drawable d = k.getBackground();
 		try {
@@ -236,17 +237,32 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
 		}
 	}
-	
-	public void setKeyTintColor(int keyboardIndex, int rowIndex, int keyIndex, int color){
-		setKeyTintColor(getKey(keyboardIndex, rowIndex, keyIndex),color);
+*/
+
+	public void setKeyTintColor(Key k, int normalColor, int pressColor){
+		Drawable d = k.getBackground();
+		try {
+			if(Build.VERSION.SDK_INT > 21){
+				d.setTintList(getTintListWithStates(normalColor, pressColor));
+			} else {
+				d.setColorFilter(normalColor,PorterDuff.Mode.SRC_ATOP);
+			}
+		} catch(Exception e){
+			d.setColorFilter(normalColor,PorterDuff.Mode.SRC_ATOP);
+		}
 	}
 	
-	public ColorStateList getTintListWithStates(int color){
+	public void setKeyTintColor(int keyboardIndex, int rowIndex, int keyIndex, int normalColor, int pressColor){
+		setKeyTintColor(getKey(keyboardIndex, rowIndex, keyIndex), normalColor, pressColor);
+	}
+	
+	public ColorStateList getTintListWithStates(int normalColor, int pressColor){
 		return new ColorStateList(new int[][]{
 			{android.R.attr.state_selected},{}
-		},new int[]{getColorWithState(color,true),getColorWithState(color,false)});
+		},new int[]{pressColor, normalColor});
 	}
-	
+
+/*	
 	public static int getColorWithState(int color, boolean selected){
 		if(selected){
 			int[] state = {Color.red(color),Color.green(color),Color.blue(color)};
@@ -257,6 +273,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 		return color;
 	}
+*/
 
 	public void setKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex){
 		setKeyRepeat(keyboardIndex, rowIndex, keyIndex, true);
@@ -684,7 +701,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				openEmojiLayout();
 				break;
 			default:
-				getCurrentIC().sendKeyEvent(new KeyEvent(System.currentTimeMillis(),System.currentTimeMillis(),KeyEvent.ACTION_DOWN,code,0,0,0,0,KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE,InputDevice.SOURCE_KEYBOARD));
+				int[] actions = {MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP};
+				for (int action : actions)
+					getCurrentIC().sendKeyEvent(new KeyEvent(action,code));	
 		}
 	}
 	
@@ -695,6 +714,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	public final void commitText(String text){
 		if(text == null) return;
 		getCurrentIC().commitText(text,text.length());
+		getCurrentIC().finishComposingText();
 	}
 
 	private void setShiftState(){

@@ -308,14 +308,7 @@ public class ColorSelectorLayout {
 		sb.setPressEventForKey(0,1,-1,Keyboard.KEYCODE_DELETE);
 		sb.setKeyDrawable(0,0,-1,R.drawable.sym_keyboard_close);
 		sb.setPressEventForKey(0,0,-1,Keyboard.KEYCODE_CANCEL);
-		StateListDrawable d = new StateListDrawable();
-		GradientDrawable gd = new GradientDrawable();
-		gd.setColor(sb.getColorWithState(Defaults.KEY_BACKGROUND_COLOR,false));
-		GradientDrawable pd = new GradientDrawable();
-		pd.setColor(sb.getColorWithState(Defaults.KEY_BACKGROUND_COLOR,true));
-		d.addState(new int[]{android.R.attr.state_selected},pd);
-		d.addState(new int[]{},gd);
-		sb.setKeysBackground(d);
+		sb.setKeysBackground(LayoutUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR,Defaults.KEY_PRESS_BACKGROUND_COLOR,true));
 		ll.addView(hexIn);
 		ll.addView(sb);
 		return ll;

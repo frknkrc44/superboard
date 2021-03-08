@@ -9,6 +9,9 @@ public class Defaults {
 	public static final int KEY_BACKGROUND_COLOR = 0xFF474B4C;
 	public static final int KEY2_BACKGROUND_COLOR = 0xFF373C40;
 	public static final int ENTER_BACKGROUND_COLOR = 0xFF5F97F6;
+	public static final int KEY_PRESS_BACKGROUND_COLOR = 0xFF474B4C;
+	public static final int KEY2_PRESS_BACKGROUND_COLOR = 0xFF373C40;
+	public static final int ENTER_PRESS_BACKGROUND_COLOR = 0xFF5F97F6;
 	public static final int KEY_TEXT_COLOR = 0xFFDDE1E2;
 	public static final int KEY_TEXT_SHADOW_COLOR = KEY_TEXT_COLOR;
 	public static final int KEY_PADDING = 10;

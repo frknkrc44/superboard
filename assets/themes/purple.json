@@ -1,1 +1,12 @@
-{"name":"Purple","code":"purple","fnTyp":"bold","icnThm":"theme_board","enterClr":"#FF7389D4","keyPad":"1.0","keyRad":"1.0","txtSize":"1.9","txtShadow":"0.0"}
+{
+    "name": "Purple",
+    "code": "purple",
+    "fnTyp": "bold",
+    "icnThm": "theme_board",
+    "enterClr": "#FF7389D4",
+    "enterPressClr": "#FF7389D4",
+    "keyPad": "1.0",
+    "keyRad": "1.0",
+    "txtSize": "1.9",
+    "txtShadow": "0.0"
+}

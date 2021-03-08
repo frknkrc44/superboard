@@ -96,7 +96,10 @@ public class ThemeUtils {
     }
 
     public static class ThemeHolder {
-        public final String name, codeName, fontType, iconTheme, backgroundColor, primaryColor, secondaryColor, enterColor, textShadowColor, textColor;
+        public final String name, codeName, fontType, iconTheme, 
+                            backgroundColor, primaryColor, secondaryColor, 
+                            enterColor, textShadowColor, textColor, 
+                            primaryPressColor, secondaryPressColor, enterPressColor;
         public final int keyPadding, keyRadius, textSize, textShadow;
         public final boolean isUserTheme;
 
@@ -121,14 +124,17 @@ public class ThemeUtils {
         }
 
         private ThemeHolder(JSONObject json, boolean userTheme) {
-            this.name = getString(json, "name", userTheme ? " (USER)" : "");
+            this.name = getString(json, "name", userTheme ? " (U)" : "");
             this.codeName = getString(json, "code");
             this.fontType = getString(json, "fnTyp");
             this.iconTheme = getString(json, "icnThm");
             this.backgroundColor = getString(json, "bgClr");
             this.primaryColor = getString(json, "priClr");
+            this.primaryPressColor = getString(json, "priPressClr");
             this.secondaryColor = getString(json, "secClr");
+            this.secondaryPressColor = getString(json, "secPressClr");
             this.enterColor = getString(json, "enterClr");
+            this.enterPressColor = getString(json, "enterPressClr");
             this.textShadowColor = getString(json, "tShdwClr");
             this.textColor = getString(json, "txtClr");
             this.keyPadding = getInt(json, "keyPad");
@@ -211,8 +217,11 @@ public class ThemeUtils {
             }
             putControlledColor(SettingMap.SET_KEYBOARD_BGCLR, backgroundColor);
             putControlledColor(SettingMap.SET_KEY_BGCLR, primaryColor);
+            putControlledColor(SettingMap.SET_KEY_PRESS_BGCLR, primaryPressColor);
             putControlledColor(SettingMap.SET_KEY2_BGCLR, secondaryColor);
+            putControlledColor(SettingMap.SET_KEY2_PRESS_BGCLR, secondaryPressColor);
             putControlledColor(SettingMap.SET_ENTER_BGCLR, enterColor);
+            putControlledColor(SettingMap.SET_ENTER_PRESS_BGCLR, enterPressColor);
             putControlledColor(SettingMap.SET_KEY_SHADOWCLR, textShadowColor);
             putControlledColor(SettingMap.SET_KEY_TEXTCLR, textColor);
             putControlledInt(SettingMap.SET_KEY_PADDING, keyPadding);

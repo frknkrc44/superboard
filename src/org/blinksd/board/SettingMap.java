@@ -6,6 +6,7 @@ import org.blinksd.*;
 import org.blinksd.board.AppSettingsV2.*;
 import android.content.res.*;
 import android.util.*;
+import static org.blinksd.board.AppSettingsV2.*;
 
 public class SettingMap extends LinkedHashMap<String,SettingType> {
 
@@ -19,8 +20,11 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_KEYBOARD_LC_ON_EMOJI = "keyboard_lc_on_emoji",
 	SET_PLAY_SND_PRESS = "play_snd_press",
 	SET_KEY_BGCLR = "key_bgclr",
+	SET_KEY_PRESS_BGCLR = "key_press_bgclr",
 	SET_KEY2_BGCLR = "key2_bgclr",
+	SET_KEY2_PRESS_BGCLR = "key2_press_bgclr",
 	SET_ENTER_BGCLR = "enter_bgclr",
+	SET_ENTER_PRESS_BGCLR = "enter_press_bgclr",
 	SET_KEY_SHADOWCLR = "key_shadowclr",
 	SET_KEY_PADDING = "key_padding",
 	SET_KEY_RADIUS = "key_radius",
@@ -63,6 +67,9 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_KEY_BGCLR,SettingType.COLOR_SELECTOR);
 		put(SET_KEY2_BGCLR,SettingType.COLOR_SELECTOR);
 		put(SET_ENTER_BGCLR,SettingType.COLOR_SELECTOR);
+		put(SET_KEY_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
+		put(SET_KEY2_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
+		put(SET_ENTER_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
 		put(SET_KEY_SHADOWCLR,SettingType.COLOR_SELECTOR);
 		put(SET_KEY_TEXTCLR,SettingType.COLOR_SELECTOR);
 		put(SET_KEY_PADDING,SettingType.FLOAT_NUMBER);
@@ -121,13 +128,20 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.KEY_BACKGROUND_COLOR;
 				case SET_KEY2_BGCLR:
 					return Defaults.KEY2_BACKGROUND_COLOR;
+				case SET_KEY_PRESS_BGCLR:
+					return Defaults.KEY_PRESS_BACKGROUND_COLOR;
+				case SET_KEY2_PRESS_BGCLR:
+					return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
 				case SET_ENTER_BGCLR:
-					if(Build.VERSION.SDK_INT < 21)
-						return Defaults.ENTER_BACKGROUND_COLOR;
+				case SET_ENTER_PRESS_BGCLR:
+					if(Build.VERSION.SDK_INT < 21) {
+						return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
+					}
 					TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
 					int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
+					int pressColor = getDarkerColor(color);
 					arr.recycle();
-					return color;
+					return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
 				case SET_KEY_SHADOWCLR:
 					return Defaults.KEY_TEXT_SHADOW_COLOR;
 				case SET_KEY_TEXTCLR:

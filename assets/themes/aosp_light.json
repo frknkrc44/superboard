@@ -1,1 +1,18 @@
-{"name":"AOSP Light","code":"aosp_light","fnTyp":"bold","bgClr":"#FFECEFF1","priClr":"#FFECEFF1","secClr":"#FFECEFF1","enterClr":"#FFECEFF1","tShdwClr":"#FF37474F","txtClr":"#FF37474F","keyPad":"1.0","keyRad":"1.0","txtSize":"1.9","txtShadow":"0.0"}
+{
+    "name": "AOSP Light",
+    "code": "aosp_light",
+    "fnTyp": "bold",
+    "bgClr": "#FFECEFF1",
+    "priClr": "#FFECEFF1",
+    "priPressClr": "#FFECEFF1",
+    "secClr": "#FFECEFF1",
+    "secPressClr": "#FFECEFF1",
+    "enterClr": "#FFECEFF1",
+    "enterPressClr": "#FFECEFF1",
+    "tShdwClr": "#FF37474F",
+    "txtClr": "#FF37474F",
+    "keyPad": "1.0",
+    "keyRad": "1.0",
+    "txtSize": "1.9",
+    "txtShadow": "0.0"
+}

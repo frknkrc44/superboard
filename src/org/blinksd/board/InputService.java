@@ -21,7 +21,6 @@ import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
 import org.blinksd.sdb.*;
 import org.superdroid.db.*;
-import org.superdroid.db.*;
 
 import static org.blinksd.board.SuperBoard.*;
 import static android.media.AudioManager.*;
@@ -93,10 +92,6 @@ public class InputService extends InputMethodService {
 			showEmojiView(false);
 		}
 		System.gc();
-	}
-	
-	private void setKeyBg(int clr){
-		sb.setKeysBackground(LayoutUtils.getKeyBg(sb,clr,true));
 	}
 	
 	private void setLayout(){
@@ -365,7 +360,9 @@ public class InputService extends InputMethodService {
 			}
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
-			setKeyBg(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR));
+			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
+			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+			sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
 			int shr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
 				shc = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWCLR);
 			sb.setKeysShadow(shr,shc);
@@ -375,17 +372,19 @@ public class InputService extends InputMethodService {
 			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 			int y = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
+			int yp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
 			int z = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_BGCLR);
+			int zp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
 			for(int i = 0;i < kbd.length;i++){
 				if(i != 0){
 					if(i < 3){
-						sb.setKeyTintColor(i,3,0,y);
-						sb.setKeyTintColor(i,3,-1,y);
-						for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y);
-						sb.setKeyTintColor(i,4,1,y);
-						sb.setKeyTintColor(i,4,3,y);
+						sb.setKeyTintColor(i,3,0,y,yp);
+						sb.setKeyTintColor(i,3,-1,y,yp);
+						for(int h = 3;h < 5;h++) sb.setKeyTintColor(i,h,0,y,yp);
+						sb.setKeyTintColor(i,4,1,y,yp);
+						sb.setKeyTintColor(i,4,3,y,yp);
 					}
-					if(i != 3) sb.setKeyTintColor(i,-1,-1,z);
+					if(i != 3) sb.setKeyTintColor(i,-1,-1,z,zp);
 				}
 			}
 			sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
@@ -399,10 +398,10 @@ public class InputService extends InputMethodService {
 				for(int g = 0;g < subKOpt.size();g++){
 					KeyOptions ko = subKOpt.get(g);
 					if(ko.darkerKeyTint){
-						sb.setKeyTintColor(sb.getKey(0,i,g),y);
+						sb.setKeyTintColor(sb.getKey(0,i,g),y,yp);
 					}
 					if(ko.pressKeyCode == Keyboard.KEYCODE_DONE){
-						sb.setKeyTintColor(sb.getKey(0,i,g),z);
+						sb.setKeyTintColor(sb.getKey(0,i,g),z,zp);
 					}
 				}
 			}
