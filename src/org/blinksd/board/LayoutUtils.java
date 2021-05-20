@@ -226,6 +226,8 @@ public class LayoutUtils {
 				}
 			}
 		}
+		int iconmulti = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER);
+		sb.setIconSizeMultiplier(iconmulti);
 	}
 	
 	public static ArrayList<String> getKeyListFromLanguageList(){

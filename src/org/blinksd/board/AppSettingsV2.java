@@ -383,6 +383,9 @@ public class AppSettingsV2 extends Activity {
 						TextView tv = p1.findViewById(android.R.id.text1);
 						tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
 						restartKeyboard();
+						// TODO: add dynamic change for size multiplier
+						if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
+							recreate();
 						d1.dismiss();
 					}
 
@@ -394,10 +397,13 @@ public class AppSettingsV2 extends Activity {
 						int tagVal = (int) dialogView.getTag();
 						if(tagVal != val){
 							sdb.putInteger(tag,tagVal);
-							sdb.onlyWrite();
+							sdb.refreshKey(tag);
 							TextView tv = p1.findViewById(android.R.id.text1);
 							tv.setText(isFloat ? getFloatNumberFromInt(tagVal) + "" : tagVal + "");
 							restartKeyboard();
+							// TODO: add dynamic change for size multiplier
+							if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
+								recreate();
 						}
 						d1.dismiss();
 					}
@@ -610,6 +616,7 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
 		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 		IconThemeUtils icons = SuperBoardApplication.getIconThemes();

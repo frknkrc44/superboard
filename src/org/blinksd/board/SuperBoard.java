@@ -23,7 +23,7 @@ import static android.view.Gravity.*;
 
 public class SuperBoard extends FrameLayout implements OnTouchListener {
 
-	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP;
+	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP, iconmulti = 1;
 	protected float txtsze = -1;
 	protected static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean clear = false, lng = false, lock = false, dpopup = false;
@@ -330,6 +330,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	
 	public final void setLongPressMultiplier(int multi){
 		mult = multi;
+	}
+
+	public final void setIconSizeMultiplier(int multi){
+		iconmulti = multi;
+		setKeysTextSize((int) txtsze);
 	}
 	
 	private boolean isHasPopup(View v){
@@ -735,11 +740,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			for(int g = 0;g < r.getChildCount();g++){
 				t = (Key) r.getChildAt(g);
 				if(!isKeyHasEvent(t) && t.getText() != null){
-					if(state > 0){
-						t.setText(t.getText().toString().toUpperCase(loc));
-					} else {
-						t.setText(t.getText().toString().toLowerCase(loc));
-					}
+					String tText = t.getText().toString();
+					t.setText(state > 0 
+						? tText.toUpperCase(loc)
+						: tText.toLowerCase(loc)
+					);
+					t.setSelected(false);
 				}
 			}
 		}
@@ -1032,7 +1038,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			t.setTextSize(txtsze=size);
 			ViewGroup.LayoutParams vp = i.getLayoutParams();
 			vp.width = -1;
-			vp.height = (int)(size*3);
+			vp.height = (int)(size*iconmulti);
 		}
 		
 		private void setKeyShadow(int radius, int color){
@@ -1255,6 +1261,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			case MotionEvent.ACTION_SCROLL:
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_OUTSIDE:
+				v.setSelected(false);
 				h.removeMessages(3);
 				break;
 		}

@@ -11,5 +11,7 @@ public class Constants {
 	public static final int MIN_KEYBD_HGT = 20;
 	public static final int MAX_KEYBD_HGT = 80;
 	public static final int MAX_OTHER_VAL = 40;
+	public static final int MIN_ICON_MULTI = 1;
+	public static final int MAX_ICON_MULTI = 10;
 	
 }

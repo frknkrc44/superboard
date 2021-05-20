@@ -22,6 +22,7 @@ public class Defaults {
 	public static final int KEY_LONGPRESS_DURATION = 1;
 	public static final int KEY_VIBRATE_DURATION = 0;
 	public static final int KEY_FONT_TYPE = 0;
+	public static final int ICON_SIZE_MULTIPLIER = 3;
 	
 	public static final String KEYBOARD_LANGUAGE_KEY = "tr_TR_Q";
 	public static final String ICON_THEME = "theme_default";

@@ -40,7 +40,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 	SET_DISABLE_REPEAT = "disable_repeat",
 	SET_ICON_THEME = "keyboard_icon_theme",
 	SET_KILL_BACKGROUND = "keyboard_kill_background",
-	SET_THEME_PRESET = "keyboard_theme_preset";
+	SET_THEME_PRESET = "keyboard_theme_preset",
+	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi";
 
 	public SettingMap(){
 		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
@@ -76,6 +77,7 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_KEY_RADIUS,SettingType.FLOAT_NUMBER);
 		put(SET_KEY_TEXTSIZE,SettingType.FLOAT_NUMBER);
 		put(SET_KEY_SHADOWSIZE,SettingType.FLOAT_NUMBER);
+		put(SET_KEY_ICON_SIZE_MULTIPLIER,SettingType.MM_DECIMAL_NUMBER);
 	}
 
 	public ArrayList<String> getSelector(final String key) throws Throwable {
@@ -162,6 +164,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					return Defaults.KILL_BACKGROUND;
 				case SET_THEME_PRESET:
 					return Defaults.THEME_PRESET;
+				case SET_KEY_ICON_SIZE_MULTIPLIER:
+					return Defaults.ICON_SIZE_MULTIPLIER;
 			}
 		}
 		return null;
@@ -192,6 +196,9 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 							nums[0] = Constants.MIN_LPRESS_DUR;
 							nums[1] = Constants.MAX_LPRESS_DUR;
 							break;
+						case SET_KEY_ICON_SIZE_MULTIPLIER:
+							nums[0] = Constants.MIN_ICON_MULTI;
+							nums[1] = Constants.MAX_ICON_MULTI;
 					}
 					break;
 				case FLOAT_NUMBER:

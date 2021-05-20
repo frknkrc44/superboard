@@ -60,6 +60,7 @@
 	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
 	<string name="settings_key_textsize">Tuş metin boyutu</string>
 	<string name="settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
+	<string name="settings_key_icon_size_multi">Tuş resmi boyutu çarpanı</string>
 
 	<!-- Backup/Restore options -->
 	<string name="settings_backup_menu_backup">Yedekle</string>

@@ -74,6 +74,7 @@
 	<string name="settings_key_radius">Key radius</string>
 	<string name="settings_key_textsize">Key text size</string>
 	<string name="settings_key_shadowsize">Key shadow size</string>
+	<string name="settings_key_icon_size_multi">Key icon size multiplier</string>
 
 	<!-- Backup/Restore options -->
 	<string name="settings_backup_menu_backup">Backup</string>
