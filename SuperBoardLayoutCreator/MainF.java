@@ -7,63 +7,63 @@ public class MainF {
 			{"f","g","ğ","ı","o","d","r","n","h","p","q","w"},
 			{"u","i","e","a","ü","t","k","m","l","y","ş"},
 			{"CAPS","j","ö","v","c","ç","z","s","b","x","DEL"},
-			{"SYM",",","LC","SPACE",".","ENTER"}
+			{"SYM",",","SPACE",".","ENTER"}
 		};
 		String[][] popup = {
 			{"①¹½⅓¼⅛","②²⅔","③³¾⅜","④⁴","⑤⅝","⑥","⑦⅞","⑧","⑨","⓪⊕⊖⊗⊘⊙⊚⊛⊜⊝ø"},
 			{"ɟꜰⒻ","ƃɢⒼ","ƃɢⒼ","ɪⒾīìíïîį","Ⓞōõóòœô","pᴅⒹ","ɹʀⓇ","uɴⓃñň","ɥʜⒽ","dᴘⓅ","bǫⓆ","ʍᴡⓌ"},
 			{"nᴜⓊūùúû","ɪⒾīìíïîį","ǝᴇⒺèéëēėęê","ɐᴀⒶâäàáæåāã","nᴜⓊūùúû","ʇᴛⓉ","ʞᴋⓀ","ɯᴍⓂ","ʟⓁ","ʎʏⓎý","Ⓢßśš"},
 			{"","ɾᴊⒿ","Ⓞōõóòœô","^Ⓥ","ɔⒸćč","ɔⒸćč","Ⓩž","Ⓢßśš","qʙⒷ","Ⓧ",""},
-			{"","","","","?!*&@/\\\\:;-+=",""}
+			{"","","","?!*&@/\\\\:;-+=",""}
 		};
 		int[][] keyWidths = {
 			{0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0},
 			{15,0,0,0,0,0,0,0,0,0,15},
-			{20,15,15,45,15,20}
+			{20,15,50,15,20}
 		};
 		int[][] pressKeyCodes = {
 			{0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0},
 			{-1,0,0,0,0,0,0,0,0,0,-5},
-			{-2,0,-102,62,0,-4}
+			{-2,0,62,0,-4}
 		};
 		int[][] longPressKeyCodes = {
 			{0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0},
 			{0,0,0,0,0,0,0,0,0,0,0},
-			{-100,9,-101,0,0,0}
+			{-100,9,0,0,-102}
 		};
 		boolean[][] repeats = {
 			{false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,true},
-			{false,false,false,true,false,false}
+			{false,false,true,false,false}
 		};
 		boolean[][] pressIsNotEvents = {
 			{false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false}
+			{false,false,false,false,false}
 		};
 		boolean[][] longPressIsNotEvents = {
 			{false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
-			{false,true,false,false,false,false}
+			{false,true,false,false,false}
 		};
 		boolean[][] darkerKeyTints = {
 			{false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false,false},
 			{false,false,false,false,false,false,false,false,false,false,false},
 			{true,false,false,false,false,false,false,false,false,false,true},
-			{true,true,true,false,true,false}
+			{true,true,false,true,false}
 		};
 		String y = create("trf","Türkçe F",true,8,true,"blinksd","tr_TR_F",layout,popup,keyWidths,pressKeyCodes,longPressKeyCodes,repeats,pressIsNotEvents,longPressIsNotEvents,darkerKeyTints);
 		try {

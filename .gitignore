@@ -1,5 +1,6 @@
 # Ignored files
 *.jks
+*.class
 
 # Ignored folders
 .idea/

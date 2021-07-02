@@ -28,7 +28,7 @@ KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
 JAVAC_DEBUG_FLAGS = 
 
-all: clear mkdirs abuild build rmdirs zipalign sign
+all: clear mkdirs langpacks abuild build rmdirs zipalign sign
 build-install: all install
 build:
 	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/resources.ap_"
@@ -68,3 +68,6 @@ rmdirs:
 	rmdir `find` 2> /dev/null || true
 push:
 	$(ADB) push bin/$(NAME).apk /sdcard
+langpacks:
+	cd SuperBoardLayoutCreator && \
+		bash create_packs.sh $(JAVADIR)
