@@ -35,6 +35,7 @@ public class BoardPopup extends SuperBoard {
 	}
 	
 	public void setKey(Key key){
+		setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		key.clone(mKey);
 		setKeysTextColor(key.getTextColor());
 		setKeysTextType(key.txtst);

@@ -465,6 +465,7 @@ public class InputService extends InputMethodService {
 		} else {
 			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
 		}
+		ll.getLayoutParams().height = iv.getLayoutParams().height;
 		po.setFilterHeight(iv.getLayoutParams().height);
 	}
 	
