@@ -452,6 +452,7 @@ public class InputService extends InputMethodService {
 																		: View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 				} else if(isColorized(this)){
 					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					w.setNavigationBarColor(0);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH(this, gestureHeight)));
 					ll.addView(createNavbarLayout(this, gestureHeight, c));
 				} else {

@@ -16,7 +16,7 @@ import static android.os.Build.VERSION.SDK_INT;
 public class SystemUtils {
 	
 	public static final boolean isNotColorizeNavbar(){
-		return getSystemProp("ro.build.version.emui").length() > 1 || SDK_INT > 29;
+		return getSystemProp("ro.build.version.emui").length() > 1;
 	}
 	
 	public static final String getSystemProp(String key){

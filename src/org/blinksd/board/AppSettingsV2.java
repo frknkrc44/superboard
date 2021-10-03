@@ -240,7 +240,7 @@ public class AppSettingsV2 extends Activity {
 	
 	private final View createBoolSelector(String key){
 		boolean val = sdb.getBoolean(key,(boolean) sMap.getDefaults(key));
-		if(Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 30) {
+		if(Build.VERSION.SDK_INT >= 21) {
 			TextView swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,this,getTranslation(key),val,switchListener);
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);

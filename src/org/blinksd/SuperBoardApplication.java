@@ -13,6 +13,7 @@ import org.superdroid.db.*;
 import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.color.ThemeUtils.*;
 import org.blinksd.utils.icon.*;
+import yandroid.util.*;
 
 public class SuperBoardApplication extends Application {
 	
@@ -28,6 +29,7 @@ public class SuperBoardApplication extends Application {
 	
 	@Override
 	public void onCreate(){
+		Styleable.tryToBypassRestrictions();
 		app = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		icons = new IconThemeUtils();
