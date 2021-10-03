@@ -12,6 +12,7 @@ import org.superdroid.db.*;
 import java.lang.reflect.Method;
 
 import static android.os.Build.VERSION.SDK_INT;
+import android.provider.*;
 
 public class SystemUtils {
 	
@@ -52,9 +53,9 @@ public class SystemUtils {
 			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 
-	public static View createNavbarLayout(Context ctx, int gestureHeight, int color){
+	public static View createNavbarLayout(Context ctx, int color){
 		View v = new View(ctx);
-		v.setLayoutParams(new ViewGroup.LayoutParams(-1,isColorized(ctx) ? navbarH(ctx, gestureHeight) : -1));
+		v.setLayoutParams(new ViewGroup.LayoutParams(-1,isColorized(ctx) ? navbarH(ctx) : -1));
 		boolean isLight = ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)));
 		if(isLight)
 			color = AppSettingsV2.getDarkerColor(color);
@@ -62,8 +63,23 @@ public class SystemUtils {
 		return v;
 	}
 	
-	public static int navbarH(Context ctx, int gestureHeight){
+	public static int findGestureHeight(Context ctx) {
+		try {
+			if(SDK_INT >= 29 && Settings.Secure.getInt(ctx.getContentResolver(),"navigation_mode") == 2) {
+				Point appUsableScreenSize = new Point();
+				Point realScreenSize = new Point();
+				Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+				defaultDisplay.getSize(appUsableScreenSize);
+				defaultDisplay.getRealSize(realScreenSize);
+				return realScreenSize.y - appUsableScreenSize.y;
+			}
+		} catch(Throwable t){}
+		return 0;
+	}
+	
+	public static int navbarH(Context ctx){
 		if(isColorized(ctx)){
+			int gestureHeight = findGestureHeight(ctx);
 			if(gestureHeight > 0) return gestureHeight;
 			int resourceId = ctx.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
 			return resourceId > 0 ? ctx.getResources().getDimensionPixelSize(resourceId) : 0;
