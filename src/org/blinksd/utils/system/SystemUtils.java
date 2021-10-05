@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 
 import static android.os.Build.VERSION.SDK_INT;
 import android.provider.*;
+import org.blinksd.utils.layout.*;
 
 public class SystemUtils {
 	
@@ -36,14 +37,12 @@ public class SystemUtils {
 				IBinder serviceBinder = (IBinder)serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
 				Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
 				Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
-				Method hasNavigationBar = null;
 				if(SDK_INT < 29){
-					hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
+					Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
 					return (boolean) hasNavigationBar.invoke(windowManagerService);
 				}
-				hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar",int.class);
-				WindowManager wm = inputService.getWindow().getWindow().getWindowManager();
-				Display dsp = wm.getDefaultDisplay();
+				Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar",int.class);
+				Display dsp = inputService.getWindow().getWindow().getWindowManager().getDefaultDisplay();
 				return (boolean) hasNavigationBar.invoke(windowManagerService,dsp.getDisplayId());
 			} catch(Exception e){
 				Log.e("Navbar","Navbar detection failed by internal system APIs because ...",e);
@@ -66,12 +65,18 @@ public class SystemUtils {
 	public static int findGestureHeight(Context ctx) {
 		try {
 			if(SDK_INT >= 29 && Settings.Secure.getInt(ctx.getContentResolver(),"navigation_mode") == 2) {
-				Point appUsableScreenSize = new Point();
-				Point realScreenSize = new Point();
-				Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-				defaultDisplay.getSize(appUsableScreenSize);
-				defaultDisplay.getRealSize(realScreenSize);
-				return realScreenSize.y - appUsableScreenSize.y;
+				if(SDK_INT > 30) {
+					Point appUsableScreenSize = new Point();
+					Point realScreenSize = new Point();
+					Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+					defaultDisplay.getSize(appUsableScreenSize);
+					defaultDisplay.getRealSize(realScreenSize);
+					return realScreenSize.y - appUsableScreenSize.y;
+				}
+				
+				// For SDK 30 or below, use old method
+				// Because new method reports wrong size
+				return DensityUtils.dpInt(48);
 			}
 		} catch(Throwable t){}
 		return 0;

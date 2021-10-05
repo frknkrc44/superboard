@@ -99,8 +99,9 @@ public class InputService extends InputMethodService {
 						po.clear();
 						return;
 					}
-					po.setKey((SuperBoard.Key)v);
+			
 					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+						po.setKey((SuperBoard.Key)v);
 						po.showCharacter();
 					}
 				}
@@ -198,7 +199,7 @@ public class InputService extends InputMethodService {
 				sb.addRows(0,lkeys);
 				sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(cl.popup));
 				if(cl.midPadding && lkeys != null){
-					sb.setRowPadding(0,lkeys.length/2,sb.wp(2));
+					sb.setRowPadding(0,lkeys.length/2,DensityUtils.wpInt(2));
 				}
 			} catch(Throwable e){
 				throw new RuntimeException(e);
@@ -246,7 +247,7 @@ public class InputService extends InputMethodService {
 			}
 			
 			for(int i = 1;i < 3;i++){
-				sb.setRowPadding(i,2,sb.wp(2));
+				sb.setRowPadding(i,2,DensityUtils.wpInt(2));
 				sb.setKeyRepeat(i,3,-1);
 				sb.setKeyRepeat(i,4,2);
 				sb.setPressEventForKey(i,3,-1,Keyboard.KEYCODE_DELETE);
@@ -359,8 +360,9 @@ public class InputService extends InputMethodService {
 			sb.setLongPressMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
 			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
-			sb.setKeysTextSize(sb.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+			sb.setKeysTextSize(DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+			sb.setIconSizeMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 			int y = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
 			int yp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
 			int z = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_BGCLR);
@@ -416,7 +418,7 @@ public class InputService extends InputMethodService {
 			sb.replaceNormalKeyboard(lkeys);
 			sb.setLayoutPopup(sb.findNormalKeyboardIndex(),LayoutUtils.getLayoutKeysFromList(l.popup));
 			if(l.midPadding && lkeys != null){
-				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,sb.wp(2));
+				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,DensityUtils.wpInt(2));
 			}
 			LayoutUtils.setKeyOpts(l,sb);
 			cl = l;
@@ -441,7 +443,11 @@ public class InputService extends InputMethodService {
 																		? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 																		: View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 				} else if(isColorized(this)){
-					w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+					// I found a bug at SDK 30
+					// FLAG_LAYOUT_NO_LIMITS not working
+					// set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
+					if(SDK_INT == 30) w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+					else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					w.setNavigationBarColor(0);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH(this)));
 					ll.addView(createNavbarLayout(this, c));

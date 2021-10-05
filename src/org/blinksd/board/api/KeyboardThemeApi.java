@@ -12,6 +12,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public static final int THEME_IMPORT_SUCCESS = 0,
                             THEME_IMPORT_FAILED_MISSING_KEYS = 1,
                             THEME_IMPORT_FAILED_EXISTS = 2,
+							THEME_IMPORT_FAILED_INVALID_JSON = 3,
                             THEME_IMPORT_FAILED_UNKNOWN = -1;
 
     public static final int IMAGE_IMPORT_SUCCESS = 0,
@@ -41,11 +42,10 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             }
             return THEME_IMPORT_FAILED_EXISTS;
         } catch(JSONException e) {
-            // do nothing
+            return THEME_IMPORT_FAILED_INVALID_JSON;
         } catch(MissingKeysException x) {
             return THEME_IMPORT_FAILED_MISSING_KEYS;
         }
-        return THEME_IMPORT_FAILED_UNKNOWN;
 	}
 
     private void importThemeInternal(JSONObject obj) throws JSONException {

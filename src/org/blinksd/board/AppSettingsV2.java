@@ -127,10 +127,10 @@ public class AppSettingsV2 extends Activity {
 		sb.createEmptyLayout();
 		sb.setEnabledLayout(0);
 		sb.setKeyboardHeight(20);
-		sb.setKeysPadding(sb.mp(4));
+		sb.setKeysPadding(DensityUtils.mpInt(4));
 		iv = new ImageView(this);
 		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.hp(20)));
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,DensityUtils.hpInt(20)));
 		ll.addView(iv);
 		ll.addView(sb);
 		main.addView(ll);
@@ -616,8 +616,8 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
 		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 		IconThemeUtils icons = SuperBoardApplication.getIconThemes();
 		sb.setKeyDrawable(0,0,1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
@@ -629,7 +629,7 @@ public class AppSettingsV2 extends Activity {
 	}
 	
 	private int getFloatPercentOrDefault(String key){
-		return sb.mp(getFloatNumberFromInt(getIntOrDefault(key)));
+		return DensityUtils.mpInt(getFloatNumberFromInt(getIntOrDefault(key)));
 	}
 	
 	private int getIntOrDefault(String key){

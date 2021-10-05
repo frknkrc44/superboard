@@ -12,6 +12,7 @@ import org.blinksd.*;
 import org.json.*;
 import org.superdroid.db.*;
 import org.blinksd.utils.icon.*;
+import org.blinksd.utils.layout.*;
 
 public class LayoutUtils {
 	
@@ -241,8 +242,8 @@ public class LayoutUtils {
 	
 	public static Drawable getKeyBg(int clr,int pressClr,boolean pressEffect){
 		GradientDrawable gd = new GradientDrawable();
-		int radius = SuperBoard.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS)));
-		int stroke = SuperBoard.mp(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING)));
+		int radius = DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS)));
+		int stroke = DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING)));
 		gd.setColor(clr);
 		gd.setCornerRadius(radius);
 		gd.setStroke(stroke,0);

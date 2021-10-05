@@ -22,15 +22,10 @@ public class ImageSelectorLayout {
 	
 	private ImageSelectorLayout(){}
 	
-	private static SuperMiniDB db;
 	private static TabWidget widget;
 	private static ImageView prev;
 	private static Bitmap temp;
 	private static TreeMap<Integer,Integer> colorList;
-	
-	static {
-		db = SuperBoardApplication.getApplicationDatabase();
-	}
 	
 	public static View getImageSelectorLayout(final Dialog win, final AppSettingsV2 ctx, String key){
 		LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);
@@ -289,6 +284,8 @@ public class ImageSelectorLayout {
 					@Override
 					public void onClick(DialogInterface p0, int p2){
 						p1.setTag(px.findViewById(android.R.id.tabs).getTag());
+						prev.setImageBitmap(convertGradientToBitmap());
+						System.gc();
 						p0.dismiss();
 					}
 
@@ -305,8 +302,6 @@ public class ImageSelectorLayout {
 			AppSettingsV2 ctx = (AppSettingsV2) p1.getContext();
 			if(p1.getId() == -2){
 				gradientType++;
-				prev.setImageBitmap(convertGradientToBitmap());
-				System.gc();
 			} else {
 				int index = getNextEmptyItemIndex();
 				View v = getColorSelectorItem(ctx,index);
@@ -314,6 +309,8 @@ public class ImageSelectorLayout {
 				gradientSel.addView(v,count - 2);
 				colorSelectorListener.onClick(v);
 			}
+			prev.setImageBitmap(convertGradientToBitmap());
+			System.gc();
 		}
 
 	};

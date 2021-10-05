@@ -14,7 +14,7 @@ class CustomSeekBar extends SeekBar {
 	
 	CustomSeekBar(Context c){
 		super(c);
-		setLayoutParams(new LinearLayout.LayoutParams(SuperBoard.mp(50),-2,0));
+		setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50),-2,0));
 		int p = SuperBoard.dp(4);
 		setPadding(p*4,p,p*4,p);
 		if(Build.VERSION.SDK_INT >= 21)

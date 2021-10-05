@@ -5,18 +5,14 @@ import android.content.res.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.inputmethodservice.*;
-import android.media.*;
 import android.os.*;
 import android.text.*;
 import android.util.*;
 import android.view.*;
-import android.view.InputDevice.*;
 import android.view.inputmethod.*;
 import android.widget.*;
-
 import java.util.*;
-
-import org.blinksd.utils.image.*;
+import org.blinksd.utils.layout.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
@@ -224,21 +220,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 	}
 
-/*
-	public void setKeyTintColor(Key k, int color){
-		Drawable d = k.getBackground();
-		try {
-			if(Build.VERSION.SDK_INT > 21){
-				d.setTintList(getTintListWithStates(color));
-			} else {
-				d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
-			}
-		} catch(Exception e){
-			d.setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
-		}
-	}
-*/
-
 	public void setKeyTintColor(Key k, int normalColor, int pressColor){
 		Drawable d = k.getBackground();
 		try {
@@ -303,29 +284,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 	public void setKeyWidthPercent(int keyboardIndex, int rowIndex, int keyIndex, int percent){
 		Key k = getKey(keyboardIndex,rowIndex,keyIndex);
-		k.getLayoutParams().width = wp(percent);
+		k.getLayoutParams().width = DensityUtils.wpInt(percent);
 		k.setId(percent);
-	}
-	
-	private static int getScreenWidth(){
-		return Resources.getSystem().getDisplayMetrics().widthPixels;
-	}
-	
-	private static int getScreenHeight(){
-		return Resources.getSystem().getDisplayMetrics().heightPixels;
-	}
-	
-	public static int wp(float percent){
-		return (int)((getScreenWidth() / 100f) * percent);
-	}
-	
-	public static int hp(float percent){
-		return (int)((getScreenHeight() / 100f) * percent);
-	}
-	
-	public static int mp(float percent){
-		int x = wp(percent), y = hp(percent);
-		return x < y ? x : y;
 	}
 	
 	public final void setLongPressMultiplier(int multi){
@@ -334,7 +294,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 	public final void setIconSizeMultiplier(int multi){
 		iconmulti = multi;
-		setKeysTextSize((int) txtsze);
+		setKeysTextSize((int) txtsze, true);
 	}
 	
 	private boolean isHasPopup(View v){
@@ -366,75 +326,81 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 	}
 	
-	public void setKeysPadding(int p){
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					Key k = getKey(j,i,g);
-					Key.LayoutParams l = (Key.LayoutParams) k.getLayoutParams();
-					l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = p;
-				}
-			}
-		}
+	public void setKeysPadding(final int padding){
+		if(getKeyMargin(0,0,0) != padding)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						Key.LayoutParams l = (Key.LayoutParams) key.getLayoutParams();
+						l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
+					}
+				});
+	}
+	
+	private int getKeyMargin(int k, int r, int y){
+		try {
+			Key key = getKey(k, r, y);
+			Key.LayoutParams l = (Key.LayoutParams) key.getLayoutParams();
+			return l.bottomMargin;
+		} catch(Throwable t){}
+		return -1;
 	}
 
-	public void setKeysTextColor(int color){
+	public void setKeysTextColor(final int color){
+		if(keyclr != color)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						key.setKeyItemColor(color);
+					}
+				});
 		keyclr = color;
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					getKey(j,i,g).setKeyItemColor(color);
-				}
-			}
-		}
 	}
 	
-	public void setKeysTextSize(int size){
+	public void setKeysTextSize(final int size){
+		setKeysTextSize(size, false);
+	}
+	
+	public void setKeysTextSize(final int size, boolean force){
+		if(txtsze != size || force)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						key.setKeyTextSize(size);
+					}
+				});
 		txtsze = size;
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					getKey(j,i,g).setKeyTextSize(size);
-				}
-			}
-		}
 	}
 
-	public void setKeysBackground(Drawable d){
+	public void setKeysBackground(final Drawable d){
+		if(keybg != d)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						key.setBackground(d);
+					}
+				});
 		keybg = d;
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					getKey(j,i,g).setBackgroundDrawable(d);
-				}
-			}
-		}
 	}
 	
-	public void setKeysShadow(int radius, int color){
+	public void setKeysShadow(final int radius, final int color){
+		if(shrad != radius || shclr != color)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						key.setKeyShadow(radius, color);
+					}
+				});
 		shrad = radius;
 		shclr = color;
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					getKey(j,i,g).setKeyShadow(radius,color);
-				}
-			}
-		}
 	}
 	
-	public void setKeysTextType(int style){
+	public void setKeysTextType(final int style){
+		if(txts != style)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						key.setKeyTextStyle(style);
+					}
+				});
 		txts = style;
-		for(int j = 0;j < getChildCount();j++){
-			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
-				for(int g = 0;g < getRow(j,i).getChildCount();g++){
-					getKey(j,i,g).setKeyTextStyle(style);
-				}
-			}
-		}
 	}
 	
-	public void setKeysTextType(TextType style){
+	public void setKeysTextType(final TextType style){
 		if(style == null){
 			setKeysTextType(0);
 			return;
@@ -448,17 +414,34 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			i++;
 		}
 	}
+	
+	public static abstract class ApplyToKeyRunnable {
+		public abstract void run(Key key);
+	}
+	
+	public void applyToAllKeys(ApplyToKeyRunnable runnable){
+		for(int j = 0;j < getChildCount();j++){
+			for(int i = 0;i < getKeyboard(j).getChildCount();i++){
+				for(int g = 0;g < getRow(j,i).getChildCount();g++){
+					runnable.run(getKey(j,i,g));
+				}
+			}
+		}
+	}
 
 	public void setKeyboardHeight(int percent){
 		//if(percent > 19 && percent < 81){
 			hp = percent;
-			getLayoutParams().height = hp(percent);
+			getLayoutParams().height = DensityUtils.hpInt(percent);
 			if(getChildCount() > 0){
 				for(int i = 0;i < getChildCount();i++){
 					getChildAt(i).getLayoutParams().height = getLayoutParams().height;
 				}
 			}
 			int x = selected;
+			
+			// this line added because after
+			// resizing layout, it needs recreation
 			setEnabledLayout(findNumberKeyboardIndex());
 			setEnabledLayout(x);
 		//} else throw new RuntimeException("Invalid keyboard height");
@@ -467,7 +450,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	public void setKeyboardWidth(int percent){
 		//if(percent > 11 && percent < 101){
 			wp = percent;
-			getLayoutParams().width = wp(percent);
+			getLayoutParams().width = DensityUtils.wpInt(percent);
 			if(getChildCount() > 0){
 				for(int i = 0;i < getChildCount();i++){
 					getChildAt(i).getLayoutParams().width = getLayoutParams().width;
@@ -506,6 +489,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			selected = keyboardIndex;
 			getChildAt(selected).setVisibility(VISIBLE);
 		} else throw new RuntimeException("Invalid keyboard index number");
+	}
+	
+	public void setLayoutType(int keyboardIndex, KeyboardType type){
+		getKeyboard(keyboardIndex).setTag(type);
 	}
 	
 	public void createLayoutWithRows(String[][] keys, KeyboardType type){
@@ -607,7 +594,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					template.clone(k);
 				}
 				k.setText(key);
-				k.getLayoutParams().width = wp(100 / keys.length);
+				k.getLayoutParams().width = DensityUtils.wpInt(100 / keys.length);
 				r.addKey(k);
 			}
 		}
@@ -802,28 +789,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				break;
 		}
 		
-		Row r = getRow(0,-1);
-		
-		if(r == null){
-			return;
-		}
-		
 		Key k;
-		
 		switch(ei.inputType & InputType.TYPE_MASK_VARIATION){
 			case InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
 			case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS:
-				for(int i = 0;i < r.getChildCount();i++){
-					if((k = (Key)r.getChildAt(i)).getText().toString().equals(",")){
-						k.setText("@");
-					}
+				k = findKeyByLabel(0, ",");
+				if(k != null){
+					k.setText("@");
 				}
 				break;
 			default:
-				for(int i = 0;i < r.getChildCount();i++){
-					if((k = (Key)r.getChildAt(i)).getText().toString().equals("@")){
-						k.setText(",");
-					}
+				k = findKeyByLabel(0, "@");
+				if(k != null){
+					k.setText(",");
 				}
 				break;
 		}
@@ -834,11 +812,26 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		fixHeight();
 	}
 	
+	public Key findKeyByLabel(int keyboard, String label){
+		ViewGroup k = getKeyboard(keyboard), r = null;
+		Key t = null;
+		for(int i = 0;i < k.getChildCount();i++){
+			r = (Row) k.getChildAt(i);
+			for(int g = 0;g < r.getChildCount();g++){
+				t = (Key) r.getChildAt(g);
+				if(t.getText() != null && t.getText().equals(label)){
+					return t;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public Key findKey(int keyboard, int keyAction){
 		ViewGroup k = getKeyboard(keyboard), r = null;
 		Key t = null;
 		for(int i = 0;i < k.getChildCount();i++){
-			r = getRow(selected,i);
+			r = (Row) k.getChildAt(i);
 			for(int g = 0;g < r.getChildCount();g++){
 				t = (Key) r.getChildAt(g);
 				if((t.getText() != null && t.getText().charAt(0) == keyAction) ||
@@ -895,7 +888,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	
 	public int findNormalKeyboardIndex(){
 		for(int i = 0;i < getChildCount();i++){
-			if(getChildAt(i).getTag() == null || getChildAt(i).getTag().equals(KeyboardType.TEXT)){
+			if(getChildAt(i).getTag() != null &&
+			   getChildAt(i).getTag().equals(KeyboardType.TEXT)){
 				return i;
 			}
 		}
@@ -941,7 +935,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				Key k = (Key) getChildAt(i);
 				if(k.getId() < 1)
 					k.setId(100 / getChildCount());
-				k.getLayoutParams().width = wp(k.getId());
+				k.getLayoutParams().width = DensityUtils.wpInt(k.getId());
 			}
 		}
 	}
@@ -981,7 +975,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			t.setGravity(CENTER);
 			t.setHintTextColor(0);
 			setKeyShadow(shrad,shclr!=-1?shclr:(shclr=keyclr));
-			setKeyTextSize(txtsze!=1?txtsze:(txtsze=mp(1.25f)));
+			setKeyTextSize(txtsze!=1?txtsze:(txtsze=DensityUtils.mp(1.25f)));
 			setBackground(keybg);
 			setKeyTextStyle(txts);
 			setOnTouchListener(SuperBoard.this);
@@ -1172,7 +1166,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				return super.getX();
 			}
 
-			return 0;
+			return getTranslationX() + getLeft();
 		}
 
 		public float getY() {
@@ -1180,7 +1174,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				return super.getY();
 			}
 
-			return 0;
+			return getTranslationY() + getTop();
 		}
 
 		public void setX(float x) {
@@ -1188,6 +1182,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				super.setX(x);
 				return;
 			}
+
+			setTranslationX(x - getLeft());
 		}
 
 		public void setY(float y) {
@@ -1195,6 +1191,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				super.setY(y);
 				return;
 			}
+
+			setTranslationY(y - getTop());
 		}
 	}
 	
@@ -1223,34 +1221,38 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	}
 
 	public float getX() {
-			if(Build.VERSION.SDK_INT >= 11) {
-				return super.getX();
-			}
-
-			return 0;
+		if(Build.VERSION.SDK_INT >= 11) {
+			return super.getX();
 		}
 
-		public float getY() {
-			if(Build.VERSION.SDK_INT >= 11) {
-				return super.getY();
-			}
+		return getTranslationX() + getLeft();
+	}
 
-			return 0;
+	public float getY() {
+		if(Build.VERSION.SDK_INT >= 11) {
+			return super.getY();
 		}
 
-		public void setX(float x) {
-			if(Build.VERSION.SDK_INT >= 11) {
-				super.setX(x);
-				return;
-			}
-		}
+		return getTranslationY() + getTop();
+	}
 
-		public void setY(float y) {
-			if(Build.VERSION.SDK_INT >= 11) {
-				super.setY(y);
-				return;
-			}
+	public void setX(float x) {
+		if(Build.VERSION.SDK_INT >= 11) {
+			super.setX(x);
+			return;
 		}
+		
+		setTranslationX(x - getLeft());
+	}
+
+	public void setY(float y) {
+		if(Build.VERSION.SDK_INT >= 11) {
+			super.setY(y);
+			return;
+		}
+		
+		setTranslationY(y - getTop());
+	}
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent m){

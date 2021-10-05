@@ -2,11 +2,11 @@ package org.blinksd.board;
 
 import android.graphics.*;
 import android.inputmethodservice.*;
-import android.os.*;
 import android.view.*;
 import android.widget.*;
-import org.blinksd.sdb.*;
 import org.blinksd.*;
+import org.blinksd.sdb.*;
+import org.blinksd.utils.layout.*;
 
 public class BoardPopup extends SuperBoard {
 	
@@ -18,6 +18,7 @@ public class BoardPopup extends SuperBoard {
 	public BoardPopup(ViewGroup root){
 		super((mRoot = root).getContext());
 		setKeyboardHeight(10);
+		pos[0] = pos[1] = 0;
 		updateKeyState((InputMethodService)root.getContext());
 		popupFilter = new View(root.getContext());
 		popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1,getKeyboardHeight()));
@@ -34,12 +35,7 @@ public class BoardPopup extends SuperBoard {
 		popupFilter.getLayoutParams().height = h;
 	}
 	
-	public void setKey(Key key){
-		setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
-		key.clone(mKey);
-		setKeysTextColor(key.getTextColor());
-		setKeysTextType(key.txtst);
-		setKeysShadow(key.shr,key.shc);
+	public void setKeyboardPrefs(){
 		khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
 		int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 		int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
@@ -48,9 +44,18 @@ public class BoardPopup extends SuperBoard {
 		setBackgroundDrawable(LayoutUtils.getKeyBg(a,ap,true));
 		popupFilter.setBackgroundColor(a-0x33000000);
 		mKey.setVisibility(GONE);
-		key.getLocationInWindow(pos);
 		mKey.setX(pos[0]);
 		mKey.setY(pos[1] - (pos[1] >= (a = mKey.getLayoutParams().height) ? a : 0));
+	}
+	
+	public void setKey(Key key){
+		setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+		key.clone(mKey);
+		setKeysTextColor(key.getTextColor());
+		setKeysTextType(key.txtst);
+		setKeysShadow(key.shr,key.shc);
+		key.getLocationInWindow(pos);
+		setKeyboardPrefs();
 	}
 
 	public void showCharacter(){
@@ -92,12 +97,12 @@ public class BoardPopup extends SuperBoard {
 	private void createPopup(String[] a){
 		int h = getChildAt(0).getLayoutParams().width, c = 6;
 		setKeyboardWidth(a.length < c ? 11*a.length : 11*c);
-		setX(wp(50-(getKeyboardWidthPercent()/2)));
+		setX(DensityUtils.wpInt(50-(getKeyboardWidthPercent()/2)));
 		h = a.length / c;
 		h = h > 0 ? h : 1;
 		h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 :0;
 		setKeyboardHeight(10*h);
-		setY(hp((khp-getKeyboardHeightPercent())/2));
+		setY(DensityUtils.hpInt((khp-getKeyboardHeightPercent())/2));
 		String[] x = null;
 		for(int i = 0,k = 0;i < h;i++){
 			x = new String[a.length < c ? a.length : c];

@@ -22,15 +22,11 @@ public class ColorSelectorLayout {
 	
 	private ColorSelectorLayout(){}
 	
-	private static SuperMiniDB db;
+	private static SuperMiniDB db = SuperBoardApplication.getApplicationDatabase();
 	private static TabWidget widget;
 	private static TextView prev;
 	private static CustomSeekBar a,r,g,b,h,s,v;
 	private static EditText hexIn;
-	
-	static {
-		db = SuperBoardApplication.getApplicationDatabase();
-	}
 	
 	public static View getColorSelectorLayout(final AppSettingsV2 ctx, int val){
 		LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);

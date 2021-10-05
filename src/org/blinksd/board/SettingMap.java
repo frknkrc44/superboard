@@ -7,6 +7,7 @@ import org.blinksd.board.AppSettingsV2.*;
 import android.content.res.*;
 import android.util.*;
 import static org.blinksd.board.AppSettingsV2.*;
+import org.blinksd.utils.system.*;
 
 public class SettingMap extends LinkedHashMap<String,SettingType> {
 
@@ -52,7 +53,8 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
 		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
-		put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
+		if (!SystemUtils.isNotColorizeNavbar())
+			put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 28)
 			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
 		put(SET_DISABLE_POPUP,SettingType.BOOL);
