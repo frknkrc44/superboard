@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import static android.os.Build.VERSION.SDK_INT;
 import android.provider.*;
 import org.blinksd.utils.layout.*;
+import org.blinksd.*;
 
 public class SystemUtils {
 	
@@ -63,15 +64,24 @@ public class SystemUtils {
 	}
 	
 	public static int findGestureHeight(Context ctx) {
+		if(!isGesturesEnabled()) return 0;
 		try {
-			if(SDK_INT >= 29 && Settings.Secure.getInt(ctx.getContentResolver(),"navigation_mode") == 2) {
+			if(SDK_INT >= 29) {
 				if(SDK_INT > 30) {
+					/*
 					Point appUsableScreenSize = new Point();
 					Point realScreenSize = new Point();
 					Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 					defaultDisplay.getSize(appUsableScreenSize);
 					defaultDisplay.getRealSize(realScreenSize);
 					return realScreenSize.y - appUsableScreenSize.y;
+					*/
+					
+					WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+					return wm.getCurrentWindowMetrics()
+						.getWindowInsets()
+						.getInsets(WindowInsets.Type.navigationBars())
+						.bottom;
 				}
 				
 				// For SDK 30 or below, use old method
@@ -82,12 +92,29 @@ public class SystemUtils {
 		return 0;
 	}
 	
+	public static boolean isGesturesEnabled(){
+		try {
+			return Settings.Secure.getInt(SuperBoardApplication.getApplication().getContentResolver(),"navigation_mode") == 2;
+		} catch(Throwable t){
+			return false;
+		}
+	}
+	
 	public static int navbarH(Context ctx){
 		if(isColorized(ctx)){
 			int gestureHeight = findGestureHeight(ctx);
 			if(gestureHeight > 0) return gestureHeight;
-			int resourceId = ctx.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-			return resourceId > 0 ? ctx.getResources().getDimensionPixelSize(resourceId) : 0;
+			Resources res = ctx.getResources();
+			int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
+			return (int) (resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0);
+		}
+		return 0;
+	}
+	
+	public static int statusBarH(Context ctx){
+		if(isColorized(ctx)){
+			int resourceId = ctx.getResources().getIdentifier("status_bar_height", "dimen", "android");
+			return (int) (resourceId > 0 ? (SDK_INT > 30 ? 1 : 1) * ctx.getResources().getDimensionPixelSize(resourceId) : 0);
 		}
 		return 0;
 	}

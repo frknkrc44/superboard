@@ -5,6 +5,7 @@ import org.blinksd.board.*;
 import org.blinksd.*;
 import org.blinksd.sdb.*;
 import org.superdroid.db.*;
+import java.util.Map.*;
 
 public class IconThemeUtils extends LinkedHashMap<String, int[]> {
 

@@ -182,6 +182,7 @@ public class InputService extends InputMethodService {
 					{"","","END","","","PAUSE","",""},
 					{abc,"","←","↑","↓","→","",""}
 				},{
+					{"-",".",",","ABC"},
 					{"1","2","3","+"},
 					{"4","5","6",";"},
 					{"7","8","9",""},
@@ -214,9 +215,10 @@ public class InputService extends InputMethodService {
 			sb.setPressEventForKey(2,3,0,Keyboard.KEYCODE_ALT);
 			sb.setPressEventForKey(3,-1,0,Keyboard.KEYCODE_MODE_CHANGE);
 			
-			sb.setPressEventForKey(-1,2,-1,Keyboard.KEYCODE_DELETE);
-			sb.setKeyRepeat(-1,2,-1);
-			sb.setPressEventForKey(-1,3,-1,Keyboard.KEYCODE_DONE);
+			sb.setPressEventForKey(-1,0,-1,Keyboard.KEYCODE_ALT);
+			sb.setPressEventForKey(-1,-2,-1,Keyboard.KEYCODE_DELETE);
+			sb.setKeyRepeat(-1,-2,-1);
+			sb.setPressEventForKey(-1,-1,-1,Keyboard.KEYCODE_DONE);
 			
 			sb.setPressEventForKey(3,1,4,KeyEvent.KEYCODE_PAGE_DOWN);
 			sb.setPressEventForKey(3,1,5,KeyEvent.KEYCODE_PAGE_UP);
@@ -323,8 +325,8 @@ public class InputService extends InputMethodService {
 		if(sb != null && sd != null){
 			LayoutUtils.setKeyOpts(cl,sb);
 			IconThemeUtils icons = SuperBoardApplication.getIconThemes();
-			sb.setKeyDrawable(-1,2,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
-			sb.setKeyDrawable(-1,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+			sb.setKeyDrawable(-1,-2,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+			sb.setKeyDrawable(-1,-1,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
 			for(int i = 1;i < 3;i++){
 				sb.setKeyDrawable(i,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
 				sb.setKeyDrawable(i,4,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
