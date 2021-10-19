@@ -64,18 +64,17 @@ public class SystemUtils {
 	}
 	
 	public static int findGestureHeight(Context ctx) {
-		if(!isGesturesEnabled()) return 0;
 		try {
 			if(SDK_INT >= 29) {
 				if(SDK_INT > 30) {
-					/*
-					Point appUsableScreenSize = new Point();
-					Point realScreenSize = new Point();
-					Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-					defaultDisplay.getSize(appUsableScreenSize);
-					defaultDisplay.getRealSize(realScreenSize);
-					return realScreenSize.y - appUsableScreenSize.y;
-					*/
+					if(isGesturesEnabled()) {
+						Point appUsableScreenSize = new Point();
+						Point realScreenSize = new Point();
+						Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+						defaultDisplay.getSize(appUsableScreenSize);
+						defaultDisplay.getRealSize(realScreenSize);
+						return realScreenSize.y - appUsableScreenSize.y;
+					}
 					
 					WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
 					return wm.getCurrentWindowMetrics()
@@ -107,14 +106,6 @@ public class SystemUtils {
 			Resources res = ctx.getResources();
 			int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
 			return (int) (resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0);
-		}
-		return 0;
-	}
-	
-	public static int statusBarH(Context ctx){
-		if(isColorized(ctx)){
-			int resourceId = ctx.getResources().getIdentifier("status_bar_height", "dimen", "android");
-			return (int) (resourceId > 0 ? (SDK_INT > 30 ? 1 : 1) * ctx.getResources().getDimensionPixelSize(resourceId) : 0);
 		}
 		return 0;
 	}
