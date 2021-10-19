@@ -67,20 +67,12 @@ public class SystemUtils {
 		try {
 			if(SDK_INT >= 29) {
 				if(SDK_INT > 30) {
-					if(isGesturesEnabled()) {
-						Point appUsableScreenSize = new Point();
-						Point realScreenSize = new Point();
-						Display defaultDisplay = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-						defaultDisplay.getSize(appUsableScreenSize);
-						defaultDisplay.getRealSize(realScreenSize);
-						return realScreenSize.y - appUsableScreenSize.y;
-					}
-					
 					WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-					return wm.getCurrentWindowMetrics()
+					boolean gesturesEnabled = isGesturesEnabled();
+					return (int) (wm.getCurrentWindowMetrics()
 						.getWindowInsets()
-						.getInsets(WindowInsets.Type.navigationBars())
-						.bottom;
+						.getInsets(gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars())
+						.bottom * (gesturesEnabled ? 1.5 : 1));
 				}
 				
 				// For SDK 30 or below, use old method
@@ -101,6 +93,7 @@ public class SystemUtils {
 	
 	public static int navbarH(Context ctx){
 		if(isColorized(ctx)){
+			if(!isGesturesEnabled() && isLand(ctx) && !isTablet(ctx)) return 0;
 			int gestureHeight = findGestureHeight(ctx);
 			if(gestureHeight > 0) return gestureHeight;
 			Resources res = ctx.getResources();
@@ -111,12 +104,9 @@ public class SystemUtils {
 	}
 	
 	public static boolean isColorized(Context ctx){
-		if(isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR)){
-			return false;
-		}
-		return !isLand(ctx) || isTablet(ctx);
+		return !(isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR));
 	}
-	
+
 	private static boolean isTablet(Context ctx){
 		return ctx.getResources().getConfiguration().smallestScreenWidthDp >= 600;
 	}
