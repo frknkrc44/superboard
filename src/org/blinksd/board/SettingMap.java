@@ -1,15 +1,16 @@
 package org.blinksd.board;
 
+import android.content.res.*;
 import android.os.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.board.AppSettingsV2.*;
-import android.content.res.*;
-import android.util.*;
-import static org.blinksd.board.AppSettingsV2.*;
+import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
 
-public class SettingMap extends LinkedHashMap<String,SettingType> {
+import static org.blinksd.board.AppSettingsV2.*;
+
+public class SettingMap extends BaseMap<String,SettingType> {
 
 	public static final String SET_KEYBOARD_LANG_SELECT = "keyboard_lang_select",
 	SET_KEYBOARD_TEXTTYPE_SELECT = "keyboard_texttype_select",
@@ -91,7 +92,7 @@ public class SettingMap extends LinkedHashMap<String,SettingType> {
 					textTypes.add(type.name());
 				return textTypes;
 			case SET_ICON_THEME:
-				return SuperBoardApplication.getIconThemes().getThemeList();
+				return (ArrayList<String>) SuperBoardApplication.getIconThemes().keyList();
 		}
 		return new ArrayList<String>();
 	}

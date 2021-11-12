@@ -143,7 +143,7 @@ public class LayoutUtils {
 		return file;
 	}
 	
-	public static HashMap<String,Language> getLanguageList(Context ctx) throws Throwable {
+	public static HashMap<String,Language> getLanguageList(Context ctx) throws IOException, JSONException {
 		HashMap<String,Language> langs = new HashMap<String,Language>();
 		AssetManager assets = ctx.getAssets();
 		String subdir = "langpacks";

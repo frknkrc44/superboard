@@ -1,9 +1,9 @@
 package org.blinksd.board.backup;
 
-import java.util.LinkedHashMap;
-import org.blinksd.board.backup.BackupOptionsSelectorLayout.BackupOptionType;
+import org.blinksd.board.backup.BackupOptionsSelectorLayout.*;
+import org.blinksd.utils.layout.BaseMap;
 
-public class BackupRestoreMap extends LinkedHashMap<String,BackupOptionType> {
+public class BackupRestoreMap extends BaseMap<String,BackupOptionType> {
 
     public static final String BKP_TYPE_ALL = "type_all",
     BKP_TYPE_THEME = "type_theme",

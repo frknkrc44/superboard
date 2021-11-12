@@ -29,7 +29,7 @@ import static android.provider.Settings.Secure.getInt;
 import static org.blinksd.utils.system.SystemUtils.*;
 import org.blinksd.utils.icon.*;
 
-public class InputService extends InputMethodService {
+public class InputService extends InputMethodService implements SuggestionLayout.OnSuggestionSelectedListener {
 	
 	private SuperBoard sb = null;
 	private BoardPopup po = null;
@@ -37,11 +37,27 @@ public class InputService extends InputMethodService {
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
 	private String kbd[][][] = null, appname;
 	private LinearLayout ll = null;
+	private SuggestionLayout sl = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
 	private File img = null;
 	private Language cl;
 	private EmojiView emoji = null;
+	
+	@Override
+	public void onSuggestionSelected(ExtractedText text, CharSequence oldText, CharSequence suggestion){
+		InputConnection ic = sb.getCurrentIC();
+		if(ic == null) ic = getCurrentInputConnection();
+		if(ic == null) return;
+		CharSequence sq1 = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
+		CharSequence sq2 = ic.getTextAfterCursor(0, Integer.MAX_VALUE);
+		if(sq1 == null) sq1 = "";
+		if(sq2 == null) sq2 = "";
+		int len = sq1.length() + sq2.length();
+		ic.setSelection(len, len);
+		ic.deleteSurroundingText(oldText.length(), text.text.toString().lastIndexOf(' '));
+		ic.commitText(suggestion, suggestion.length());
+	}
 
 	@Override
 	public View onCreateInputView(){
@@ -71,17 +87,30 @@ public class InputService extends InputMethodService {
 	@Override
 	public void onFinishInput(){
 		super.onFinishInput();
-		if(sb != null){
+		if(sb != null)
 			sb.updateKeyState(this);
-		}
+		
 		if(po != null){
 			po.showPopup(false);
 			po.clear();
 		}
-		if(emoji != null){
+		
+		if(emoji != null)
 			showEmojiView(false);
-		}
+		
+		if(sl != null)
+			sl.setCompletion(null, null);
+			
 		System.gc();
+	}
+	
+	public void sendCompletionRequest(){
+		InputConnection ic = sb.getCurrentIC();
+		if(ic == null) ic = getCurrentInputConnection();
+		if(ic == null) return;
+		ExtractedTextRequest req = new ExtractedTextRequest();
+		ExtractedText text = ic.getExtractedText(req,InputConnection.GET_EXTRACTED_TEXT_MONITOR);
+		if(text != null && sl != null) sl.setCompletion(text, cl.language);
 	}
 	
 	private void setLayout(){
@@ -117,6 +146,8 @@ public class InputService extends InputMethodService {
 					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
 						po.hideCharacter();
 					}
+					
+					sendCompletionRequest();
 				}
 				
 				public void sendDefaultKeyboardEvent(View v){
@@ -271,6 +302,13 @@ public class InputService extends InputMethodService {
 			ll = new LinearLayout(this);
 			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 			ll.setOrientation(LinearLayout.VERTICAL);
+			sl = new SuggestionLayout(this);
+			sl.setLayoutParams(new FrameLayout.LayoutParams(-1, dp(56)));
+			sl.setId(android.R.attr.shape);
+			sl.setOnSuggestionSelectedListener(this);
+			// setCandidatesView(sl);
+			// setCandidatesViewShown(true);
+			ll.addView(sl);
 			ll.addView(sb);
 		}
 		if(Build.VERSION.SDK_INT >= 16 && emoji == null){
@@ -353,6 +391,7 @@ public class InputService extends InputMethodService {
 			}
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
+			sl.setBackgroundColor(c);
 			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
 			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
 			sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
@@ -408,6 +447,8 @@ public class InputService extends InputMethodService {
 			SuperBoardApplication.clearCustomFont();
 			sb.setCustomFont(SuperBoardApplication.getCustomFont());
 		}
+		
+		sendCompletionRequest();
 	}
 	
 	private void setKeyboardLayout(String lang){
@@ -430,15 +471,21 @@ public class InputService extends InputMethodService {
 	}
 	
 	private void adjustNavbar(int c){
+		int baseHeight = sb.getKeyboardHeight();
+		if(sl.getVisibility() == View.VISIBLE){
+			baseHeight += sl.getLayoutParams().height;
+		}
+		
 		if(SDK_INT > 20){
 			Window w = getWindow().getWindow();
 			if(detectNavbar(this)){
-				if(ll.getChildCount() > 1){
-					ll.removeViewAt(1);
-				}
+				View navbarView = ll.findViewById(android.R.attr.gravity);
+				if(navbarView != null)
+					ll.removeView(navbarView);
+
 				if(SDK_INT >= 28 && SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT)){
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 					int color = Color.rgb(Color.red(c),Color.green(c),Color.blue(c));
 					w.setNavigationBarColor(color);
 					w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
@@ -451,19 +498,20 @@ public class InputService extends InputMethodService {
 					if(SDK_INT == 30) w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 					else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					w.setNavigationBarColor(0);
-					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()+navbarH(this)));
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight+navbarH(this)));
 					ll.addView(createNavbarLayout(this, c));
 				} else {
 					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 				}
 			} else {
-				iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+				iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 			}
 		} else {
-			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,sb.getKeyboardHeight()));
+			iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 		}
+		
 		ll.getLayoutParams().height = iv.getLayoutParams().height;
 		po.setFilterHeight(iv.getLayoutParams().height);
 	}

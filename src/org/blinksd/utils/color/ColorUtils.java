@@ -1,9 +1,10 @@
 package org.blinksd.utils.color;
 
 import android.graphics.*;
+import android.os.*;
 import android.util.*;
-
 import java.lang.annotation.*;
+
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
@@ -45,6 +46,9 @@ public class ColorUtils {
 
 	@FloatRange(from = 0.0, to = 1.0)
 	public static double calculateLuminance(@ColorInt int color) {
+		if(Build.VERSION.SDK_INT >= 24)
+			return Color.luminance(color);
+		
 		final double[] result = getTempDouble3Array();
 		colorToXYZ(color, result);
 		// Luminance is the Y component
@@ -157,7 +161,7 @@ public class ColorUtils {
 			color = pixels[i];
 			a = Color.alpha(color);
 			if(a > 0){
-				color = (a < 255) ? Color.rgb(Color.red(color),Color.green(color),Color.blue(color)) : color;
+				color = (a < 255) ? convertARGBtoRGB(color) : color;
 				r += Color.red(color);
 				g += Color.green(color);
 				b += Color.blue(color);
@@ -175,6 +179,10 @@ public class ColorUtils {
 		b = b & 0x000000FF;
 		color = 0xFF000000 | r | g | b;
 		return color;
+	}
+	
+	public static int convertARGBtoRGB(int color){
+		return Color.rgb(Color.red(color),Color.green(color),Color.blue(color));
 	}
 	
 	@Retention(SOURCE)

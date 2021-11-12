@@ -1,14 +1,12 @@
 package org.blinksd.utils.icon;
 
 import java.util.*;
-import org.blinksd.board.*;
 import org.blinksd.*;
-import org.blinksd.sdb.*;
+import org.blinksd.board.*;
+import org.blinksd.utils.layout.*;
 import org.superdroid.db.*;
-import java.util.Map.*;
 
-public class IconThemeUtils extends LinkedHashMap<String, int[]> {
-
+public class IconThemeUtils extends BaseMap<String,int[]> {
 	public IconThemeUtils(){
 		put("theme_default", new int[]{
 				R.drawable.sym_keyboard_shift,
@@ -40,16 +38,8 @@ public class IconThemeUtils extends LinkedHashMap<String, int[]> {
 			});
 	}
 	
-	public ArrayList<String> getThemeList(){
-		return new ArrayList<String>(keySet());
-	}
-	
-	public int indexOf(String theme){
-		return getThemeList().indexOf(theme);
-	}
-	
 	public String getFromIndex(int index){
-		List<String> keys = getThemeList();
+		List<String> keys = keyList();
 		return keys.get(keys.size() > index ? index : 0);
 	}
 	

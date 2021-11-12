@@ -14,6 +14,8 @@ import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.color.ThemeUtils.*;
 import org.blinksd.utils.icon.*;
 import yandroid.util.*;
+import org.blinksd.utils.dictionary.*;
+import android.os.*;
 
 public class SuperBoardApplication extends Application {
 	
@@ -26,6 +28,7 @@ public class SuperBoardApplication extends Application {
 	private static String fontPath = null;
 	private static IconThemeUtils icons;
 	private static List<ThemeHolder> themes;
+	private static Map<String, List<String>> dicts;
 	
 	@Override
 	public void onCreate(){
@@ -40,10 +43,23 @@ public class SuperBoardApplication extends Application {
 			languageCache = LayoutUtils.getLanguageList(getApplicationContext());
 		} catch(Throwable t){
 			throw new RuntimeException(t);
-			// languageCache = new HashMap<String,LayoutUtils.Language>();
 		}
-
+		
 		reloadThemeCache();
+		
+		new Thread() {
+			public void run(){
+				dicts = DictionaryProvider.getAllDictionaries();
+			}
+		}.start();
+	}
+	
+	public static Map<String, List<String>> getDicts(){
+		return dicts;
+	}
+
+	public static boolean isDictsReady(){
+		return dicts != null;
 	}
 	
 	public static SuperBoardApplication getApplication(){

@@ -31,7 +31,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
 	public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
 	
-	protected Handler h = new Handler(){
+	protected Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			View v = null;
@@ -40,15 +40,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			}
 			switch(msg.what){
 				case 0:
-					removeMessages(3);
-					sendEmptyMessage(3);
+					// removeMessages(3);
+					// sendEmptyMessage(3);
 					break;
 				case 1:
 					removeMessages(1);
 					switch(act){
 						case MotionEvent.ACTION_UP:
-							removeMessages(3);
-							sendEmptyMessage(3);
+							// removeMessages(3);
+							// sendEmptyMessage(3);
 							break;
 						case MotionEvent.ACTION_DOWN:
 							if(isHasPopup(v)){
@@ -88,8 +88,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 							sendMessageDelayed(n,((mult>1?15:20)*mult)*(lng?1:20));
 							if(!lng) lng = true;
 						} else {
-							removeMessages(3);
-							sendEmptyMessage(3);
+							// removeMessages(3);
+							// sendEmptyMessage(3);
 						}
 					}
 					break;
@@ -136,8 +136,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	}
 	
 	public void afterPopupEvent(){
-		h.removeMessages(0);
-		h.sendEmptyMessage(0);
+		mHandler.removeMessages(0);
+		mHandler.sendEmptyMessage(0);
 	}
 	
 	public void switchLanguage(){
@@ -1264,7 +1264,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			case MotionEvent.ACTION_CANCEL:
 			case MotionEvent.ACTION_OUTSIDE:
 				v.setSelected(false);
-				h.removeMessages(3);
+				mHandler.removeMessages(3);
 				break;
 		}
 
@@ -1276,21 +1276,21 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			switch(m.getAction()){
 				case MotionEvent.ACTION_UP:
 					act = MotionEvent.ACTION_UP;
-					if(isKeyRepeat(v) == false && h.hasMessages(1)){
+					if(isKeyRepeat(v) == false && mHandler.hasMessages(1)){
 						sendDefaultKeyboardEvent(v);
 					}
-					h.removeMessages(3);
-					h.sendEmptyMessage(3);
+					mHandler.removeMessages(3);
+					mHandler.sendEmptyMessage(3);
 					break;
 				case MotionEvent.ACTION_DOWN:
 					act = MotionEvent.ACTION_DOWN;
-					h.removeMessages(1);
+					mHandler.removeMessages(1);
 					onKeyboardEvent(v);
-					Message x = h.obtainMessage(1,v);
+					Message msg = mHandler.obtainMessage(1,v);
 					if(isKeyRepeat(v)){
-						h.sendMessage(x);
+						mHandler.sendMessage(msg);
 					} else {
-						h.sendMessageDelayed(x,250*mult);
+						mHandler.sendMessageDelayed(msg,250*mult);
 					}
 					break;
 			}
@@ -1303,8 +1303,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	private void normalPress(View v, MotionEvent m){
 		switch(m.getAction()){
 			case MotionEvent.ACTION_UP:
-				h.removeMessages(3);
-				h.sendEmptyMessage(3);
+				mHandler.removeMessages(3);
+				mHandler.sendEmptyMessage(3);
 				break;
 			case MotionEvent.ACTION_DOWN:
 				sendDefaultKeyboardEvent(v);
