@@ -31,6 +31,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
 	public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
 	
+	public static final int SHIFT_OFF = 0;
+	public static final int SHIFT_ON = 1;
+	public static final int SHIFT_LOCKED = 2;
+	
 	protected Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
@@ -707,6 +711,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		if(text == null) return;
 		getCurrentIC().commitText(text,text.length());
 		getCurrentIC().finishComposingText();
+	}
+	
+	public int getShiftState(){
+		return shift;
 	}
 
 	private void setShiftState(){

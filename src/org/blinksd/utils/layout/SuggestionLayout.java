@@ -42,7 +42,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		setCompletionText(text.text, lang);
 	}
 	
-	public void setCompletionText(final CharSequence text, final String lang){
+	private void setCompletionText(final CharSequence text, final String lang){
 		mCompletionsLayout.removeAllViews();
 		
 		if(text == null || text.length() < 1)
@@ -52,16 +52,6 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		str = str.substring(str.lastIndexOf(" ")+1);
 		mLastText = str;
 		new LoadDictTask().execute(str, lang);
-	}
-	
-	public void setCompletions(CompletionInfo[] completions){
-		mCompletionsLayout.removeAllViews();
-		
-		if(completions == null || completions.length < 1)
-			return;
-
-		for(CompletionInfo info : completions)
-			addCompletionView(info.getText());
 	}
 	
 	private void addCompletionView(final CharSequence text){
@@ -77,6 +67,15 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		tv.setText(text);
 		tv.setOnClickListener(this);
 		mCompletionsLayout.addView(tv);
+	}
+	
+	public void retheme(){
+		for(int i = 0;i < mCompletionsLayout.getChildCount();i++){
+			TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
+			tv.setTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
+			float textSize = DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
+			tv.setTextSize(textSize);
+		}
 	}
 	
 	@Override

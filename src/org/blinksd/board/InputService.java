@@ -49,6 +49,28 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		InputConnection ic = sb.getCurrentIC();
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
+		
+		int state = sb.getShiftState();
+		if(state == SuperBoard.SHIFT_OFF && Character.isUpperCase(oldText.charAt(0))){
+			state = SuperBoard.SHIFT_ON;
+		}
+		
+		switch(state){
+			case SuperBoard.SHIFT_OFF:
+				suggestion = suggestion.toString().toLowerCase();
+				break;
+			case SuperBoard.SHIFT_LOCKED:
+				suggestion = suggestion.toString().toUpperCase();
+				break;
+			case SuperBoard.SHIFT_ON:
+				String first = String.valueOf(suggestion.charAt(0));
+				String other = suggestion.toString();
+				other = other.substring(1);
+				first = first.toUpperCase();
+				suggestion = first + other;
+				break;
+		}
+		
 		CharSequence sq1 = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
 		CharSequence sq2 = ic.getTextAfterCursor(0, Integer.MAX_VALUE);
 		if(sq1 == null) sq1 = "";
@@ -56,7 +78,9 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		int len = sq1.length() + sq2.length();
 		ic.setSelection(len, len);
 		ic.deleteSurroundingText(oldText.length(), text.text.toString().lastIndexOf(' '));
+		suggestion += " ";
 		ic.commitText(suggestion, suggestion.length());
+		sb.afterKeyboardEvent();
 	}
 
 	@Override
@@ -392,6 +416,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			sb.setBackgroundColor(c);
 			sl.setBackgroundColor(c);
+			sl.retheme();
 			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
 			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
 			sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
