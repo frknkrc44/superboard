@@ -10,7 +10,7 @@ import org.blinksd.*;
 public class DictionaryDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "dicts.db";
 	private static final int DATABASE_VERSION = 1;
-	public boolean isReady = false;
+	public boolean isReady = true;
 	
 	public DictionaryDB(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -20,6 +20,8 @@ public class DictionaryDB extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase p1){
 		List<String> types = SuperBoardApplication.getLanguageTypes();
 		StringBuilder sb = new StringBuilder();
+		isReady = false;
+		
 		for(String type : types){
 			sb.append("CREATE TABLE IF NOT EXISTS LANG_")
 				.append(escapeString(type))
@@ -28,9 +30,15 @@ public class DictionaryDB extends SQLiteOpenHelper {
 			p1.execSQL(sb.toString());
 			sb.setLength(0);
 		}
+		
+		isReady = true;
 	}
 
 /*
+	public static File getDictionaryDir(){
+		return new File(SuperBoardApplication.getApplication().getDataDir() + "/dictionaries");
+	}
+	
 	public void fillDB(){
 		File dictDir = getDictionaryDir();
 		
@@ -74,6 +82,8 @@ public class DictionaryDB extends SQLiteOpenHelper {
 	}
 	
 	private void saveToDB(String lang, BufferedReader reader, OnSaveProgressListener listener) throws IOException{
+		isReady = false;
+		
 		String table = "LANG_" + escapeString(lang);
 		StringBuilder sb = new StringBuilder();
 		SQLiteDatabase db = getWritableDatabase();
@@ -142,11 +152,11 @@ public class DictionaryDB extends SQLiteOpenHelper {
 					.append(" LIKE ")
 					.append("'")
 					.append(escapeString(prefix))
-					.append("%'");
+					.append("%'")
+					.append(" ORDER BY LENGTH(word)");
 			}
-
+			
 			sb.append(" LIMIT 20");
-
 			Cursor cursor = db.rawQuery(sb.toString(), null);
 
 			if(cursor.moveToFirst()){
@@ -173,10 +183,6 @@ public class DictionaryDB extends SQLiteOpenHelper {
 			str = str.replace("\\x1a", "\\Z");
 		}
 		return str;
-	}
-	
-	public static File getDictionaryDir(){
-		return new File(SuperBoardApplication.getApplication().getDataDir() + "/dictionaries");
 	}
 
 	@Override
