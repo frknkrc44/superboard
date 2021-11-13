@@ -63,7 +63,8 @@ public class DictionaryImportActivity extends Activity {
 
 		@Override
 		public void onProgress(int current, int state){
-			publishProgress(current, state);
+			if(current % 1000 == 0 || state == DictionaryDB.OnSaveProgressListener.STATE_DELETE_DUPLICATES)
+				publishProgress(current, state);
 		}
 
 		@Override
