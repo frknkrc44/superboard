@@ -64,9 +64,9 @@ public class DictionaryDB extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void saveToDB(String lang, FileDescriptor fd, OnSaveProgressListener listener){
+	public void saveToDB(String lang, InputStream fd, OnSaveProgressListener listener){
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(fd));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fd));
 			saveToDB(lang, reader, listener);
 		} catch(Throwable ex) {
 			throw new RuntimeException(ex);

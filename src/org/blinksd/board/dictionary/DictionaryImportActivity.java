@@ -93,14 +93,14 @@ public class DictionaryImportActivity extends Activity {
 		protected Void doInBackground(Uri[] p1){
 			try {
 				Uri uri = p1[0];
-				ParcelFileDescriptor pfd = getContentResolver().openFile(uri, "r", null);
+				InputStream pfd = getContentResolver().openInputStream(uri);
 				String name = uri.getLastPathSegment();
 				if(name.contains("/"))
 					name = name.substring(name.lastIndexOf('/')+1);
 				assert name.endsWith(".fbd") : "Name is " + name;
 				name = name.substring(0, name.lastIndexOf("."));
 				
-				SuperBoardApplication.getDictDB().saveToDB(name, pfd.getFileDescriptor(), this);
+				SuperBoardApplication.getDictDB().saveToDB(name, pfd, this);
 			} catch (IOException e){
 				e.printStackTrace();
 			}
