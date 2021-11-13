@@ -83,6 +83,11 @@
 	<string name="settings_backup_type_theme">Theme (icon theme, background image, colors, ...)</string>
 	<string name="settings_backup_type_other">Others</string>
 	
+	<!-- Dictionary importer resources -->
+	<string name="settings_dict_importing">Importing, please don\'t close this app</string>
+	<string name="settings_dict_import_count">%s word imported</string>
+	<string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
+	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
 		<item>Regular</item>

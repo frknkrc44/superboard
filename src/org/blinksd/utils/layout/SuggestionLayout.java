@@ -11,6 +11,7 @@ import org.blinksd.board.*;
 import org.blinksd.utils.dictionary.*;
 import org.superdroid.db.*;
 import android.view.View.*;
+import org.blinksd.*;
 
 public class SuggestionLayout extends FrameLayout implements View.OnClickListener {
 	private LinearLayout mCompletionsLayout;
@@ -45,13 +46,14 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	private void setCompletionText(final CharSequence text, final String lang){
 		mCompletionsLayout.removeAllViews();
 		
-		if(text == null || text.length() < 1)
+		if(text == null)
 			return;
 		
 		String str = text.toString();
-		str = str.substring(str.lastIndexOf(" ")+1);
+		str = str.substring(str.lastIndexOf(' ')+1);
+		str = str.substring(str.lastIndexOf('\n')+1);
 		mLastText = str;
-		new LoadDictTask().execute(str, lang);
+		new LoadDictTask().execute(lang, str);
 	}
 	
 	private void addCompletionView(final CharSequence text){
@@ -89,7 +91,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
 		@Override
 		protected List<String> doInBackground(String[] p1){
-			return DictionaryProvider.getSuggestions(p1[0], p1[1]);
+			return SuperBoardApplication.getDictDB().getQuery(p1[0].toLowerCase(), p1[1].toLowerCase());
 		}
 
 		@Override

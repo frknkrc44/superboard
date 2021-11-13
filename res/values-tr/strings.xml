@@ -69,6 +69,11 @@
 	<string name="settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, ...)</string>
 	<string name="settings_backup_type_other">Diğerleri</string>
 	
+	<!-- Dictionary importer resources -->
+	<string name="settings_dict_importing">İçe aktarılıyor, lütfen bu uygulamayı kapatmayın</string>
+	<string name="settings_dict_import_count">%s kelime içe aktarıldı</string>
+	<string name="settings_dict_import_delete_duplicates">Fazlalıklar siliniyor</string>
+	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_icon_theme">
 		<item>Varsayılan</item>

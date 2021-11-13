@@ -134,7 +134,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(ic == null) return;
 		ExtractedTextRequest req = new ExtractedTextRequest();
 		ExtractedText text = ic.getExtractedText(req,InputConnection.GET_EXTRACTED_TEXT_MONITOR);
-		if(text != null && sl != null) sl.setCompletion(text, cl.language);
+		if(text != null && sl != null && text.text != null) sl.setCompletion(text, cl.language);
 	}
 	
 	private void setLayout(){

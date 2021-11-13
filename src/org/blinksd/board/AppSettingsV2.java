@@ -28,6 +28,7 @@ import yandroid.widget.*;
 import static android.media.AudioManager.*;
 import org.blinksd.utils.toolbar.*;
 import org.blinksd.utils.icon.*;
+import org.blinksd.board.dictionary.*;
 
 public class AppSettingsV2 extends Activity {
 	
@@ -67,6 +68,15 @@ public class AppSettingsV2 extends Activity {
 
 			});
 		}
+		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_language), new View.OnClickListener(){
+
+				@Override
+				public void onClick(View p1){
+					startActivity(new Intent(AppSettingsV2.this,DictionaryImportActivity.class));
+				}
+
+			});
+		
 		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_close), new View.OnClickListener(){
 
 				@Override

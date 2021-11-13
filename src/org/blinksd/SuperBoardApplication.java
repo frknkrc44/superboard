@@ -28,7 +28,8 @@ public class SuperBoardApplication extends Application {
 	private static String fontPath = null;
 	private static IconThemeUtils icons;
 	private static List<ThemeHolder> themes;
-	private static Map<String, List<String>> dicts;
+	private static DictionaryDB dictDB;
+	
 	
 	@Override
 	public void onCreate(){
@@ -49,17 +50,18 @@ public class SuperBoardApplication extends Application {
 		
 		new Thread() {
 			public void run(){
-				dicts = DictionaryProvider.getAllDictionaries();
+				dictDB = new DictionaryDB(appContext);
+				// dictDB.fillDB();
 			}
 		}.start();
 	}
 	
-	public static Map<String, List<String>> getDicts(){
-		return dicts;
+	public static DictionaryDB getDictDB(){
+		return dictDB;
 	}
 
 	public static boolean isDictsReady(){
-		return dicts != null;
+		return dictDB != null && dictDB.isReady;
 	}
 	
 	public static SuperBoardApplication getApplication(){
@@ -154,8 +156,27 @@ public class SuperBoardApplication extends Application {
 		return out;
 	}
 	
+	public static List<String> getLanguageTypes(){
+		List<String> langKeys = new ArrayList<String>(languageCache.keySet());
+		List<String> out = new ArrayList<String>();
+		for(String key : langKeys){
+			Language lang = languageCache.get(key);
+			String name = lang.language.split("_")[0].toLowerCase();
+			if(!out.contains(name))
+				out.add(name);
+		}
+		return out;
+	}
+	
 	public static SettingMap getSettings(){
 		return settingMap;
 	}
+
+	@Override
+	public void onTerminate(){
+		super.onTerminate();
+		if(dictDB != null) dictDB.close();
+	}
+	
 	
 }
