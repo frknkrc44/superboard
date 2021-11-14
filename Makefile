@@ -32,7 +32,7 @@ all: clear mkdirs langpacks abuild build rmdirs zipalign sign
 build-install: all install
 build:
 	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/resources.ap_"
-	$(JAVAC) -classpath $(CLASSPATH) -source 7 -g:none -nowarn -sourcepath $(SRC) -sourcepath bin/aidl/ -sourcepath gen -d bin $(JAVAC_DEBUG_FLAGS) `find gen -name "*.java"` `find bin/aidl/ -name "*.java"` `find $(SRC) -name "*.java"`
+	$(JAVAC) -classpath $(CLASSPATH) -source 8 -target 8 -g:none -nowarn -sourcepath $(SRC) -sourcepath bin/aidl/ -sourcepath gen -d bin $(JAVAC_DEBUG_FLAGS) `find gen -name "*.java"` `find bin/aidl/ -name "*.java"` `find $(SRC) -name "*.java"`
 	$(ADX) --dex --output=bin/classes.dex bin
 	mv bin/resources.ap_ bin/$(NAME).ap_
 	cd bin ; $(AAPT) add $(NAME).ap_ classes.dex
