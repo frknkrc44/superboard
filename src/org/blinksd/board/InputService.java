@@ -333,6 +333,12 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			}
 		}
 		
+		if(Build.VERSION.SDK_INT >= 16 && emoji == null){
+			emoji = new EmojiView(sb,emojiClick);
+			emoji.setVisibility(View.GONE);
+			emoji.setBackgroundDrawable(sb.getBackground());
+		}
+		
 		if(ll == null){
 			ll = new LinearLayout(this);
 			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
@@ -345,21 +351,16 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			// setCandidatesViewShown(true);
 			ll.addView(sl);
 			ll.addView(sb);
+			if(emoji != null){
+				ll.addView(emoji);
+			}
 		}
-		if(Build.VERSION.SDK_INT >= 16 && emoji == null){
-			emoji = new EmojiView(sb,emojiClick);
-			emoji.setVisibility(View.GONE);
-			emoji.setBackgroundDrawable(sb.getBackground());
-		}
+		
 		if(fl == null){
 			fl = new RelativeLayout(this);
 			fl.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 			iv = new ImageView(this);
 			fl.addView(iv);
-			if(emoji != null){
-				fl.addView(emoji);
-				emoji.getLayoutParams().height = sb.getKeyboardHeight();
-			}
 			fl.addView(ll);
 			iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			iv.setAdjustViewBounds(false);
@@ -579,8 +580,8 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			return;
 		}
 		if(showEmoji != value){
-			emoji.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
-			sb.setVisibility(value ? View.INVISIBLE : View.VISIBLE);
+			emoji.setVisibility(value ? View.VISIBLE : View.GONE);
+			sb.setVisibility(value ? View.GONE : View.VISIBLE);
 			showEmoji = value;
 		}
 	}

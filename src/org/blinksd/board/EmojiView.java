@@ -62,7 +62,6 @@ public class EmojiView extends LinearLayout {
 		final LinearLayout ll = new LinearLayout(getContext());
 		ll.setLayoutParams(new LayoutParams(-1,-1));
 		ll.setOrientation(VERTICAL);
-		setLayoutParams(new RelativeLayout.LayoutParams(-1,-1));
 		final LinearLayout tl = new LinearLayout(getContext());
 		int l = getResources().getDisplayMetrics().widthPixels / emojis.length;
 		tl.setLayoutParams(new LayoutParams(-1,l));
