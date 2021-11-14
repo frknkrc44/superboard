@@ -43,9 +43,15 @@ public class InputService extends InputMethodService implements SuggestionLayout
 	private File img = null;
 	private Language cl;
 	private EmojiView emoji = null;
+
+	@Override
+	public void onUpdateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd){
+		super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
+		sendCompletionRequest();
+	}
 	
 	@Override
-	public void onSuggestionSelected(ExtractedText text, CharSequence oldText, CharSequence suggestion){
+	public void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion){
 		InputConnection ic = sb.getCurrentIC();
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
@@ -71,15 +77,21 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				break;
 		}
 		
-		CharSequence sq1 = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
-		CharSequence sq2 = ic.getTextAfterCursor(0, Integer.MAX_VALUE);
-		if(sq1 == null) sq1 = "";
-		if(sq2 == null) sq2 = "";
-		int len = sq1.length() + sq2.length();
-		ic.setSelection(len, len);
-		ic.deleteSurroundingText(oldText.length(), text.text.toString().lastIndexOf(' '));
+		ExtractedTextRequest req = new ExtractedTextRequest();
+		ExtractedText exText = ic.getExtractedText(req, 0);
+		String exTextStr = exText.text.toString();
+		exTextStr = exTextStr.substring(text.length()-1);
+		
+		ic.deleteSurroundingText(oldText.length(), exTextStr.toString().indexOf(' '));
 		suggestion += " ";
 		ic.commitText(suggestion, suggestion.length());
+		
+		req = new ExtractedTextRequest();
+		exText = ic.getExtractedText(req, 0);
+		exTextStr = exText.text.toString();
+		int pos = exTextStr.indexOf(suggestion.toString()) + suggestion.length();
+		ic.setSelection(pos, pos);
+		
 		sb.afterKeyboardEvent();
 	}
 
@@ -132,9 +144,8 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		InputConnection ic = sb.getCurrentIC();
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
-		ExtractedTextRequest req = new ExtractedTextRequest();
-		ExtractedText text = ic.getExtractedText(req,InputConnection.GET_EXTRACTED_TEXT_MONITOR);
-		if(text != null && sl != null && text.text != null) sl.setCompletion(text, cl.language);
+		CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
+		if(text != null && sl != null) sl.setCompletionText(text, cl.language);
 	}
 	
 	private void setLayout(){
@@ -171,7 +182,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 						po.hideCharacter();
 					}
 					
-					sendCompletionRequest();
+					// sendCompletionRequest();
 				}
 				
 				public void sendDefaultKeyboardEvent(View v){

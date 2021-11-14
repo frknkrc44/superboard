@@ -16,8 +16,7 @@ import org.blinksd.*;
 public class SuggestionLayout extends FrameLayout implements View.OnClickListener {
 	private LinearLayout mCompletionsLayout;
 	private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
-	private String mLastText;
-	private ExtractedText mLastExtractedText;
+	private String mLastText, mCompleteText;
 	
 	public SuggestionLayout(Context context){
 		super(context);
@@ -39,17 +38,17 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		if(text == null)
 			return;
 			
-		mLastExtractedText = text;
 		setCompletionText(text.text, lang);
 	}
 	
-	private void setCompletionText(final CharSequence text, final String lang){
+	public void setCompletionText(final CharSequence text, final String lang){
 		mCompletionsLayout.removeAllViews();
 		
 		if(text == null)
 			return;
 		
 		String str = text.toString();
+		mCompleteText = str;
 		str = str.substring(str.lastIndexOf(' ')+1);
 		str = str.substring(str.lastIndexOf('\n')+1);
 		mLastText = str;
@@ -83,7 +82,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	@Override
 	public void onClick(View p1){
 		if(mOnSuggestionSelectedListener != null){
-			mOnSuggestionSelectedListener.onSuggestionSelected(mLastExtractedText, mLastText, ((TextView) p1).getText());
+			mOnSuggestionSelectedListener.onSuggestionSelected(mCompleteText, mLastText, ((TextView) p1).getText());
 		}
 	}
 	
@@ -105,6 +104,6 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	}
 	
 	public interface OnSuggestionSelectedListener {
-		void onSuggestionSelected(ExtractedText text, CharSequence oldText, CharSequence suggestion);
+		void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion);
 	}
 }
