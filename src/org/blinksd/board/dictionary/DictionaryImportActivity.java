@@ -2,8 +2,10 @@ package org.blinksd.board.dictionary;
 
 import android.app.*;
 import android.content.*;
+import android.database.*;
 import android.net.*;
 import android.os.*;
+import android.provider.*;
 import android.view.*;
 import android.widget.*;
 import java.io.*;
@@ -94,18 +96,35 @@ public class DictionaryImportActivity extends Activity {
 		protected Void doInBackground(Uri[] p1){
 			try {
 				Uri uri = p1[0];
-				InputStream pfd = getContentResolver().openInputStream(uri);
-				String name = uri.getLastPathSegment();
-				if(name.contains("/"))
-					name = name.substring(name.lastIndexOf('/')+1);
+				Cursor returnCursor = getContentResolver().query(uri, null, null, null, null);
+				int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+				returnCursor.moveToFirst();
+				
+				String name = returnCursor.getString(nameIndex);
 				assert name.endsWith(".fbd") : "Name is " + name;
-				name = name.substring(0, name.lastIndexOf("."));
+				
+				int idx = findDotIndex(name);
+				name = name.substring(0, idx);
+				
+				InputStream pfd = getContentResolver().openInputStream(uri);
 				
 				SuperBoardApplication.getDictDB().saveToDB(name, pfd, this);
 			} catch (IOException e){
 				e.printStackTrace();
 			}
 			return null;
+		}
+		
+		private int findDotIndex(String txt){
+			char[] arr = txt.toCharArray();
+			for(int i = 0;i < arr.length;i++){
+				char chr = arr[i];
+				if(chr == '(' || chr == '.') {
+					return i;
+				}
+			}
+			
+			return 2;
 		}
 
 		@Override

@@ -17,6 +17,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	private LinearLayout mCompletionsLayout;
 	private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
 	private String mLastText, mCompleteText;
+	private List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
 	
 	public SuggestionLayout(Context context){
 		super(context);
@@ -52,7 +53,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		str = str.substring(str.lastIndexOf(' ')+1);
 		str = str.substring(str.lastIndexOf('\n')+1);
 		mLastText = str;
-		new LoadDictTask().execute(lang, str);
+		LoadDictTask task = new LoadDictTask();
+		mLoadDictTasks.add(task);
+		task.execute(lang, str);
 	}
 	
 	private void addCompletionView(final CharSequence text){
@@ -89,6 +92,19 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	private class LoadDictTask extends AsyncTask<String,Void,List<String>>{
 
 		@Override
+		protected void onPreExecute(){
+			try {
+				for(LoadDictTask task : mLoadDictTasks){
+					if(task != this){
+						task.cancel(true);
+						mLoadDictTasks.remove(task);
+					}
+				}
+			} catch(Throwable t){}
+			super.onPreExecute();
+		}
+
+		@Override
 		protected List<String> doInBackground(String[] p1){
 			return SuperBoardApplication.getDictDB().getQuery(p1[0].toLowerCase(), p1[1].toLowerCase());
 		}
@@ -96,9 +112,11 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		@Override
 		protected void onPostExecute(final List<String> result){
 			mCompletionsLayout.removeAllViews();
-			for(String item : result) {
+			
+			for(String item : result)
 				addCompletionView(item);
-			}
+			
+			mLoadDictTasks.remove(this);
 			super.onPostExecute(result);
 		}
 	}
