@@ -309,6 +309,9 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setPressEventForKey(3,-1,4,KeyEvent.KEYCODE_DPAD_DOWN);
 			sb.setPressEventForKey(3,-1,5,KeyEvent.KEYCODE_DPAD_RIGHT);
 			
+			for(int i = 2;i < 6;i++)
+				sb.setKeyRepeat(3,-1,i);
+			
 			for(int i = 0;i < 2;i++){
 				for(int g = 0;g < 8;g++){
 					if(i > 0 && g > 3) break;

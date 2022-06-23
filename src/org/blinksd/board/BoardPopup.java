@@ -7,6 +7,7 @@ import android.widget.*;
 import org.blinksd.*;
 import org.blinksd.sdb.*;
 import org.blinksd.utils.layout.*;
+import org.superdroid.db.*;
 
 public class BoardPopup extends SuperBoard {
 	
@@ -137,11 +138,7 @@ public class BoardPopup extends SuperBoard {
 		mKey.setHint(null);
 	}
 	
-	private SuperMiniDB getDB(){
-		return SuperBoardApplication.getApplicationDatabase();
-	}
-	
 	public int getIntOrDefault(String key){
-		return getDB().getInteger(key, (int) SuperBoardApplication.getSettings().getDefaults(key));
+		return SuperDBHelper.getIntValueOrDefault(key);
 	}
 }
