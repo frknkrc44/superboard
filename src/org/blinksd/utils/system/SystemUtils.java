@@ -26,7 +26,7 @@ public class SystemUtils {
 		try {
 			Class<?> propClass = Class.forName("android.os.SystemProperties");
 			Method getMethod = propClass.getMethod("get", String.class);
-			return getMethod.invoke(null, key).toString();
+			return (String) getMethod.invoke(null, key);
 		} catch(Throwable t){}
 		return "";
 	}
@@ -57,9 +57,9 @@ public class SystemUtils {
 		View v = new View(ctx);
 		v.setId(android.R.attr.gravity);
 		v.setLayoutParams(new ViewGroup.LayoutParams(-1,isColorized(ctx) ? navbarH(ctx) : -1));
-		boolean isLight = ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)));
+		boolean isLight = Build.VERSION.SDK_INT < 31 && ColorUtils.satisfiesTextContrast(Color.rgb(Color.red(color),Color.green(color),Color.blue(color)));
 		if(isLight)
-			color = AppSettingsV2.getDarkerColor(color);
+			color = ColorUtils.getDarkerColor(color);
 		v.setBackgroundColor(color);
 		return v;
 	}
@@ -70,9 +70,12 @@ public class SystemUtils {
 				if(SDK_INT > 30) {
 					WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
 					boolean gesturesEnabled = isGesturesEnabled();
+					
+					// TODO: Detect Android 12L+ Taskbar
+					int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
 					return (int) (wm.getCurrentWindowMetrics()
 						.getWindowInsets()
-						.getInsets(gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars())
+						.getInsets(type)
 						.bottom * (gesturesEnabled ? 1.5 : 1));
 				}
 				

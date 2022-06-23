@@ -64,7 +64,7 @@ public class ColorSelectorLayout {
 		};
 
 		for(int i = 0;i < stra.length;i++){
-			stra[i] = ctx.getTranslation(stra[i]);
+			stra[i] = SettingsCategorizedListAdapter.getTranslation(ctx, stra[i]);
 		}
 
 		host.setOnTabChangedListener(new TabHost.OnTabChangeListener(){

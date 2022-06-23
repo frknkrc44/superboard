@@ -27,7 +27,7 @@ public class NumberSelectorLayout {
 		lp.bottomMargin = DensityUtils.dpInt(8);
 		text.setLayoutParams(lp);
 		text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
-		text.setText(getProgressString(ctx,val,isFloat));
+		text.setText(getProgressString(val,isFloat));
 		main.addView(text);
 		
 		CustomSeekBar seek = new CustomSeekBar(ctx);
@@ -38,7 +38,7 @@ public class NumberSelectorLayout {
 				@Override
 				public void onProgressChanged(SeekBar p1, int p2, boolean p3){
 					int progress = p1.getProgress() + min;
-					text.setText(getProgressString(ctx,progress,isFloat));
+					text.setText(getProgressString(progress,isFloat));
 					main.setTag(progress);
 				}
 
@@ -53,8 +53,8 @@ public class NumberSelectorLayout {
 		return main;
 	}
 	
-	private static String getProgressString(AppSettingsV2 ctx, int val, boolean isFloat){
-		return isFloat ? ctx.getFloatNumberFromInt(val) + "" : val + "";
+	private static String getProgressString(int val, boolean isFloat){
+		return isFloat ? DensityUtils.getFloatNumberFromInt(val) + "" : val + "";
 	}
 	
 }

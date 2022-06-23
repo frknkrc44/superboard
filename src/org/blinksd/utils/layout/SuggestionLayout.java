@@ -62,7 +62,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		TextView tv = new TextView(getContext());
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
-		float textSize = DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
+		float textSize = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
 		tv.setTextSize(textSize);
 		tv.setLayoutParams(new LinearLayout.LayoutParams(-2, -1));
 		int pad = DensityUtils.dpInt(8);
@@ -77,7 +77,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		for(int i = 0;i < mCompletionsLayout.getChildCount();i++){
 			TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
 			tv.setTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
-			float textSize = DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
+			float textSize = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
 			tv.setTextSize(textSize);
 		}
 	}

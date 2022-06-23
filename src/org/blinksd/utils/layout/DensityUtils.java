@@ -29,9 +29,8 @@ public class DensityUtils {
 		return (int) hp(px);
 	}
 
-	public static float mp(float percent){
-		float width = wp(percent), height = hp(percent);
-		return width < height ? width : height;
+	public static float mp(float px){
+		return (Math.min(getScreenWidth(), getScreenHeight()) / 100f) * px;
 	}
 	
 	public static int mpInt(float percent){
@@ -50,4 +49,11 @@ public class DensityUtils {
 		return getDisplayMetrics().heightPixels;
 	}
 	
+	public static float getFloatNumberFromInt(int i){
+		return i / 10.0f;
+	}
+
+	public static int getIntNumberFromFloat(float i){
+		return (int)(i * 10);
+	}
 }

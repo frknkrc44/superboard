@@ -52,6 +52,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 	
 	@Override
 	public void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion){
+		if(sb == null) return;
 		InputConnection ic = sb.getCurrentIC();
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
@@ -141,6 +142,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 	}
 	
 	public void sendCompletionRequest(){
+		if(sb == null) return;
 		InputConnection ic = sb.getCurrentIC();
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
@@ -346,7 +348,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sl = new SuggestionLayout(this);
 			sl.setLayoutParams(new FrameLayout.LayoutParams(-1, dp(56)));
 			sl.setId(android.R.attr.shape);
-			sl.setOnSuggestionSelectedListener(this);
+			// sl.setOnSuggestionSelectedListener(this);
 			// setCandidatesView(sl);
 			// setCandidatesViewShown(true);
 			ll.addView(sl);
@@ -415,14 +417,21 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.updateKeyState(this);
 			float ori = conf.orientation == Configuration.ORIENTATION_LANDSCAPE ? 1.3f : 1;
 			sb.setKeyboardHeight((int)(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
-			img = AppSettingsV2.getBackgroundImageFile();
-			if(fl != null){
-				if(img.exists()) {
-					int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
-					Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-					iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
-				} else {
+			if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_MONET)){
+				img = null;
+				if(fl != null){
 					iv.setImageBitmap(null);
+				}
+			} else {
+				img = AppSettingsV2.getBackgroundImageFile();
+				if(fl != null){
+					if(img.exists()) {
+						int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
+						Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
+						iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
+					} else {
+						iv.setImageBitmap(null);
+					}
 				}
 			}
 			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
@@ -438,7 +447,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setLongPressMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
 			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
-			sb.setKeysTextSize(DensityUtils.mpInt(AppSettingsV2.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+			sb.setKeysTextSize(DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 			sb.setIconSizeMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 			int y = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
@@ -458,6 +467,9 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				}
 			}
 			sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
+			boolean sugDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
+			sl.setVisibility(sugDisabled ? View.GONE : View.VISIBLE);
+			sl.setOnSuggestionSelectedListener(sugDisabled ? null : this);
 			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
@@ -521,6 +533,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 					ll.removeView(navbarView);
 
 				if(SDK_INT >= 28 && SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT)){
+					w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 					int color = Color.rgb(Color.red(c),Color.green(c),Color.blue(c));
@@ -539,6 +552,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 					ll.addView(createNavbarLayout(this, c));
 				} else {
 					w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+					w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 					w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 					iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,baseHeight));
 				}

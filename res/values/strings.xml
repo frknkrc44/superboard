@@ -26,6 +26,8 @@
 	<string name="settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
 	<string name="settings_disable_popup">Disable popup menu</string>
 	<string name="settings_disable_repeat">Disable character repeating on long press</string>
+	<string name="settings_disable_suggestions">Disable word suggestions</string>
+	<string name="settings_use_monet">Use monet colors (beta)</string>
 	<string name="settings_detect_capslock">Detect capslock status automatically</string>
 	<string name="settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
 	<string name="settings_enter_bgclr">Enter key background color</string>
@@ -118,6 +120,12 @@
 		<item>Daisy</item>
 		<item>Material</item>
 		<item>Apricot</item>
+	</string-array>
+	
+	<string-array name="settings_categories">
+		<item>General</item>
+		<item>Theming</item>
+		<item>Advanced Theming</item>
 	</string-array>
 	
 </resources>

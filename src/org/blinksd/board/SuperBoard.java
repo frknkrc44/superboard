@@ -598,9 +598,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					template.clone(k);
 				}
 				k.setText(key);
-				k.getLayoutParams().width = DensityUtils.wpInt(100 / keys.length);
 				r.addKey(k);
 			}
+			r.setKeyWidths();
 		}
 		getKeyboard(keyboardIndex).addView(r);
 	}

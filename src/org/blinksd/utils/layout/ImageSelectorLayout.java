@@ -74,7 +74,7 @@ public class ImageSelectorLayout {
 		};
 
 		for(int i = 0;i < stra.length;i++){
-			stra[i] = ctx.getTranslation(stra[i]);
+			stra[i] = SettingsCategorizedListAdapter.getTranslation(ctx, stra[i]);
 		}
 
 		host.setup();
@@ -117,11 +117,11 @@ public class ImageSelectorLayout {
 		LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class,ctx);
 		Button s = LayoutCreator.createButton(ctx);
 		s.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		s.setText(ctx.getTranslation("image_selector_select"));
+		s.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_select"));
 		l.addView(s);
 		Button w = LayoutCreator.createButton(ctx);
 		w.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
-		w.setText(ctx.getTranslation("image_selector_wp"));
+		w.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_wp"));
 		l.addView(w);
 		s.setOnClickListener(new View.OnClickListener(){
 				@Override
@@ -165,7 +165,7 @@ public class ImageSelectorLayout {
 		Button rb = LayoutCreator.createButton(ctx);
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
-		rb.setText(ctx.getTranslation("image_selector_rotate"));
+		rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));
 		rb.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View p1){
@@ -321,7 +321,7 @@ public class ImageSelectorLayout {
 		public void onClick(View p1){
 			if(colorList.size() < 2){
 				AppSettingsV2 ctx = (AppSettingsV2) p1.getContext();
-				String out = String.format(ctx.getTranslation("image_selector_gradient_remove_item_error"),colorList.size());
+				String out = String.format(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_remove_item_error"),colorList.size());
 				Toast.makeText(ctx,out,Toast.LENGTH_SHORT).show();
 				return;
 			}

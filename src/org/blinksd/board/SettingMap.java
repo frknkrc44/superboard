@@ -5,12 +5,11 @@ import android.os.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.board.AppSettingsV2.*;
+import org.blinksd.utils.color.*;
 import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
 
-import static org.blinksd.board.AppSettingsV2.*;
-
-public class SettingMap extends BaseMap<String,SettingType> {
+public class SettingMap extends BaseMap<String,SettingItem> {
 
 	public static final String SET_KEYBOARD_LANG_SELECT = "keyboard_lang_select",
 	SET_KEYBOARD_TEXTTYPE_SELECT = "keyboard_texttype_select",
@@ -40,46 +39,83 @@ public class SettingMap extends BaseMap<String,SettingType> {
 	SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
 	SET_DISABLE_POPUP = "disable_popup",
 	SET_DISABLE_REPEAT = "disable_repeat",
+	SET_DISABLE_SUGGESTIONS = "disable_suggestions",
+	SET_USE_MONET = "use_monet",
 	SET_ICON_THEME = "keyboard_icon_theme",
 	SET_KILL_BACKGROUND = "keyboard_kill_background",
 	SET_THEME_PRESET = "keyboard_theme_preset",
 	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi";
 
 	public SettingMap(){
-		put(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
-		put(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
-		put(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
-		put(SET_ICON_THEME,SettingType.ICON_SELECTOR);
-		put(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
-		put(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
-		put(SET_PLAY_SND_PRESS,SettingType.BOOL);
-		put(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
+		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
+		putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		putTheming(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
+		putTheming(SET_ICON_THEME,SettingType.ICON_SELECTOR);
+		putThemingAdvanced(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
+		putGeneral(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
+		putGeneral(SET_PLAY_SND_PRESS,SettingType.BOOL);
+		putGeneral(SET_KEYBOARD_LC_ON_EMOJI,SettingType.BOOL);
 		if (!SystemUtils.isNotColorizeNavbar())
-			put(SET_COLORIZE_NAVBAR,SettingType.BOOL);
+			putTheming(SET_COLORIZE_NAVBAR,SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 28)
-			put(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
-		put(SET_DISABLE_POPUP,SettingType.BOOL);
-		put(SET_DISABLE_REPEAT,SettingType.BOOL);
-		put(SET_DETECT_CAPSLOCK,SettingType.BOOL);
-		put(SET_KILL_BACKGROUND,SettingType.BOOL);
-		put(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
-		put(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
-		put(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
-		put(SET_KEY_LONGPRESS_DURATION,SettingType.MM_DECIMAL_NUMBER);
-		put(SET_KEYBOARD_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY2_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_ENTER_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY2_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_ENTER_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY_SHADOWCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY_TEXTCLR,SettingType.COLOR_SELECTOR);
-		put(SET_KEY_PADDING,SettingType.FLOAT_NUMBER);
-		put(SET_KEY_RADIUS,SettingType.FLOAT_NUMBER);
-		put(SET_KEY_TEXTSIZE,SettingType.FLOAT_NUMBER);
-		put(SET_KEY_SHADOWSIZE,SettingType.FLOAT_NUMBER);
-		put(SET_KEY_ICON_SIZE_MULTIPLIER,SettingType.MM_DECIMAL_NUMBER);
+			putTheming(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
+		putGeneral(SET_DISABLE_POPUP,SettingType.BOOL);
+		putGeneral(SET_DISABLE_REPEAT,SettingType.BOOL);
+		putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
+		if(Build.VERSION.SDK_INT >= 31)
+			putTheming(SET_USE_MONET, SettingType.BOOL);
+		putGeneral(SET_DETECT_CAPSLOCK,SettingType.BOOL);
+		putGeneral(SET_KILL_BACKGROUND,SettingType.BOOL);
+		putThemingAdvanced(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
+		putGeneral(SET_KEYBOARD_HEIGHT,SettingType.MM_DECIMAL_NUMBER);
+		putGeneral(SET_KEY_VIBRATE_DURATION,SettingType.DECIMAL_NUMBER);
+		putGeneral(SET_KEY_LONGPRESS_DURATION,SettingType.MM_DECIMAL_NUMBER);
+		putThemingAdvanced(SET_KEYBOARD_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY2_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_ENTER_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY2_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_ENTER_PRESS_BGCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY_SHADOWCLR,SettingType.COLOR_SELECTOR);
+		putThemingAdvanced(SET_KEY_TEXTCLR,SettingType.COLOR_SELECTOR);
+		putTheming(SET_KEY_PADDING,SettingType.FLOAT_NUMBER);
+		putTheming(SET_KEY_RADIUS,SettingType.FLOAT_NUMBER);
+		putTheming(SET_KEY_TEXTSIZE,SettingType.FLOAT_NUMBER);
+		putTheming(SET_KEY_SHADOWSIZE,SettingType.FLOAT_NUMBER);
+		putTheming(SET_KEY_ICON_SIZE_MULTIPLIER,SettingType.MM_DECIMAL_NUMBER);
+	}
+	
+	private void putGeneral(String name, SettingType type){
+		put(name, new SettingItem(SettingCategory.GENERAL, type));
+	}
+	
+	private void putTheming(String name, SettingType type){
+		put(name, new SettingItem(SettingCategory.THEMING, type));
+	}
+	
+	private void putThemingAdvanced(String name, SettingType type){
+		put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type));
+	}
+	
+	public int getChildrenCount(SettingCategory category){
+		int count = 0;
+		for(String str : keySet()){
+			if(get(str).category == category)
+				count++;
+		}
+		return count;
+	}
+	
+	public String getChildKey(SettingCategory category, int idx){
+		int i = 0;
+		for(String str : keySet()){
+			if(get(str).category == category){
+				if(i == idx) return str;
+				i++;
+			}
+		}
+		return null;
 	}
 
 	public ArrayList<String> getSelector(final String key) throws Throwable {
@@ -143,7 +179,7 @@ public class SettingMap extends BaseMap<String,SettingType> {
 					}
 					TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
 					int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
-					int pressColor = getDarkerColor(color);
+					int pressColor = ColorUtils.getDarkerColor(color);
 					arr.recycle();
 					return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
 				case SET_KEY_SHADOWCLR:
@@ -160,6 +196,10 @@ public class SettingMap extends BaseMap<String,SettingType> {
 					return Defaults.DISABLE_POPUP;
 				case SET_DISABLE_REPEAT:
 					return Defaults.DISABLE_REPEAT;
+				case SET_DISABLE_SUGGESTIONS:
+					return Defaults.DISABLE_SUGGESTIONS;
+				case SET_USE_MONET:
+					return Defaults.USE_MONET;
 				case SET_ICON_THEME:
 					return Defaults.ICON_THEME;
 				case SET_KILL_BACKGROUND:
@@ -177,7 +217,7 @@ public class SettingMap extends BaseMap<String,SettingType> {
 		int[] nums = new int[2];
 		nums[0] = 0;
 		if(containsKey(key)){
-			switch(get(key)){
+			switch(get(key).type){
 				case DECIMAL_NUMBER:
 					switch(key){
 						case SET_KEYBOARD_BGBLUR:

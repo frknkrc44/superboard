@@ -28,4 +28,8 @@ public class BaseMap<K, V> {
 	public int indexOf(K theme){
 		return keyList().indexOf(theme);
 	}
+	
+	public int size(){
+		return map.size();
+	}
 }

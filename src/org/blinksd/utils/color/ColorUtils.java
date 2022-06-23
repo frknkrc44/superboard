@@ -185,6 +185,14 @@ public class ColorUtils {
 		return Color.rgb(Color.red(color),Color.green(color),Color.blue(color));
 	}
 	
+	public static int getDarkerColor(int color) {
+		int[] state = {Color.red(color),Color.green(color),Color.blue(color)};
+		for(int i = 0;i < state.length;i++){
+			state[i] /= 1.2;
+		}
+		return Color.argb(Color.alpha(color),state[0],state[1],state[2]);
+	}
+	
 	@Retention(SOURCE)
 	@Target({PARAMETER,METHOD,LOCAL_VARIABLE,FIELD})
 	public @interface ColorInt {}

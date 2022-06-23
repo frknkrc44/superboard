@@ -38,20 +38,20 @@ public class ColorSelectorItemLayout extends LinearLayout {
 			case -1:
 				img.setImageResource(android.R.drawable.ic_input_add);
 				img.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-				btn.setText(ctx.getTranslation("image_selector_gradient_add_item"));
+				btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_add_item"));
 				setOnClickListener(gradientAddColorListener);
 				return;
 			case -2:
 				img.setImageResource(android.R.drawable.ic_media_next);
 				img.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-				btn.setText(ctx.getTranslation("image_selector_gradient_change_orientation"));
+				btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_change_orientation"));
 				setOnClickListener(gradientAddColorListener);
 				return;
 		}
 		colorList = colors;
 		int color = 0xFF000000;
 		updateColorView(color);
-		btn.setText(ctx.getTranslation("image_selector_gradient_item"));
+		btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_item"));
 		ImageView del = LayoutCreator.createImageView(ctx);
 		lp = new LayoutParams(height,height,0);
 		del.setLayoutParams(lp);
