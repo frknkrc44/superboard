@@ -1,10 +1,12 @@
 package org.blinksd.board;
 
+import android.content.*;
 import android.content.res.*;
 import android.os.*;
 import java.util.*;
 import org.blinksd.*;
 import org.blinksd.board.AppSettingsV2.*;
+import org.blinksd.board.dictionary.*;
 import org.blinksd.utils.color.*;
 import org.blinksd.utils.layout.*;
 import org.blinksd.utils.system.*;
@@ -44,12 +46,14 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	SET_ICON_THEME = "keyboard_icon_theme",
 	SET_KILL_BACKGROUND = "keyboard_kill_background",
 	SET_THEME_PRESET = "keyboard_theme_preset",
-	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi";
+	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi",
+	SET_IMPORT_DICT_PACK = "import_dict_pack";
 
 	public SettingMap(){
 		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
+		putGeneral(SET_IMPORT_DICT_PACK,SettingType.REDIRECT);
 		putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
-		putTheming(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
+		putThemingAdvanced(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
 		putTheming(SET_ICON_THEME,SettingType.ICON_SELECTOR);
 		putThemingAdvanced(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
 		putGeneral(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
@@ -115,6 +119,15 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 				i++;
 			}
 		}
+		return null;
+	}
+	
+	public Intent getRedirect(Context context, final String key) {
+		switch(key){
+			case SET_IMPORT_DICT_PACK:
+				return new Intent(context,DictionaryImportActivity.class);
+		}
+		
 		return null;
 	}
 

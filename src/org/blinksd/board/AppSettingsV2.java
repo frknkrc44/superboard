@@ -17,7 +17,6 @@ import org.blinksd.sdb.*;
 import org.blinksd.utils.icon.*;
 import org.blinksd.utils.image.*;
 import org.blinksd.utils.layout.*;
-import org.blinksd.utils.toolbar.*;
 import org.superdroid.db.*;
 
 import static android.media.AudioManager.*;
@@ -44,39 +43,6 @@ public class AppSettingsV2 extends Activity {
 		super.onCreate(b);
 		sdb = SuperBoardApplication.getApplicationDatabase();
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
-		SuperToolbar toolbar = new SuperToolbar(this);
-		if(BuildParams.DEBUG) {
-			toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_backup), new View.OnClickListener(){
-
-					@Override
-					public void onClick(View p1){
-						startActivity(new Intent(AppSettingsV2.this, BackupRestoreActivity.class));
-					}
-
-			});
-		}
-		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_language), new View.OnClickListener(){
-
-				@Override
-				public void onClick(View p1){
-					startActivity(new Intent(AppSettingsV2.this,DictionaryImportActivity.class));
-				}
-
-			});
-		
-		toolbar.addMenuItem(getResources().getDrawable(R.drawable.sym_keyboard_close), new View.OnClickListener(){
-
-				@Override
-				public void onClick(View p1){
-					sdb.removeDB();
-					File bgFile = getBackgroundImageFile();
-					bgFile.delete();
-					recreate();
-				}
-
-		});
-		toolbar.setTextColor(0xFFFFFFFF);
-		main.addView(toolbar);
 		try {
 			createMainView();
 		} catch(Throwable e){
@@ -236,6 +202,7 @@ public class AppSettingsV2 extends Activity {
 		FLOAT_NUMBER,
 		MM_DECIMAL_NUMBER,
 		IMAGE,
+		REDIRECT,
 	}
 	
 }

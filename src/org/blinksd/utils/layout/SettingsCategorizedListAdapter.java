@@ -88,6 +88,8 @@ class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		String key = (String) getChild(p1, p2);
 		SettingType z = SuperBoardApplication.getSettings().get(key).type;
 		switch(z){
+			case REDIRECT:
+				return createRedirect(key);
 			case BOOL:
 				return createBoolSelector(key);
 			case IMAGE:
@@ -247,6 +249,24 @@ class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			throw new RuntimeException(t);
 		}
 	}
+	
+	private final View createRedirect(String key){
+		try {
+			View base = createImageSelector(key);
+			base.setOnClickListener(redirectListener);
+			return base;
+		} catch(Throwable t){
+			throw new RuntimeException(t);
+		}
+	}
+	
+	private final View.OnClickListener redirectListener = new View.OnClickListener(){
+		@Override
+		public void onClick(View p1){
+			Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
+			p1.getContext().startActivity(intent);
+		}
+	};
 
 	private final View.OnClickListener colorSelectorListener = new View.OnClickListener(){
 

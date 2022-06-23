@@ -39,10 +39,6 @@
             android:name=".AppSettings$SetActivity"/>
 		<activity
 			android:launchMode="singleTask"
-            android:name=".BackupRestoreActivity"
-            android:label="@string/settings_activity"/>
-		<activity
-			android:launchMode="singleTask"
             android:name=".dictionary.DictionaryImportActivity"/>
 		<service
 			android:name=".InputService"
