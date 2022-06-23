@@ -19,7 +19,7 @@ import org.blinksd.utils.color.ThemeUtils.*;
 import org.superdroid.db.*;
 import yandroid.widget.*;
 
-class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
+public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	
 	public SettingsCategorizedListAdapter(AppSettingsV2 context){
 		mContext = context;

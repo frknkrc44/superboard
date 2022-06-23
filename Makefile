@@ -1,10 +1,11 @@
 SDK=$(HOME)/Android/Sdk
-TARGET=30
-TOOL=$(shell ls $(SDK)/build-tools | grep $(TARGET) | tail -n 1)
+TARGET=32
+TOOL=$(shell ls $(SDK)/build-tools | tail -n1)
 JAVADIR= 
 BUILDTOOLS=$(SDK)/build-tools/$(TOOL)
 AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
 ADX=$(BUILDTOOLS)/dx
+AD8=$(BUILDTOOLS)/d8
 AAPT=$(BUILDTOOLS)/aapt
 JAVAC=$(JAVADIR)javac
 KOTLINC=$(SDK)/plugins/Kotlin/kotlinc/bin/kotlinc
@@ -19,7 +20,7 @@ space := $(aa) $(aa)
 CLASSPATH=$(AJAR):$(subst $(space),:,$(shell find include/ -name "*.jar"))
 
 SRC=src/
-NAME=$(shell basename $(CURDIR))
+NAME=FBoard
 
 KEYFILE=key.jks
 KEYALIAS=Alias
@@ -31,11 +32,12 @@ JAVAC_DEBUG_FLAGS =
 all: clear mkdirs langpacks abuild build rmdirs zipalign sign
 build-install: all install
 build:
-	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/resources.ap_"
+	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/$(NAME).ap_"
 	$(JAVAC) -classpath $(CLASSPATH) -source 8 -target 8 -g:none -nowarn -sourcepath $(SRC) -sourcepath bin/aidl/ -sourcepath gen -d bin $(JAVAC_DEBUG_FLAGS) `find gen -name "*.java"` `find bin/aidl/ -name "*.java"` `find $(SRC) -name "*.java"`
-	$(ADX) --dex --output=bin/classes.dex bin
-	mv bin/resources.ap_ bin/$(NAME).ap_
-	cd bin ; $(AAPT) add $(NAME).ap_ classes.dex
+	@[ -f $(ADX) ] && \
+		$(ADX) --dex --output=bin/classes.dex bin || \
+		$(AD8) `find bin/ -name "*.class"` --lib $(AJAR) --output bin
+	$(AAPT) add bin/$(NAME).ap_ bin/*.dex
 abuild:
 	$(AIDL) -Iaidl -I$(SRC) -p$(FAIDL) -obin/aidl/ `find aidl -name "*.aidl"` `find $(SRC) -name "*.aidl"`
 zipalign:
