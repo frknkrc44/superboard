@@ -37,7 +37,7 @@ build:
 	@[ -f $(ADX) ] && \
 		$(ADX) --dex --output=bin/classes.dex bin || \
 		$(AD8) `find bin/ -name "*.class"` --lib $(AJAR) --output bin
-	$(AAPT) add bin/$(NAME).ap_ bin/*.dex
+	cd bin && $(AAPT) add $(NAME).ap_ *.dex
 abuild:
 	$(AIDL) -Iaidl -I$(SRC) -p$(FAIDL) -obin/aidl/ `find aidl -name "*.aidl"` `find $(SRC) -name "*.aidl"`
 zipalign:
