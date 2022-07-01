@@ -7,6 +7,7 @@ import android.os.*;
 import android.widget.*;
 import java.lang.reflect.*;
 import org.blinksd.board.*;
+import android.content.res.*;
 
 class CustomSeekBar extends SeekBar {
 	
@@ -23,17 +24,27 @@ class CustomSeekBar extends SeekBar {
 	}
 
 	void drawSeekBar(){
-		Bitmap b = Bitmap.createBitmap(SuperBoard.dp(36),SuperBoard.dp(36),Bitmap.Config.ARGB_8888);
-		Canvas c = new Canvas(b);
-		Paint p = new Paint();
-		p.setStyle(Paint.Style.FILL);
-		p.setColor(0xFFDEDEDE);
-		RectF r = new RectF(0,0,b.getWidth(),b.getHeight());
-		c.drawOval(r,p);
-		setThumb(new BitmapDrawable(b));
-		Drawable ld = getResources().getDrawable(R.drawable.pbar);
-		ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
-		setProgressDrawable(ld);
+		if(Build.VERSION.SDK_INT < 21){
+			Bitmap b = Bitmap.createBitmap(SuperBoard.dp(36),SuperBoard.dp(36),Bitmap.Config.ARGB_8888);
+			Canvas c = new Canvas(b);
+			Paint p = new Paint();
+			int color = 0xFFDEDEDE;
+			p.setStyle(Paint.Style.FILL);
+			p.setColor(color);
+			RectF r = new RectF(0,0,b.getWidth(),b.getHeight());
+			c.drawOval(r,p);
+			setThumb(new BitmapDrawable(b));
+			Drawable ld = getResources().getDrawable(R.drawable.pbar);
+			ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
+			setProgressDrawable(ld);
+		} else {
+			int color = Build.VERSION.SDK_INT >= 31 
+				? getResources().getColor(android.R.color.system_accent1_200)
+				: 0xFFDEDEDE;
+			setThumbTintList(ColorStateList.valueOf(color));
+			setBackgroundTintList(ColorStateList.valueOf(color));
+			setProgressTintList(ColorStateList.valueOf(color));
+		}
 	}
 
 	public Drawable getThumb() {

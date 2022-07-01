@@ -43,6 +43,15 @@ public class AppSettingsV2 extends Activity {
 		super.onCreate(b);
 		sdb = SuperBoardApplication.getApplicationDatabase();
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
+		
+		if(Build.VERSION.SDK_INT >= 31){
+			getWindow().getDecorView().setFitsSystemWindows(true);
+			main.setFitsSystemWindows(false);
+			getWindow().setNavigationBarColor(0);
+			getWindow().setStatusBarColor(0);
+			getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
+		}
+		
 		try {
 			createMainView();
 		} catch(Throwable e){
@@ -66,6 +75,9 @@ public class AppSettingsV2 extends Activity {
 				if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
 				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
 				switch(event){
+					case 3:
+						audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+						break;
 					case 2:
 						audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
 						break;
@@ -79,15 +91,17 @@ public class AppSettingsV2 extends Activity {
 			}
 		};
 		
-		sb.addRow(0,new String[]{"1","2","3"});
-		for(int i = 0;i <= 2;i++) sb.getKey(0,0,i).setId(i);
+		int ph = 12;
+		sb.addRow(0,new String[]{"1","2","3","4"});
+		sb.getKey(0,0,0).setSubText("½");
+		for(int i = 0;i < 4;i++) sb.getKey(0,0,i).setId(i);
 		sb.createEmptyLayout();
 		sb.setEnabledLayout(0);
-		sb.setKeyboardHeight(20);
-		sb.setKeysPadding(DensityUtils.mpInt(4));
+		sb.setKeyboardHeight(ph);
+		sb.setKeysPadding(DensityUtils.mpInt(1));
 		iv = new ImageView(this);
 		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,DensityUtils.hpInt(20)));
+		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,DensityUtils.hpInt(ph)));
 		ll.addView(iv);
 		ll.addView(sb);
 		main.addView(ll);
@@ -111,15 +125,16 @@ public class AppSettingsV2 extends Activity {
 		int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
 		sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
 		sb.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-		sb.setKeyTintColor(0,0,1,getIntOrDefault(SettingMap.SET_KEY2_BGCLR),getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
-		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
+		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_KEY2_BGCLR),getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
+		sb.setKeyTintColor(0,0,-1,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
 		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
 		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 		IconThemeUtils icons = SuperBoardApplication.getIconThemes();
-		sb.setKeyDrawable(0,0,1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+		sb.setKeyDrawable(0,0,2,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+		LayoutUtils.setSpaceBarViewPrefs(icons, sb.getKey(0,0,1), SuperBoardApplication.getCurrentKeyboardLanguage().name);
 		sb.setKeyDrawable(0,0,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
 		try {
 			SuperBoardApplication.clearCustomFont();
@@ -195,8 +210,7 @@ public class AppSettingsV2 extends Activity {
 		BOOL,
 		THEME_SELECTOR,
 		COLOR_SELECTOR,
-		LANG_SELECTOR,
-		ICON_SELECTOR,
+		STR_SELECTOR,
 		SELECTOR,
 		DECIMAL_NUMBER,
 		FLOAT_NUMBER,

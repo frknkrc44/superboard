@@ -16,13 +16,14 @@ import org.blinksd.utils.layout.*;
 
 import static android.view.View.*;
 import static android.view.Gravity.*;
+import org.blinksd.utils.color.*;
 
 public class SuperBoard extends FrameLayout implements OnTouchListener {
 
-	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP, iconmulti = 1;
+	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txtclr = Color.WHITE, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP, iconmulti = 1;
 	protected float txtsze = -1;
 	protected static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
-	private boolean clear = false, lng = false, lock = false, dpopup = false;
+	private boolean clear = false, lng = false, lock = false, dpopup = false, ppreview = false;
 	protected Drawable keybg = null;
 	private String KEY_REPEAT = "10RePeAt01", x[];
 	private Typeface cFont = Typeface.DEFAULT;
@@ -314,7 +315,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				cs += x;
 			}
 		}
-		getKey(keyboardIndex, rowIndex, keyIndex).setHint(cs);
+		Key key = getKey(keyboardIndex, rowIndex, keyIndex);
+		key.setHint(cs);
+		if(cs.length() > 0)
+			key.setSubText(String.valueOf(cs.charAt(0)));
 	}
 
 	public void setLayoutPopup(int keyboardIndex,String[][] chars){
@@ -334,7 +338,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		if(getKeyMargin(0,0,0) != padding)
 			applyToAllKeys(new ApplyToKeyRunnable(){
 					public void run(Key key){
-						Key.LayoutParams l = (Key.LayoutParams) key.getLayoutParams();
+						Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
 						l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
 					}
 				});
@@ -343,7 +347,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	private int getKeyMargin(int k, int r, int y){
 		try {
 			Key key = getKey(k, r, y);
-			Key.LayoutParams l = (Key.LayoutParams) key.getLayoutParams();
+			Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
 			return l.bottomMargin;
 		} catch(Throwable t){}
 		return -1;
@@ -392,6 +396,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				});
 		shrad = radius;
 		shclr = color;
+	}
+	
+	public void setKeysPopupPreviewEnabled(final boolean enabled){
+		if(enabled != ppreview)
+			applyToAllKeys(new ApplyToKeyRunnable(){
+					public void run(Key key){
+						ppreview = enabled;
+						key.setKeyImageVisible(key.isKeyIconSet());
+					}
+				});
 	}
 	
 	public void setKeysTextType(final int style){
@@ -540,8 +554,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	
 	public void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, String[] chars){
 		getRow(keyboardIndex, rowIndex).removeAllViewsInLayout();
-		for(String chr : chars){
-			addKeyToRow(keyboardIndex, rowIndex, chr);
+		for(int i = 0;i < chars.length;i++){
+			addKeyToRow(keyboardIndex, rowIndex, chars[i]);
 		}
 	}
 	
@@ -570,16 +584,21 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 	public void addRows(int keyboardIndex,String[][] keys){
 		if(keys != null){
-			for(String[] key : keys){
-				addRow(keyboardIndex,key);
+			for(int i = 0;i < keys.length;i++){
+				addRow(keyboardIndex,keys[i]);
 			}
 		}
 	}
 	
 	public void addKeyToRow(int keyboardIndex, int rowIndex, String key){
+		addKeyToRow(keyboardIndex, rowIndex, key, "");
+	}
+	
+	public void addKeyToRow(int keyboardIndex, int rowIndex, String key, String subKey){
 		Row r = getRow(keyboardIndex, rowIndex);
 		Key k = new Key(getContext());
 		k.setText(key);
+		k.setSubText(subKey);
 		r.addKey(k);
 		r.setKeyWidths();
 	}
@@ -592,7 +611,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		clear = true;
 		Row r = new Row(getContext());
 		if(keys.length > 0){
-			for(String key : keys){
+			for(int i = 0;i < keys.length;i++){
+				String key = keys[i];
 				Key k = new Key(getContext());
 				if(template != null){
 					template.clone(k);
@@ -736,10 +756,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				t = (Key) r.getChildAt(g);
 				if(!isKeyHasEvent(t) && t.getText() != null){
 					String tText = t.getText().toString();
+					String sText = t.getSubText().toString();
 					t.setText(state > 0 
-						? tText.toUpperCase(loc)
-						: tText.toLowerCase(loc)
-					);
+							  ? tText.toUpperCase(loc)
+							  : tText.toLowerCase(loc));
+					t.setSubText(state > 0 
+								 ? sText.toUpperCase(loc)
+								 : sText.toLowerCase(loc));
 					t.setSelected(false);
 				}
 			}
@@ -804,12 +827,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				k = findKeyByLabel(0, ",");
 				if(k != null){
 					k.setText("@");
+					// k.setSubText("→");
 				}
 				break;
 			default:
 				k = findKeyByLabel(0, "@");
 				if(k != null){
 					k.setText(",");
+					// k.setSubText("→");
 				}
 				break;
 		}
@@ -948,14 +973,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 	}
 
-	protected class Key extends LinearLayout {
+	protected class Key extends RelativeLayout {
 		
-		TextView t = null;
-		ImageView i = null;
+		TextView label = null, sublabel = null;
+		ImageView icon = null;
 		protected int shr = 0, shc = 0, txtst = 0;
 		
 		public boolean isKeyIconSet(){
-			return i.getDrawable() != null;
+			return icon.getDrawable() != null && icon.isShown();
 		}
 		
 		public int getKeyWidth(){
@@ -966,26 +991,36 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			return keyclr;
 		}
 		
-		Key(Context c){
-			super(c);
+		Key(Context context){
+			super(context);
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
-			t = new TextView(c);
-			t.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
-			i = new ImageView(c);
-			i.setLayoutParams(new LinearLayout.LayoutParams(-1,-1));
-			addView(t);
-			addView(i);
-			i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+			label = new TextView(context);
+			label.setLayoutParams(new RelativeLayout.LayoutParams(-1,-1));
+			sublabel = new TextView(context);
+			RelativeLayout.LayoutParams subParams = new RelativeLayout.LayoutParams(-2,-2);
+			subParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+			subParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+			int margin = DensityUtils.mpInt(1.5f);
+			subParams.rightMargin = subParams.topMargin = margin;
+			sublabel.setLayoutParams(subParams);
+			icon = new ImageView(context);
+			RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(-1,-1);
+			iconParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+			icon.setLayoutParams(iconParams);
+			addView(label);
+			addView(sublabel);
+			addView(icon);
+			icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			setKeyImageVisible(false);
-			t.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
-			t.setSingleLine();
-			setGravity(CENTER);
-			t.setGravity(CENTER);
-			t.setHintTextColor(0);
+			label.setTextColor(keyclr!=-1?keyclr:(keyclr=0xFFDEDEDE));
+			label.setSingleLine();
+			label.setGravity(CENTER);
+			label.setHintTextColor(0);
 			setKeyShadow(shrad,shclr!=-1?shclr:(shclr=keyclr));
 			setKeyTextSize(txtsze!=1?txtsze:(txtsze=DensityUtils.mp(1.25f)));
 			setBackground(keybg);
 			setKeyTextStyle(txts);
+			setKeyItemColor(txtclr);
 			setOnTouchListener(SuperBoard.this);
 		}
 
@@ -1000,51 +1035,68 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		
 		public void setKeyIcon(Drawable dr){
 			setKeyImageVisible(true);
-			i.setImageDrawable(dr);
+			icon.setImageDrawable(dr);
+			dr.setColorFilter(txtclr,PorterDuff.Mode.SRC_ATOP);
+		}
+		
+		public void setKeyIcon(int res){
+			setKeyIcon(getResources().getDrawable(res));
 		}
 		
 		public void setKeyItemColor(int color){
-			t.setTextColor(color);
+			label.setTextColor(txtclr=color);
+			sublabel.setTextColor(ColorUtils.convertARGBtoRGB(color) - 0x66000000);
 			if(isKeyIconSet()){
 				getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
 			}
 		}
 		
-		public void setText(CharSequence cs){
+		public void setText(CharSequence text){
 			setKeyImageVisible(false);
-			t.setText(cs);
+			label.setText(text);
+		}
+		
+		public void setSubText(CharSequence text){
+			setKeyImageVisible(false);
+			sublabel.setText(text);
 		}
 		
 		public CharSequence getText(){
-			return t.getText();
+			return label.getText();
+		}
+		
+		public CharSequence getSubText(){
+			return sublabel.getText();
 		}
 		
 		public Drawable getKeyIcon(){
-			return i.getDrawable();
+			return icon.getDrawable();
 		}
 		
 		protected CharSequence getHint(){
-			return t.getHint();
+			return label.getHint();
 		}
 		
 		public void setKeyImageVisible(boolean visible){
-			i.setVisibility(visible?VISIBLE:GONE);
-			t.setVisibility(visible?GONE:VISIBLE);
+			icon.setVisibility(visible?VISIBLE:GONE);
+			label.setVisibility(visible?GONE:VISIBLE);
+			sublabel.setVisibility(ppreview&&!visible?VISIBLE:GONE);
 		}
 		
 		protected void setHint(CharSequence cs){
-			t.setHint(cs);
+			label.setHint(cs);
 		}
 		
 		private void setKeyTextSize(float size){
-			t.setTextSize(txtsze=size);
-			ViewGroup.LayoutParams vp = i.getLayoutParams();
+			label.setTextSize(txtsze=size);
+			sublabel.setTextSize(label.getTextSize() / 3);
+			ViewGroup.LayoutParams vp = icon.getLayoutParams();
 			vp.width = -1;
 			vp.height = (int)(size*iconmulti);
 		}
 		
 		private void setKeyShadow(int radius, int color){
-			t.setShadowLayer(shr=radius,0,0,shc=color);
+			label.setShadowLayer(shr=radius,0,0,shc=color);
 		}
 		
 		public void setKeyTextStyle(int style){
@@ -1055,84 +1107,89 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		
 		public void setKeyTextStyle(TextType style){
 			if(style == null){
-				t.setTypeface(Typeface.DEFAULT);
+				label.setTypeface(Typeface.DEFAULT);
 				return;
 			}
 			switch(style){
 				case regular:
-					t.setTypeface(Typeface.DEFAULT);
+					label.setTypeface(Typeface.DEFAULT);
 					break;
 				case bold:
-					t.setTypeface(Typeface.DEFAULT_BOLD);
+					label.setTypeface(Typeface.DEFAULT_BOLD);
 					break;
 				case italic:
-					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
+					label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
 					break;
 				case bold_italic:
-					t.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
+					label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
 					break;
 				case condensed:
-					t.setTypeface(Typeface.create("sans-serif-condensed",0));
+					label.setTypeface(Typeface.create("sans-serif-condensed",0));
 					break;
 				case condensed_bold:
-					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
+					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
 					break;
 				case condensed_italic:
-					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
+					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
 					break;
 				case condensed_bold_italic:
-					t.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
+					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
 					break;
 				case serif:
-					t.setTypeface(Typeface.SERIF);
+					label.setTypeface(Typeface.SERIF);
 					break;
 				case serif_bold:
-					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
+					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
 					break;
 				case serif_italic:
-					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
+					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
 					break;
 				case serif_bold_italic:
-					t.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
+					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
 					break;
 				case monospace:
-					t.setTypeface(Typeface.MONOSPACE);
+					label.setTypeface(Typeface.MONOSPACE);
 					break;
 				case monospace_bold:
-					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
+					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
 					break;
 				case monospace_italic:
-					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
+					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
 					break;
 				case monospace_bold_italic:
-					t.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
+					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
 					break;
 				case serif_monospace:
-					t.setTypeface(Typeface.create("serif-monospace",Typeface.NORMAL));
+					label.setTypeface(Typeface.create("serif-monospace",Typeface.NORMAL));
 					break;
 				case serif_monospace_bold:
-					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD));
+					label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD));
 					break;
 				case serif_monospace_italic:
-					t.setTypeface(Typeface.create("serif-monospace",Typeface.ITALIC));
+					label.setTypeface(Typeface.create("serif-monospace",Typeface.ITALIC));
 					break;
 				case serif_monospace_bold_italic:
-					t.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
+					label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
 					break;
 				case custom:
 					// Contains a system problem about custom font files,
 					// Custom fonts applying too slowly and I can't fix it!
-					t.setTypeface(cFont);
+					label.setTypeface(cFont);
 					break;
 			}
+			sublabel.setTypeface(label.getTypeface());
 		}
 		
 		protected TextView getTextView(){
-			return t;
+			return label;
+		}
+		
+		protected TextView getSubTextView(){
+			return sublabel;
 		}
 		
 		protected ImageView getImageView(){
-			return i;
+			return icon;
 		}
 		
 		@Override
@@ -1157,14 +1214,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			k.setKeyShadow(shr,shc);
 			k.setKeyItemColor(keyclr);
 			k.getTextView().setSingleLine();
+			k.getSubTextView().setSingleLine();
 			k.setId(getId());
-			k.setKeyTextSize(t.getTextSize()/2.5f);
+			k.setKeyTextSize(label.getTextSize()/2.5f);
 			k.setKeyTextStyle(txts);
 			if(disableTouchEvent) k.setOnTouchListener(null);
 			if(isKeyIconSet()){
 				k.setKeyIcon(getKeyIcon());
 			} else {
 				k.setText(getText());
+				k.setSubText(getSubText());
 			}
 			return k;
 		}

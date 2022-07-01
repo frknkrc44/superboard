@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.blinksd.board"
-    android:versionCode="26"
-    android:versionName="3.17.1">
+    android:versionCode="27"
+    android:versionName="3.18">
 	
 	<uses-sdk android:minSdkVersion="8" 
 		android:targetSdkVersion="29" />

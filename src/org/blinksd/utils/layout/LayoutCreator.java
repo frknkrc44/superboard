@@ -1,10 +1,13 @@
 package org.blinksd.utils.layout;
 
 import android.content.*;
+import android.os.*;
 import android.view.*;
 import android.widget.*;
 import java.lang.reflect.*;
 import java.util.*;
+import org.blinksd.board.*;
+import org.blinksd.utils.color.*;
 import yandroid.widget.*;
 
 public class LayoutCreator {
@@ -146,6 +149,13 @@ public class LayoutCreator {
 		sw.setText(text);
 		sw.setChecked(on);
 		sw.setOnCheckedChangeListener(listener);
+		sw.setThumbResource(R.drawable.switch_thumb);
+		sw.setTrackResource(R.drawable.switch_track);
+		int tint = Build.VERSION.SDK_INT >= 31 
+					? ctx.getResources().getColor(android.R.color.system_accent1_200)
+					: ColorUtils.getAccentColor();
+		sw.getThumbDrawable().setTint(tint);
+		sw.getTrackDrawable().setTint(tint);
 		return sw;
 	}
 	

@@ -32,4 +32,9 @@ public class BaseMap<K, V> {
 	public int size(){
 		return map.size();
 	}
+	
+	public K getFromIndex(int index){
+		List<K> keys = keyList();
+		return keys.get(keys.size() > index ? index : 0);
+	}
 }

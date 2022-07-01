@@ -18,6 +18,7 @@ import org.blinksd.utils.color.*;
 import org.blinksd.utils.color.ThemeUtils.*;
 import org.superdroid.db.*;
 import yandroid.widget.*;
+import yandroid.util.*;
 
 public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	
@@ -99,11 +100,13 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 				return createRadioSelector(key,themeKeys);
 			case COLOR_SELECTOR:
 				return createColorSelector(key);
-			case LANG_SELECTOR:
-				List<String> keySet = SuperBoardApplication.getLanguageHRNames();
-				return createRadioSelector(key,keySet);
-			case ICON_SELECTOR:
+			case STR_SELECTOR:
 			case SELECTOR:
+				if(SettingMap.SET_KEYBOARD_LANG_SELECT.equals(key)){
+					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
+					return createRadioSelector(key,keySet);
+				}
+				
 				List<String> selectorKeys = getArrayAsList(key);
 				return createRadioSelector(key,selectorKeys);
 			case DECIMAL_NUMBER:
@@ -191,7 +194,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		int pad = (int)(getListPreferredItemHeight() / 4);
 		boolean val = getAppDB().getBoolean(key,(boolean) getSettings().getDefaults(key));
 		if(Build.VERSION.SDK_INT >= 21) {
-			TextView swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,mContext,getTranslation(key),val,switchListener);
+			YSwitch swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,mContext,getTranslation(key),val,switchListener);
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);
 			swtch.setPadding(pad,0,pad,0);
@@ -322,7 +325,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 					}
 
 				});
-			build.show();
+
+			doHacksAndShow(build);
 		}
 
 	};
@@ -384,7 +388,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 					}
 
 				});
-			build.show();
+			
+			doHacksAndShow(build);
 		}
 
 	};
@@ -427,7 +432,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			AlertDialog dialog = build.create();
 			dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog,mContext,p1.getTag().toString());
 			dialog.setView(dialogView);
-			dialog.show();
+			
+			doHacksAndShow(build);
 		}
 
 	};
@@ -463,16 +469,20 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			final String tag = p1.getTag(TAG1).toString();
 			int val;
-			final boolean langSelector = getSettings().get(tag).type == SettingType.LANG_SELECTOR;
-			final boolean iconSelector = getSettings().get(tag).type == SettingType.ICON_SELECTOR;
-			final boolean themeSelector = getSettings().get(tag).type == SettingType.THEME_SELECTOR;
-			if(langSelector){
+			final SettingItem item = getSettings().get(tag);
+			final boolean langSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_LANG_SELECT.equals(tag);
+			final boolean iconSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_ICON_THEME.equals(tag);
+			final boolean spaceSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_SPACETYPE_SELECT.equals(tag);
+			final boolean themeSelector = item.type == SettingType.THEME_SELECTOR;
+			if(langSelector || iconSelector || spaceSelector){
 				String value = SuperDBHelper.getValueOrDefault(tag);
-				val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
-			} else if(iconSelector){
-				String value = SuperDBHelper.getValueOrDefault(tag);
-				val = SuperBoardApplication.getIconThemes().indexOf(value);
-			} else if (themeSelector){
+				if(langSelector)
+					val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
+				else if(iconSelector)
+					val = SuperBoardApplication.getIconThemes().indexOf(value);
+				else
+					val = SuperBoardApplication.getSpaceBarStyles().indexOf(value);
+			} else if(themeSelector) {
 				val = -1;
 			} else {
 				val = mContext.getIntOrDefault(tag);
@@ -495,7 +505,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
 						@Override
 						public void onClick(DialogInterface p1, int p2){
-							if(langSelector || iconSelector || themeSelector) getAppDB().putString(tag,(String)getSettings().getDefaults(tag));
+							if(langSelector || iconSelector || spaceSelector) getAppDB().putString(tag,(String)getSettings().getDefaults(tag));
 							else getAppDB().putInteger(tag,(int)getSettings().getDefaults(tag));
 							getAppDB().onlyWrite();
 							mContext.restartKeyboard();
@@ -516,6 +526,9 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 							} else if(iconSelector){
 								String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
 								getAppDB().putString(tag,index);
+							} else if(spaceSelector) {
+								String index = SuperBoardApplication.getSpaceBarStyles().getFromIndex(tagVal);
+								getAppDB().putString(tag,index);
 							} else if (themeSelector) {
 								List<ThemeHolder> themes = SuperBoardApplication.getThemes();
 								ThemeHolder theme = themes.get(tagVal);
@@ -529,7 +542,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 					}
 
 				});
-			build.show();
+
+			doHacksAndShow(build);
 		}
 
 	};
@@ -586,5 +600,46 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		} catch(Throwable t){
 			return new ArrayList<String>();
 		}
+	}
+	
+	public void doHacksAndShow(AlertDialog.Builder builder){
+		AlertDialog dialog = builder.create();
+		
+		if(Build.VERSION.SDK_INT >= 31) {
+			Drawable dw = dialog.getWindow().getDecorView().getBackground(); 
+			int color = mContext.getResources().getColor(android.R.color.system_neutral1_900);
+			dw.setTint(color);
+			/*
+			GradientDrawable gd = new GradientDrawable();
+			gd.setColor(color);
+			gd.setCornerRadius(mContext.getResources().getDisplayMetrics().density * 16);
+			dialog.getWindow().setBackgroundDrawable(gd);
+			*/
+		}
+			
+		
+		dialog.show();
+
+		try {
+			Styleable.tryToBypassRestrictions();
+			Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+			mAlert.setAccessible(true);
+			Object mController = mAlert.get(dialog);
+			Field fPosBtn = mController.getClass().getDeclaredField("mButtonPositive");
+			fPosBtn.setAccessible(true);
+			Field fNeuBtn = mController.getClass().getDeclaredField("mButtonNeutral");
+			fNeuBtn.setAccessible(true);
+			Field fNegBtn = mController.getClass().getDeclaredField("mButtonNegative");
+			fNegBtn.setAccessible(true);
+			int tint = Build.VERSION.SDK_INT >= 31 
+				? mContext.getResources().getColor(android.R.color.system_accent1_200)
+				: ColorUtils.getAccentColor();
+			Button mPositiveButton = (Button) fPosBtn.get(mController);
+			Button mNeutralButron = (Button) fNeuBtn.get(mController);
+			Button mNegativeButton = (Button) fNegBtn.get(mController);
+			if(mPositiveButton != null) mPositiveButton.setTextColor(tint);
+			if(mNeutralButron != null) mNeutralButron.setTextColor(tint);
+			if(mNegativeButton != null) mNegativeButton.setTextColor(tint);
+		} catch(Throwable t){}
 	}
 }

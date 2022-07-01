@@ -27,6 +27,7 @@
 	<string name="settings_disable_popup">Disable popup menu</string>
 	<string name="settings_disable_repeat">Disable character repeating on long press</string>
 	<string name="settings_disable_suggestions">Disable word suggestions</string>
+	<string name="settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet">Use monet colors (beta)</string>
 	<string name="settings_detect_capslock">Detect capslock status automatically</string>
 	<string name="settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
@@ -66,6 +67,7 @@
 	<string name="settings_keyboard_texttype_select">Keyboard font</string>
 	<string name="settings_keyboard_theme_preset">Keyboard theme</string>
 	<string name="settings_keyboard_icon_theme">Icon theme</string>
+	<string name="settings_keyboard_spacetype_select">Space bar style</string>
 	
 	<!-- Number selector resources -->
 	<string name="settings_keyboard_bgblur">Keyboard background image blur</string>
@@ -118,9 +120,16 @@
 	
 	<string-array name="settings_keyboard_icon_theme">
 		<item>Default</item>
-		<item>Daisy</item>
 		<item>Material</item>
 		<item>Apricot</item>
+	</string-array>
+	
+	<string-array name="settings_keyboard_spacetype_select">
+		<item>Theme default</item>
+		<item>Selected language</item>
+		<item>Daisy</item>
+		<item>Space bar</item>
+		<item>Empty</item>
 	</string-array>
 	
 	<string-array name="settings_categories">

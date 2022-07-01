@@ -27,6 +27,7 @@ public class SuperBoardApplication extends Application {
 	private static File fontFile = null;
 	private static String fontPath = null;
 	private static IconThemeUtils icons;
+	private static SpaceBarThemeUtils spaceBars;
 	private static List<ThemeHolder> themes;
 	private static DictionaryDB dictDB;
 	
@@ -37,6 +38,7 @@ public class SuperBoardApplication extends Application {
 		appContext = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		icons = new IconThemeUtils();
+		spaceBars = new SpaceBarThemeUtils();
 		settingMap = new SettingMap();
 		fontPath = getApplication().getExternalCacheDir()+"/font.ttf";
 		
@@ -93,6 +95,10 @@ public class SuperBoardApplication extends Application {
 		return icons;
 	}
 	
+	public static SpaceBarThemeUtils getSpaceBarStyles(){
+		return spaceBars;
+	}
+	
 	public static Typeface getCustomFont(){
 		if(customFont == null){
 			try {
@@ -114,6 +120,11 @@ public class SuperBoardApplication extends Application {
 		if(fontFile == null || fontFile.lastModified() != newFile.lastModified()){
 			customFont = null;
 		}
+	}
+	
+	public static Language getCurrentKeyboardLanguage(){
+		String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
+		return getKeyboardLanguage(appDB.getString(key,(String)settingMap.getDefaults(key)));
 	}
 	
 	public static Language getKeyboardLanguage(String name){

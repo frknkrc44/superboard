@@ -27,6 +27,7 @@ public class Defaults {
 	public static final int ICON_SIZE_MULTIPLIER = 3;
 	
 	public static final String KEYBOARD_LANGUAGE_KEY = "tr_TR_Q";
+	public static final String KEYBOARD_SPACETYPE = "theme";
 	public static final String ICON_THEME = "theme_default";
 	public static final String THEME_PRESET = "default";
 	
@@ -40,5 +41,6 @@ public class Defaults {
 	public static final boolean DISABLE_REPEAT = false;
 	public static final boolean DISABLE_SUGGESTIONS = false;
 	public static final boolean USE_MONET = false;
+	public static final boolean ENABLE_POPUP_PREVIEW = false;
 	public static final boolean KILL_BACKGROUND = false;
 }

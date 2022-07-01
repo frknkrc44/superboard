@@ -1,9 +1,11 @@
 package org.blinksd.utils.color;
 
+import android.content.res.*;
 import android.graphics.*;
 import android.os.*;
 import android.util.*;
 import java.lang.annotation.*;
+import org.blinksd.*;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -191,6 +193,13 @@ public class ColorUtils {
 			state[i] /= 1.2;
 		}
 		return Color.argb(Color.alpha(color),state[0],state[1],state[2]);
+	}
+	
+	public static int getAccentColor(){
+		TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
+		int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
+		arr.recycle();
+		return color;
 	}
 	
 	@Retention(SOURCE)

@@ -15,6 +15,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 
 	public static final String SET_KEYBOARD_LANG_SELECT = "keyboard_lang_select",
 	SET_KEYBOARD_TEXTTYPE_SELECT = "keyboard_texttype_select",
+	SET_KEYBOARD_SPACETYPE_SELECT = "keyboard_spacetype_select",
 	SET_KEYBOARD_BGIMG = "keyboard_bgimg",
 	SET_KEYBOARD_BGBLUR = "keyboard_bgblur",
 	SET_KEYBOARD_HEIGHT = "keyboard_height",
@@ -43,6 +44,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	SET_DISABLE_REPEAT = "disable_repeat",
 	SET_DISABLE_SUGGESTIONS = "disable_suggestions",
 	SET_USE_MONET = "use_monet",
+	SET_ENABLE_POPUP_PREVIEW = "enable_popup_preview",
 	SET_ICON_THEME = "keyboard_icon_theme",
 	SET_KILL_BACKGROUND = "keyboard_kill_background",
 	SET_THEME_PRESET = "keyboard_theme_preset",
@@ -50,11 +52,12 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	SET_IMPORT_DICT_PACK = "import_dict_pack";
 
 	public SettingMap(){
-		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.LANG_SELECTOR);
+		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.STR_SELECTOR);
 		putGeneral(SET_IMPORT_DICT_PACK,SettingType.REDIRECT);
 		putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		putTheming(SET_KEYBOARD_SPACETYPE_SELECT,SettingType.STR_SELECTOR);
 		putThemingAdvanced(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
-		putTheming(SET_ICON_THEME,SettingType.ICON_SELECTOR);
+		putTheming(SET_ICON_THEME,SettingType.STR_SELECTOR);
 		putThemingAdvanced(SET_KEYBOARD_BGIMG,SettingType.IMAGE);
 		putGeneral(SET_KEYBOARD_SHOW_POPUP,SettingType.BOOL);
 		putGeneral(SET_PLAY_SND_PRESS,SettingType.BOOL);
@@ -68,6 +71,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 		putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 31)
 			putTheming(SET_USE_MONET, SettingType.BOOL);
+		putTheming(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
 		putGeneral(SET_DETECT_CAPSLOCK,SettingType.BOOL);
 		putGeneral(SET_KILL_BACKGROUND,SettingType.BOOL);
 		putThemingAdvanced(SET_KEYBOARD_BGBLUR,SettingType.DECIMAL_NUMBER);
@@ -140,6 +144,8 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())
 					textTypes.add(type.name());
 				return textTypes;
+			case SET_KEYBOARD_SPACETYPE_SELECT:
+				return (ArrayList<String>) SuperBoardApplication.getSpaceBarStyles().keyList();
 			case SET_ICON_THEME:
 				return (ArrayList<String>) SuperBoardApplication.getIconThemes().keyList();
 		}
@@ -213,8 +219,12 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 					return Defaults.DISABLE_SUGGESTIONS;
 				case SET_USE_MONET:
 					return Defaults.USE_MONET;
+				case SET_ENABLE_POPUP_PREVIEW:
+					return Defaults.ENABLE_POPUP_PREVIEW;
 				case SET_ICON_THEME:
 					return Defaults.ICON_THEME;
+				case SET_KEYBOARD_SPACETYPE_SELECT:
+					return Defaults.KEYBOARD_SPACETYPE;
 				case SET_KILL_BACKGROUND:
 					return Defaults.KILL_BACKGROUND;
 				case SET_THEME_PRESET:

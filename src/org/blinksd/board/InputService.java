@@ -28,6 +28,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.Secure.getInt;
 import static org.blinksd.utils.system.SystemUtils.*;
 import org.blinksd.utils.icon.*;
+import android.graphics.drawable.*;
 
 public class InputService extends InputMethodService implements SuggestionLayout.OnSuggestionSelectedListener {
 	
@@ -166,10 +167,14 @@ public class InputService extends InputMethodService implements SuggestionLayout
 						return;
 					}
 			
-					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
+					boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
+					
+					if(showPopup || !disablePopup)
 						po.setKey((SuperBoard.Key)v);
+						
+					if(showPopup)
 						po.showCharacter();
-					}
 				}
 				
 				public void onPopupEvent(){
@@ -230,33 +235,33 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			appname = getString(R.string.app_name);
 			String abc = "ABC";
-			kbd = new String[][][]{
-				{
-					{"[","]","θ","÷","<",">","`","´","{","}"},
-					{"©","£","€","+","®","¥","π","Ω","λ","β"},
-					{"@","#","$","%","&","*","-","=","(",")"},
-					{"S2","!","\"","'",":",";","/","?",""},
-					{abc,",",appname,".",""}
-				},{
-					{"√","ℕ","★","×","™","‰","∛","^","~","±"},
-					{"♣","♠","♪","♥","♦","≈","Π","¶","§","∆"},
-					{"←","↑","↓","→","∞","≠","_","℅","‘","’"},
-					{"S3","¡","•","°","¢","|","\\","¿",""},
-					{abc,"₺",appname,"…",""}
-				},{
-					{"F1","F2","F3","F4","F5","F6","F7","F8"},
-					{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
-					{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
-					{"","","END","","","PAUSE","",""},
-					{abc,"","←","↑","↓","→","",""}
-				},{
-					{"-",".",",","ABC"},
-					{"1","2","3","+"},
-					{"4","5","6",";"},
-					{"7","8","9",""},
-					{"*","0","#",""}
-				}
+			String[][] kbdSym1 = {
+				{"[","]","θ","÷","<",">","`","´","{","}"},
+				{"©","£","€","+","®","¥","π","Ω","λ","β"},
+				{"@","#","$","%","&","*","-","=","(",")"},
+				{"S2","!","\"","'",":",";","/","?",""},
+				{abc,",",appname,".",""}
+			}, kbdSym2 = {
+				{"√","ℕ","★","×","™","‰","∛","^","~","±"},
+				{"♣","♠","♪","♥","♦","≈","Π","¶","§","∆"},
+				{"←","↑","↓","→","∞","≠","_","℅","‘","’"},
+				{"S3","¡","•","°","¢","|","\\","¿",""},
+				{abc,"₺",appname,"…",""}
+			}, kbdSym3 = {
+				{"F1","F2","F3","F4","F5","F6","F7","F8"},
+				{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
+				{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
+				{"","","END","","","PAUSE","",""},
+				{abc,"","←","↑","↓","→","",""}
+			}, kbdNums = {
+				{"-",".",",","ABC"},
+				{"1","2","3","+"},
+				{"4","5","6",";"},
+				{"7","8","9",""},
+				{"*","0","#",""}
 			};
+			
+			kbd = new String[][][]{kbdSym1,kbdSym2,kbdSym3,kbdNums};
 
 			try {
 				String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
@@ -264,9 +269,10 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				if(!cl.language.equals(lang)){
 					throw new RuntimeException("Where is the layout JSON file (in assets)?");
 				}
-				String[][] lkeys = LayoutUtils.getLayoutKeysFromList(cl.layout);
+				String[][] lkeys = LayoutUtils.getLayoutKeys(cl.layout);
 				sb.addRows(0,lkeys);
-				sb.setLayoutPopup(0,LayoutUtils.getLayoutKeysFromList(cl.popup));
+				lkeys = LayoutUtils.getLayoutKeys(cl.popup);
+				sb.setLayoutPopup(0,lkeys);
 				if(cl.midPadding && lkeys != null){
 					sb.setRowPadding(0,lkeys.length/2,DensityUtils.wpInt(2));
 				}
@@ -275,8 +281,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			}
 			sb.createLayoutWithRows(kbd[0],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
-			sb.createLayoutWithRows(kbd[2],KeyboardType.SYMBOL);
-				
+			sb.createLayoutWithRows(kbd[2],KeyboardType.SYMBOL);		
 			sb.createLayoutWithRows(kbd[3],KeyboardType.NUMBER);
 			
 			sb.setPressEventForKey(1,3,0,Keyboard.KEYCODE_ALT);
@@ -409,11 +414,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			for(int i = 1;i < 3;i++){
 				sb.setKeyDrawable(i,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
 				sb.setKeyDrawable(i,4,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
-				int item = icons.getIconResource(IconThemeUtils.SYM_TYPE_SPACE);
-				if(item != android.R.color.transparent)
-					sb.setKeyDrawable(i,4,2,item);
-				else
-					sb.getKey(i,4,2).setText(appname);
+				LayoutUtils.setSpaceBarViewPrefs(icons, sb.getKey(i,4,2), appname);
 			}
 			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
 			sb.setRepeating(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_REPEAT));
@@ -453,6 +454,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setKeysTextSize(DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 			sb.setIconSizeMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+			sb.setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
 			int y = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
 			int yp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
 			int z = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_BGCLR);
@@ -509,9 +511,9 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			if(!l.language.equals(lang)){
 				throw new RuntimeException("Where is the layout JSON file (in assets)?");
 			}
-			String[][] lkeys = LayoutUtils.getLayoutKeysFromList(l.layout);
+			String[][] lkeys = LayoutUtils.getLayoutKeys(l.layout);
 			sb.replaceNormalKeyboard(lkeys);
-			sb.setLayoutPopup(sb.findNormalKeyboardIndex(),LayoutUtils.getLayoutKeysFromList(l.popup));
+			sb.setLayoutPopup(sb.findNormalKeyboardIndex(),LayoutUtils.getLayoutKeys(l.popup));
 			if(l.midPadding && lkeys != null){
 				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,DensityUtils.wpInt(2));
 			}

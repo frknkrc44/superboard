@@ -77,23 +77,24 @@ public class LayoutUtils {
 		}
 		return jsonList;
 	}
-	
-	public static String[][] getLayoutKeysFromList(List<List<KeyOptions>> list){
+
+	public static String[][] getLayoutKeys(List<List<KeyOptions>> list){
 		if(list != null){
-			String[][] out = new String[list.size()][];
+			String[][] xout = new String[list.size()][];
 			for(int i = 0;i < list.size();i++){
 				List<KeyOptions> subList = list.get(i);
-				String[] subOut = new String[subList.size()];
+				String[] out = new String[subList.size()];
 				for(int g = 0;g < subList.size();g++){
-					subOut[g] = subList.get(g).key;
+					KeyOptions opts = subList.get(g);
+					out[g] = opts.key;
 				}
-				out[i] = subOut;
+				xout[i] = out;
 			}
-			return out;
+			return xout;	
 		}
 		return null;
 	}
-	
+
 	public static Language createLanguage(String fileData, boolean userTheme) throws JSONException {
 		Language l = new Language();
 		JSONObject main = new JSONObject(fileData);
@@ -192,6 +193,14 @@ public class LayoutUtils {
 				}
 				if(ko.longPressKeyCode != 0){
 					sb.setLongPressEventForKey(0,i,g,ko.longPressKeyCode,!ko.longPressIsNotEvent);
+					if(ko.longPressIsNotEvent){
+						SuperBoard.Key key = sb.getKey(0,i,g);
+						switch(ko.longPressKeyCode){
+							case '\t':
+								key.setSubText("→");
+								break;
+						}
+					}
 				}
 				if(ko.repeat){
 					sb.setKeyRepeat(0,i,g);
@@ -206,14 +215,12 @@ public class LayoutUtils {
 						sb.setKeyDrawable(0,i,g, icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_DELETE));
 						break;
 					case Keyboard.KEYCODE_MODE_CHANGE:
-						sb.getKey(0,i,g).setText("!?#");
+						SuperBoard.Key kbdMChange = sb.getKey(0,i,g);
+						kbdMChange.setText("!?#");
+						kbdMChange.setSubText("↓");
 						break;
 					case KeyEvent.KEYCODE_SPACE:
-						int item = icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_SPACE);
-						if(item == android.R.color.transparent)
-							sb.getKey(0,i,g).setText(lang.label);
-						else
-							sb.setKeyDrawable(0,i,g,item);
+						setSpaceBarViewPrefs(icons, sb.getKey(0,i,g), lang.label);
 						break;
 					case Keyboard.KEYCODE_DONE:
 						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_ENTER));
@@ -229,6 +236,23 @@ public class LayoutUtils {
 		}
 		int iconmulti = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER);
 		sb.setIconSizeMultiplier(iconmulti);
+	}
+	
+	public static void setSpaceBarViewPrefs(IconThemeUtils icons, SuperBoard.Key space, String label){
+		if(icons == null) icons = SuperBoardApplication.getIconThemes();
+		int item = icons.getIconResource(IconThemeUtils.SYM_TYPE_SPACE);
+		switch(item){
+			case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
+			case SpaceBarThemeUtils.SPACEBAR_TEXT:
+				space.setText(label);
+				break;
+			case SpaceBarThemeUtils.SPACEBAR_HIDE:
+				space.setKeyIcon(new ColorDrawable());
+				break;
+			default:
+				space.setKeyIcon(item);
+				break;
+		}
 	}
 	
 	public static ArrayList<String> getKeyListFromLanguageList(){

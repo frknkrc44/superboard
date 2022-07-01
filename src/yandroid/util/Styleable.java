@@ -9,6 +9,7 @@ package yandroid.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import android.content.res.*;
 
 public class Styleable {
 	
@@ -58,6 +59,7 @@ public class Styleable {
 	 */
 	private static Object getObject(String requestedName){
 		requestedName = requestedName.trim();
+		
 		tryToBypassRestrictions();
 		try {
 			Class<?> CLASS = Class.forName("android.R$styleable");
