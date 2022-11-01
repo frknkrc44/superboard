@@ -1,5 +1,5 @@
 SDK=$(HOME)/Android/Sdk
-TARGET=32
+TARGET=$(shell ls $(SDK)/build-tools | tail -n1 | cut -f1 -d.)
 TOOL=$(shell ls $(SDK)/build-tools | tail -n1)
 JAVADIR= 
 BUILDTOOLS=$(SDK)/build-tools/$(TOOL)

@@ -980,7 +980,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		protected int shr = 0, shc = 0, txtst = 0;
 		
 		public boolean isKeyIconSet(){
-			return icon.getDrawable() != null && icon.isShown();
+			return icon.getDrawable() != null;
 		}
 		
 		public int getKeyWidth(){
