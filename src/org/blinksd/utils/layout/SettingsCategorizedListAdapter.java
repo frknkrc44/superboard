@@ -21,23 +21,23 @@ import yandroid.widget.*;
 import yandroid.util.*;
 
 public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
-	
+
 	public SettingsCategorizedListAdapter(AppSettingsV2 context){
 		mContext = context;
 	}
-	
+
 	private final AppSettingsV2 mContext;
 	public static View dialogView;
 	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
-	
+
 	private static SuperMiniDB getAppDB(){
 		return SuperBoardApplication.getApplicationDatabase();
 	}
-	
+
 	private static SettingMap getSettings(){
 		return SuperBoardApplication.getSettings();
 	}
-	
+
 	@Override
 	public int getGroupCount(){
 		return SettingCategory.values().length;
@@ -106,7 +106,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 					List<String> keySet = SuperBoardApplication.getLanguageHRNames();
 					return createRadioSelector(key,keySet);
 				}
-				
+
 				List<String> selectorKeys = getArrayAsList(key);
 				return createRadioSelector(key,selectorKeys);
 			case DECIMAL_NUMBER:
@@ -114,7 +114,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			case FLOAT_NUMBER:
 				return createNumberSelector(key,z == SettingType.FLOAT_NUMBER);
 		}
-		
+
 		return null;
 	}
 
@@ -252,7 +252,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			throw new RuntimeException(t);
 		}
 	}
-	
+
 	private final View createRedirect(String key){
 		try {
 			View base = createImageSelector(key);
@@ -262,7 +262,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			throw new RuntimeException(t);
 		}
 	}
-	
+
 	private final View.OnClickListener redirectListener = new View.OnClickListener(){
 		@Override
 		public void onClick(View p1){
@@ -388,7 +388,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 					}
 
 				});
-			
+
 			doHacksAndShow(build);
 		}
 
@@ -432,7 +432,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			AlertDialog dialog = build.create();
 			dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog,mContext,p1.getTag().toString());
 			dialog.setView(dialogView);
-			
+
 			doHacksAndShow(build);
 		}
 
@@ -547,17 +547,17 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		}
 
 	};
-	
+
 	private final float getListPreferredItemHeight(){
 		TypedValue value = new TypedValue();
 		mContext.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);	
 		return TypedValue.complexToDimension(value.data, mContext.getResources().getDisplayMetrics());
 	}
-	
+
 	private String getTranslation(String key){
 		return getTranslation(mContext, key);
 	}
-	
+
 	public static String getTranslation(Context ctx, String key){
 		String requestedKey = "settings_" + key;
 		try {
@@ -565,7 +565,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		} catch(Throwable t){}
 		return requestedKey;
 	}
-	
+
 	private void setColorsFromBitmap(Bitmap b){
 		if(b == null) return;
 		int c = ColorUtils.getBitmapColor(b);
@@ -584,7 +584,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR,keyClr ^ 0x00FFFFFF);
 		getAppDB().onlyWrite();
 	}
-	
+
 	private List<String> getArrayAsList(String key) {
 		try {
 			int id = mContext.getResources().getIdentifier("settings_" + key, "array", mContext.getPackageName());
@@ -601,10 +601,10 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			return new ArrayList<String>();
 		}
 	}
-	
+
 	public void doHacksAndShow(AlertDialog.Builder builder){
 		AlertDialog dialog = builder.create();
-		
+
 		if(Build.VERSION.SDK_INT >= 31) {
 			Drawable dw = dialog.getWindow().getDecorView().getBackground(); 
 			int color = mContext.getResources().getColor(android.R.color.system_neutral1_900);
@@ -616,9 +616,12 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			dialog.getWindow().setBackgroundDrawable(gd);
 			*/
 		}
-			
-		
+
 		dialog.show();
+
+ 		int tint = Build.VERSION.SDK_INT >= 31
+				? mContext.getResources().getColor(android.R.color.system_accent1_200)
+				: ColorUtils.getAccentColor();
 
 		try {
 			Styleable.tryToBypassRestrictions();
@@ -631,15 +634,19 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			fNeuBtn.setAccessible(true);
 			Field fNegBtn = mController.getClass().getDeclaredField("mButtonNegative");
 			fNegBtn.setAccessible(true);
-			int tint = Build.VERSION.SDK_INT >= 31 
-				? mContext.getResources().getColor(android.R.color.system_accent1_200)
-				: ColorUtils.getAccentColor();
 			Button mPositiveButton = (Button) fPosBtn.get(mController);
-			Button mNeutralButron = (Button) fNeuBtn.get(mController);
+			Button mNeutralButton = (Button) fNeuBtn.get(mController);
 			Button mNegativeButton = (Button) fNegBtn.get(mController);
 			if(mPositiveButton != null) mPositiveButton.setTextColor(tint);
-			if(mNeutralButron != null) mNeutralButron.setTextColor(tint);
+			if(mNeutralButton != null) mNeutralButton.setTextColor(tint);
 			if(mNegativeButton != null) mNegativeButton.setTextColor(tint);
-		} catch(Throwable t){}
+		} catch(Throwable t){
+			Button btn1 = dialog.findViewById(android.R.id.button1);
+			Button btn2 = dialog.findViewById(android.R.id.button2);
+			Button btn3 = dialog.findViewById(android.R.id.button3);
+			if(btn1 != null) btn1.setTextColor(tint);
+			if(btn2 != null) btn2.setTextColor(tint);
+			if(btn3 != null) btn3.setTextColor(tint);
+		}
 	}
 }
