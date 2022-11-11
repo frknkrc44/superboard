@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdk 33
+    buildToolsVersion "33.0.0"
+
+    defaultConfig {
+        applicationId "org.blinksd.board"
+        minSdk keystoreProperties['MINSDK'].toInteger()
+        targetSdk keystoreProperties['TARGETSDK'].toInteger()
+        versionCode keystoreProperties['VERCODE'].toInteger()
+        versionName keystoreProperties['VERNAME']
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    
+   signingConfigs {
+        release {
+            keyAlias keystoreProperties['KEYALIAS']
+            keyPassword keystoreProperties['KEYPASS']
+            storeFile file(keystoreProperties['KEYFILE'])
+            storePassword keystoreProperties['STOREPASS']
+        }
+    }
+
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+}

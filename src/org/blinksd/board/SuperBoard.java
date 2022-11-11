@@ -1107,8 +1107,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		
 		public void setKeyTextStyle(TextType style){
 			if(style == null){
-				label.setTypeface(Typeface.DEFAULT);
-				return;
+				style = TextType.regular;
 			}
 			switch(style){
 				case regular:
@@ -1124,7 +1123,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
 					break;
 				case condensed:
-					label.setTypeface(Typeface.create("sans-serif-condensed",0));
+					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.NORMAL));
 					break;
 				case condensed_bold:
 					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));

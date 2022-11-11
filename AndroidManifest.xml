@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.blinksd.board"
-    android:versionCode="27"
-    android:versionName="3.18">
+    android:versionCode="28"
+    android:versionName="3.20">
 	
 	<uses-sdk android:minSdkVersion="8" 
-		android:targetSdkVersion="29" />
+		android:targetSdkVersion="33" />
 	
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
@@ -23,6 +23,7 @@
         android:theme="@style/AppTheme"
 		android:resizeableActivity="true">
 		<activity
+            android:exported="true"
 			android:launchMode="singleTask"
 			android:name=".SetupActivity">
             <intent-filter>
@@ -36,11 +37,9 @@
             android:label="@string/settings_activity"/>
 		<activity
 			android:launchMode="singleTask"
-            android:name=".AppSettings$SetActivity"/>
-		<activity
-			android:launchMode="singleTask"
             android:name=".dictionary.DictionaryImportActivity"/>
 		<service
+            android:exported="true"
 			android:name=".InputService"
 			android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
