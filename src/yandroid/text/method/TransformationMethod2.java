@@ -29,5 +29,5 @@ public interface TransformationMethod2 extends TransformationMethod {
      * @param allowLengthChanges true to allow the transformation to change the length
      *                           of the input string.
      */
-    public void setLengthChangesAllowed(boolean allowLengthChanges);
+    void setLengthChangesAllowed(boolean allowLengthChanges);
 }

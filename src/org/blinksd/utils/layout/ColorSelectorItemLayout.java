@@ -1,13 +1,18 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.graphics.drawable.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
-import org.blinksd.board.*;
-import android.graphics.*;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.blinksd.board.AppSettingsV2;
+import org.blinksd.board.R;
+
+import java.util.TreeMap;
 
 public class ColorSelectorItemLayout extends LinearLayout {
 	

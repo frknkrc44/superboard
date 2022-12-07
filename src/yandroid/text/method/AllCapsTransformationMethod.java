@@ -28,10 +28,10 @@ import java.util.Locale;
  * @hide
  */
 public class AllCapsTransformationMethod implements TransformationMethod2 {
-    private static final String TAG = "AllCapsTransformationMethod";
+    private static final String TAG = "AllCapsTransformation";
 
     private boolean mEnabled;
-    private Locale mLocale;
+    private final Locale mLocale;
 
     public AllCapsTransformationMethod(Context context) {
         mLocale = context.getResources().getConfiguration().locale;

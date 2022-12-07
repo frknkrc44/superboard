@@ -1,34 +1,56 @@
 package org.blinksd.board;
 
-import android.content.*;
-import android.content.res.*;
-import android.graphics.*;
-import android.inputmethodservice.*;
-import android.media.*;
-import android.os.*;
-import android.util.*;
-import android.view.*;
-import android.view.inputmethod.*;
-import android.widget.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import org.blinksd.*;
-import org.blinksd.board.LayoutUtils.*;
-import org.blinksd.utils.color.*;
-import org.blinksd.utils.image.*;
-import org.blinksd.utils.layout.*;
-import org.blinksd.utils.system.*;
-import org.blinksd.sdb.*;
-import org.superdroid.db.*;
-
-import static org.blinksd.board.SuperBoard.*;
-import static android.media.AudioManager.*;
+import static android.media.AudioManager.FX_KEYPRESS_DELETE;
+import static android.media.AudioManager.FX_KEYPRESS_RETURN;
+import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
+import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.os.Build.VERSION.SDK_INT;
-import static android.provider.Settings.Secure.getInt;
-import static org.blinksd.utils.system.SystemUtils.*;
-import org.blinksd.utils.icon.*;
-import android.graphics.drawable.*;
+import static org.blinksd.board.SuperBoard.KeyboardType;
+import static org.blinksd.board.SuperBoard.dp;
+import static org.blinksd.utils.system.SystemUtils.createNavbarLayout;
+import static org.blinksd.utils.system.SystemUtils.detectNavbar;
+import static org.blinksd.utils.system.SystemUtils.isColorized;
+import static org.blinksd.utils.system.SystemUtils.navbarH;
+
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.inputmethodservice.InputMethodService;
+import android.inputmethodservice.Keyboard;
+import android.media.AudioManager;
+import android.os.Build;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.ExtractedText;
+import android.view.inputmethod.ExtractedTextRequest;
+import android.view.inputmethod.InputConnection;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.LayoutUtils.KeyOptions;
+import org.blinksd.board.LayoutUtils.Language;
+import org.blinksd.sdb.SuperMiniDB;
+import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.image.ImageUtils;
+import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.utils.layout.SuggestionLayout;
+import org.superdroid.db.SuperDBHelper;
+
+import java.io.File;
+import java.util.List;
 
 public class InputService extends InputMethodService implements SuggestionLayout.OnSuggestionSelectedListener {
 	
@@ -36,12 +58,12 @@ public class InputService extends InputMethodService implements SuggestionLayout
 	private BoardPopup po = null;
 	private SuperMiniDB sd = null;
 	public static final String COLORIZE_KEYBOARD = "org.blinksd.board.KILL";
-	private String kbd[][][] = null, appname;
+	private String[][][] kbd = null;
+	private String appname;
 	private LinearLayout ll = null;
 	private SuggestionLayout sl = null;
 	private RelativeLayout fl = null;
 	private ImageView iv = null;
-	private File img = null;
 	private Language cl;
 	private EmojiView emoji = null;
 
@@ -84,7 +106,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		String exTextStr = exText.text.toString();
 		exTextStr = exTextStr.substring(text.length()-1);
 		
-		ic.deleteSurroundingText(oldText.length(), exTextStr.toString().indexOf(' '));
+		ic.deleteSurroundingText(oldText.length(), exTextStr.indexOf(' '));
 		suggestion += " ";
 		ic.commitText(suggestion, suggestion.length());
 		
@@ -151,6 +173,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(text != null && sl != null) sl.setCompletionText(text, cl.language);
 	}
 	
+	@SuppressLint("ResourceType")
 	private void setLayout(){
 		if(sd == null){
 			sd = SuperBoardApplication.getApplicationDatabase();
@@ -332,7 +355,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				sb.setPressEventForKey(i,4,0,Keyboard.KEYCODE_MODE_CHANGE);
 				sb.setPressEventForKey(i,4,2,KeyEvent.KEYCODE_SPACE);
 				sb.setPressEventForKey(i,4,-1,Keyboard.KEYCODE_DONE);
-				sb.setLongPressEventForKey(i,4,0,sb.KEYCODE_CLOSE_KEYBOARD);
+				sb.setLongPressEventForKey(i,4,0, SuperBoard.KEYCODE_CLOSE_KEYBOARD);
 				sb.setKeyWidthPercent(i,3,0,15);
 				sb.setKeyWidthPercent(i,3,-1,15);
 				sb.setKeyWidthPercent(i,4,0,20);
@@ -346,7 +369,11 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(Build.VERSION.SDK_INT >= 16 && emoji == null){
 			emoji = new EmojiView(sb,emojiClick);
 			emoji.setVisibility(View.GONE);
-			emoji.setBackgroundDrawable(sb.getBackground());
+			if(SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+				emoji.setBackground(sb.getBackground());
+			} else {
+				emoji.setBackgroundDrawable(sb.getBackground());
+			}
 		}
 		
 		if(ll == null){
@@ -421,13 +448,13 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.updateKeyState(this);
 			float ori = conf.orientation == Configuration.ORIENTATION_LANDSCAPE ? 1.3f : 1;
 			sb.setKeyboardHeight((int)(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
+			File img;
 			if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_MONET)){
-				img = null;
 				if(fl != null){
 					iv.setImageBitmap(null);
 				}
 			} else {
-				img = AppSettingsV2.getBackgroundImageFile();
+				img = SuperBoardApplication.getBackgroundImageFile();
 				if(fl != null){
 					if(img.exists()) {
 						int blur = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
@@ -533,7 +560,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(SDK_INT > 20){
 			Window w = getWindow().getWindow();
 			if(detectNavbar(this)){
-				View navbarView = ll.findViewById(android.R.attr.gravity);
+				@SuppressLint("ResourceType") View navbarView = ll.findViewById(android.R.attr.gravity);
 				if(navbarView != null)
 					ll.removeView(navbarView);
 
@@ -572,7 +599,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		po.setFilterHeight(iv.getLayoutParams().height);
 	}
 	
-	private BroadcastReceiver r = new BroadcastReceiver(){
+	private final BroadcastReceiver r = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context p1,Intent p2){
 			setPrefs();
@@ -605,17 +632,15 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		}
 	}
 	
-	private View.OnClickListener emojiClick = new View.OnClickListener(){
-		public void onClick(View v){
-			final int num = Integer.parseInt(v.getTag().toString());
-			switch(num){
-				case -1:
-					showEmojiView(false);
-					break;
-				case 10:
-					sb.sendKeyEvent(KeyEvent.KEYCODE_DEL);
-					break;
-			}
+	private final View.OnClickListener emojiClick = v -> {
+		final int num = Integer.parseInt(v.getTag().toString());
+		switch(num){
+			case -1:
+				showEmojiView(false);
+				break;
+			case 10:
+				sb.sendKeyEvent(KeyEvent.KEYCODE_DEL);
+				break;
 		}
 	};
 }

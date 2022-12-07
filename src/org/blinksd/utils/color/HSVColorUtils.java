@@ -1,6 +1,6 @@
 package org.blinksd.utils.color;
 
-import android.graphics.*;
+import android.graphics.Color;
 
 public class HSVColorUtils {
 	

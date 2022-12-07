@@ -1,17 +1,22 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.os.*;
-import android.text.*;
-import android.view.*;
-import android.view.inputmethod.*;
-import android.widget.*;
-import java.util.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.dictionary.*;
-import org.superdroid.db.*;
-import android.view.View.*;
-import org.blinksd.*;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.inputmethod.ExtractedText;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.SettingMap;
+import org.superdroid.db.SuperDBHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SuggestionLayout extends FrameLayout implements View.OnClickListener {
 	private LinearLayout mCompletionsLayout;

@@ -1,14 +1,24 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
-import java.lang.reflect.*;
-import java.util.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.color.*;
-import yandroid.widget.*;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.os.Build;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import org.blinksd.board.R;
+import org.blinksd.utils.color.ColorUtils;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+
+import yandroid.widget.YCompoundButton;
+import yandroid.widget.YSwitch;
 
 public class LayoutCreator {
 	
@@ -154,8 +164,14 @@ public class LayoutCreator {
 		int tint = Build.VERSION.SDK_INT >= 31 
 					? ctx.getResources().getColor(android.R.color.system_accent1_200)
 					: ColorUtils.getAccentColor();
-		sw.getThumbDrawable().setTint(tint);
-		sw.getTrackDrawable().setTint(tint);
+		if (Build.VERSION.SDK_INT >= 21) {
+			sw.getThumbDrawable().setTint(tint);
+			sw.getTrackDrawable().setTint(tint);
+		} else {
+			sw.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+			sw.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+		}
+
 		return sw;
 	}
 	

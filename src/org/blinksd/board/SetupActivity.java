@@ -1,33 +1,57 @@
 package org.blinksd.board;
 
-import android.app.*;
-import android.content.*;
-import android.content.pm.*;
-import android.content.res.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.os.*;
-import android.provider.*;
-import android.text.*;
-import android.view.*;
-import android.view.inputmethod.*;
-import android.widget.*;
-import java.lang.reflect.*;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.concurrent.Executors;
 
 public class SetupActivity extends Activity {
-
 	private SetupResources sr;
 	private LinearLayout ml,ll;
 	private int tempClr;
 	private Dots dot;
-	
-    @Override
+
+	@Override
     protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		if(Build.VERSION.SDK_INT <= 11) {
-			if(!(isInputMethodEnabled() && isInputMethodSelected()))
-				Toast.makeText(this, R.string.wizard_api8_warning, Toast.LENGTH_LONG).show();
-			startSettings();
+			if(!isInputMethodEnabled()) {
+				startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
+				h.post(new ImeEnabledCheckerRunnable());
+			} else if(!isInputMethodSelected()) {
+				h.post(new ImeSelectedCheckerRunnable());
+			} else {
+				startSettings();
+			}
 			return;
 		} else if(isInputMethodEnabled() && isInputMethodSelected()){
 			startSettings();
@@ -43,20 +67,47 @@ public class SetupActivity extends Activity {
 		finish();
 	}
 
-	Handler h = new Handler(){
+	Handler h = new Handler(Looper.getMainLooper()){
 		@Override
 		public void handleMessage(Message msg){
 			this.removeMessages(0);
-			if(sr != null) sr.skip(sr.SEEK_NEXT);
+			if(sr != null) sr.skip(SetupResources.SEEK_NEXT);
 			this.sendEmptyMessageDelayed(0,250);
 			super.handleMessage(msg);
 		}
 	};
+
+	private class ImeEnabledCheckerRunnable implements Runnable {
+		@Override
+		public void run() {
+			if(!isInputMethodEnabled()) {
+				h.postDelayed(this, 250);
+				return;
+			}
+
+			h.post(new ImeSelectedCheckerRunnable());
+		}
+	}
+
+	private class ImeSelectedCheckerRunnable implements Runnable {
+		@Override
+		public void run() {
+			if(!isInputMethodSelected()) {
+				((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
+				h.postDelayed(this, 2000);
+				return;
+			}
+
+			startSettings();
+		}
+	}
 	
 	private class SetupResources {
 
-		private int lastScroll = 0, lscr = 0,textSize;
-		private ViewGroup scroll,bottom;
+		private int lastScroll = 0;
+		private int lscr = 0;
+		private final int textSize;
+		private ViewGroup scroll;
 		private ImageView tv,tn;
 
 		public SetupResources(){
@@ -89,7 +140,7 @@ public class SetupActivity extends Activity {
 				ml.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,0));
 				ml.setOrientation(LinearLayout.VERTICAL);
 				LinearLayout ll = new LinearLayout(SetupActivity.this);
-				ll.setLayoutParams(new LinearLayout.LayoutParams(getWidth() * tabs.length,-1,1));
+				ll.setLayoutParams(new LinearLayout.LayoutParams(getWidth() * tabs.length,-1, 1));
 				for(View v : tabs) ll.addView(v);
 				ml.addView(ll);
 				ml.addView(bottomBar());
@@ -215,7 +266,7 @@ public class SetupActivity extends Activity {
 				ll.addView(tv);
 				ll.addView(dot.getDotView());
 				ll.addView(tn);
-				bottom = ll;
+				ViewGroup bottom = ll;
 			}
 			return ll;
 		}
@@ -231,29 +282,21 @@ public class SetupActivity extends Activity {
 
 		private Drawable csibg(Drawable d,boolean b){
 			int color = textColor - 0x88000000;
-			Method m = null;
 			try {
 				if(d.getClass().getName().contains("RippleDrawable")){
-					m = d.getClass().getDeclaredMethod("setColor",new Class[]{ColorStateList.class});
+					Method m = d.getClass().getDeclaredMethod("setColor",new Class[]{ColorStateList.class});
 					m.setAccessible(true);
 					m.invoke(d,new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}},new int[]{color}));
 				} else {
-					m = d.getClass().getDeclaredMethod("setColorFilter",new Class[]{int.class,PorterDuff.Mode.class});
-					m.setAccessible(true);
-					m.invoke(d,color,PorterDuff.Mode.SRC_ATOP);
+					d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 				}
-			} catch(Exception | Error e){}
+			} catch(Throwable ignored) {}
 			return d;
 		}
 
-		private View.OnClickListener onClk = new View.OnClickListener(){
-			@Override
-			public void onClick(View view){
-				navigateViews((int)view.getTag());
-			}
-		};
+		private final View.OnClickListener onClk = view -> navigateViews((int)view.getTag());
 
-		private int navigateViews(int seek){
+		private void navigateViews(int seek){
 			switch(seek){
 				case SEEK_BACK:
 					if(seek(false)){
@@ -300,47 +343,40 @@ public class SetupActivity extends Activity {
 			dot.setSelection(lscr);
 			tv.setVisibility(seek(false) ? View.VISIBLE : View.INVISIBLE);
 			tn.setVisibility((lscr == 0) || (lscr == (scroll.getChildCount() - 2)) ? View.VISIBLE : View.INVISIBLE);
-			return 0;
 		}
 
+		@SuppressLint("SoonBlockedPrivateApi")
 		private void setScrollXAPI8(View view, int scroll) {
 			try {
 				Field scrollX = View.class.getDeclaredField("mScrollX");
 				scrollX.setAccessible(true);
 				scrollX.set(view, scroll);
-			} catch(Throwable t) {}
+				view.invalidate();
+			} catch(Throwable ignored) {}
 		}
 
 		private boolean seek(boolean next){
 			return next ? (lscr < (scroll.getChildCount() - 1)) : (lscr > 0);
 		}
 
-		public int skip(int seek){
+		public void skip(int seek){
 			if((lscr == 1 && isInputMethodEnabled()) || (lscr == 2 && isInputMethodSelected()))
 				navigateViews(seek);
-			return 0;
 		}
 
-		
-		public int setLauncherIconVisibility(PackageManager pm, boolean visible){
-			pm.setComponentEnabledSetting(getComponentName(), 
-										  visible ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : 
-										  PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-			return 0;
-		}
 
 		public Bitmap drawPrev(){
 			int d = 3;
 			Bitmap b = Bitmap.createBitmap(dpInt(100)/d,dpInt(100)/d,Bitmap.Config.ARGB_8888);
 			Canvas c = new Canvas(b);
 			Paint p = new Paint();
-			p.setStrokeWidth(dpInt(10)/d);
+			p.setStrokeWidth(dp(10)/d);
 			p.setStrokeCap(Paint.Cap.ROUND);
 			p.setStrokeJoin(Paint.Join.ROUND);
 			p.setColor(SetupResources.textColor);
-			c.drawLine(dpInt(60)/d,dpInt(10)/d,dpInt(30)/d,dpInt(44)/d,p);
-			c.drawLine(dpInt(30)/d,dpInt(46)/d,dpInt(60)/d,dpInt(80)/d,p);
-			c.drawPoint(dpInt(29)/d,dpInt(45)/d,p);
+			c.drawLine(dp(60)/d,dp(10)/d,dp(30)/d,dp(44)/d,p);
+			c.drawLine(dp(30)/d,dp(46)/d,dp(60)/d,dp(80)/d,p);
+			c.drawPoint(dp(29)/d,dp(45)/d,p);
 			return b;
 		}
 		
@@ -349,13 +385,13 @@ public class SetupActivity extends Activity {
 			Bitmap b = Bitmap.createBitmap(dpInt(100)/d,dpInt(100)/d,Bitmap.Config.ARGB_8888);
 			Canvas c = new Canvas(b);
 			Paint p = new Paint();
-			p.setStrokeWidth(dpInt(10)/d);
+			p.setStrokeWidth(dp(10)/d);
 			p.setStrokeCap(Paint.Cap.ROUND);
 			p.setStrokeJoin(Paint.Join.ROUND);
 			p.setColor(SetupResources.textColor);
-			c.drawLine(dpInt(30)/d,dpInt(10)/d,dpInt(60)/d,dpInt(44)/d,p);
-			c.drawLine(dpInt(60)/d,dpInt(46)/d,dpInt(30)/d,dpInt(80)/d,p);
-			c.drawPoint(dpInt(61)/d,dpInt(45)/d,p);
+			c.drawLine(dp(30)/d,dp(10)/d,dp(60)/d,dp(44)/d,p);
+			c.drawLine(dp(60)/d,dp(46)/d,dp(30)/d,dp(80)/d,p);
+			c.drawPoint(dp(61)/d,dp(45)/d,p);
 			return b;
 		}
 
@@ -366,7 +402,7 @@ public class SetupActivity extends Activity {
 	public class Dots {
 		
 		private LinearLayout dotView;
-		private int dot;
+		private final int dot;
 		
 		public Dots(int dots){
 			dot = dots;
@@ -392,21 +428,20 @@ public class SetupActivity extends Activity {
 			return dotView;
 		}
 		
-		public int setSelection(int index){
+		public void setSelection(int index){
 			View tempView;
 			for(int i = 0;i < dot;i++){
 				tempView = dotView.getChildAt(i);
 				tempClr = (SetupResources.textColor - (tempView.getId() == index ? 0 : 0xAA000000));
-				tempView.setBackgroundDrawable(getBg(tempClr,100));
+				tempView.setBackgroundDrawable(getBg(tempClr));
 			}
-			return 0;
 		}
 	}
 	
-	private static GradientDrawable getBg(int color, float radius){
+	private static GradientDrawable getBg(int color){
 		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(color);
-		gd.setCornerRadius(radius);
+		gd.setCornerRadius(100f);
 		return gd;
 	}
 	

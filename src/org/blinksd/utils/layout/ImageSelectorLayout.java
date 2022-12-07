@@ -1,22 +1,48 @@
 package org.blinksd.utils.layout;
-import android.app.*;
-import android.content.*;
-import android.content.pm.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.net.*;
-import android.os.*;
-import android.provider.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.TabHost.*;
-import java.io.*;
-import java.util.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.image.*;
-import org.blinksd.sdb.*;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.WallpaperManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2;
+import org.blinksd.board.R;
+import org.blinksd.utils.image.ImageUtils;
+
+import java.io.File;
+import java.util.TreeMap;
 
 public class ImageSelectorLayout {
 	
@@ -158,7 +184,7 @@ public class ImageSelectorLayout {
 				}
 			});
 		
-		final File f = ctx.getBackgroundImageFile();
+		final File f = SuperBoardApplication.getBackgroundImageFile();
 		if(f.exists()){
 			prev.setImageBitmap(temp = BitmapFactory.decodeFile(f.getAbsolutePath()));
 		}
@@ -166,31 +192,25 @@ public class ImageSelectorLayout {
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
 		rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));
-		rb.setOnClickListener(new View.OnClickListener(){
-				@Override
-				public void onClick(View p1){
-					if(temp == null){
-						return;
-					}
-					Matrix matrix = new Matrix();
-					matrix.postRotate(90);
-					if(!temp.isMutable()){
-						temp = temp.copy(Bitmap.Config.ARGB_8888,true);
-					}
-					temp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true);
-					prev.setImageBitmap(temp);
-				}
-			});
-		s.setOnLongClickListener(new View.OnLongClickListener(){
-				@Override
-				public boolean onLongClick(View p1){
-					f.delete();
-					prev.setImageDrawable(null);
-					win.dismiss();
-					ctx.restartKeyboard();
-					return false;
-				}
-			});
+		rb.setOnClickListener(p1 -> {
+			if(temp == null){
+				return;
+			}
+			Matrix matrix = new Matrix();
+			matrix.postRotate(90);
+			if(!temp.isMutable()){
+				temp = temp.copy(Bitmap.Config.ARGB_8888,true);
+			}
+			temp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true);
+			prev.setImageBitmap(temp);
+		});
+		s.setOnLongClickListener(p1 -> {
+			f.delete();
+			prev.setImageDrawable(null);
+			win.dismiss();
+			ctx.restartKeyboard();
+			return false;
+		});
 		return l;
 	}
 	
@@ -198,7 +218,7 @@ public class ImageSelectorLayout {
 	
 	private static View getGradientSelector(final AppSettingsV2 ctx){
 		if(colorList == null){
-			colorList = new TreeMap<Integer,Integer>();
+			colorList = new TreeMap<>();
 		} else {
 			colorList.clear();
 		}
@@ -242,10 +262,8 @@ public class ImageSelectorLayout {
 	
 	private static Bitmap convertGradientToBitmap(){
 		int size = (int) ImageUtils.minSize;
-		GradientDrawable gd = new GradientDrawable();
-		gd.setColors(getGradientColors());
+		GradientDrawable gd = new GradientDrawable(getGradientOrientation(), getGradientColors());
 		gd.setBounds(0,0,size,size);
-		gd.setOrientation(getGradientOrientation());
 		Bitmap out = Bitmap.createBitmap(size,size,Bitmap.Config.ARGB_8888);
 		Canvas drw = new Canvas(out);
 		gd.draw(drw);
@@ -297,6 +315,7 @@ public class ImageSelectorLayout {
 	
 	private static final View.OnClickListener gradientAddColorListener = new View.OnClickListener(){
 
+		@SuppressLint("ResourceType")
 		@Override
 		public void onClick(View p1){
 			AppSettingsV2 ctx = (AppSettingsV2) p1.getContext();

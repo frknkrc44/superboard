@@ -1,9 +1,9 @@
 package org.blinksd.utils.icon;
 
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.layout.*;
-import org.superdroid.db.*;
+import org.blinksd.Defaults;
+import org.blinksd.board.SettingMap;
+import org.blinksd.utils.layout.BaseMap;
+import org.superdroid.db.SuperDBHelper;
 
 public class SpaceBarThemeUtils extends BaseMap<String,Integer> {
 	public static final int SPACEBAR_DEFAULT = 0, SPACEBAR_TEXT = 1, SPACEBAR_HIDE = 2;

@@ -1,18 +1,31 @@
 package org.blinksd.board;
 
-import android.content.*;
-import android.content.res.*;
-import android.graphics.drawable.*;
-import android.inputmethodservice.*;
-import android.os.*;
-import android.view.*;
-import java.io.*;
-import java.util.*;
-import org.blinksd.*;
-import org.json.*;
-import org.superdroid.db.*;
-import org.blinksd.utils.icon.*;
-import org.blinksd.utils.layout.*;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.inputmethodservice.Keyboard;
+import android.os.Build;
+import android.view.KeyEvent;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.icon.SpaceBarThemeUtils;
+import org.blinksd.utils.layout.DensityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.superdroid.db.SuperDBHelper;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 public class LayoutUtils {
 	

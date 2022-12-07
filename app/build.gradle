@@ -33,6 +33,13 @@ android {
             storeFile file(keystoreProperties['KEYFILE'])
             storePassword keystoreProperties['STOREPASS']
         }
+
+       debug {
+           keyAlias keystoreProperties['KEYALIAS']
+           keyPassword keystoreProperties['KEYPASS']
+           storeFile file(keystoreProperties['KEYFILE'])
+           storePassword keystoreProperties['STOREPASS']
+       }
     }
 
 

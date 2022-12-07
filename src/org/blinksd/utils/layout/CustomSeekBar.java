@@ -1,13 +1,23 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.os.*;
-import android.widget.*;
-import java.lang.reflect.*;
-import org.blinksd.board.*;
-import android.content.res.*;
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.widget.AbsSeekBar;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+
+import org.blinksd.board.R;
+import org.blinksd.board.SuperBoard;
+
+import java.lang.reflect.Field;
 
 class CustomSeekBar extends SeekBar {
 	

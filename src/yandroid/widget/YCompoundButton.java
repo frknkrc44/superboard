@@ -16,16 +16,17 @@
 
 package yandroid.widget;
 
-import yandroid.annotation.Nullable;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.*;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -48,10 +49,6 @@ import yandroid.util.Styleable;
  *
  * <p><strong>XML attributes</strong></p>
  * <p>
- * See {@link android.R.styleable#CompoundButton
- * CompoundButton Attributes}, {@link android.R.styleable#Button Button
- * Attributes}, {@link android.R.styleable#TextView TextView Attributes}, {@link
- * android.R.styleable#View View Attributes}
  * </p>
  */
 public abstract class YCompoundButton extends Button implements Checkable {
@@ -95,7 +92,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
             setButtonDrawable(d);
         }
 
-        if(Build.VERSION.SDK_INT >= 21) {
+        if(SDK_INT >= LOLLIPOP) {
             if (a.hasValue(Styleable.getKey("CompoundButton_buttonTintMode"))) {
             mButtonTintMode = parseTintMode(a.getInt(
                     Styleable.getKey("CompoundButton_buttonTintMode"), -1), mButtonTintMode);
@@ -113,12 +110,11 @@ public abstract class YCompoundButton extends Button implements Checkable {
         setChecked(checked);
 
         a.recycle();
-		
-        if(Build.VERSION.SDK_INT >= 21) {
-            applyButtonTint();
-        }
+
+        applyButtonTint();
     }
-	
+
+    @TargetApi(11)
 	private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
         switch (value) {
             case 3: return PorterDuff.Mode.SRC_OVER;
@@ -235,7 +231,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
         Drawable d = null;
         if (mButtonResource != 0) {
-            d = getContext().getDrawable(mButtonResource);
+            d = getContext().getResources().getDrawable(mButtonResource);
         }
         setButtonDrawable(d);
     }
@@ -256,7 +252,9 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
             if (d != null) {
                 d.setCallback(this);
-                d.setLayoutDirection(getLayoutDirection());
+                if(SDK_INT >= M) {
+                    d.setLayoutDirection(getLayoutDirection());
+                }
                 if (d.isStateful()) {
                     d.setState(getDrawableState());
                 }
@@ -282,7 +280,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
      * @see #setButtonTintList(ColorStateList)
      * @see Drawable#setTintList(ColorStateList)
      */
-    public void setButtonTintList(@Nullable ColorStateList tint) {
+    public void setButtonTintList(ColorStateList tint) {
         mButtonTintList = tint;
         mHasButtonTint = true;
 
@@ -294,7 +292,6 @@ public abstract class YCompoundButton extends Button implements Checkable {
      * @attr ref android.R.styleable#CompoundButton_buttonTint
      * @see #setButtonTintList(ColorStateList)
      */
-    @Nullable
     public ColorStateList getButtonTintList() {
         return mButtonTintList;
     }
@@ -310,7 +307,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
      * @see #getButtonTintMode()
      * @see Drawable#setTintMode(PorterDuff.Mode)
      */
-    public void setButtonTintMode(@Nullable PorterDuff.Mode tintMode) {
+    public void setButtonTintMode(PorterDuff.Mode tintMode) {
         mButtonTintMode = tintMode;
         mHasButtonTintMode = true;
 
@@ -322,12 +319,15 @@ public abstract class YCompoundButton extends Button implements Checkable {
      * @attr ref android.R.styleable#CompoundButton_buttonTintMode
      * @see #setButtonTintMode(PorterDuff.Mode)
      */
-    @Nullable
     public PorterDuff.Mode getButtonTintMode() {
         return mButtonTintMode;
     }
 
     private void applyButtonTint() {
+        if(SDK_INT < LOLLIPOP) {
+            return;
+        }
+
         if (mButtonDrawable != null && (mHasButtonTint || mHasButtonTintMode)) {
             mButtonDrawable = mButtonDrawable.mutate();
 
@@ -357,9 +357,11 @@ public abstract class YCompoundButton extends Button implements Checkable {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(YCompoundButton.class.getName());
-        info.setCheckable(true);
-        info.setChecked(mChecked);
+        if(SDK_INT >= ICE_CREAM_SANDWICH) {
+            info.setClassName(YCompoundButton.class.getName());
+            info.setCheckable(true);
+            info.setChecked(mChecked);
+        }
     }
 
     @Override
@@ -375,7 +377,8 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 	
 	public boolean isLayoutRtl(){
-		return getResources().getConfiguration().getLayoutDirection() == Configuration.SCREENLAYOUT_LAYOUTDIR_RTL;
+		return SDK_INT >= JELLY_BEAN_MR1 &&
+                getResources().getConfiguration().getLayoutDirection() == Configuration.SCREENLAYOUT_LAYOUTDIR_RTL;
 	}
 
     @Override
@@ -425,7 +428,11 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
             final Drawable background = getBackground();
             if (background != null) {
-                background.setHotspotBounds(left, top, right, bottom);
+                if(SDK_INT >= LOLLIPOP) {
+                    background.setHotspotBounds(left, top, right, bottom);
+                } else {
+                    background.setBounds(left, top, right, bottom);
+                }
             }
         }
 
@@ -471,7 +478,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
     public void drawableHotspotChanged(float x, float y) {
         super.drawableHotspotChanged(x, y);
 
-        if (mButtonDrawable != null) {
+        if (mButtonDrawable != null && SDK_INT >= LOLLIPOP) {
             mButtonDrawable.setHotspot(x, y);
         }
     }
@@ -484,15 +491,14 @@ public abstract class YCompoundButton extends Button implements Checkable {
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
-        if (mButtonDrawable != null) mButtonDrawable.jumpToCurrentState();
+        if (mButtonDrawable != null && SDK_INT >= HONEYCOMB) {
+            mButtonDrawable.jumpToCurrentState();
+        }
     }
 
     public static class SavedState extends BaseSavedState {
         boolean checked;
 
-        /**
-         * Constructor called from {@link CompoundButton#onSaveInstanceState()}
-         */
         public SavedState(Parcelable superState) {
             super(superState);
         }
@@ -502,7 +508,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
          */
         private SavedState(Parcel in) {
             super(in);
-            checked = (Boolean)in.readValue(null);
+            checked = (Boolean)in.readValue(getClass().getClassLoader());
         }
 
         @Override

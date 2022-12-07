@@ -1,29 +1,41 @@
 package org.blinksd.board;
 
-import android.app.*;
-import android.content.*;
-import android.graphics.*;
-import android.media.*;
-import android.net.*;
-import android.os.*;
-import android.provider.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import java.io.*;
-import org.blinksd.*;
-import org.blinksd.board.dictionary.*;
-import org.blinksd.sdb.*;
-import org.blinksd.utils.icon.*;
-import org.blinksd.utils.image.*;
-import org.blinksd.utils.layout.*;
-import org.superdroid.db.*;
+import static android.media.AudioManager.FX_KEYPRESS_DELETE;
+import static android.media.AudioManager.FX_KEYPRESS_RETURN;
+import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
+import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 
-import static android.media.AudioManager.*;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.sdb.SuperMiniDB;
+import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.image.ImageUtils;
+import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.utils.layout.LayoutCreator;
+import org.blinksd.utils.layout.SettingsCategorizedListView;
+import org.superdroid.db.SuperDBHelper;
+
+import java.io.File;
 
 public class AppSettingsV2 extends Activity {
 	private LinearLayout main;
-	private SuperMiniDB sdb;
 	private SuperBoard sb;
 	private static ImageView iv;
 	private SettingsCategorizedListView mSettView;
@@ -41,9 +53,8 @@ public class AppSettingsV2 extends Activity {
 	@Override
 	protected void onCreate(Bundle b){
 		super.onCreate(b);
-		sdb = SuperBoardApplication.getApplicationDatabase();
 		main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,this);
-		
+
 		if(Build.VERSION.SDK_INT >= 31){
 			getWindow().getDecorView().setFitsSystemWindows(true);
 			main.setFitsSystemWindows(false);
@@ -57,8 +68,10 @@ public class AppSettingsV2 extends Activity {
 		} catch(Throwable e){
 			Log.e("MainView","Error:",e);
 		}
+
 		main.addView(mSettView);
 		setKeyPrefs();
+
 		setContentView(main);
 	}
 	
@@ -101,7 +114,7 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeysPadding(DensityUtils.mpInt(1));
 		iv = new ImageView(this);
 		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new RelativeLayout.LayoutParams(-1,DensityUtils.hpInt(ph)));
+		iv.setLayoutParams(new FrameLayout.LayoutParams(-1,DensityUtils.hpInt(ph)));
 		ll.addView(iv);
 		ll.addView(sb);
 		main.addView(ll);
@@ -113,7 +126,7 @@ public class AppSettingsV2 extends Activity {
 	}
 	
 	private void setKeyPrefs(){
-		File img = getBackgroundImageFile();
+		File img = SuperBoardApplication.getBackgroundImageFile();
 		if(img.exists()) {
 			int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 			Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
@@ -153,10 +166,6 @@ public class AppSettingsV2 extends Activity {
 	public void restartKeyboard(){
 		setKeyPrefs();
 		sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
-	}
-	
-	public static File getBackgroundImageFile(){
-		return new File(SuperBoardApplication.getApplication().getFilesDir()+"/bg");
 	}
 	
 	@Override
@@ -200,13 +209,13 @@ public class AppSettingsV2 extends Activity {
 		}
 	}
 	
-	public static enum SettingCategory {
+	public enum SettingCategory {
 		GENERAL,
 		THEMING,
 		THEMING_ADVANCED,
 	}
 	
-	public static enum SettingType {
+	public enum SettingType {
 		BOOL,
 		THEME_SELECTOR,
 		COLOR_SELECTOR,

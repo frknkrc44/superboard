@@ -1,11 +1,14 @@
 package org.superdroid.db;
 
-import android.content.*;
-import android.content.res.*;
-import android.os.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.sdb.*;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperMiniDB;
 
 public class SuperDBHelper {
 	
@@ -34,29 +37,30 @@ public class SuperDBHelper {
 			return getMonetColorValue(key);
 		}
 		
-		return Integer.valueOf(getValueOrDefault(key));
+		return Integer.parseInt(getValueOrDefault(key));
 	}
 	
 	public static boolean getBooleanValueOrDefault(String key){
-		return Boolean.valueOf(getValueOrDefault(key));
+		return Boolean.parseBoolean(getValueOrDefault(key));
 	}
 	
 	public static long getLongValueOrDefault(String key){
-		return Long.valueOf(getValueOrDefault(key));
+		return Long.parseLong(getValueOrDefault(key));
 	}
 	
 	public static float getFloatValueOrDefault(String key){
-		return Float.valueOf(getValueOrDefault(key));
+		return Float.parseFloat(getValueOrDefault(key));
 	}
 	
 	public static double getDoubleValueOrDefault(String key){
-		return Double.valueOf(getValueOrDefault(key));
+		return Double.parseDouble(getValueOrDefault(key));
 	}
 	
 	public static byte getByteValueOrDefault(String key){
-		return Byte.valueOf(getValueOrDefault(key));
+		return Byte.parseByte(getValueOrDefault(key));
 	}
-	
+
+	@TargetApi(31)
 	private static int getMonetColorValue(String key){
 		Resources res = SuperBoardApplication.getApplication().getResources();
 		Configuration conf = res.getConfiguration();
@@ -65,7 +69,7 @@ public class SuperDBHelper {
 			case SettingMap.SET_ENTER_BGCLR:
 				return res.getColor(dark ? android.R.color.system_accent1_500 : android.R.color.system_accent1_300);
 			case SettingMap.SET_ENTER_PRESS_BGCLR:
-				return res.getColor(dark ? android.R.color.system_accent1_400 : android.R.color.system_accent1_400);
+				return res.getColor(dark ? android.R.color.system_accent1_600 : android.R.color.system_accent1_400);
 			case SettingMap.SET_KEY_BGCLR:
 				return res.getColor(dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_100);
 			case SettingMap.SET_KEY_PRESS_BGCLR:
@@ -80,6 +84,6 @@ public class SuperDBHelper {
 				return res.getColor(dark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_900);
 		}
 		
-		return Integer.valueOf(getValueOrDefault(key));
+		return Integer.parseInt(getValueOrDefault(key));
 	}
 }

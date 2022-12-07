@@ -1,12 +1,24 @@
 package org.blinksd.board;
 
-import android.content.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.TabHost.*;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 public class EmojiView extends LinearLayout {
 	
@@ -46,17 +58,14 @@ public class EmojiView extends LinearLayout {
 		FrameLayout fl = new FrameLayout(getContext());
 		fl.setLayoutParams(new LayoutParams(-1,-1));
 		fl.setId(android.R.id.tabcontent);
-		th.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
-			@Override
-			public void onTabChanged(String p1){
-				if(tw != null){
-					View child = tw.getChildTabViewAt(curTab);
-					if(child != null)
-						child.setSelected(false);
-					child = tw.getChildTabViewAt(curTab = th.getCurrentTab());
-					if(child != null)
-						child.setSelected(true);
-				}
+		th.setOnTabChangedListener(p1 -> {
+			if(tw != null){
+				View child = tw.getChildTabViewAt(curTab);
+				if(child != null)
+					child.setSelected(false);
+				child = tw.getChildTabViewAt(curTab = th.getCurrentTab());
+				if(child != null)
+					child.setSelected(true);
 			}
 		});
 		final LinearLayout ll = new LinearLayout(getContext());
@@ -84,12 +93,7 @@ public class EmojiView extends LinearLayout {
 			ts.setIndicator(tv);
 			tv.setBackgroundDrawable(drw.getConstantState().newDrawable());
 			final int x = i;
-			ts.setContent(new TabContentFactory(){
-					@Override
-					public View createTabContent(String p1){
-						return emojiList(x);
-					}
-				});
+			ts.setContent(p1 -> emojiList(x));
 			th.addTab(ts);
 		}
 		addView(th);
@@ -120,26 +124,21 @@ public class EmojiView extends LinearLayout {
 			return iv;
 		}
 	}
-	
+
 	// Disable View constructors
 	private EmojiView(Context c){ super(c); }
 	private EmojiView(Context c, AttributeSet a){ super(c,a); }
-	private EmojiView(Context c, AttributeSet a, int d){ super(c,a,d); }
-	private EmojiView(Context c, AttributeSet a, int d, int r){ super(c,a,d,r); }
 	
 	private GridView emojiList(final int index){
 		final GridView gv = new GridView(getContext());
-		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
+		}
 		gv.setLayoutParams(new LayoutParams(-1,-1));
 		final int columns = 6;
 		gv.setNumColumns(columns);
 		gv.setGravity(Gravity.CENTER);
-		gv.setOnItemClickListener(new GridView.OnItemClickListener(){
-			@Override
-			public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4){
-				((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString());
-			}
-		});
+		gv.setOnItemClickListener((p1, p2, p3, p4) -> ((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString()));
 		ArrayAdapter<String> aa = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,android.R.id.text1){
 			@Override
 			public View getView(int pos, View cv, ViewGroup p){

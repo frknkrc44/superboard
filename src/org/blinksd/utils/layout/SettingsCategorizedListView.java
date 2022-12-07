@@ -1,9 +1,10 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.widget.*;
-import android.widget.ExpandableListView.*;
-import org.blinksd.board.*;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupCollapseListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
+
+import org.blinksd.board.AppSettingsV2;
 
 public class SettingsCategorizedListView extends ExpandableListView implements OnGroupCollapseListener, OnGroupExpandListener {
 	public final SettingsCategorizedListAdapter mAdapter;

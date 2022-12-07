@@ -1,10 +1,11 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.view.*;
-import android.widget.*;
+import android.content.Context;
+import android.view.View;
+import android.widget.RadioGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RadioSelectorLayout {
 	

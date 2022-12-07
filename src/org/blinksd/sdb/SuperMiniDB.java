@@ -11,21 +11,29 @@ package org.blinksd.sdb;
  ----------------------------
 */
 
-import java.io.*;
-import java.util.*;
-import java.security.*;
-import javax.crypto.*;
-import javax.crypto.spec.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class SuperMiniDB {
 
 	private String su,sv,sq;
 	private boolean dbRemoved = false, clean = true;
 	private File folder,tf;
-	private Scanner sc = null;
 	private FileOutputStream os = null;
 	
-	private HashMap<String,String> hm1 = new HashMap<String,String>();
+	private final HashMap<String,String> hm1 = new HashMap<String,String>();
 	
 	public static final String QUERY_RULE_STARTSWITH = "SW",
 								QUERY_RULE_ENDSWITH = "EW",
@@ -306,8 +314,8 @@ public class SuperMiniDB {
 	
 	private void parseValues(File f) throws FileNotFoundException {
 		sq = "";
-		sc = new Scanner(f);
-		while(sc.hasNext()) append(0,sc.nextLine());
+		Scanner sc = new Scanner(f);
+		while(sc.hasNext()) append(0, sc.nextLine());
 		hm1.put(f.getName(),sq);
 		sq = "";
 		sc = null;
@@ -407,8 +415,10 @@ public class SuperMiniDB {
 				cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 				MessageDigest sha = MessageDigest.getInstance("SHA-1");
 				keyBuf = Integer.toString(key).getBytes("UTF-8");
-				keyBuf = Arrays.copyOf(sha.digest(keyBuf), 16); 
-				secretKey = new SecretKeySpec(keyBuf, "AES");
+				byte[] newBuf = new byte[16];
+				System.arraycopy(sha.digest(keyBuf), 0, newBuf, 0, 16);
+				// keyBuf = Arrays.copyOf(sha.digest(keyBuf), 16);
+				secretKey = new SecretKeySpec(newBuf, "AES");
 			} catch(Throwable e){
 				throw new RuntimeException(e);
 			}

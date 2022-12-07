@@ -7,3 +7,6 @@
 bin/
 gen/
 .gradle/
+
+# ignore others
+local.properties

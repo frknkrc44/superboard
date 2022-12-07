@@ -1,12 +1,14 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.os.*;
-import android.widget.*;
-import android.content.res.*;
-import java.lang.reflect.*;
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+
+import java.lang.reflect.Field;
 
 public class CustomRadioButton extends RadioButton {
 	

@@ -1,15 +1,22 @@
 package org.blinksd.board;
 
-import android.content.*;
-import android.content.res.*;
-import android.os.*;
-import java.util.*;
-import org.blinksd.*;
-import org.blinksd.board.AppSettingsV2.*;
-import org.blinksd.board.dictionary.*;
-import org.blinksd.utils.color.*;
-import org.blinksd.utils.layout.*;
-import org.blinksd.utils.system.*;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.os.Build;
+
+import org.blinksd.Constants;
+import org.blinksd.Defaults;
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2.SettingCategory;
+import org.blinksd.board.AppSettingsV2.SettingItem;
+import org.blinksd.board.AppSettingsV2.SettingType;
+import org.blinksd.board.dictionary.DictionaryImportActivity;
+import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.layout.BaseMap;
+import org.blinksd.utils.system.SystemUtils;
+
+import java.util.ArrayList;
 
 public class SettingMap extends BaseMap<String,SettingItem> {
 

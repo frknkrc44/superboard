@@ -7,9 +7,10 @@ package yandroid.util;
  * @author frknkrc44
  */
 
+import android.content.res.Resources;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import android.content.res.*;
 
 public class Styleable {
 	
@@ -26,7 +27,7 @@ public class Styleable {
 	 */
 	public static int[] getStyleable(String requestedName){
 		Object o = getObject(requestedName);
-		if(o != null && o instanceof int[]){
+		if(o instanceof int[]){
 			return (int[]) o;
 		}
 		return new int[]{};
@@ -68,7 +69,13 @@ public class Styleable {
 				f.setAccessible(true);
 				return f.get(null);
 			}
-		} catch(Throwable t){}
+		} catch(Throwable t){
+			Resources res = Resources.getSystem();
+			int resId = res.getIdentifier(requestedName, "styleable", "android");
+			if(resId != 0) {
+
+			}
+		}
 		return null;
 	}
 	

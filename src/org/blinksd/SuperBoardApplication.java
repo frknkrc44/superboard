@@ -1,21 +1,25 @@
 package org.blinksd;
 
-import android.app.*;
-import android.content.*;
-import android.graphics.*;
-import android.util.*;
-import java.io.*;
-import java.util.*;
-import org.blinksd.board.*;
-import org.blinksd.board.LayoutUtils.*;
-import org.blinksd.sdb.*;
-import org.superdroid.db.*;
+import android.app.Application;
+import android.graphics.Typeface;
+
+import org.blinksd.board.LayoutUtils;
+import org.blinksd.board.LayoutUtils.Language;
+import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ThemeUtils;
-import org.blinksd.utils.color.ThemeUtils.*;
-import org.blinksd.utils.icon.*;
-import yandroid.util.*;
-import org.blinksd.utils.dictionary.*;
-import android.os.*;
+import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
+import org.blinksd.utils.dictionary.DictionaryDB;
+import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.icon.SpaceBarThemeUtils;
+import org.superdroid.db.SuperDBHelper;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import yandroid.util.Styleable;
 
 public class SuperBoardApplication extends Application {
 	
@@ -34,7 +38,7 @@ public class SuperBoardApplication extends Application {
 	
 	@Override
 	public void onCreate(){
-        super.onCreate();
+		super.onCreate();
 		Styleable.tryToBypassRestrictions();
 		appContext = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
@@ -42,6 +46,7 @@ public class SuperBoardApplication extends Application {
 		spaceBars = new SpaceBarThemeUtils();
 		settingMap = new SettingMap();
 		fontPath = getApplication().getExternalCacheDir()+"/font.ttf";
+		getCustomFont(); // start to load custom Typeface
 		
 		try {
 			languageCache = LayoutUtils.getLanguageList(getApplicationContext());
@@ -87,8 +92,7 @@ public class SuperBoardApplication extends Application {
 		try {
 			themes = ThemeUtils.getThemes();
 		} catch(Throwable t){
-			throw new RuntimeException(t);
-			// themes = new ArrayList<>();
+			themes = new ArrayList<>();
 		}
 	}
 	
@@ -132,7 +136,7 @@ public class SuperBoardApplication extends Application {
 		return languageCache.containsKey(name) ? languageCache.get(name) : LayoutUtils.getEmptyLanguage();
 	}
 	
-	public static Language getNextLanguage(){
+	public static void getNextLanguage(){
 		ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(languageCache);
 		String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
 		String sel = appDB.getString(key,(String)settingMap.getDefaults(key));
@@ -147,12 +151,14 @@ public class SuperBoardApplication extends Application {
 			if(index >= 0){
 				index = (index + 1) % ll.size();
 				Language l = languageCache.get(ll.get(index));
+				if(l == null) {
+					return;
+				}
 				appDB.putString(key,l.language);
 				appDB.onlyWrite();
-				return l;
+				return;
 			}
 		}
-		return LayoutUtils.getEmptyLanguage();
 	}
 	
 	/**
@@ -184,11 +190,13 @@ public class SuperBoardApplication extends Application {
 		return settingMap;
 	}
 
+	public static File getBackgroundImageFile(){
+		return new File(getApplication().getFilesDir(), "bg");
+	}
+
 	@Override
 	public void onTerminate(){
 		super.onTerminate();
 		if(dictDB != null) dictDB.close();
 	}
-	
-	
 }

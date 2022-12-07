@@ -1,20 +1,31 @@
 package org.blinksd.utils.system;
 
-import android.content.*;
-import android.content.res.*;
-import android.graphics.*;
-import android.os.*;
-import android.util.*;
-import android.view.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.color.*;
-import org.superdroid.db.*;
-import java.lang.reflect.Method;
-
 import static android.os.Build.VERSION.SDK_INT;
-import android.provider.*;
-import org.blinksd.utils.layout.*;
-import org.blinksd.*;
+
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.IBinder;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.InputService;
+import org.blinksd.board.SettingMap;
+import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.layout.DensityUtils;
+import org.superdroid.db.SuperDBHelper;
+
+import java.lang.reflect.Method;
 
 public class SystemUtils {
 	

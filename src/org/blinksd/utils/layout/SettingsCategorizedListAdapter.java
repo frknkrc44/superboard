@@ -1,24 +1,54 @@
 package org.blinksd.utils.layout;
-import android.app.*;
-import android.content.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.os.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.board.AppSettingsV2.*;
-import org.blinksd.sdb.*;
-import org.blinksd.utils.color.*;
-import org.blinksd.utils.color.ThemeUtils.*;
-import org.superdroid.db.*;
-import yandroid.widget.*;
-import yandroid.util.*;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2;
+import org.blinksd.board.AppSettingsV2.SettingCategory;
+import org.blinksd.board.AppSettingsV2.SettingItem;
+import org.blinksd.board.AppSettingsV2.SettingType;
+import org.blinksd.board.LayoutUtils;
+import org.blinksd.board.R;
+import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperMiniDB;
+import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.color.ThemeUtils;
+import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
+import org.superdroid.db.SuperDBHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import yandroid.widget.YCompoundButton;
+import yandroid.widget.YSwitch;
 
 public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
@@ -27,7 +57,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	}
 
 	private final AppSettingsV2 mContext;
-	public static View dialogView;
+	public View dialogView;
 	private static final int TAG1 = R.string.app_name, TAG2 = R.string.hello_world;
 
 	private static SuperMiniDB getAppDB(){
@@ -60,7 +90,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public long getGroupId(int p1){
-		return p1 << 8;
+		return (long) p1 << 8;
 	}
 
 	@Override
@@ -77,7 +107,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	public View getGroupView(int p1, boolean p2, View p3, ViewGroup p4){
 		if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_MONET) && getGroup(p1) == SettingCategory.THEMING_ADVANCED) {
 			// Disable advanced theming for monet mode
-			return new Space(p4.getContext());
+			return new SpaceCompat(p4.getContext());
 		}
 		TextView view = (TextView) LayoutInflater.from(p4.getContext()).inflate(android.R.layout.simple_expandable_list_item_1, p4, false);
 		view.setText(mContext.getResources().getStringArray(R.array.settings_categories)[p1]);
@@ -88,6 +118,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	public View getChildView(int p1, int p2, boolean p3, View p4, ViewGroup p5){
 		String key = (String) getChild(p1, p2);
 		SettingType z = SuperBoardApplication.getSettings().get(key).type;
+
 		switch(z){
 			case REDIRECT:
 				return createRedirect(key);
@@ -123,9 +154,9 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return false;
 	}
 
-	private final View createNumberSelector(String key, boolean isFloat){
+	private View createNumberSelector(String key, boolean isFloat){
 		int num = mContext.getIntOrDefault(key);
-		LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,mContext);
+		LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class,mContext);
 		numSelector.getLayoutParams().height = -2;
 		TextView img = LayoutCreator.createTextView(mContext);
 		img.setId(android.R.id.text1);
@@ -149,9 +180,9 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return numSelector;
 	}
 
-	private final View createColorSelector(String key){
+	private View createColorSelector(String key){
 		int color = mContext.getIntOrDefault(key);
-		LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(LinearLayout.class,mContext);
+		LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class,mContext);
 		colSelector.getLayoutParams().height = -2;
 		ImageView img = LayoutCreator.createImageView(mContext);
 		img.setId(android.R.id.icon);
@@ -177,7 +208,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return colSelector;
 	}
 
-	private final View createImageSelector(String key){
+	private View createImageSelector(String key){
 		TextView btn = LayoutCreator.createTextView(mContext);
 		btn.setGravity(Gravity.CENTER_VERTICAL);
 		btn.setTextColor(0xFFFFFFFF);
@@ -190,35 +221,43 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return btn;
 	}
 
-	private final View createBoolSelector(String key){
+	@SuppressLint("DiscouragedPrivateApi")
+	private View createBoolSelector(String key){
 		int pad = (int)(getListPreferredItemHeight() / 4);
 		boolean val = getAppDB().getBoolean(key,(boolean) getSettings().getDefaults(key));
+
+
 		if(Build.VERSION.SDK_INT >= 21) {
-			YSwitch swtch = LayoutCreator.createFilledYSwitch(LinearLayout.class,mContext,getTranslation(key),val,switchListener);
+			YSwitch swtch = LayoutCreator.createFilledYSwitch(AbsListView.class,mContext,getTranslation(key),val,switchListener);
 			swtch.setMinHeight((int) getListPreferredItemHeight());
 			swtch.setTag(key);
 			swtch.setPadding(pad,0,pad,0);
 			return swtch;
 		} else if(Build.VERSION.SDK_INT >= 14) {
 			Switch swtch = new Switch(mContext);
-			swtch.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+			swtch.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
 			swtch.setChecked(val);
 			swtch.setText(getTranslation(key));
 			swtch.setOnCheckedChangeListener(switchListenerAPI19);
+			if (Build.VERSION.SDK_INT >= 16) {
+				swtch.setThumbResource(R.drawable.switch_thumb);
+				swtch.setTrackResource(R.drawable.switch_track);
+				int tint = ColorUtils.getAccentColor();
+				swtch.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+				swtch.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+			}
 			swtch.setTextOn("");
 			swtch.setTextOff("");
 			swtch.setPadding(pad,0,pad,0);
-			if(Build.VERSION.SDK_INT < 30) {
-				int minW = DensityUtils.dpInt(64);
-				if(Build.VERSION.SDK_INT >= 16)
-					swtch.setSwitchMinWidth(minW);
-				else {
-					try {
-						Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
-						minWidth.setAccessible(true);
-						minWidth.set(swtch, minW);
-					} catch(Throwable t) {}
-				}
+			int minW = DensityUtils.dpInt(32);
+			if(Build.VERSION.SDK_INT >= 16)
+				swtch.setSwitchMinWidth(minW);
+			else {
+				try {
+					Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
+					minWidth.setAccessible(true);
+					minWidth.set(swtch, minW);
+				} catch(Throwable ignored) {}
 			}
 
 			swtch.setMinHeight((int) getListPreferredItemHeight());
@@ -227,12 +266,16 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		}
 
 		LinearLayout ll = LayoutCreator.createHorizontalLayout(mContext);
-		ll.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+		ll.setPadding(pad,0,pad,0);
+		ll.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
 		TextView tv = new TextView(mContext);
 		tv.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
 		tv.setText(getTranslation(key));
+		tv.setSingleLine();
 		ll.addView(tv);
 		ToggleButton tb = new ToggleButton(mContext);
+		tb.setTextOff("");
+		tb.setTextOn("");
 		tb.setLayoutParams(new LinearLayout.LayoutParams(-2, -2, 0));
 		tb.setChecked(val);
 		tb.setPadding(pad,0,pad,0);
@@ -241,90 +284,62 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return ll;
 	}
 
-	private final View createRadioSelector(String key, List<String> items) {
-		try {
-			View base = createImageSelector(key);
-			base.setTag(TAG1,key);
-			base.setTag(TAG2,items);
-			base.setOnClickListener(radioSelectorListener);
-			return base;
-		} catch(Throwable t){
-			throw new RuntimeException(t);
-		}
+	private View createRadioSelector(String key, List<String> items) {
+		View base = createImageSelector(key);
+		base.setTag(TAG1,key);
+		base.setTag(TAG2,items);
+		base.setOnClickListener(radioSelectorListener);
+		return base;
 	}
 
-	private final View createRedirect(String key){
-		try {
-			View base = createImageSelector(key);
-			base.setOnClickListener(redirectListener);
-			return base;
-		} catch(Throwable t){
-			throw new RuntimeException(t);
-		}
+	private View createRedirect(String key){
+		View base = createImageSelector(key);
+		base.setOnClickListener(redirectListener);
+		return base;
 	}
 
-	private final View.OnClickListener redirectListener = new View.OnClickListener(){
-		@Override
-		public void onClick(View p1){
-			Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
-			p1.getContext().startActivity(intent);
-		}
+	private final View.OnClickListener redirectListener = p1 -> {
+		Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
+		p1.getContext().startActivity(intent);
 	};
 
 	private final View.OnClickListener colorSelectorListener = new View.OnClickListener(){
 
 		@Override
-		public void onClick(final View p1){
+		public void onClick(View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			final String tag = p1.getTag().toString();
 			build.setTitle(getTranslation(tag));
 			final int val = mContext.getIntOrDefault(tag);
 			dialogView = ColorSelectorLayout.getColorSelectorLayout(mContext ,p1.getTag().toString());
 			build.setView(dialogView);
-			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						p1.dismiss();
-					}
-
-				});
-			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface d1, int p2){
-						int tagVal = (int) getSettings().getDefaults(tag);
-						getAppDB().putInteger(tag,tagVal);
-						getAppDB().onlyWrite();
-						ImageView img = p1.findViewById(android.R.id.icon);
-						GradientDrawable gd = new GradientDrawable();
-						gd.setColor(tagVal);
-						gd.setCornerRadius(1000);
-						img.setImageDrawable(gd);
-						mContext.restartKeyboard();
-						d1.dismiss();
-					}
-
-				});
-			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface d1, int p2){
-						int tagVal = (int) dialogView.findViewById(android.R.id.tabs).getTag();
-						if(tagVal != val){
-							getAppDB().putInteger(tag,tagVal);
-							getAppDB().onlyWrite();
-							ImageView img = p1.findViewById(android.R.id.icon);
-							GradientDrawable gd = new GradientDrawable();
-							gd.setColor(tagVal);
-							gd.setCornerRadius(1000);
-							img.setImageDrawable(gd);
-							mContext.restartKeyboard();
-						}
-						d1.dismiss();
-					}
-
-				});
+			build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+			build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
+				int tagVal = (int) getSettings().getDefaults(tag);
+				getAppDB().putInteger(tag,tagVal);
+				getAppDB().onlyWrite();
+				ImageView img = p1.findViewById(android.R.id.icon);
+				GradientDrawable gd = new GradientDrawable();
+				gd.setColor(tagVal);
+				gd.setCornerRadius(1000);
+				img.setImageDrawable(gd);
+				mContext.restartKeyboard();
+				d1.dismiss();
+			});
+			build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
+				int tagVal = (int) dialogView.findViewById(android.R.id.tabs).getTag();
+				if(tagVal != val){
+					getAppDB().putInteger(tag,tagVal);
+					getAppDB().onlyWrite();
+					ImageView img = p1.findViewById(android.R.id.icon);
+					GradientDrawable gd = new GradientDrawable();
+					gd.setColor(tagVal);
+					gd.setCornerRadius(1000);
+					img.setImageDrawable(gd);
+					mContext.restartKeyboard();
+				}
+				d1.dismiss();
+			});
 
 			doHacksAndShow(build);
 		}
@@ -344,50 +359,33 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			final int val = mContext.getIntOrDefault(tag);
 			dialogView = NumberSelectorLayout.getNumberSelectorLayout(act,isFloat,minMax[0],minMax[1],val);
 			build.setView(dialogView);
-			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						p1.dismiss();
-					}
-
-				});
-			build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface d1, int p2){
-						int tagVal = (int) getSettings().getDefaults(tag);
-						getAppDB().putInteger(tag,tagVal);
-						getAppDB().onlyWrite();
-						TextView tv = p1.findViewById(android.R.id.text1);
-						tv.setText(isFloat ? DensityUtils.getFloatNumberFromInt(tagVal) + "" : tagVal + "");
-						mContext.restartKeyboard();
-						// TODO: add dynamic change for size multiplier
-						if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
-							mContext.recreate();
-						d1.dismiss();
-					}
-
-				});
-			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface d1, int p2){
-						int tagVal = (int) dialogView.getTag();
-						if(tagVal != val){
-							getAppDB().putInteger(tag,tagVal);
-							getAppDB().refreshKey(tag);
-							TextView tv = p1.findViewById(android.R.id.text1);
-							tv.setText(isFloat ? DensityUtils.getFloatNumberFromInt(tagVal) + "" : tagVal + "");
-							mContext.restartKeyboard();
-							// TODO: add dynamic change for size multiplier
-							if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
-								mContext.recreate();
-						}
-						d1.dismiss();
-					}
-
-				});
+			build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+			build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
+				int tagVal = (int) getSettings().getDefaults(tag);
+				getAppDB().putInteger(tag,tagVal);
+				getAppDB().onlyWrite();
+				TextView tv = p1.findViewById(android.R.id.text1);
+				tv.setText(isFloat ? DensityUtils.getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+				mContext.restartKeyboard();
+				// TODO: add dynamic change for size multiplier
+				if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
+					mContext.recreate();
+				d1.dismiss();
+			});
+			build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
+				int tagVal = (int) dialogView.getTag();
+				if(tagVal != val){
+					getAppDB().putInteger(tag,tagVal);
+					getAppDB().refreshKey(tag);
+					TextView tv = p1.findViewById(android.R.id.text1);
+					tv.setText(isFloat ? DensityUtils.getFloatNumberFromInt(tagVal) + "" : tagVal + "");
+					mContext.restartKeyboard();
+					// TODO: add dynamic change for size multiplier
+					if(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag))
+						mContext.recreate();
+				}
+				d1.dismiss();
+			});
 
 			doHacksAndShow(build);
 		}
@@ -400,35 +398,23 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		public void onClick(View p1){
 			AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
 			build.setTitle(getTranslation(p1.getTag().toString()));
-			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						p1.dismiss();
-					}
-
-				});
-			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						ImageView img = dialogView.findViewById(android.R.id.custom);
-						Drawable d = img.getDrawable();
-						if(d != null){
-							try {
-								File bgFile = mContext.getBackgroundImageFile();
-								Bitmap bmp = ((BitmapDrawable) d).getBitmap();
-								setColorsFromBitmap(bmp);
-								FileOutputStream fos = new FileOutputStream(bgFile);
-								bmp.compress(Bitmap.CompressFormat.PNG,100,fos);
-							} catch(Throwable e){}
-							mContext.restartKeyboard();
-							mContext.recreate();
-						}
-						p1.dismiss();
-					}
-
-				});
+			build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+			build.setPositiveButton(android.R.string.ok, (p112, p2) -> {
+				ImageView img = dialogView.findViewById(android.R.id.custom);
+				Drawable d = img.getDrawable();
+				if(d != null){
+					try {
+						File bgFile = SuperBoardApplication.getBackgroundImageFile();
+						Bitmap bmp = ((BitmapDrawable) d).getBitmap();
+						setColorsFromBitmap(bmp);
+						FileOutputStream fos = new FileOutputStream(bgFile);
+						bmp.compress(Bitmap.CompressFormat.PNG,100,fos);
+					} catch(Throwable ignored){}
+					mContext.restartKeyboard();
+					mContext.recreate();
+				}
+				p112.dismiss();
+			});
 			AlertDialog dialog = build.create();
 			dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog,mContext,p1.getTag().toString());
 			dialog.setView(dialogView);
@@ -489,66 +475,49 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 			}
 			build.setTitle(getTranslation(tag));
 			ScrollView dialogScroller = new ScrollView(p1.getContext());
-			dialogView = RadioSelectorLayout.getRadioSelectorLayout(mContext,val,(List<String>)p1.getTag(TAG2));
+			dialogView = RadioSelectorLayout.getRadioSelectorLayout(mContext,val, (List<String>) p1.getTag(TAG2));
 			dialogScroller.addView(dialogView);
 			build.setView(dialogScroller);
-			build.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						p1.dismiss();
-					}
-
-				});
+			build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
 			if(!themeSelector)
-				build.setNeutralButton(R.string.settings_return_defaults, new DialogInterface.OnClickListener(){
-
-						@Override
-						public void onClick(DialogInterface p1, int p2){
-							if(langSelector || iconSelector || spaceSelector) getAppDB().putString(tag,(String)getSettings().getDefaults(tag));
-							else getAppDB().putInteger(tag,(int)getSettings().getDefaults(tag));
-							getAppDB().onlyWrite();
-							mContext.restartKeyboard();
-							p1.dismiss();
-						}
-
-					});
-			final int xval = val;
-			build.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface p1, int p2){
-						int tagVal = (int) dialogView.getTag();
-						if(tagVal != xval){
-							if(langSelector){
-								String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
-								getAppDB().putString(tag,index);
-							} else if(iconSelector){
-								String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
-								getAppDB().putString(tag,index);
-							} else if(spaceSelector) {
-								String index = SuperBoardApplication.getSpaceBarStyles().getFromIndex(tagVal);
-								getAppDB().putString(tag,index);
-							} else if (themeSelector) {
-								List<ThemeHolder> themes = SuperBoardApplication.getThemes();
-								ThemeHolder theme = themes.get(tagVal);
-								theme.applyTheme();
-								mContext.recreate();
-							} else getAppDB().putInteger(tag,tagVal);
-							getAppDB().onlyWrite();
-							mContext.restartKeyboard();
-						}
-						p1.dismiss();
-					}
-
+				build.setNeutralButton(R.string.settings_return_defaults, (p112, p2) -> {
+					if(langSelector || iconSelector || spaceSelector) getAppDB().putString(tag,(String)getSettings().getDefaults(tag));
+					else getAppDB().putInteger(tag,(int)getSettings().getDefaults(tag));
+					getAppDB().onlyWrite();
+					mContext.restartKeyboard();
+					p112.dismiss();
 				});
+			final int xval = val;
+			build.setPositiveButton(android.R.string.ok, (p113, p2) -> {
+				int tagVal = (int) dialogView.getTag();
+				if(tagVal != xval){
+					if(langSelector){
+						String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
+						getAppDB().putString(tag,index);
+					} else if(iconSelector){
+						String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
+						getAppDB().putString(tag,index);
+					} else if(spaceSelector) {
+						String index = SuperBoardApplication.getSpaceBarStyles().getFromIndex(tagVal);
+						getAppDB().putString(tag,index);
+					} else if (themeSelector) {
+						List<ThemeHolder> themes = SuperBoardApplication.getThemes();
+						ThemeHolder theme = themes.get(tagVal);
+						theme.applyTheme();
+						mContext.recreate();
+					} else getAppDB().putInteger(tag,tagVal);
+					getAppDB().onlyWrite();
+					mContext.restartKeyboard();
+				}
+				p113.dismiss();
+			});
 
 			doHacksAndShow(build);
 		}
 
 	};
 
-	private final float getListPreferredItemHeight(){
+	private float getListPreferredItemHeight(){
 		TypedValue value = new TypedValue();
 		mContext.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);	
 		return TypedValue.complexToDimension(value.data, mContext.getResources().getDisplayMetrics());
@@ -558,11 +527,12 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		return getTranslation(mContext, key);
 	}
 
+	@SuppressLint("DiscouragedApi")
 	public static String getTranslation(Context ctx, String key){
 		String requestedKey = "settings_" + key;
 		try {
 			return ctx.getString(ctx.getResources().getIdentifier(requestedKey, "string", ctx.getPackageName()));
-		} catch(Throwable t){}
+		} catch(Throwable ignored){}
 		return requestedKey;
 	}
 
@@ -585,20 +555,17 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		getAppDB().onlyWrite();
 	}
 
+	@SuppressLint("DiscouragedApi")
 	private List<String> getArrayAsList(String key) {
 		try {
 			int id = mContext.getResources().getIdentifier("settings_" + key, "array", mContext.getPackageName());
 			if(id > 0){
 				String[] arr = mContext.getResources().getStringArray(id);
-				List<String> out = new ArrayList<String>();
-				for(String str : arr){
-					out.add(str);
-				}
-				return out;
+				return new ArrayList<>(Arrays.asList(arr));
 			}
 			return getSettings().getSelector(key);
 		} catch(Throwable t){
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -606,8 +573,11 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		AlertDialog dialog = builder.create();
 
 		if(Build.VERSION.SDK_INT >= 31) {
-			Drawable dw = dialog.getWindow().getDecorView().getBackground(); 
-			int color = mContext.getResources().getColor(android.R.color.system_neutral1_900);
+			Drawable dw = dialog.getWindow().getDecorView().getBackground();
+			int color = mContext.getResources().getColor(
+					android.R.color.system_neutral1_900,
+					SuperBoardApplication.getApplication().getTheme()
+			);
 			dw.setTint(color);
 			/*
 			GradientDrawable gd = new GradientDrawable();
@@ -619,28 +589,13 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
 		dialog.show();
 
- 		int tint = Build.VERSION.SDK_INT >= 31
-				? mContext.getResources().getColor(android.R.color.system_accent1_200)
-				: ColorUtils.getAccentColor();
+		if (Build.VERSION.SDK_INT >= 19) {
+			int tint = Build.VERSION.SDK_INT >= 31
+					? mContext.getResources().getColor(
+					android.R.color.system_accent1_200,
+					SuperBoardApplication.getApplication().getTheme()
+			) : ColorUtils.getAccentColor();
 
-		try {
-			Styleable.tryToBypassRestrictions();
-			Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-			mAlert.setAccessible(true);
-			Object mController = mAlert.get(dialog);
-			Field fPosBtn = mController.getClass().getDeclaredField("mButtonPositive");
-			fPosBtn.setAccessible(true);
-			Field fNeuBtn = mController.getClass().getDeclaredField("mButtonNeutral");
-			fNeuBtn.setAccessible(true);
-			Field fNegBtn = mController.getClass().getDeclaredField("mButtonNegative");
-			fNegBtn.setAccessible(true);
-			Button mPositiveButton = (Button) fPosBtn.get(mController);
-			Button mNeutralButton = (Button) fNeuBtn.get(mController);
-			Button mNegativeButton = (Button) fNegBtn.get(mController);
-			if(mPositiveButton != null) mPositiveButton.setTextColor(tint);
-			if(mNeutralButton != null) mNeutralButton.setTextColor(tint);
-			if(mNegativeButton != null) mNegativeButton.setTextColor(tint);
-		} catch(Throwable t){
 			Button btn1 = dialog.findViewById(android.R.id.button1);
 			Button btn2 = dialog.findViewById(android.R.id.button2);
 			Button btn3 = dialog.findViewById(android.R.id.button3);

@@ -1,14 +1,23 @@
 package org.blinksd.utils.color;
 
-import android.content.res.*;
-import android.graphics.*;
-import android.os.*;
-import android.util.*;
-import java.lang.annotation.*;
-import org.blinksd.*;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
+import android.util.Log;
+
+import org.blinksd.Defaults;
+import org.blinksd.SuperBoardApplication;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 // Copied from support library
 // Android Open Source Project

@@ -1,23 +1,27 @@
 package org.blinksd.board;
 
-import android.graphics.*;
-import android.inputmethodservice.*;
-import android.view.*;
-import android.widget.*;
-import org.blinksd.*;
-import org.blinksd.sdb.*;
-import org.blinksd.utils.layout.*;
-import org.superdroid.db.*;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.inputmethodservice.InputMethodService;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import org.blinksd.utils.layout.DensityUtils;
+import org.superdroid.db.SuperDBHelper;
 
 public class BoardPopup extends SuperBoard {
 	
-	private static ViewGroup mRoot;
-	private Key mKey;
-	private static int pos[] = new int[2], khp = 0;
-	private View popupFilter = null;
+	private final ViewGroup mRoot;
+	private final Key mKey;
+	private static final int[] pos = new int[2];
+	private static int khp = 0;
+	private final View popupFilter;
 	
+	@SuppressLint("ClickableViewAccessibility")
 	public BoardPopup(ViewGroup root){
-		super((mRoot = root).getContext());
+		super(root.getContext());
+		mRoot = root;
 		setKeyboardHeight(10);
 		pos[0] = pos[1] = 0;
 		updateKeyState((InputMethodService)root.getContext());
@@ -75,7 +79,7 @@ public class BoardPopup extends SuperBoard {
 		hideCharacter();
 		CharSequence hint = mKey.getHint();
 		String str = hint != null ? hint.toString().trim() : "";
-		setVisibility(visible && str != null && str.length() > 0?VISIBLE:GONE);
+		setVisibility(visible && str.length() > 0 ?VISIBLE:GONE);
 		popupFilter.setVisibility(getVisibility());
 		if(isShown()){
 			setCharacters(str);
@@ -96,17 +100,17 @@ public class BoardPopup extends SuperBoard {
 	}
 	
 	private void createPopup(String[] a){
-		int h = getChildAt(0).getLayoutParams().width, c = 6;
+		int h, c = 6;
 		setKeyboardWidth(a.length < c ? 11*a.length : 11*c);
-		setX(DensityUtils.wpInt(50-(getKeyboardWidthPercent()/2)));
+		setX(DensityUtils.wpInt(50-(getKeyboardWidthPercent()/2f)));
 		h = a.length / c;
 		h = h > 0 ? h : 1;
 		h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 :0;
 		setKeyboardHeight(10*h);
-		setY(DensityUtils.hpInt((khp-getKeyboardHeightPercent())/2));
-		String[] x = null;
+		setY(DensityUtils.hpInt((khp-getKeyboardHeightPercent())/2f));
+		String[] x;
 		for(int i = 0,k = 0;i < h;i++){
-			x = new String[a.length < c ? a.length : c];
+			x = new String[Math.min(a.length, c)];
 			x[0] = "";
 			for(int g = 0;g < c;g++){
 				k++;

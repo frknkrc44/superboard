@@ -1,11 +1,15 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.view.*;
-import android.widget.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.sdb.*;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2;
+import org.blinksd.sdb.SuperMiniDB;
 
 public class NumberSelectorLayout {
 

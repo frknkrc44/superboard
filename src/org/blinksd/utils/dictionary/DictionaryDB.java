@@ -1,11 +1,20 @@
 package org.blinksd.utils.dictionary;
 
-import android.content.*;
-import android.database.*;
-import android.database.sqlite.*;
-import java.io.*;
-import java.util.*;
-import org.blinksd.*;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import org.blinksd.SuperBoardApplication;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DictionaryDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "dicts.db";

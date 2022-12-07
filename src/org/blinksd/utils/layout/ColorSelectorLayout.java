@@ -1,22 +1,40 @@
 package org.blinksd.utils.layout;
 
-import android.content.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.media.*;
-import android.text.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.TabHost.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.color.*;
-import org.blinksd.sdb.*;
-import org.superdroid.db.*;
+import static android.media.AudioManager.FX_KEYPRESS_DELETE;
+import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 
-import static android.media.AudioManager.*;
-import android.inputmethodservice.*;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.inputmethodservice.Keyboard;
+import android.media.AudioManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
+
+import org.blinksd.Defaults;
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2;
+import org.blinksd.board.LayoutUtils;
+import org.blinksd.board.R;
+import org.blinksd.board.SettingMap;
+import org.blinksd.board.SuperBoard;
+import org.blinksd.sdb.SuperMiniDB;
+import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.color.HSVColorUtils;
+import org.superdroid.db.SuperDBHelper;
 
 public class ColorSelectorLayout {
 	

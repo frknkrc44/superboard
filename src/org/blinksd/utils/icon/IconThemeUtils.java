@@ -1,10 +1,11 @@
 package org.blinksd.utils.icon;
 
-import java.util.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.layout.*;
-import org.superdroid.db.*;
+import org.blinksd.Defaults;
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.R;
+import org.blinksd.board.SettingMap;
+import org.blinksd.utils.layout.BaseMap;
+import org.superdroid.db.SuperDBHelper;
 
 public class IconThemeUtils extends BaseMap<String,int[]> {
 	public IconThemeUtils(){

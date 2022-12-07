@@ -1,18 +1,25 @@
 package org.blinksd.board.dictionary;
 
-import android.app.*;
-import android.content.*;
-import android.database.*;
-import android.net.*;
-import android.os.*;
-import android.provider.*;
-import android.view.*;
-import android.widget.*;
-import java.io.*;
-import org.blinksd.*;
-import org.blinksd.board.*;
-import org.blinksd.utils.dictionary.*;
-import org.blinksd.utils.layout.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.view.Gravity;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.R;
+import org.blinksd.utils.dictionary.DictionaryDB;
+import org.blinksd.utils.layout.DensityUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class DictionaryImportActivity extends Activity {
 

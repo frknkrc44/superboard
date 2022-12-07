@@ -1,5 +1,5 @@
 package yandroid.graphics;
-/**
+/*
  * A little hack to get required hidden
  * methods for Switch and CompoundButton
  *
@@ -7,6 +7,7 @@ package yandroid.graphics;
  */
 
 import android.graphics.drawable.Drawable;
+
 import java.lang.reflect.Method;
 
 public class DrawableUtils {
@@ -25,7 +26,7 @@ public class DrawableUtils {
 			m.setAccessible(true);
 			Object o = m.invoke(drw);
 			return new Insets(o);
-		} catch(Throwable t){}
+		} catch(Throwable ignored){}
 		return Insets.NONE;
 	}
 	

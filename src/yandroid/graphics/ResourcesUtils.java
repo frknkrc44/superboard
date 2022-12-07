@@ -6,7 +6,9 @@ package yandroid.graphics;
  * @author frknkrc44
  */
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
+
 import java.lang.reflect.Method;
 
 public class ResourcesUtils {
@@ -16,12 +18,13 @@ public class ResourcesUtils {
 	 *
 	 * @author frknkrc44
 	 */
+	@SuppressLint("DiscouragedPrivateApi")
 	public static Object getCompatibilityInfo(Resources res){
 		try {
 			Method m = Resources.class.getDeclaredMethod("getCompatibilityInfo");
 			m.setAccessible(true);
 			return m.invoke(res);
-		} catch(Throwable t){}
+		} catch(Throwable ignored){}
 		return null;
 	}
 	

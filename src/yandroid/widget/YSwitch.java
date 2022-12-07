@@ -16,6 +16,9 @@
 
 package yandroid.widget;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.*;
+
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -24,15 +27,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.Region.Op;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.FloatProperty;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
@@ -44,11 +46,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import yandroid.graphics.DrawableUtils;
 import yandroid.graphics.Insets;
 import yandroid.graphics.TextPaintUtils;
+import yandroid.graphics.PropertyUtils;
 import yandroid.text.method.AllCapsTransformationMethod;
 import yandroid.text.method.TransformationMethod2;
 import yandroid.util.Styleable;
-
-import static android.os.Build.VERSION.SDK_INT;
 
 /**
  * A Switch is a two-state toggle switch widget that can select between two
@@ -467,7 +468,7 @@ public class YSwitch extends YCompoundButton {
      * @attr ref android.R.styleable#Switch_track
      */
     public void setTrackResource(int resId) {
-        setTrackDrawable(getContext().getDrawable(resId));
+        setTrackDrawable(getContext().getResources().getDrawable(resId));
     }
 
     /**
@@ -509,7 +510,7 @@ public class YSwitch extends YCompoundButton {
      * @attr ref android.R.styleable#Switch_thumb
      */
     public void setThumbResource(int resId) {
-        setThumbDrawable(getContext().getDrawable(resId));
+        setThumbDrawable(getContext().getResources().getDrawable(resId));
     }
 
     /**
@@ -680,7 +681,10 @@ public class YSwitch extends YCompoundButton {
 
         final int measuredHeight = getMeasuredHeight();
         if (measuredHeight < switchHeight) {
-            setMeasuredDimension(getMeasuredWidthAndState(), switchHeight);
+            setMeasuredDimension(
+                    SDK_INT >= HONEYCOMB
+                    ? getMeasuredWidthAndState()
+                    : getMeasuredWidth(), switchHeight);
         }
     }
 
@@ -852,14 +856,22 @@ public class YSwitch extends YCompoundButton {
 
     private void animateThumbToCheckedState(boolean newCheckedState) {
         final float targetPosition = newCheckedState ? 1 : 0;
-        mPositionAnimator = ObjectAnimator.ofFloat(this, THUMB_POS, targetPosition);
-        mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
-        mPositionAnimator.setAutoCancel(true);
-        mPositionAnimator.start();
+        if (SDK_INT >= ICE_CREAM_SANDWICH) {
+            mPositionAnimator = ObjectAnimator.ofFloat(this,
+                    SDK_INT >= N
+                            ? PropertyUtils.THUMB_POS
+                            : PropertyUtils.THUMB_POS_COMPAT, targetPosition);
+            mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
+            if (SDK_INT >= JELLY_BEAN_MR2) {
+                mPositionAnimator.setAutoCancel(true);
+            }
+            mPositionAnimator.start();
+        }
+
     }
 
     private void cancelPositionAnimator() {
-        if (mPositionAnimator != null) {
+        if (mPositionAnimator != null && SDK_INT >= HONEYCOMB) {
             mPositionAnimator.cancel();
         }
     }
@@ -873,7 +885,7 @@ public class YSwitch extends YCompoundButton {
      *
      * @param position new position between [0,1]
      */
-    private void setThumbPosition(float position) {
+    public void setThumbPosition(float position) {
         mThumbPosition = position;
         invalidate();
     }
@@ -898,6 +910,22 @@ public class YSwitch extends YCompoundButton {
             cancelPositionAnimator();
             setThumbPosition(checked ? 1 : 0);
         }
+    }
+
+    public boolean isAttachedToWindow() {
+        if (SDK_INT >= KITKAT) {
+            return super.isAttachedToWindow();
+        }
+
+        return getWindowToken() != null;
+    }
+
+    public boolean isLaidOut() {
+        if (SDK_INT >= KITKAT) {
+            return super.isLaidOut();
+        }
+
+        return getWidth() > 0 && getHeight() > 0;
     }
 
     @Override
@@ -1012,7 +1040,11 @@ public class YSwitch extends YCompoundButton {
 
             final Drawable background = getBackground();
             if (background != null) {
-                background.setHotspotBounds(thumbLeft, switchTop, thumbRight, switchBottom);
+                if(SDK_INT >= LOLLIPOP) {
+                    background.setHotspotBounds(thumbLeft, switchTop, thumbRight, switchBottom);
+                } else {
+                    background.setBounds(thumbLeft, switchTop, thumbRight, switchBottom);
+                }
             }
         }
 
@@ -1174,6 +1206,10 @@ public class YSwitch extends YCompoundButton {
     public void drawableHotspotChanged(float x, float y) {
         super.drawableHotspotChanged(x, y);
 
+        if (SDK_INT < LOLLIPOP) {
+            return;
+        }
+
         if (mThumbDrawable != null) {
             mThumbDrawable.setHotspot(x, y);
         }
@@ -1191,6 +1227,10 @@ public class YSwitch extends YCompoundButton {
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
+
+        if (SDK_INT < HONEYCOMB) {
+            return;
+        }
 
         if (mThumbDrawable != null) {
             mThumbDrawable.jumpToCurrentState();
@@ -1215,29 +1255,23 @@ public class YSwitch extends YCompoundButton {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(YSwitch.class.getName());
-        CharSequence switchText = isChecked() ? mTextOn : mTextOff;
-        if (!TextUtils.isEmpty(switchText)) {
-            CharSequence oldText = info.getText();
-            if (TextUtils.isEmpty(oldText)) {
-                info.setText(switchText);
-            } else {
-                StringBuilder newText = new StringBuilder();
-                newText.append(oldText).append(' ').append(switchText);
-                info.setText(newText);
+        if(SDK_INT >= ICE_CREAM_SANDWICH) {
+            info.setClassName(YSwitch.class.getName());
+            CharSequence switchText = isChecked() ? mTextOn : mTextOff;
+            if (!TextUtils.isEmpty(switchText)) {
+                CharSequence oldText = info.getText();
+                if (TextUtils.isEmpty(oldText)) {
+                    info.setText(switchText);
+                } else {
+                    StringBuilder newText = new StringBuilder();
+                    newText.append(oldText).append(' ').append(switchText);
+                    info.setText(newText);
+                }
             }
         }
     }
 
-    private static final FloatProperty<YSwitch> THUMB_POS = new FloatProperty<YSwitch>("thumbPos") {
-        @Override
-        public Float get(YSwitch object) {
-            return object.mThumbPosition;
-        }
-
-        @Override
-        public void setValue(YSwitch object, float value) {
-            object.setThumbPosition(value);
-        }
-    };
+    public float getThumbPosition() {
+        return mThumbPosition;
+    }
 }

@@ -1,11 +1,16 @@
 package org.blinksd.utils.image;
 
-import android.content.*;
-import android.graphics.*;
-import android.renderscript.*;
-import java.io.*;
-import java.lang.reflect.*;
-import org.blinksd.*;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+
+import org.blinksd.SuperBoardApplication;
+
+import java.io.File;
+import java.lang.reflect.Method;
 
 public class ImageUtils {
 	private ImageUtils(){}

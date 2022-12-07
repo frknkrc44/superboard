@@ -1,16 +1,20 @@
 package org.blinksd.utils.color;
 
-import android.content.res.*;
-import android.graphics.*;
-
-import java.io.*;
-import java.util.*;
+import android.content.res.AssetManager;
+import android.graphics.Color;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.board.*;
-import org.blinksd.sdb.*;
-import org.json.*;
-import org.superdroid.db.*;
+import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperMiniDB;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class ThemeUtils {
     private ThemeUtils() {}
