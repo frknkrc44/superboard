@@ -7,7 +7,7 @@ AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
 ADX=$(BUILDTOOLS)/dx
 AD8=$(BUILDTOOLS)/d8
 AAPT=$(BUILDTOOLS)/aapt
-JAVAC=$(JAVADIR)javac
+JAVAC=$(JAVADIR)/javac
 KOTLINC=$(SDK)/plugins/Kotlin/kotlinc/bin/kotlinc
 JARSIGNER=$(JAVADIR)jarsigner
 APKSIGNER=$(BUILDTOOLS)/apksigner
@@ -29,7 +29,7 @@ KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
 JAVAC_DEBUG_FLAGS = 
 
-all: clear mkdirs langpacks abuild build rmdirs zipalign sign
+all: clear mkdirs langpacks keystore abuild build rmdirs zipalign sign
 build-install: all install
 build:
 	$(AAPT) package -v -f -I $(AJAR) -M "AndroidManifest.xml" -A "assets" -S "res" -m -J "gen" -F "bin/$(NAME).ap_"
@@ -72,4 +72,6 @@ push:
 	$(ADB) push bin/$(NAME).apk /sdcard
 langpacks:
 	cd SuperBoardLayoutCreator && \
-		bash create_packs.sh $(JAVADIR)
+		${SHELL} create_packs.sh $(JAVADIR)
+keystore:
+	${SHELL} apply_keystore_props.sh
