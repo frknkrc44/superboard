@@ -46,7 +46,7 @@ zipalign:
 optimize:
 	optipng -o7 `find res -name "*.png"`
 sign:
-	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME).apk bin/$(NAME).ap_
+	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk bin/$(NAME).ap_
 	#rm -f bin/$(NAME).ap_
 jarsign:
 	$(JARSIGNER) -keystore $(KEYFILE) -storepass $(STOREPASS) -keypass $(KEYPASS) -signedjar bin/$(NAME).apk bin/$(NAME).ap_ $(KEYALIAS)
@@ -57,7 +57,7 @@ generate:
 clear:
 	rm -rf bin gen
 install:
-	$(ADB) install -r bin/$(NAME).apk
+	$(ADB) install -r bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk
 mkdirs:
 	mkdir aidl 2> /dev/null || true
 	mkdir bin 2> /dev/null || true
