@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.Gravity;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.concurrent.Executors;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
 import org.blinksd.utils.dictionary.DictionaryDB;
@@ -68,17 +68,19 @@ public class DictionaryImportActivity extends Activity {
 	@Override
 	public void onBackPressed(){}
 	
-	private class DictLoadTask extends AsyncTask<Uri, Integer, Void> implements DictionaryDB.OnSaveProgressListener {
+	private class DictLoadTask implements DictionaryDB.OnSaveProgressListener {
 
 		@Override
 		public void onProgress(int current, int state){
 			if(current % 1000 == 0 || state == DictionaryDB.OnSaveProgressListener.STATE_DELETE_DUPLICATES)
 				publishProgress(current, state);
 		}
+        
+        private void publishProgress(Integer... values) {
+            onProgressUpdate(values);
+        }
 
-		@Override
 		protected void onProgressUpdate(Integer[] values){
-			super.onProgressUpdate(values);
 			int current = values[0];
 			int state = values[1];
 			TextView tv = findViewById(android.R.id.text1);
@@ -91,15 +93,19 @@ public class DictionaryImportActivity extends Activity {
 					break;
 			}
 		}
+        
+        public void execute(Uri... args) {
+            onPreExecute();
+            Executors.newSingleThreadExecutor().execute(() -> {
+                 Void out = doInBackground(args);
+                 SuperBoardApplication.mainHandler.post(() -> onPostExecute(out));
+            });
+        }
 
-
-		@Override
 		protected void onPreExecute(){
-			super.onPreExecute();
 			prepareProgressView();
 		}
 
-		@Override
 		protected Void doInBackground(Uri[] p1){
 			try {
 				Uri uri = p1[0];
@@ -134,9 +140,7 @@ public class DictionaryImportActivity extends Activity {
 			return 2;
 		}
 
-		@Override
 		protected void onPostExecute(Void result){
-			super.onPostExecute(result);
 			finish();
 		}
 	}

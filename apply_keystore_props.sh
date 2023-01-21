@@ -1,3 +1,8 @@
+if [ ! -f keystore.properties ]
+then
+	$SHELL create_keystore_props.sh
+fi
+
 PROPS=$(cat keystore.properties)
 
 replace_item() {

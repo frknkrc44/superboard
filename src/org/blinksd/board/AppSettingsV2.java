@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +32,8 @@ import org.blinksd.utils.layout.SettingsCategorizedListView;
 import org.superdroid.db.SuperDBHelper;
 
 import java.io.File;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AppSettingsV2 extends Activity {
 	private LinearLayout main;
@@ -177,9 +178,14 @@ public class AppSettingsV2 extends Activity {
 		}
 	}
 	
-	private class ImageTask extends AsyncTask<Object,Bitmap,Bitmap> {
+	private class ImageTask {
+        public void execute(Object... args) {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                Bitmap bmp = doInBackground(args);
+                SuperBoardApplication.mainHandler.post(() -> onPostExecute(bmp));
+            });
+        }
 
-		@Override
 		protected Bitmap doInBackground(Object[] p1){
 			try {
 				return MediaStore.Images.Media.getBitmap((ContentResolver)p1[0],(Uri)p1[1]);
@@ -187,9 +193,7 @@ public class AppSettingsV2 extends Activity {
 			return null;
 		}
 
-		@Override
 		protected void onPostExecute(Bitmap result){
-			super.onPostExecute(result);
 			if(result != null){
 				result = ImageUtils.getMinimizedBitmap(result);
 				ImageView img = mSettView.mAdapter.dialogView.findViewById(android.R.id.custom);

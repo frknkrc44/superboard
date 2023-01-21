@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
@@ -709,7 +710,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				updateKeyState();
 			playSound(0);
 		}
-		if(vib > 0) vb.vibrate(vib);
+		if(vib > 0) {
+            if(Build.VERSION.SDK_INT >= 26) {
+                vb.vibrate(VibrationEffect.createOneShot(vib, 255));
+            } else {
+                vb.vibrate(vib);
+            }
+        }
 	}
 	
 	public void fakeKeyboardEvent(Key v){

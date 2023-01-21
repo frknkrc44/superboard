@@ -2,6 +2,8 @@ package org.blinksd;
 
 import android.app.Application;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Looper;
 
 import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.LayoutUtils.Language;
@@ -34,6 +36,8 @@ public class SuperBoardApplication extends Application {
 	private static SpaceBarThemeUtils spaceBars;
 	private static List<ThemeHolder> themes;
 	private static DictionaryDB dictDB;
+    
+    public static final Handler mainHandler = new Handler(Looper.getMainLooper());
 	
 	
 	@Override

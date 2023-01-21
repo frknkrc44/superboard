@@ -20,10 +20,20 @@ public class DictionaryDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "dicts.db";
 	private static final int DATABASE_VERSION = 1;
 	public boolean isReady = true;
+    private SQLiteDatabase mReadDatabase;
 	
 	public DictionaryDB(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
+    
+    @Override
+    public SQLiteDatabase getReadableDatabase() {
+        if(mReadDatabase == null || !mReadDatabase.isOpen()) {
+            mReadDatabase = super.getReadableDatabase();
+        }
+        
+        return mReadDatabase;
+    }
 	
 	@Override
 	public void onCreate(SQLiteDatabase p1){
@@ -96,24 +106,22 @@ public class DictionaryDB extends SQLiteOpenHelper {
 		String table = "LANG_" + escapeString(lang);
 		StringBuilder sb = new StringBuilder();
 		SQLiteDatabase db = getWritableDatabase();
+        sb.append("INSERT OR IGNORE INTO ")
+			.append(table)
+			.append("(word)")
+			.append(" VALUES ");
 		
-		int count = 0;
+        int count = 0;
 		for (String line; (line = reader.readLine()) != null; ) {
-			line = line.trim().toLowerCase();
+			line = escapeString(line.trim().toLowerCase());
 			if(line.length() > 1 && !line.contains(" ") && !line.contains("/")) {
-				sb.append("INSERT OR IGNORE INTO ")
-					.append(table)
-					.append("(word)")
-					.append(" VALUES ('")
-					.append(escapeString(line))
-					.append("')");
-				db.execSQL(sb.toString());
-				sb.setLength(0);
-				
-				if(listener != null)
-					listener.onProgress(++count, OnSaveProgressListener.STATE_IMPORT);
+				sb.append("('").append(line).append("'),");
+                count++;
 			}
 		}
+        sb.deleteCharAt(sb.length()-1);
+        db.execSQL(sb.toString());
+		sb.setLength(0);
 		
 		if(listener != null)
 			listener.onProgress(count, OnSaveProgressListener.STATE_DELETE_DUPLICATES);
@@ -175,7 +183,9 @@ public class DictionaryDB extends SQLiteOpenHelper {
 				} while (cursor.moveToNext());
 			}
 
-			db.close();
+            // if(!db.inTransaction()) {
+			//     db.close();
+            // }
 		} catch(Throwable t){}
 		
 		return out;

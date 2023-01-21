@@ -203,6 +203,10 @@ public class ColorUtils {
 		}
 		return Color.argb(Color.alpha(color),state[0],state[1],state[2]);
 	}
+    
+    public static int getColorWithAlpha(int color, int alpha) {
+        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+    }
 	
 	public static int getAccentColor(){
 		TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{ android.R.attr.colorAccent });
