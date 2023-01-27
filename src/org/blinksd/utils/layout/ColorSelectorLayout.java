@@ -282,7 +282,9 @@ public class ColorSelectorLayout {
 					switch(Integer.parseInt(x[0])){
 						case Keyboard.KEYCODE_DELETE:
 							String s = hexIn.getText().toString();
-							hexIn.setText(s.substring(0,s.length()-1));
+							if (s.length() > 0) {
+								hexIn.setText(s.substring(0,s.length()-1));
+							}
 							break;
 						case Keyboard.KEYCODE_CANCEL:
 							hexIn.setText("");

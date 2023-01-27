@@ -11,13 +11,13 @@ import org.blinksd.utils.layout.DensityUtils;
 import org.superdroid.db.SuperDBHelper;
 
 public class BoardPopup extends SuperBoard {
-	
+
 	private final ViewGroup mRoot;
 	private final Key mKey;
 	private static final int[] pos = new int[2];
 	private static int khp = 0;
 	private final View popupFilter;
-	
+
 	@SuppressLint("ClickableViewAccessibility")
 	public BoardPopup(ViewGroup root){
 		super(root.getContext());
@@ -35,11 +35,11 @@ public class BoardPopup extends SuperBoard {
 		mKey.setVisibility(GONE);
 		setVisibility(GONE);
 	}
-	
+
 	public void setFilterHeight(int h){
 		popupFilter.getLayoutParams().height = h;
 	}
-	
+
 	public void setKeyboardPrefs(){
 		khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
 		int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
@@ -52,7 +52,7 @@ public class BoardPopup extends SuperBoard {
 		mKey.setX(pos[0]);
 		mKey.setY(pos[1] - (pos[1] >= (a = mKey.getLayoutParams().height) ? a : 0));
 	}
-	
+
 	public void setKey(Key key){
 		setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		key.clone(mKey);
@@ -66,15 +66,15 @@ public class BoardPopup extends SuperBoard {
 	public void showCharacter(){
 		mKey.setVisibility(VISIBLE);
 	}
-	
+
 	public void hideCharacter(){
 		mKey.setVisibility(GONE);
 	}
-	
+
 	public void showPopup(){
 		showPopup(true);
 	}
-	
+
 	public void showPopup(boolean visible){
 		hideCharacter();
 		CharSequence hint = mKey.getHint();
@@ -91,14 +91,14 @@ public class BoardPopup extends SuperBoard {
 		super.setVisibility(visibility);
 		mRoot.setFocusable(visibility != VISIBLE);
 	}
-	
+
 	private void setCharacters(String chr){
 		clear();
 		String[] u = chr.split("");
 		createPopup(u);
 		setKeysShadow(mKey.shr,mKey.shc);
 	}
-	
+
 	private void createPopup(String[] a){
 		int h, c = 6;
 		setKeyboardWidth(a.length < c ? 11*a.length : 11*c);
@@ -135,13 +135,13 @@ public class BoardPopup extends SuperBoard {
 		clear();
 		System.gc();
 	}
-	
+
 	@Override
 	public void clear(){
 		super.clear();
 		mKey.setHint(null);
 	}
-	
+
 	public int getIntOrDefault(String key){
 		return SuperDBHelper.getIntValueOrDefault(key);
 	}

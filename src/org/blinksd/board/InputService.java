@@ -184,17 +184,17 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				private boolean shown = false;
 				@Override
 				public void onKeyboardEvent(View v){
+					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
+					boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
+
+					if(showPopup || !disablePopup)
+						po.setKey((SuperBoard.Key)v);
+
 					if(shown = po.isShown()){
 						po.showPopup(false);
 						po.clear();
 						return;
 					}
-			
-					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
-					boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
-					
-					if(showPopup || !disablePopup)
-						po.setKey((SuperBoard.Key)v);
 						
 					if(showPopup)
 						po.showCharacter();

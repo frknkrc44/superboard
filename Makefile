@@ -1,7 +1,7 @@
 SDK=$(HOME)/Android/Sdk
 TARGET=$(shell ls $(SDK)/build-tools | tail -n1 | cut -f1 -d.)
 TOOL=$(shell ls $(SDK)/build-tools | tail -n1)
-JAVADIR= 
+JAVADIR=/usr/bin
 BUILDTOOLS=$(SDK)/build-tools/$(TOOL)
 AJAR=$(SDK)/platforms/android-$(TARGET)/android.jar
 ADX=$(BUILDTOOLS)/dx
