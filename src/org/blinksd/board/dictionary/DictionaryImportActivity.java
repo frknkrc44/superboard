@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.concurrent.Executors;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
 import org.blinksd.utils.dictionary.DictionaryDB;
@@ -20,6 +19,7 @@ import org.blinksd.utils.layout.DensityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Executors;
 
 public class DictionaryImportActivity extends Activity {
 

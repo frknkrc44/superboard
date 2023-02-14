@@ -20,10 +20,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.image.ImageUtils;
 import org.blinksd.utils.layout.DensityUtils;
@@ -32,13 +30,12 @@ import org.blinksd.utils.layout.SettingsCategorizedListView;
 import org.superdroid.db.SuperDBHelper;
 
 import java.io.File;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class AppSettingsV2 extends Activity {
 	private LinearLayout main;
 	private SuperBoard sb;
-	private static ImageView iv;
+	private ImageView iv;
 	private SettingsCategorizedListView mSettView;
 	
 
@@ -121,7 +118,7 @@ public class AppSettingsV2 extends Activity {
 		main.addView(ll);
 	}
 	
-	private void createMainView() throws Throwable {
+	private void createMainView() {
 		createPreviewView();
 		mSettView = new SettingsCategorizedListView(this);
 	}
@@ -146,14 +143,18 @@ public class AppSettingsV2 extends Activity {
 		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
 		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
-		IconThemeUtils icons = SuperBoardApplication.getIconThemes();
-		sb.setKeyDrawable(0,0,2,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
-		LayoutUtils.setSpaceBarViewPrefs(icons, sb.getKey(0,0,1), SuperBoardApplication.getCurrentKeyboardLanguage().name);
-		sb.setKeyDrawable(0,0,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+		IconThemeUtils iconThemes = SuperBoardApplication.getIconThemes();
+		sb.setKeyDrawable(0,0,2,
+				iconThemes.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+		LayoutUtils.setSpaceBarViewPrefs(iconThemes,
+				sb.getKey(0,0,1),
+				SuperBoardApplication.getCurrentKeyboardLanguage().name);
+		sb.setKeyDrawable(0,0,-1,
+				iconThemes.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
 		try {
 			SuperBoardApplication.clearCustomFont();
 			sb.setCustomFont(SuperBoardApplication.getCustomFont());
-		} catch(Throwable t){}
+		} catch(Throwable ignored){}
 	}
 	
 	public int getFloatPercentOrDefault(String key){
@@ -189,7 +190,7 @@ public class AppSettingsV2 extends Activity {
 		protected Bitmap doInBackground(Object[] p1){
 			try {
 				return MediaStore.Images.Media.getBitmap((ContentResolver)p1[0],(Uri)p1[1]);
-			} catch(Throwable e){}
+			} catch(Throwable ignored){}
 			return null;
 		}
 

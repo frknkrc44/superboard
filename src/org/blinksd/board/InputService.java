@@ -52,7 +52,9 @@ import org.superdroid.db.SuperDBHelper;
 import java.io.File;
 import java.util.List;
 
-public class InputService extends InputMethodService implements SuggestionLayout.OnSuggestionSelectedListener {
+public class InputService extends InputMethodService implements
+		SuggestionLayout.OnSuggestionSelectedListener,
+		SuggestionLayout.OnQuickMenuItemClickListener {
 	
 	private SuperBoard sb = null;
 	private BoardPopup po = null;
@@ -117,6 +119,8 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		ic.setSelection(pos, pos);
 		
 		sb.afterKeyboardEvent();
+
+		SuperBoardApplication.getDictDB().increaseUsageCount(cl.language.split("_")[0], suggestion.toString().trim());
 	}
 
 	@Override
@@ -157,7 +161,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		
 		if(emoji != null)
 			showEmojiView(false);
-		
+
 		if(sl != null)
 			sl.setCompletion(null, null);
 			
@@ -170,7 +174,8 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(ic == null) ic = getCurrentInputConnection();
 		if(ic == null) return;
 		CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
-		if(text != null && sl != null) sl.setCompletionText(text, cl.language);
+		boolean sugDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
+		if(text != null && sl != null) sl.setCompletionText(sugDisabled ? "" : text, cl.language);
 	}
 	
 	@SuppressLint("ResourceType")
@@ -182,13 +187,19 @@ public class InputService extends InputMethodService implements SuggestionLayout
 		if(sb == null){
 			sb = new SuperBoard(this){
 				private boolean shown = false;
+
 				@Override
-				public void onKeyboardEvent(View v){
+				public void beforeKeyboardEvent(View v) {
 					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
 					boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
 
 					if(showPopup || !disablePopup)
 						po.setKey((SuperBoard.Key)v);
+				}
+
+				@Override
+				public void onKeyboardEvent(View v){
+					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
 
 					if(shown = po.isShown()){
 						po.showPopup(false);
@@ -274,8 +285,8 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				{"F1","F2","F3","F4","F5","F6","F7","F8"},
 				{"F9","F10","F11","F12","P↓","P↑","INS","DEL"},
 				{"TAB","ENTER","HOME","ESC","PREV","PLAY","STOP","NEXT"},
-				{"","","END","","","PAUSE","",""},
-				{abc,"","←","↑","↓","→","",""}
+				{"","","END","","BS","PAUSE","CUT","COPY"},
+				{abc,"","←","↑","↓","→","","PASTE"}
 			}, kbdNums = {
 				{"-",".",",","ABC"},
 				{"1","2","3","+"},
@@ -319,7 +330,7 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setPressEventForKey(3,1,4,KeyEvent.KEYCODE_PAGE_DOWN);
 			sb.setPressEventForKey(3,1,5,KeyEvent.KEYCODE_PAGE_UP);
 			sb.setPressEventForKey(3,1,6,KeyEvent.KEYCODE_INSERT);
-			sb.setPressEventForKey(3,1,7,KeyEvent.KEYCODE_DEL);
+			sb.setPressEventForKey(3,1,7,KeyEvent.KEYCODE_FORWARD_DEL);
 			sb.setPressEventForKey(3,2,0,KeyEvent.KEYCODE_TAB);
 			sb.setPressEventForKey(3,2,1,'\n',false);
 			sb.setPressEventForKey(3,2,2,KeyEvent.KEYCODE_MOVE_HOME);
@@ -330,12 +341,16 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			sb.setPressEventForKey(3,2,7,KeyEvent.KEYCODE_MEDIA_NEXT);
 			
 			sb.setPressEventForKey(3,3,2,KeyEvent.KEYCODE_MOVE_END);
+			sb.setPressEventForKey(3,3,4,KeyEvent.KEYCODE_DEL);
 			sb.setPressEventForKey(3,3,5,KeyEvent.KEYCODE_MEDIA_PAUSE);
+			sb.setPressEventForKey(3,3,6,KeyEvent.KEYCODE_CUT);
+			sb.setPressEventForKey(3,3,7,KeyEvent.KEYCODE_COPY);
 			
 			sb.setPressEventForKey(3,-1,2,KeyEvent.KEYCODE_DPAD_LEFT);
 			sb.setPressEventForKey(3,-1,3,KeyEvent.KEYCODE_DPAD_UP);
 			sb.setPressEventForKey(3,-1,4,KeyEvent.KEYCODE_DPAD_DOWN);
 			sb.setPressEventForKey(3,-1,5,KeyEvent.KEYCODE_DPAD_RIGHT);
+			sb.setPressEventForKey(3,-1,7,KeyEvent.KEYCODE_PASTE);
 			
 			for(int i = 2;i < 6;i++)
 				sb.setKeyRepeat(3,-1,i);
@@ -500,8 +515,10 @@ public class InputService extends InputMethodService implements SuggestionLayout
 			}
 			sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
 			boolean sugDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
-			sl.setVisibility(sugDisabled ? View.GONE : View.VISIBLE);
+			boolean topBarDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
+			sl.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
 			sl.setOnSuggestionSelectedListener(sugDisabled ? null : this);
+			sl.setOnQuickMenuItemClickListener(topBarDisabled ? null : this);
 			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
 				setKeyboardLayout(lang);
@@ -643,4 +660,18 @@ public class InputService extends InputMethodService implements SuggestionLayout
 				break;
 		}
 	};
+
+	@Override
+	public void onQuickMenuItemClick(int action) {
+		if (sb != null) {
+			switch (action) {
+				case KeyEvent.KEYCODE_NUM:
+					sb.setEnabledLayout(sb.getEnabledLayoutIndex() != 3 ? 3 : 0);
+					break;
+				default:
+					sb.sendKeyEvent(action);
+					break;
+			}
+		}
+	}
 }

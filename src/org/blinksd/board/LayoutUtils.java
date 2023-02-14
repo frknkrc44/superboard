@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class LayoutUtils {
@@ -32,9 +33,9 @@ public class LayoutUtils {
 	private LayoutUtils(){}
 	
 	private static List<List<KeyOptions>> createLayoutFromJSON(JSONArray jsonData) throws JSONException {
-		List<List<KeyOptions>> jsonList = new ArrayList<List<KeyOptions>>();
+		List<List<KeyOptions>> jsonList = new ArrayList<>();
 		for(int i = 0;i < jsonData.length();i++){
-			jsonList.add(new ArrayList<KeyOptions>());
+			jsonList.add(new ArrayList<>());
 			JSONObject jo = jsonData.getJSONObject(i);
 			for(int g = 0;g < jo.length();g++){
 				JSONArray ja = jo.getJSONArray("row");
@@ -124,29 +125,31 @@ public class LayoutUtils {
 		return l;
 	}
 
+	/*
 	public static Language getLanguage(Context ctx, String name){
 		return getLanguage(ctx, name, false);
 	}
+	*/
 	
 	public static Language getLanguage(Context ctx, String name, boolean onlyUser){
 		try {
 			HashMap<String,Language> llist = getLanguageList(ctx);
 			if(llist.containsKey(name)){
 				Language lang = llist.get(name);
-				if(onlyUser){
+				if(lang != null && onlyUser){
 					if(lang.userTheme)
 						return lang;
 					return getEmptyLanguage();
 				}
 				return lang;
 			}
-		} catch(Throwable t){}
+		} catch(Throwable ignored){}
 		return getEmptyLanguage();
 	}
 	
 	public static Language getEmptyLanguage(){
 		Language l = new Language();
-		l.layout = l.popup = new ArrayList<List<KeyOptions>>();
+		l.layout = l.popup = new ArrayList<>();
 		return l;
 	}
 
@@ -158,7 +161,7 @@ public class LayoutUtils {
 	}
 	
 	public static HashMap<String,Language> getLanguageList(Context ctx) throws IOException, JSONException {
-		HashMap<String,Language> langs = new HashMap<String,Language>();
+		HashMap<String,Language> langs = new HashMap<>();
 		AssetManager assets = ctx.getAssets();
 		String subdir = "langpacks";
 		String[] items = assets.list(subdir);
@@ -166,10 +169,10 @@ public class LayoutUtils {
 		for(String str : items){
 			if(str.endsWith(".json")){
 				Scanner sc = new Scanner(assets.open(subdir + "/" + str));
-				String s = "";
-				while(sc.hasNext()) s += sc.nextLine();
+				StringBuilder s = new StringBuilder();
+				while(sc.hasNext()) s.append(sc.nextLine());
 				sc.close();
-				Language l = createLanguage(s, false);
+				Language l = createLanguage(s.toString(), false);
 				if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
 					langs.put(l.language,l);
 				}
@@ -178,12 +181,12 @@ public class LayoutUtils {
 
 		File langFilesDir = getUserLanguageFilesDir();
 
-        for(String file : langFilesDir.list()) {
+        for(String file : Objects.requireNonNull(langFilesDir.list())) {
             Scanner sc = new Scanner(new File(langFilesDir + "/" + file));
-			String s = "";
-			while(sc.hasNext()) s += sc.nextLine();
+			StringBuilder s = new StringBuilder();
+			while(sc.hasNext()) s.append(sc.nextLine());
 			sc.close();
-            Language l = createLanguage(s, true);
+            Language l = createLanguage(s.toString(), true);
 			if(l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk){
 				l.label += " (USER)";
 				langs.put(l.language,l);
@@ -208,10 +211,8 @@ public class LayoutUtils {
 					sb.setLongPressEventForKey(0,i,g,ko.longPressKeyCode,!ko.longPressIsNotEvent);
 					if(ko.longPressIsNotEvent){
 						SuperBoard.Key key = sb.getKey(0,i,g);
-						switch(ko.longPressKeyCode){
-							case '\t':
-								key.setSubText("→");
-								break;
+						if (ko.longPressKeyCode == '\t') {
+							key.setSubText("→");
 						}
 					}
 				}
@@ -273,8 +274,7 @@ public class LayoutUtils {
 	}
 	
 	public static ArrayList<String> getKeyListFromLanguageList(HashMap<String,Language> list){
-		ArrayList<String> a = new ArrayList<String>(list.keySet());
-		return a;
+		return new ArrayList<>(list.keySet());
 	}
 	
 	public static Drawable getKeyBg(int clr,int pressClr,boolean pressEffect){

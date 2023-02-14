@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FBoard</string>
-    <string name="hello_world">@string/app_name</string>
+    <string name="app_name" translatable="false">FBoard</string>
+    <string name="hello_world" translatable="false">@string/app_name</string>
 	
 	<!-- Setup wizard resources -->
 	<string name="wizard_welcome">Welcome to %s setup wizard!</string>
@@ -26,6 +26,7 @@
 	<string name="settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
 	<string name="settings_disable_popup">Disable popup menu</string>
 	<string name="settings_disable_repeat">Disable character repeating on long press</string>
+	<string name="settings_disable_top_bar">Disable top bar</string>
 	<string name="settings_disable_suggestions">Disable word suggestions</string>
 	<string name="settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet">Use monet colors (beta)</string>
@@ -43,12 +44,12 @@
 	<string name="settings_play_snd_press">Play sound on key press events</string>
 	<string name="settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
 
-	<string name="settings_return_defaults">(↻)</string>
+	<string name="settings_return_defaults" translatable="false">(↻)</string>
 	
 	<!-- Color selector layout resources -->
-	<string name="settings_color_selector_rgb">ARGB</string>
-	<string name="settings_color_selector_hsv">AHSV</string>
-	<string name="settings_color_selector_hex">HEX</string>
+	<string name="settings_color_selector_rgb" translatable="false">ARGB</string>
+	<string name="settings_color_selector_hsv" translatable="false">AHSV</string>
+	<string name="settings_color_selector_hex" translatable="false">HEX</string>
 	
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo">Photo</string>

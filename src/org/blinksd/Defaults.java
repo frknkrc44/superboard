@@ -41,4 +41,5 @@ public class Defaults {
 	public static final boolean USE_MONET = false;
 	public static final boolean ENABLE_POPUP_PREVIEW = false;
 	public static final boolean KILL_BACKGROUND = false;
+	public static final boolean DISABLE_TOP_BAR = false;
 }

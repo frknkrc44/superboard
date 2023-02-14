@@ -56,7 +56,8 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	SET_KILL_BACKGROUND = "keyboard_kill_background",
 	SET_THEME_PRESET = "keyboard_theme_preset",
 	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi",
-	SET_IMPORT_DICT_PACK = "import_dict_pack";
+	SET_IMPORT_DICT_PACK = "import_dict_pack",
+	SET_DISABLE_TOP_BAR = "disable_top_bar";
 
 	public SettingMap(){
 		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.STR_SELECTOR);
@@ -75,6 +76,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 			putTheming(SET_COLORIZE_NAVBAR_ALT,SettingType.BOOL);
 		putGeneral(SET_DISABLE_POPUP,SettingType.BOOL);
 		putGeneral(SET_DISABLE_REPEAT,SettingType.BOOL);
+		putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL);
 		putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 31)
 			putTheming(SET_USE_MONET, SettingType.BOOL);
@@ -134,20 +136,18 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	}
 	
 	public Intent getRedirect(Context context, final String key) {
-		switch(key){
-			case SET_IMPORT_DICT_PACK:
-				return new Intent(context,DictionaryImportActivity.class);
+		if (SET_IMPORT_DICT_PACK.equals(key)) {
+			return new Intent(context, DictionaryImportActivity.class);
 		}
-		
 		return null;
 	}
 
-	public ArrayList<String> getSelector(final String key) throws Throwable {
+	public ArrayList<String> getSelector(final String key) {
 		switch(key){
 			case SET_KEYBOARD_LANG_SELECT:
 				return LayoutUtils.getKeyListFromLanguageList();
 			case SET_KEYBOARD_TEXTTYPE_SELECT:
-				ArrayList<String> textTypes = new ArrayList<String>();
+				ArrayList<String> textTypes = new ArrayList<>();
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())
 					textTypes.add(type.name());
 				return textTypes;
@@ -156,7 +156,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 			case SET_ICON_THEME:
 				return (ArrayList<String>) SuperBoardApplication.getIconThemes().keyList();
 		}
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 	public Object getDefaults(final String key){
@@ -224,6 +224,8 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 					return Defaults.DISABLE_REPEAT;
 				case SET_DISABLE_SUGGESTIONS:
 					return Defaults.DISABLE_SUGGESTIONS;
+				case SET_DISABLE_TOP_BAR:
+					return Defaults.DISABLE_TOP_BAR;
 				case SET_USE_MONET:
 					return Defaults.USE_MONET;
 				case SET_ENABLE_POPUP_PREVIEW:
@@ -245,7 +247,6 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 
 	public int[] getMinMaxNumbers(final String key){
 		int[] nums = new int[2];
-		nums[0] = 0;
 		if(containsKey(key)){
 			switch(get(key).type){
 				case DECIMAL_NUMBER:

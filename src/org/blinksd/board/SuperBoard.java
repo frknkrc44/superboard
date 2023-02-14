@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.os.VibratorManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -84,7 +85,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			sendMessageDelayed(msg, delay);
 		}
 
-		public void obtainAndSendMessage(int msgId, Object obj, long delay) {
+		public void obtainAndSendMessage(int msgId, Object obj) {
 			removeAndSendMessage(obtainMessage(msgId, obj));
 		}
 
@@ -170,12 +171,21 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		if(c instanceof InputMethodService){
 			curr = (InputMethodService) c;
 		}
-		vb = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
+		if (Build.VERSION.SDK_INT < 31)
+			vb = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
+		else {
+			VibratorManager vm = (VibratorManager) c.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+			vb = vm.getDefaultVibrator();
+		}
 		// trigSystemSuggestions();
 		setLayoutParams(new LayoutParams(-1,-1));
 		setBackgroundColor(0xFF212121);
 		createEmptyLayout();
 		setKeyboardHeight(hp);
+	}
+
+	public void beforeKeyboardEvent(View v) {
+
 	}
 	
 	public void onKeyboardEvent(View v){
@@ -679,6 +689,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	}
 
 	private void defaultKeyboardEvent(Key v){
+		beforeKeyboardEvent(v);
+
 		if(v.getTag(TAG_NP) != null){
 			x = v.getTag(TAG_NP).toString().split(":");
 			switch(y = Integer.parseInt(x[0])){
@@ -698,8 +710,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					break;
 				case Keyboard.KEYCODE_DELETE:
 					sendKeyEvent(KeyEvent.KEYCODE_DEL);
-					if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
-						updateKeyState();
 					break;
 				case Keyboard.KEYCODE_DONE:
 					switch(action){
@@ -722,6 +732,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					} else {
 						commitText((char)y+"");
 					}
+
 					if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
 						updateKeyState();
 					break;
@@ -729,12 +740,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			playSound(y);
 		} else {
 			commitText(v.getText().toString());
+
 			if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
 				updateKeyState();
+
 			playSound(0);
 		}
 		if(vib > 0) {
-            if(Build.VERSION.SDK_INT >= 26) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vb.vibrate(VibrationEffect.createOneShot(vib, 255));
             } else {
                 vb.vibrate(vib);
@@ -742,7 +755,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
         onKeyboardEvent(v);
 	}
-	
+
+	/**
+	 * Use fake keyboard event instead of real one
+	 *
+	 * @param {@link Key} key - Input key for play sound
+	 */
 	public void fakeKeyboardEvent(Key v){
 		if(v.getTag(TAG_NP) != null){
 			x = v.getTag(TAG_NP).toString().split(":");
@@ -1454,15 +1472,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 				case MotionEvent.ACTION_UP:
 					act = MotionEvent.ACTION_UP;
 					if(mHandler.hasMessages(1)){
-						sendDefaultKeyboardEvent(v);
 						mHandler.removeMessages(1);
+						sendDefaultKeyboardEvent(v);
 					}
 					mHandler.removeAndSendEmptyMessage(3);
 					break;
 				case MotionEvent.ACTION_DOWN:
 					act = MotionEvent.ACTION_DOWN;
+					mHandler.obtainAndSendMessageDelayed(1, v, 250L*mult);
 					onKeyboardEvent(v);
-					mHandler.obtainAndSendMessageDelayed(1, v, 200L*mult);
 					break;
 			}
 		} else {

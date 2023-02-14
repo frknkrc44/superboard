@@ -24,8 +24,6 @@ import java.util.Locale;
 
 /**
  * Transforms source text into an ALL CAPS string, locale-aware.
- *
- * @hide
  */
 public class AllCapsTransformationMethod implements TransformationMethod2 {
     private static final String TAG = "AllCapsTransformation";

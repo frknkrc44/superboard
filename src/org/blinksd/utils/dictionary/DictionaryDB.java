@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DictionaryDB extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "dicts.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	public boolean isReady = true;
     private SQLiteDatabase mReadDatabase;
 	
@@ -45,7 +45,8 @@ public class DictionaryDB extends SQLiteOpenHelper {
 			sb.append("CREATE TABLE IF NOT EXISTS LANG_")
 				.append(escapeString(type))
 				.append(" (id INTEGER PRIMARY KEY AUTOINCREMENT,")
-				.append(" word TEXT)");
+				.append(" word TEXT")
+				.append(", usage_count INTEGER DEFAULT 0)");
 			p1.execSQL(sb.toString());
 			sb.setLength(0);
 		}
@@ -139,6 +140,16 @@ public class DictionaryDB extends SQLiteOpenHelper {
 
 		isReady = true;
 	}
+
+	public void increaseUsageCount(String lang, String word){
+		SQLiteDatabase db = getWritableDatabase();
+		StringBuilder sb = new StringBuilder("UPDATE LANG_");
+		sb.append(escapeString(lang));
+		sb.append(" SET usage_count = usage_count +1 WHERE word = '");
+		sb.append(word);
+		sb.append("'");
+		db.execSQL(sb.toString());
+	}
 	
 	public List<String> getQuery(String lang, String prefix){
 		return getQuery(lang, prefix, false);
@@ -170,7 +181,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
 					.append("'")
 					.append(escapeString(prefix))
 					.append("%'")
-					.append(" ORDER BY LENGTH(word)");
+					.append(" ORDER BY LENGTH(word), usage_count DESC");
 			}
 			
 			sb.append(" LIMIT 20");
@@ -186,7 +197,9 @@ public class DictionaryDB extends SQLiteOpenHelper {
             // if(!db.inTransaction()) {
 			//     db.close();
             // }
-		} catch(Throwable t){}
+		} catch(Throwable t){
+			throw new RuntimeException(t);
+		}
 		
 		return out;
 	}
@@ -194,7 +207,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
 	public static String escapeString(String str){
 		if (str != null && str.length() > 0) {
 			str = str.replace("\\", "\\\\");
-			str = str.replace("'", "\\'");
+			str = str.replace("'", "`");
 			str = str.replace("\0", "\\0");
 			str = str.replace("\n", "\\n");
 			str = str.replace("\r", "\\r");
@@ -205,8 +218,32 @@ public class DictionaryDB extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase p1, int p2, int p3){
-		// TODO: If you want to upgrade
+	public void onUpgrade(SQLiteDatabase p1, int oldVersion, int newVersion){
+		int current = oldVersion;
+
+		// add usage_count for words
+		if (current == 1) {
+			List<String> tables = new ArrayList<>();
+			Cursor cursor = p1.rawQuery("SELECT name FROM sqlite_master WHERE type ='table' AND name LIKE 'LANG_%'", null);
+			if(cursor.moveToFirst()){
+				do {
+					String table = cursor.getString(0);
+					System.out.println("TABLE: " + table);
+					tables.add(table);
+				} while (cursor.moveToNext());
+			}
+
+			isReady = false;
+			for (String table : tables) {
+				StringBuilder sb = new StringBuilder("ALTER TABLE ");
+				sb.append(table);
+				sb.append(" ADD COLUMN usage_count INTEGER DEFAULT 0");
+				p1.execSQL(sb.toString());
+			}
+			isReady = true;
+			current++;
+		}
+
 	}
 	
 	public interface OnSaveProgressListener {

@@ -28,16 +28,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.concurrent.Executors;
 
 public class SetupActivity extends Activity {
 	private SetupResources sr;
 	private LinearLayout ml,ll;
-	private int tempClr;
 	private Dots dot;
 
 	@Override
@@ -172,7 +169,7 @@ public class SetupActivity extends Activity {
 				Drawable d = info.loadIcon(getPackageManager());
 				iv.setImageDrawable(d);
 				label = info.loadLabel(getPackageManager()).toString();
-			} catch(Throwable t){}
+			} catch(Throwable ignored){}
 			TextView tv = new TextView(SetupActivity.this);
 			tv.setLayoutParams(new LinearLayout.LayoutParams(-2,-2));
 			tv.setText(String.format(getResources().getString(R.string.wizard_welcome),label));
@@ -277,14 +274,14 @@ public class SetupActivity extends Activity {
 		
 			return csibg(getResources().getDrawable(
 							 getTheme().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground}
-																 ).getResourceId(0,0)),false);
+																 ).getResourceId(0,0)));
 		}
 
-		private Drawable csibg(Drawable d,boolean b){
+		private Drawable csibg(Drawable d){
 			int color = textColor - 0x88000000;
 			try {
 				if(d.getClass().getName().contains("RippleDrawable")){
-					Method m = d.getClass().getDeclaredMethod("setColor",new Class[]{ColorStateList.class});
+					Method m = d.getClass().getDeclaredMethod("setColor", ColorStateList.class);
 					m.setAccessible(true);
 					m.invoke(d,new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}},new int[]{color}));
 				} else {
@@ -432,7 +429,7 @@ public class SetupActivity extends Activity {
 			View tempView;
 			for(int i = 0;i < dot;i++){
 				tempView = dotView.getChildAt(i);
-				tempClr = (SetupResources.textColor - (tempView.getId() == index ? 0 : 0xAA000000));
+				int tempClr = (SetupResources.textColor - (tempView.getId() == index ? 0 : 0xAA000000));
 				tempView.setBackgroundDrawable(getBg(tempClr));
 			}
 		}

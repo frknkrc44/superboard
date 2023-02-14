@@ -49,17 +49,18 @@ public class BoardPopup extends SuperBoard {
 		setBackgroundDrawable(LayoutUtils.getKeyBg(a,ap,true));
 		popupFilter.setBackgroundColor(a-0x33000000);
 		mKey.setVisibility(GONE);
-		mKey.setX(pos[0]);
-		mKey.setY(pos[1] - (pos[1] >= (a = mKey.getLayoutParams().height) ? a : 0));
 	}
 
 	public void setKey(Key key){
 		setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+		key.getLocationInWindow(pos);
 		key.clone(mKey);
 		setKeysTextColor(key.getTextColor());
 		setKeysTextType(key.txtst);
 		setKeysShadow(key.shr,key.shc);
-		key.getLocationInWindow(pos);
+		mKey.setX(pos[0]);
+		int a = mKey.getLayoutParams().height;
+		mKey.setY(pos[1] - (pos[1] >= a ? a : 0));
 		setKeyboardPrefs();
 	}
 

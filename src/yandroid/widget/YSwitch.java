@@ -17,7 +17,12 @@
 package yandroid.widget;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.*;
+import static android.os.Build.VERSION_CODES.HONEYCOMB;
+import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+import static android.os.Build.VERSION_CODES.KITKAT;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static android.os.Build.VERSION_CODES.N;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -45,8 +50,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import yandroid.graphics.DrawableUtils;
 import yandroid.graphics.Insets;
-import yandroid.graphics.TextPaintUtils;
 import yandroid.graphics.PropertyUtils;
+import yandroid.graphics.TextPaintUtils;
 import yandroid.text.method.AllCapsTransformationMethod;
 import yandroid.text.method.TransformationMethod2;
 import yandroid.util.Styleable;
