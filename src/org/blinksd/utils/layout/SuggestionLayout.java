@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.color.ColorUtils;
@@ -53,6 +54,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		mQuickMenuLayout = new LinearLayout(context);
 		mQuickMenuLayout.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 		mQuickMenuLayout.setVisibility(GONE);
+		mQuickMenuLayout.setGravity(Gravity.CENTER);
 		addView(mQuickMenuLayout);
 		fillQuickMenu();
 	}
@@ -126,7 +128,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
 	private void addQMItem(int tag, int drawableRes) {
 		ImageButton btn = new ImageButton(getContext());
-		btn.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
+		btn.setLayoutParams(new LinearLayout.LayoutParams(-2, -1));
 		btn.setImageResource(drawableRes);
 		btn.setTag(tag);
 		btn.setOnClickListener(mOnQMClickListener);
@@ -134,9 +136,24 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		int pad = DensityUtils.dpInt(8);
 		btn.setScaleType(ImageView.ScaleType.FIT_CENTER);
 		btn.setPadding(pad, pad, pad, pad);
+		int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
+		int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+		Drawable keybg = LayoutUtils.getKeyBg(keyClr,keyPressClr,true);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			btn.setBackground(keybg);
+		} else {
+			btn.setBackgroundDrawable(keybg);
+		}
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			btn.setImageTintList(ColorStateList.valueOf(color));
-			btn.setBackgroundTintList(ColorStateList.valueOf(ColorUtils.getColorWithAlpha(color, 70)));
+			btn.setBackgroundTintList(new ColorStateList(new int[][]{
+					{android.R.attr.state_enabled, android.R.attr.state_pressed},
+					{}
+			}, new int[]{
+					keyPressClr,
+					keyClr
+			}));
 		} else {
 			btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 			btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
