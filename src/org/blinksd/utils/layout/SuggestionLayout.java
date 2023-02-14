@@ -196,9 +196,10 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	}
 	
 	public void retheme(){
+		int color = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR);
+
 		for(int i = 0;i < mCompletionsLayout.getChildCount();i++){
 			TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
-			int color = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR);
 		    tv.setTextColor(color);
 			float textSize = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE)));
 			tv.setTextSize(textSize);
@@ -209,6 +210,32 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 				tv.setBackground(getSuggestionItemBackground());
 			} else {
 				tv.setBackgroundDrawable(getSuggestionItemBackground());
+			}
+		}
+
+		for (int i = 0;i < mQuickMenuLayout.getChildCount();i++) {
+			ImageButton btn = (ImageButton) mQuickMenuLayout.getChildAt(i);
+			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
+			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+			Drawable keybg = LayoutUtils.getKeyBg(keyClr,keyPressClr,true);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				btn.setBackground(keybg);
+			} else {
+				btn.setBackgroundDrawable(keybg);
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				btn.setImageTintList(ColorStateList.valueOf(color));
+				btn.setBackgroundTintList(new ColorStateList(new int[][]{
+						{android.R.attr.state_enabled, android.R.attr.state_pressed},
+						{}
+				}, new int[]{
+						keyPressClr,
+						keyClr
+				}));
+			} else {
+				btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+				btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
 			}
 		}
 	}
