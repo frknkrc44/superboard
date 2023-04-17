@@ -13,8 +13,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdk 33
-    buildToolsVersion "33.0.0"
+    compileSdk keystoreProperties['TARGETSDK'].toInteger()
 
     defaultConfig {
         applicationId "org.blinksd.board"
