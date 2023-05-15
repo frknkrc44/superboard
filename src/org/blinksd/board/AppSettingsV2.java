@@ -7,6 +7,7 @@ import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.widget.LinearLayout;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.image.ImageUtils;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutCreator;
@@ -34,8 +36,8 @@ import java.util.concurrent.Executors;
 
 public class AppSettingsV2 extends Activity {
 	private LinearLayout main;
-	private SuperBoard sb;
-	private ImageView iv;
+	private SuperBoard kbdPreview;
+	private ImageView backgroundImageView;
 	private SettingsCategorizedListView mSettView;
 	
 
@@ -75,46 +77,20 @@ public class AppSettingsV2 extends Activity {
 	
 	private void createPreviewView(){
 		FrameLayout ll = (FrameLayout) LayoutCreator.getHFilledView(FrameLayout.class, LinearLayout.class, this);
-		sb = new SuperBoard(this){
-			@Override
-			public void sendDefaultKeyboardEvent(View v){
-				playSound(v.getId());
-			}
-			
-			@Override
-			public void playSound(int event){
-				if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
-				AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
-				switch(event){
-					case 3:
-						audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
-						break;
-					case 2:
-						audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
-						break;
-					case 1:
-						audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
-						break;
-					default:
-						audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
-						break;
-				}
-			}
-		};
-		
-		int ph = 12;
-		sb.addRow(0,new String[]{"1","2","3","4"});
-		sb.getKey(0,0,0).setSubText("½");
-		for(int i = 0;i < 4;i++) sb.getKey(0,0,i).setId(i);
-		sb.createEmptyLayout();
-		sb.setEnabledLayout(0);
-		sb.setKeyboardHeight(ph);
-		sb.setKeysPadding(DensityUtils.mpInt(1));
-		iv = new ImageView(this);
-		iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		iv.setLayoutParams(new FrameLayout.LayoutParams(-1,DensityUtils.hpInt(ph)));
-		ll.addView(iv);
-		ll.addView(sb);
+		kbdPreview = new PreviewBoard(this);
+		int popupHeight = 12;
+		kbdPreview.addRow(0,new String[]{"1","2","3","4"});
+		kbdPreview.getKey(0,0,0).setSubText("½");
+		for(int i = 0;i < 4;i++) kbdPreview.getKey(0,0,i).setId(i);
+		kbdPreview.createEmptyLayout();
+		kbdPreview.setEnabledLayout(0);
+		kbdPreview.setKeyboardHeight(popupHeight);
+		kbdPreview.setKeysPadding(DensityUtils.mpInt(1));
+		backgroundImageView = new ImageView(this);
+		backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		backgroundImageView.setLayoutParams(new FrameLayout.LayoutParams(-1,DensityUtils.hpInt(popupHeight)));
+		ll.addView(backgroundImageView);
+		ll.addView(kbdPreview);
 		main.addView(ll);
 	}
 	
@@ -128,32 +104,39 @@ public class AppSettingsV2 extends Activity {
 		if(img.exists()) {
 			int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
 			Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-			iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
+			backgroundImageView.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
 		} else {
-			iv.setImageBitmap(null);
+			backgroundImageView.setImageBitmap(null);
 		}
 		int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
 		int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-		sb.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
-		sb.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-		sb.setKeyTintColor(0,0,2,getIntOrDefault(SettingMap.SET_KEY2_BGCLR),getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
-		sb.setKeyTintColor(0,0,-1,getIntOrDefault(SettingMap.SET_ENTER_BGCLR),getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
-		sb.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
-		sb.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-		sb.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
-		sb.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
-		sb.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+		kbdPreview.setKeysBackground(LayoutUtils.getKeyBg(keyClr,keyPressClr,true));
+		kbdPreview.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
+				getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
+		kbdPreview.setKeyTintColor(0,0,2,
+				getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
+				getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
+		kbdPreview.setKeyTintColor(0,0,-1,
+				getIntOrDefault(SettingMap.SET_ENTER_BGCLR),
+				getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
+		kbdPreview.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
+		kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+		kbdPreview.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+		kbdPreview.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+		kbdPreview.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 		IconThemeUtils iconThemes = SuperBoardApplication.getIconThemes();
-		sb.setKeyDrawable(0,0,2,
-				iconThemes.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
+		kbdPreview.setKeyDrawable(0,0,2,
+				iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
 		LayoutUtils.setSpaceBarViewPrefs(iconThemes,
-				sb.getKey(0,0,1),
+				kbdPreview.getKey(0,0,1),
 				SuperBoardApplication.getCurrentKeyboardLanguage().name);
-		sb.setKeyDrawable(0,0,-1,
-				iconThemes.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+		kbdPreview.setKeyDrawable(0,0,-1,
+				iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
+		kbdPreview.setKeyVibrateDuration(
+				SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
 		try {
 			SuperBoardApplication.clearCustomFont();
-			sb.setCustomFont(SuperBoardApplication.getCustomFont());
+			kbdPreview.setCustomFont(SuperBoardApplication.getCustomFont());
 		} catch(Throwable ignored){}
 	}
 	
@@ -232,5 +215,36 @@ public class AppSettingsV2 extends Activity {
 		IMAGE,
 		REDIRECT,
 	}
-	
+
+	private class PreviewBoard extends SuperBoard {
+		public PreviewBoard(Context c) {
+			super(c);
+		}
+
+		@Override
+		public void sendDefaultKeyboardEvent(View v){
+			playSound(v.getId());
+			kbdPreview.vibrate();
+		}
+
+		@Override
+		public void playSound(int event){
+			if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+			AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
+			switch(event){
+				case 3:
+					audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+					break;
+				case 2:
+					audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+					break;
+				case 1:
+					audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+					break;
+				default:
+					audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+					break;
+			}
+		}
+	}
 }

@@ -341,7 +341,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 				d1.dismiss();
 			});
 
-			doHacksAndShow(build);
+			doHacksAndShow(build.create());
 		}
 
 	};
@@ -387,7 +387,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 				d1.dismiss();
 			});
 
-			doHacksAndShow(build);
+			doHacksAndShow(build.create());
 		}
 
 	};
@@ -416,10 +416,15 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 				p112.dismiss();
 			});
 			AlertDialog dialog = build.create();
-			dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog,mContext,p1.getTag().toString());
-			dialog.setView(dialogView);
+			dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog, () -> {
+				Intent i = new Intent();
+				i.setType("image/*");
+				i.setAction(Intent.ACTION_GET_CONTENT);
+				mContext.startActivityForResult(Intent.createChooser(i,""),1);
+			}, mContext::restartKeyboard, p1.getTag().toString());
 
-			doHacksAndShow(build);
+			dialog.setView(dialogView);
+			doHacksAndShow(dialog);
 		}
 
 	};
@@ -512,7 +517,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 				p113.dismiss();
 			});
 
-			doHacksAndShow(build);
+			doHacksAndShow(build.create());
 		}
 
 	};
@@ -569,12 +574,10 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		}
 	}
 
-	public void doHacksAndShow(AlertDialog.Builder builder){
-		AlertDialog dialog = builder.create();
-
+	public static void doHacksAndShow(AlertDialog dialog){
 		if(Build.VERSION.SDK_INT >= 31) {
 			Drawable dw = dialog.getWindow().getDecorView().getBackground();
-			int color = mContext.getResources().getColor(
+			int color = dialog.getContext().getResources().getColor(
 					android.R.color.system_neutral1_900,
 					SuperBoardApplication.getApplication().getTheme()
 			);
@@ -591,7 +594,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
 		if (Build.VERSION.SDK_INT >= 19) {
 			int tint = Build.VERSION.SDK_INT >= 31
-					? mContext.getResources().getColor(
+					? dialog.getContext().getResources().getColor(
 					android.R.color.system_accent1_200,
 					SuperBoardApplication.getApplication().getTheme()
 			) : ColorUtils.getAccentColor();

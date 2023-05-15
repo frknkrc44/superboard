@@ -1,5 +1,6 @@
 package org.blinksd.utils.layout;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -9,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.blinksd.board.AppSettingsV2;
 import org.blinksd.board.R;
 
 import java.util.TreeMap;
@@ -17,9 +17,9 @@ import java.util.TreeMap;
 public class ColorSelectorItemLayout extends LinearLayout {
 	
 	private TreeMap<Integer,Integer> colorList;
-	private ImageView img;
-	
-	public ColorSelectorItemLayout(AppSettingsV2 ctx, int index, TreeMap<Integer,Integer> colors, View.OnClickListener gradientAddColorListener, View.OnClickListener gradientDelColorListener, View.OnClickListener colorSelectorListener){
+	private final ImageView img;
+
+	public ColorSelectorItemLayout(Context ctx, int index, TreeMap<Integer,Integer> colors, View.OnClickListener gradientAddColorListener, View.OnClickListener gradientDelColorListener, View.OnClickListener colorSelectorListener){
 		super(ctx);
 		setLayoutParams(new LayoutParams(-1,-2));
 		img = LayoutCreator.createImageView(ctx);

@@ -46,7 +46,7 @@ public class ColorSelectorLayout {
 	private static CustomSeekBar a,r,g,b,h,s,v;
 	private static EditText hexIn;
 	
-	public static View getColorSelectorLayout(final AppSettingsV2 ctx, int val){
+	public static View getColorSelectorLayout(final Context ctx, int val){
 		LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);
 
 		widget = new TabWidget(ctx);
@@ -143,7 +143,7 @@ public class ColorSelectorLayout {
 		return getColorSelectorLayout(ctx, val);
 	}
 	
-	private static View getView(AppSettingsV2 ctx, int i){
+	private static View getView(Context ctx, int i){
 		switch(i){
 			case 0: return getRGBSelector(ctx);
 			case 1: return getHSVSelector(ctx);
@@ -152,7 +152,7 @@ public class ColorSelectorLayout {
 		return null;
 	}
 	
-	private static View getRGBSelector(final AppSettingsV2 ctx){
+	private static View getRGBSelector(final Context ctx){
 		LinearLayout ll = new LinearLayout(ctx);
 		ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 		ll.setOrientation(LinearLayout.VERTICAL);
@@ -201,7 +201,7 @@ public class ColorSelectorLayout {
 		return ll;
 	}
 	
-	private static View getHSVSelector(AppSettingsV2 ctx){
+	private static View getHSVSelector(Context ctx){
 		LinearLayout ll = new LinearLayout(ctx);
 		ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 		ll.setOrientation(LinearLayout.VERTICAL);
@@ -246,7 +246,7 @@ public class ColorSelectorLayout {
 		return ll;
 	}
 	
-	private static View getHexSelector(final AppSettingsV2 ctx){
+	private static View getHexSelector(final Context ctx){
 		LinearLayout ll = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);
 		hexIn = new EditText(ctx);
 		hexIn.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));

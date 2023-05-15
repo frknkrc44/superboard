@@ -1,10 +1,13 @@
 package org.blinksd.board.api;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.LayoutUtils;
+import org.blinksd.board.api.parcelables.IconThemeParcel;
 import org.blinksd.utils.color.ThemeUtils;
+import org.blinksd.utils.icon.LocalIconTheme;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,8 +27,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
                             IMAGE_IMPORT_FAILED_UNKNOWN = -1;
 
     public static final int ICON_THEME_IMPORT_SUCCESS = 0,
-                            ICON_THEME_IMPORT_FAILED_MISSING_KEYS = 1,
-                            ICON_THEME_IMPORT_FAILED_EXISTS = 2,
+                            ICON_THEME_IMPORT_FAILED_EXISTS = 1,
                             ICON_THEME_IMPORT_FAILED_UNKNOWN = -1;
     
     public static final int LANG_PKG_IMPORT_SUCCESS = 0,
@@ -49,6 +51,8 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             return THEME_IMPORT_FAILED_INVALID_JSON;
         } catch(MissingKeysException x) {
             return THEME_IMPORT_FAILED_MISSING_KEYS;
+        } catch (RuntimeException y) {
+            return THEME_IMPORT_FAILED_UNKNOWN;
         }
 	}
 
@@ -61,7 +65,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             fos.flush();
             fos.close();
         } catch(Throwable t) {
-            throw new JSONException(t);
+            throw new RuntimeException(t);
         }
     }
 
@@ -89,35 +93,42 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
 	@Override
     public boolean isThemeImported(String name){
-		List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getApplication().getThemes();
+		List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
         ThemeUtils.ThemeHolder theme = ThemeUtils.getUserThemeFromCodeName(themes, name);
         // System.out.println("NAME: " + name + " OBJ: " + theme);
         return theme != null;
 	}
-    	
-	@Override
-	public int importBgImage(String path){
-        return IMAGE_IMPORT_FAILED_UNKNOWN;
-	}
-
-	@Override
-    public int importBgImageBytes(byte[] bytes){
-        return IMAGE_IMPORT_FAILED_UNKNOWN;
-	}
 
     @Override
-    public int importIconTheme(String jsonStr, byte[] icons){
-        return ICON_THEME_IMPORT_FAILED_UNKNOWN;
+    public int importBgImage(Bitmap bmp){
+        return IMAGE_IMPORT_FAILED_UNKNOWN;
     }
 
     @Override
-    public int importIconThemeForced(String jsonStr, byte[] icons){
-        return ICON_THEME_IMPORT_FAILED_UNKNOWN;
+    public int importIconTheme(IconThemeParcel icons){
+        if (isIconThemeImported(icons.mThemeName)) {
+            return ICON_THEME_IMPORT_FAILED_EXISTS;
+        }
+
+        return importIconThemeForced(icons);
+    }
+
+    @Override
+    public int importIconThemeForced(IconThemeParcel icons){
+        try {
+            String name = icons.mThemeName;
+            SuperBoardApplication.getIconThemes()
+                    .importIconTheme(name, new LocalIconTheme(icons));
+        } catch (Throwable t) {
+            return ICON_THEME_IMPORT_FAILED_UNKNOWN;
+        }
+
+        return ICON_THEME_IMPORT_SUCCESS;
     }
 
     @Override
     public boolean isIconThemeImported(String name){
-        return false;
+        return SuperBoardApplication.getIconThemes().isThemeExists(name);
     }
 
     @Override
@@ -157,5 +168,5 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
         return eqlang.name.equals(name);
     }
 
-    private class MissingKeysException extends RuntimeException {}
+    private static class MissingKeysException extends RuntimeException {}
 }

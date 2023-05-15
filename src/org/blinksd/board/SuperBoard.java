@@ -746,14 +746,23 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 			playSound(0);
 		}
-		if(vib > 0) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vb.vibrate(VibrationEffect.createOneShot(vib, 255));
-            } else {
-                vb.vibrate(vib);
-            }
-        }
+
+		vibrate();
         onKeyboardEvent(v);
+	}
+
+	public void vibrate() {
+		vibrateInternal(vib);
+	}
+
+	private void vibrateInternal(int duration) {
+		if(duration > 0) {
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				vb.vibrate(VibrationEffect.createOneShot(duration, 255));
+			} else {
+				vb.vibrate(duration);
+			}
+		}
 	}
 
 	/**
@@ -769,6 +778,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			return;
 		}
 		playSound(0);
+		vibrate();
 	}
 	
 	protected InputMethodService getServiceContext(){

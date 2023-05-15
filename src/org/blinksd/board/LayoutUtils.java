@@ -2,7 +2,6 @@ package org.blinksd.board;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -12,7 +11,7 @@ import android.view.KeyEvent;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.utils.icon.IconThemeUtils;
-import org.blinksd.utils.icon.SpaceBarThemeUtils;
+import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.layout.DensityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -223,10 +222,10 @@ public class LayoutUtils {
 				String theme = SuperDBHelper.getValueOrDefault(SettingMap.SET_ICON_THEME);
 				switch(ko.pressKeyCode){
 					case Keyboard.KEYCODE_SHIFT:
-						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_SHIFT));
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_SHIFT));
 						break;
 					case Keyboard.KEYCODE_DELETE:
-						sb.setKeyDrawable(0,i,g, icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_DELETE));
+						sb.setKeyDrawable(0,i,g, icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_DELETE));
 						break;
 					case Keyboard.KEYCODE_MODE_CHANGE:
 						SuperBoard.Key kbdMChange = sb.getKey(0,i,g);
@@ -237,13 +236,13 @@ public class LayoutUtils {
 						setSpaceBarViewPrefs(icons, sb.getKey(0,i,g), lang.label);
 						break;
 					case Keyboard.KEYCODE_DONE:
-						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_ENTER));
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_ENTER));
 						break;
 					case SuperBoard.KEYCODE_SWITCH_LANGUAGE:
 						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_language);
 						break;
 					case SuperBoard.KEYCODE_OPEN_EMOJI_LAYOUT:
-						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, IconThemeUtils.SYM_TYPE_EMOJI));
+						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_EMOJI));
 						break;
 				}
 			}
@@ -254,18 +253,11 @@ public class LayoutUtils {
 	
 	public static void setSpaceBarViewPrefs(IconThemeUtils icons, SuperBoard.Key space, String label){
 		if(icons == null) icons = SuperBoardApplication.getIconThemes();
-		int item = icons.getIconResource(IconThemeUtils.SYM_TYPE_SPACE);
-		switch(item){
-			case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
-			case SpaceBarThemeUtils.SPACEBAR_TEXT:
-				space.setText(label);
-				break;
-			case SpaceBarThemeUtils.SPACEBAR_HIDE:
-				space.setKeyIcon(new ColorDrawable());
-				break;
-			default:
-				space.setKeyIcon(item);
-				break;
+		Drawable drawable = icons.getIconResource(LocalIconTheme.SYM_TYPE_SPACE);
+		if (drawable == null) {
+			space.setText(label);
+		} else {
+			space.setKeyIcon(drawable);
 		}
 	}
 	

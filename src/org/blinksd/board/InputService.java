@@ -44,6 +44,7 @@ import org.blinksd.board.LayoutUtils.Language;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
+import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.image.ImageUtils;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.SuggestionLayout;
@@ -451,11 +452,11 @@ public class InputService extends InputMethodService implements
 		if(sb != null && sd != null){
 			LayoutUtils.setKeyOpts(cl,sb);
 			IconThemeUtils icons = SuperBoardApplication.getIconThemes();
-			sb.setKeyDrawable(-1,-2,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
-			sb.setKeyDrawable(-1,-1,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+			sb.setKeyDrawable(-1,-2,-1,icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
+			sb.setKeyDrawable(-1,-1,-1,icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
 			for(int i = 1;i < 3;i++){
-				sb.setKeyDrawable(i,3,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_DELETE));
-				sb.setKeyDrawable(i,4,-1,icons.getIconResource(IconThemeUtils.SYM_TYPE_ENTER));
+				sb.setKeyDrawable(i,3,-1,icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
+				sb.setKeyDrawable(i,4,-1,icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
 				LayoutUtils.setSpaceBarViewPrefs(icons, sb.getKey(i,4,2), appname);
 			}
 			sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
