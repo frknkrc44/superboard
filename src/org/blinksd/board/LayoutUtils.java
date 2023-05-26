@@ -2,6 +2,8 @@ package org.blinksd.board;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.layout.DensityUtils;
@@ -269,10 +272,24 @@ public class LayoutUtils {
 		return new ArrayList<>(list.keySet());
 	}
 	
-	public static Drawable getKeyBg(int clr,int pressClr,boolean pressEffect){
-		GradientDrawable gd = new GradientDrawable();
+	public static Drawable getKeyBg(int clr, int pressClr, boolean pressEffect){
 		int radius = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS)));
 		int stroke = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING)));
+		return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
+	}
+
+	public static Drawable getCircleButtonBackground(boolean pressEffect) {
+		return getButtonBackground(64, 2, pressEffect);
+	}
+
+	public static Drawable getButtonBackground(int radius, int stroke, boolean pressEffect) {
+		int keyClr = ColorUtils.getAccentColor();
+		int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+		return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
+	}
+
+	public static Drawable getButtonBackground(int clr, int pressClr, int radius, int stroke, boolean pressEffect) {
+		GradientDrawable gd = new GradientDrawable();
 		gd.setColor(clr);
 		gd.setCornerRadius(radius);
 		gd.setStroke(stroke,0);
@@ -283,6 +300,7 @@ public class LayoutUtils {
 			pd.setCornerRadius(radius);
 			pd.setStroke(stroke,0);
 			d.addState(new int[]{android.R.attr.state_selected},pd);
+			d.addState(new int[]{android.R.attr.state_pressed},pd);
 			d.addState(new int[]{},gd);
 			return d;
 		}

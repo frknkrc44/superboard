@@ -2,9 +2,6 @@ package org.blinksd.utils.layout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.WallpaperManager;
@@ -21,16 +18,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.UserHandle;
 import android.provider.Settings;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -43,12 +36,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.utils.image.ImageUtils;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.TreeMap;
 
 public class ImageSelectorLayout {
@@ -171,6 +163,7 @@ public class ImageSelectorLayout {
 		Context ctx = win.getContext();
 		LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
 		Button s = LayoutCreator.createButton(ctx);
+		s.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
 		s.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
 		s.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_select"));
 		s.setOnClickListener(p1 -> onImageSelectPressed.run());
@@ -180,6 +173,7 @@ public class ImageSelectorLayout {
 		// https://issuetracker.google.com/issues/237124750
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 			Button w = LayoutCreator.createButton(ctx);
+			w.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
 			w.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
 			w.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_wp"));
 			l.addView(w);
@@ -207,6 +201,7 @@ public class ImageSelectorLayout {
 		}
 
 		Button rb = LayoutCreator.createButton(ctx);
+		rb.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
 		rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));

@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import yandroid.util.Styleable;
-
 public class SuperBoardApplication extends Application {
 	
 	private static HashMap<String,Language> languageCache = null;

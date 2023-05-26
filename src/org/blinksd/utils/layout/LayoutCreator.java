@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
@@ -24,7 +25,7 @@ public class LayoutCreator {
 	
 	public static View getView(Class<?> clazz, Context ctx){
 		try {
-			Constructor cs = clazz.getConstructor(Context.class);
+			Constructor<?> cs = clazz.getConstructor(Context.class);
 			cs.setAccessible(true);
 			return (View) cs.newInstance(ctx);
 		} catch(Throwable t){
@@ -139,7 +140,7 @@ public class LayoutCreator {
 		ViewGroup group = (ViewGroup) box.getChildAt(0);
 		return getButtonsFromGridBox(group);
 	}
-	
+
 	public static ViewGroup.LayoutParams createLayoutParams(Class<?> rootViewClass, int width, int height){
 		try {
 			if(rootViewClass == null){
@@ -152,6 +153,21 @@ public class LayoutCreator {
 			return params;
 		} catch(Throwable t){}
 		return null;
+	}
+	
+	public static ViewGroup.LayoutParams createLayoutParams(Class<?> rootViewClass, int width, int height, int weight){
+		try {
+			if(rootViewClass == null){
+				rootViewClass = ViewGroup.class;
+			}
+			Class<?> c = Class.forName(rootViewClass.getName() + "$LayoutParams");
+			Constructor<?> cs = c.getConstructor(int.class,int.class,int.class);
+			cs.setAccessible(true);
+			ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) cs.newInstance(width,height,weight);
+			return params;
+		} catch(Throwable t){
+			return createLayoutParams(rootViewClass, width, height);
+		}
 	}
 	
 	public static YSwitch createYSwitch(Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener){

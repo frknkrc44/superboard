@@ -7,10 +7,10 @@ package yandroid.util;
  * @author frknkrc44
  */
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class Styleable {
 	
@@ -18,7 +18,7 @@ public class Styleable {
 	
 	/**
 	 * Get int array to get style indexes
-	 *
+	 * <p>
 	 * If requested name is unavailable at
 	 * namespace or not int array, returns
 	 * empty int array
@@ -36,7 +36,7 @@ public class Styleable {
 	/**
 	 * Get a key to get style value from
 	 * attributes
-	 *
+	 * <p>
 	 * If requested name is unavailable at
 	 * namespace, returns zero
 	 *
@@ -52,12 +52,13 @@ public class Styleable {
 	
 	/**
 	 * Get requested field from hidden class
-	 *
+	 * <p>
 	 * If any error occurred or requested
 	 * field name is empty, returns null
 	 *
 	 * @author frknkrc44
 	 */
+	@SuppressLint("PrivateApi")
 	private static Object getObject(String requestedName){
 		requestedName = requestedName.trim();
 
@@ -72,7 +73,7 @@ public class Styleable {
 			Resources res = Resources.getSystem();
 			int resId = res.getIdentifier(requestedName, "styleable", "android");
 			if(resId != 0) {
-
+				return resId;
 			}
 		}
 		return null;

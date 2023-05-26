@@ -40,6 +40,7 @@ public class SetupActivity extends Activity {
 	@Override
     protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+
 		if(Build.VERSION.SDK_INT <= 11) {
 			if(!isInputMethodEnabled()) {
 				startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
@@ -56,6 +57,14 @@ public class SetupActivity extends Activity {
 		}
         sr = new SetupResources();
         setContentView(sr.mainView());
+		if(Build.VERSION.SDK_INT >= 31){
+			getWindow().getDecorView().setFitsSystemWindows(true);
+			((ViewGroup) findViewById(android.R.id.content))
+					.getChildAt(0).setFitsSystemWindows(false);
+			getWindow().setNavigationBarColor(0);
+			getWindow().setStatusBarColor(0);
+			getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
+		}
 		h.sendEmptyMessage(0);
     }
 

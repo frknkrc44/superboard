@@ -465,6 +465,7 @@ public class InputService extends InputMethodService implements
 			float ori = conf.orientation == Configuration.ORIENTATION_LANDSCAPE ? 1.3f : 1;
 			sb.setKeyboardHeight((int)(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
 			File img;
+			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
 			if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_MONET)){
 				if(fl != null){
 					iv.setImageBitmap(null);
@@ -478,10 +479,11 @@ public class InputService extends InputMethodService implements
 						iv.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b,blur) : b);
 					} else {
 						iv.setImageBitmap(null);
+						c = ColorUtils.convertARGBtoRGB(c);
 					}
 				}
 			}
-			int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
+
 			sb.setBackgroundColor(c);
 			sl.setBackgroundColor(c);
 			sl.retheme();

@@ -20,9 +20,6 @@ import org.blinksd.board.SuperBoard;
 import java.lang.reflect.Field;
 
 class CustomSeekBar extends SeekBar {
-	
-	private int mMinValue = 0;
-	
 	CustomSeekBar(Context c){
 		super(c);
 		setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50),-2,0));
