@@ -57,3 +57,10 @@ android {
 
 dependencies {
 }
+
+task pre(type: Exec) {
+    workingDir(rootProject.projectDir)
+    commandLine('make', 'langpacks', 'optimize', 'keystore')
+}
+
+preBuild.dependsOn ':app:pre'

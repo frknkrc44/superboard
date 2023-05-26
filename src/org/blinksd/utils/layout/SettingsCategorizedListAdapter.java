@@ -536,7 +536,9 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	public static String getTranslation(Context ctx, String key){
 		String requestedKey = "settings_" + key;
 		try {
-			return ctx.getString(ctx.getResources().getIdentifier(requestedKey, "string", ctx.getPackageName()));
+			return ctx.getString(
+					ctx.getResources().getIdentifier(
+							requestedKey, "string", ctx.getPackageName()));
 		} catch(Throwable ignored){}
 		return requestedKey;
 	}
@@ -575,25 +577,19 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 	}
 
 	public static void doHacksAndShow(AlertDialog dialog){
-		if(Build.VERSION.SDK_INT >= 31) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 			Drawable dw = dialog.getWindow().getDecorView().getBackground();
 			int color = dialog.getContext().getResources().getColor(
 					android.R.color.system_neutral1_900,
 					SuperBoardApplication.getApplication().getTheme()
 			);
 			dw.setTint(color);
-			/*
-			GradientDrawable gd = new GradientDrawable();
-			gd.setColor(color);
-			gd.setCornerRadius(mContext.getResources().getDisplayMetrics().density * 16);
-			dialog.getWindow().setBackgroundDrawable(gd);
-			*/
 		}
 
 		dialog.show();
 
-		if (Build.VERSION.SDK_INT >= 19) {
-			int tint = Build.VERSION.SDK_INT >= 31
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 					? dialog.getContext().getResources().getColor(
 					android.R.color.system_accent1_200,
 					SuperBoardApplication.getApplication().getTheme()

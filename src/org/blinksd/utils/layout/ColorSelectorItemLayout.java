@@ -63,7 +63,8 @@ public class ColorSelectorItemLayout extends LinearLayout {
 		del.setScaleType(img.getScaleType());
 		del.setImageResource(R.drawable.sym_keyboard_close);
 		del.setColorFilter(0xFFFFFFFF,PorterDuff.Mode.SRC_ATOP);
-		del.setPadding(pad,pad,0,pad);
+		pad *= 1.5;
+		del.setPadding(pad,pad,pad,pad);
 		del.setOnClickListener(gradientDelColorListener);
 		del.setId(index);
 		setTag(color);

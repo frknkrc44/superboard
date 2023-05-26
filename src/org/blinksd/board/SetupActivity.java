@@ -271,16 +271,20 @@ public class SetupActivity extends Activity {
 		public Drawable getSelectableItemBg(){
 			if(Build.VERSION.SDK_INT < 14)
 				return null;
-		
-			return csibg(getResources().getDrawable(
-							 getTheme().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground}
-																 ).getResourceId(0,0)));
+
+			int resId = getTheme().obtainStyledAttributes(
+					new int[]{android.R.attr.selectableItemBackground}
+			).getResourceId(0,0);
+			Drawable itemBg = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+					? getResources().getDrawable(resId, getTheme())
+					: getResources().getDrawable(resId);
+			return csibg(itemBg);
 		}
 
 		private Drawable csibg(Drawable d){
 			int color = textColor - 0x88000000;
 			try {
-				if(d.getClass().getName().contains("RippleDrawable")){
+				if(d.getClass().getSimpleName().contains("RippleDrawable")){
 					Method m = d.getClass().getDeclaredMethod("setColor", ColorStateList.class);
 					m.setAccessible(true);
 					m.invoke(d,new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}},new int[]{color}));

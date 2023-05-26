@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.blinksd.board"
-    android:versionCode="32"
-    android:versionName="3.24">
+    android:versionCode="33"
+    android:versionName="3.25">
 	
-	<uses-sdk android:minSdkVersion="8"
+	<uses-sdk android:minSdkVersion="9"
 		android:targetSdkVersion="33" />
 	
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+		android:maxSdkVersion="32" />
+	<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
 
 	<permission

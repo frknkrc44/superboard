@@ -43,7 +43,6 @@ public class SuperBoardApplication extends Application {
 	@Override
 	public void onCreate(){
 		super.onCreate();
-		Styleable.tryToBypassRestrictions();
 		appContext = this;
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		icons = new IconThemeUtils();

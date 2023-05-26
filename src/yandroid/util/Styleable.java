@@ -60,8 +60,7 @@ public class Styleable {
 	 */
 	private static Object getObject(String requestedName){
 		requestedName = requestedName.trim();
-		
-		tryToBypassRestrictions();
+
 		try {
 			Class<?> CLASS = Class.forName("android.R$styleable");
 			if(requestedName.length() > 1){
@@ -77,25 +76,5 @@ public class Styleable {
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Try to bypass reflection restrictions
-	 * Thanks to XDA
-	 *
-	 * @author frknkrc44
-	 */
-	public static void tryToBypassRestrictions(){
-        try {
-            Method forName = Class.class.getDeclaredMethod("forName", String.class);
-            Method getDeclaredMethod = Class.class.getDeclaredMethod("getDeclaredMethod", String.class, Class[].class);
-            Class<?> vmRuntimeClass = (Class<?>) forName.invoke(null, "dalvik.system.VMRuntime");
-            Method getRuntime = (Method) getDeclaredMethod.invoke(vmRuntimeClass, "getRuntime", null);
-            Method setHiddenApiExemptions = (Method) getDeclaredMethod.invoke(vmRuntimeClass, "setHiddenApiExemptions", new Class[]{String[].class});
-            assert getRuntime != null;
-            Object vmRuntime = getRuntime.invoke(null);
-            assert setHiddenApiExemptions != null;
-            setHiddenApiExemptions.invoke(vmRuntime, (Object) new String[]{"L"});
-        } catch(Throwable t){}
 	}
 }
