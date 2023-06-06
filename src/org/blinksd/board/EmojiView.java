@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -184,28 +185,52 @@ public class EmojiView extends LinearLayout {
 		final GridView gv = new GridView(getContext());
 		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
 		gv.setLayoutParams(new LayoutParams(-1,-1));
-		final int columns = 6;
+		final int columns = 7;
 		gv.setNumColumns(columns);
 		gv.setGravity(Gravity.CENTER);
+		gv.setSelector(new ColorDrawable());
 		gv.setOnItemClickListener((p1, p2, p3, p4) -> ((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString()));
-		ArrayAdapter<String> aa = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,android.R.id.text1){
-			@Override
-			public View getView(int pos, View cv, ViewGroup p){
-				TextView v = (TextView) super.getView(pos,cv,p);
-				v.setBackgroundDrawable(drw.getConstantState().newDrawable());
-				v.setTextColor(keyclr);
-				v.setGravity(Gravity.CENTER);
-				v.setSingleLine();
-				v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
-				v.setHeight(getResources().getDisplayMetrics().heightPixels / 12);
-				v.setTextSize(txtsze);
-				v.setText(getItem(pos).trim());
-				return v;
-			}
-		};
-		gv.setAdapter(aa);
-		for(int i = 0;i < emojis[index].length;i++)
-			aa.add(emojis[index][i]);
+		EmojiItemAdapter adapter = new EmojiItemAdapter(index, columns);
+		gv.setAdapter(adapter);
 		return gv;
+	}
+
+	private class EmojiItemAdapter extends BaseAdapter {
+		private final int categoryIndex;
+		private final int columns;
+
+		public EmojiItemAdapter(int categoryIndex, int columns) {
+			this.categoryIndex = categoryIndex;
+			this.columns = columns;
+		}
+
+		@Override
+		public int getCount() {
+			return emojis[categoryIndex].length;
+		}
+
+		@Override
+		public String getItem(int position) {
+			return emojis[categoryIndex][position];
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return getItem(position).hashCode() + position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView v = (TextView) new TextView(EmojiView.this.getContext());
+			v.setBackgroundDrawable(drw.getConstantState().newDrawable());
+			v.setTextColor(keyclr);
+			v.setGravity(Gravity.CENTER);
+			v.setSingleLine();
+			v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
+			v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
+			v.setTextSize(txtsze);
+			v.setText(getItem(position).trim());
+			return v;
+		}
 	}
 }
