@@ -37,7 +37,6 @@ public class EmojiUtils {
      * @return true if the typeface set on the given paint has a glyph for the string
      */
     private boolean hasGlyph(Paint paint, String string) {
-
         final int length = string.length();
         if (length == 1 && Character.isWhitespace(string.charAt(0))) {
             // measureText + getTextBounds skips whitespace so we need to special case it here

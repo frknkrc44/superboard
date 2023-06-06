@@ -11,5 +11,5 @@ gen/
 
 # ignore others
 local.properties
-emoji*.json
+EmojiJsonCreator/emoji*.json
 .mypy_cache/

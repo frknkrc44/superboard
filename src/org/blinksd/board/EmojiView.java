@@ -21,6 +21,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.utils.system.EmojiUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,11 +44,13 @@ public class EmojiView extends LinearLayout {
 	private static String[][] emojis;
 	
 	public EmojiView(SuperBoard sb, View.OnClickListener ocl){
-		super(sb.getContext());
+		this(sb.getContext());
 		getEmojis(sb);
 		oclick = ocl;
 		applyTheme(sb);
 	}
+
+	private EmojiView(Context c){ super(c); }
 
 	private void getEmojis(SuperBoard sb) {
 		try {
@@ -58,8 +61,7 @@ public class EmojiView extends LinearLayout {
 			sc.close();
 
 			JSONObject jsonObject = new JSONObject(s.toString());
-			emojis = new String[jsonObject.length()+1][];
-			int j = 0;
+			List<String[]> emojiList = new ArrayList<>();
 			for (Iterator<String> it = jsonObject.keys(); it.hasNext(); ) {
 				JSONArray jsonArray = jsonObject.getJSONArray(it.next());
 				List<String> category = new ArrayList<>();
@@ -70,15 +72,22 @@ public class EmojiView extends LinearLayout {
 					}
 				}
 
-				emojis[j++] = category.toArray(new String[0]);
+				if (!category.isEmpty()) {
+					emojiList.add(category.toArray(new String[0]));
+				}
 			}
+
+			if (SuperBoardApplication.getEmojiUtils().hasGlyph("🇦")) {
+				emojiList.add(new String[]{
+						"🇦 ", "🇧 ", "🇨 ", "🇩 ", "🇪 ", "🇫 ", "🇬 ",
+						"🇭 ", "🇮 ", "🇯 ", "🇰 ", "🇱 ", "🇲 ", "🇳 ",
+						"🇴 ", "🇵 ", "🇶 ", "🇷 ", "🇸 ", "🇹 ", "🇺 ",
+						"🇻 ", "🇼 ", "🇽 ", "🇾 ", "🇿 "
+				});
+			}
+
+			emojis = emojiList.toArray(new String[0][]);
 		} catch (Throwable ignored) {}
-		emojis[emojis.length-1] = new String[]{
-				"🇦 ","🇧 ","🇨 ","🇩 ","🇪 ","🇫 ", "🇬 ",
-				"🇭 ","🇮 ","🇯 ","🇰 ","🇱 ", "🇲 ", "🇳 ",
-				"🇴 ","🇵 ","🇶 ","🇷 ", "🇸 ","🇹 ", "🇺 ",
-				"🇻 ","🇼 ","🇽 ", "🇾 ","🇿 "
-		};
 	}
 	
 	public void applyTheme(SuperBoard sb){
@@ -170,16 +179,10 @@ public class EmojiView extends LinearLayout {
 			return iv;
 		}
 	}
-
-	// Disable View constructors
-	private EmojiView(Context c){ super(c); }
-	private EmojiView(Context c, AttributeSet a){ super(c,a); }
 	
 	private GridView emojiList(final int index){
 		final GridView gv = new GridView(getContext());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
-		}
+		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
 		gv.setLayoutParams(new LayoutParams(-1,-1));
 		final int columns = 6;
 		gv.setNumColumns(columns);
