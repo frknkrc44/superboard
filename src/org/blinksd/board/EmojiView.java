@@ -4,13 +4,10 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -22,11 +19,10 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.utils.system.EmojiUtils;
+import org.blinksd.utils.system.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +33,7 @@ public class EmojiView extends LinearLayout {
 	
 	private float txtsze;
 	private int keyclr;
-	private Drawable drw;
+	private Drawable drw, emptyDrawable = new ColorDrawable();
 	private TabWidget tw;
 	private TabHost th;
 	private View.OnClickListener oclick;
@@ -68,7 +64,7 @@ public class EmojiView extends LinearLayout {
 				List<String> category = new ArrayList<>();
 				for (int i = 0;i < jsonArray.length();i++) {
 					String glyph = jsonArray.getString(i);
-					if (SuperBoardApplication.getEmojiUtils().hasGlyph(glyph)) {
+					if (SuperBoardApplication.getTextUtils().hasGlyph(glyph)) {
 						category.add(glyph);
 					}
 				}
@@ -78,7 +74,7 @@ public class EmojiView extends LinearLayout {
 				}
 			}
 
-			if (SuperBoardApplication.getEmojiUtils().hasGlyph("🇦")) {
+			if (SuperBoardApplication.getTextUtils().hasGlyph("🇦")) {
 				emojiList.add(new String[]{
 						"🇦 ", "🇧 ", "🇨 ", "🇩 ", "🇪 ", "🇫 ", "🇬 ",
 						"🇭 ", "🇮 ", "🇯 ", "🇰 ", "🇱 ", "🇲 ", "🇳 ",
@@ -185,11 +181,12 @@ public class EmojiView extends LinearLayout {
 		final GridView gv = new GridView(getContext());
 		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
 		gv.setLayoutParams(new LayoutParams(-1,-1));
-		final int columns = 7;
+		int columns = SuperBoardApplication.getTextUtils().getTextBounds(emojis[0][0]).width() / 2;
 		gv.setNumColumns(columns);
 		gv.setGravity(Gravity.CENTER);
-		gv.setSelector(new ColorDrawable());
-		gv.setOnItemClickListener((p1, p2, p3, p4) -> ((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString()));
+		gv.setSelector(emptyDrawable);
+		gv.setOnItemClickListener((p1, p2, p3, p4) ->
+				((InputService)getContext()).onEmojiText(p1.getItemAtPosition(p3).toString()));
 		EmojiItemAdapter adapter = new EmojiItemAdapter(index, columns);
 		gv.setAdapter(adapter);
 		return gv;

@@ -5,10 +5,16 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.util.Pair;
 
-public class EmojiUtils {
-    public EmojiUtils() {}
+public class TextUtils {
+    public TextUtils() {}
 
     private final Paint paint = new Paint();
+
+    public Rect getTextBounds(String text) {
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        return bounds;
+    }
 
     public boolean hasGlyph(String text) {
         text = text.trim();
