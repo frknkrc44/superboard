@@ -39,15 +39,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.utils.layout.LayoutUtils;
-import org.blinksd.utils.layout.LayoutUtils.KeyOptions;
-import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.image.ImageUtils;
 import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.utils.layout.LayoutUtils;
+import org.blinksd.utils.layout.LayoutUtils.KeyOptions;
+import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.utils.layout.SuggestionLayout;
 import org.superdroid.db.SuperDBHelper;
 

@@ -10,10 +10,10 @@ import android.graphics.drawable.Drawable;
 
 import org.blinksd.Defaults;
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.layout.BaseMap;
+import org.blinksd.utils.layout.LayoutUtils;
 import org.superdroid.db.SuperDBHelper;
 
 import java.io.File;

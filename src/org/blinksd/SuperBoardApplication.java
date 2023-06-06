@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.blinksd.utils.layout.LayoutUtils;
-import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.board.SettingMap;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ThemeUtils;
@@ -14,6 +12,8 @@ import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
 import org.blinksd.utils.dictionary.DictionaryDB;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.SpaceBarThemeUtils;
+import org.blinksd.utils.layout.LayoutUtils;
+import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.utils.system.TextUtils;
 import org.superdroid.db.SuperDBHelper;
 

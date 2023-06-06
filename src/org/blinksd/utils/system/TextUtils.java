@@ -10,8 +10,9 @@ public class TextUtils {
 
     private final Paint paint = new Paint();
 
-    public Rect getTextBounds(String text) {
+    public Rect getTextBounds(float textSize, String text) {
         Rect bounds = new Rect();
+        paint.setTextSize(textSize);
         paint.getTextBounds(text, 0, text.length(), bounds);
         return bounds;
     }

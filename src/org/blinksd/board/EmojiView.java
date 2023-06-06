@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -19,7 +21,6 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.utils.system.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -152,22 +153,25 @@ public class EmojiView extends LinearLayout {
 		setOrientation(VERTICAL);
 	}
 	
-	private View categoryItem(int num, int width, View.OnClickListener ocl){
+	private View categoryItem(int num, int size, View.OnClickListener ocl){
 		if(num == -1){
-			TextView tv = new TextView(getContext());
-			tv.setLayoutParams(new LayoutParams(width,-1,0));
-			tv.setGravity(Gravity.CENTER);
+			Button tv = new Button(getContext());
+			tv.setLayoutParams(new LayoutParams(size,-1,0));
 			tv.setTextColor(keyclr);
+			tv.setBackgroundDrawable(drw.getConstantState().newDrawable());
+			tv.setGravity(Gravity.CENTER);
 			tv.setText("A");
 			tv.setTag(num);
 			tv.setTextSize(txtsze);
 			tv.setOnClickListener(ocl);
 			return tv;
 		} else {
-			ImageView iv = new ImageView(getContext());
-			iv.setLayoutParams(new LayoutParams(width,-1,0));
+			ImageButton iv = new ImageButton(getContext());
+			iv.setBackgroundDrawable(drw.getConstantState().newDrawable());
+			iv.setLayoutParams(new LayoutParams(size, size,0));
 			iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-			int p = width / 8;
+			iv.setAdjustViewBounds(true);
+			int p = size / 4;
 			iv.setPadding(p,p,p,p);
 			iv.setImageResource(R.drawable.sym_keyboard_delete);
 			iv.setColorFilter(keyclr,PorterDuff.Mode.SRC_ATOP);
@@ -181,7 +185,8 @@ public class EmojiView extends LinearLayout {
 		final GridView gv = new GridView(getContext());
 		gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
 		gv.setLayoutParams(new LayoutParams(-1,-1));
-		int columns = SuperBoardApplication.getTextUtils().getTextBounds(emojis[0][0]).width() / 2;
+		int columns = SuperBoardApplication.getTextUtils()
+				.getTextBounds(txtsze, emojis[0][0]).width() / 2;
 		gv.setNumColumns(columns);
 		gv.setGravity(Gravity.CENTER);
 		gv.setSelector(emptyDrawable);

@@ -19,7 +19,6 @@ import org.blinksd.board.SuperBoard;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
-import org.blinksd.utils.layout.DensityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
