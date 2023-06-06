@@ -2,7 +2,8 @@
 <resources>
 	<!-- Setup wizard resources -->
 	<string name="wizard_welcome">%s kurulum sihirbazına hoş geldiniz!</string>
-	<string name="wizard_enable">Klavyeyi sistem ayarlarından etkinleştirin</string>
+    <string name="wizard_nextbtn">İleri</string>
+    <string name="wizard_enable">Klavyeyi sistem ayarlarından etkinleştirin</string>
 	<string name="wizard_enablebtn">Sistem ayarlarını aç</string>
 	<string name="wizard_select">%s\'ı varsayılan klavyeniz yapın</string>
 	<string name="wizard_selectbtn">Klavye seçim penceresini aç</string>

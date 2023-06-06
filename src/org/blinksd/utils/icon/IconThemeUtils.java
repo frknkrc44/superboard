@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 
 import org.blinksd.Defaults;
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.layout.BaseMap;
@@ -132,10 +133,16 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
 	}
 
 	private Drawable getDrawable(int res) {
-		if (res == SpaceBarThemeUtils.SPACEBAR_HIDE) {
-			return new ColorDrawable();
+		switch (res) {
+			case SpaceBarThemeUtils.SPACEBAR_HIDE:
+				return new ColorDrawable();
+
+			case SpaceBarThemeUtils.SPACEBAR_TEXT:
+			case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
+					return null;
 		}
 
-		return null;
+		return LayoutUtils.getDrawableCompat(
+				SuperBoardApplication.getApplication(), res, null);
 	}
 }

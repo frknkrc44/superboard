@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.blinksd.board"
-    android:versionCode="34"
-    android:versionName="3.26">
+    android:versionCode="35"
+    android:versionName="3.27">
 	
 	<uses-sdk android:minSdkVersion="9"
 		android:targetSdkVersion="33" />
@@ -27,7 +27,7 @@
 		<activity
             android:exported="true"
 			android:launchMode="singleTask"
-			android:name=".SetupActivity">
+			android:name=".SetupActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />

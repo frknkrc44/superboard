@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -578,12 +579,15 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 
 	public static void doHacksAndShow(AlertDialog dialog){
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-			Drawable dw = dialog.getWindow().getDecorView().getBackground();
+			GradientDrawable gradientDrawable = new GradientDrawable();
 			int color = dialog.getContext().getResources().getColor(
 					android.R.color.system_neutral1_900,
 					SuperBoardApplication.getApplication().getTheme()
 			);
-			dw.setTint(color);
+			gradientDrawable.setColor(color);
+			gradientDrawable.setCornerRadius(DensityUtils.dpInt(16));
+			gradientDrawable.setTint(color);
+			dialog.getWindow().getDecorView().setBackground(gradientDrawable);
 		}
 
 		dialog.show();

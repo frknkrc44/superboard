@@ -2,10 +2,11 @@ package org.blinksd.board;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
@@ -23,6 +24,7 @@ import org.superdroid.db.SuperDBHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -256,6 +258,7 @@ public class LayoutUtils {
 	
 	public static void setSpaceBarViewPrefs(IconThemeUtils icons, SuperBoard.Key space, String label){
 		if(icons == null) icons = SuperBoardApplication.getIconThemes();
+
 		Drawable drawable = icons.getIconResource(LocalIconTheme.SYM_TYPE_SPACE);
 		if (drawable == null) {
 			space.setText(label);
@@ -305,6 +308,54 @@ public class LayoutUtils {
 			return d;
 		}
 		return gd;
+	}
+
+	public static Drawable getSelectableItemBg(Context context, int textColor){
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			return null;
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			int resId = context.getTheme().obtainStyledAttributes(
+					new int[]{android.R.attr.selectableItemBackground}
+			).getResourceId(0,0);
+			Drawable d = getDrawableCompat(context, resId, null);
+			int color = textColor - 0x88000000;
+			try {
+				if(d.getClass().getSimpleName().contains("RippleDrawable")){
+					Method m = d.getClass().getDeclaredMethod("setColor", ColorStateList.class);
+					m.setAccessible(true);
+					m.invoke(d,new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}},new int[]{color}));
+				} else {
+					d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+				}
+			} catch(Throwable ignored) {}
+			return d;
+		}
+
+		GradientDrawable content = new GradientDrawable();
+		content.setColor(ColorUtils.getAccentColor());
+		int padding = DensityUtils.dpInt(16);
+		content.setCornerRadius(padding);
+
+		return new RippleDrawable(
+				ColorStateList.valueOf(textColor - 0x88000000),
+				content, null
+		);
+	}
+
+	public static Drawable getDrawableCompat(Context context, int resId, Integer tintColor) {
+		Drawable drawable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+				? context.getResources().getDrawable(resId, context.getTheme())
+				: context.getResources().getDrawable(resId);
+		if (tintColor != null) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+				drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP);
+			} else {
+				drawable.setTint(tintColor);
+			}
+		}
+
+		return drawable;
 	}
 	
 	public static class Language {

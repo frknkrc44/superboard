@@ -6,6 +6,7 @@
 	
 	<!-- Setup wizard resources -->
 	<string name="wizard_welcome">Welcome to %s setup wizard!</string>
+	<string name="wizard_nextbtn">Next</string>
 	<string name="wizard_enable">Enable keyboard from settings</string>
 	<string name="wizard_enablebtn">Open system settings</string>
 	<string name="wizard_select">Select %s as your default keyboard</string>

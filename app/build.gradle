@@ -63,4 +63,10 @@ task pre(type: Exec) {
     commandLine('make', 'langpacks', 'optimize', 'keystore')
 }
 
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+        outputFileName = "FBoard-v${variant.versionName}.apk"
+    }
+}
+
 preBuild.dependsOn ':app:pre'

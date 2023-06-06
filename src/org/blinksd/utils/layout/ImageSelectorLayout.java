@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
@@ -76,10 +77,16 @@ public class ImageSelectorLayout {
 			}
 		};
 		prev.setId(android.R.id.custom);
+		int gradientPadding = DensityUtils.dpInt(2);
+		int frameMargin = DensityUtils.dpInt(8);
+		prev.setPadding(gradientPadding, gradientPadding, gradientPadding, gradientPadding);
 		int dp = DensityUtils.hpInt(25);
-		prev.setLayoutParams(new LinearLayout.LayoutParams(-1, dp, 0));
-		prev.setScaleType(ImageView.ScaleType.FIT_CENTER);
-		prev.setAdjustViewBounds(true);
+		LinearLayout.LayoutParams imagePreviewParams =
+				new LinearLayout.LayoutParams(-1, dp, 0);
+		imagePreviewParams.setMargins(frameMargin, frameMargin, frameMargin, frameMargin);
+		prev.setLayoutParams(imagePreviewParams);
+		prev.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		// prev.setAdjustViewBounds(true);
 		holder.addView(prev);
 		holder.addView(fl);
 		host.addView(holder);
@@ -161,10 +168,14 @@ public class ImageSelectorLayout {
 	private static View getPhotoSelector(final Dialog win, final Runnable onImageSelectPressed,
 										 final Runnable onRestartKeyboard) {
 		Context ctx = win.getContext();
+		int margin = DensityUtils.dpInt(8);
 		LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
+		l.setPadding(margin, margin, margin, margin);
 		Button s = LayoutCreator.createButton(ctx);
-		s.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
-		s.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
+		s.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
+		params.bottomMargin = margin;
+		s.setLayoutParams(params);
 		s.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_select"));
 		s.setOnClickListener(p1 -> onImageSelectPressed.run());
 		l.addView(s);
@@ -173,8 +184,10 @@ public class ImageSelectorLayout {
 		// https://issuetracker.google.com/issues/237124750
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 			Button w = LayoutCreator.createButton(ctx);
-			w.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
-			w.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
+			w.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
+			params = new LinearLayout.LayoutParams(-1, -2, 0);
+			params.bottomMargin = margin;
+			w.setLayoutParams(params);
 			w.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_wp"));
 			l.addView(w);
 			w.setOnClickListener(p1 -> {
@@ -201,7 +214,7 @@ public class ImageSelectorLayout {
 		}
 
 		Button rb = LayoutCreator.createButton(ctx);
-		rb.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(true));
+		rb.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
 		rb.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,0));
 		l.addView(rb);
 		rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));

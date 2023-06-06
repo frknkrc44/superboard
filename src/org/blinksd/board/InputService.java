@@ -186,87 +186,7 @@ public class InputService extends InputMethodService implements
 			registerReceiver(r,new IntentFilter(COLORIZE_KEYBOARD));
 		}
 		if(sb == null){
-			sb = new SuperBoard(this){
-				private boolean shown = false;
-
-				@Override
-				public void beforeKeyboardEvent(View v) {
-					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
-					boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
-
-					if(showPopup || !disablePopup)
-						po.setKey((SuperBoard.Key)v);
-				}
-
-				@Override
-				public void onKeyboardEvent(View v){
-					boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
-
-					if(shown = po.isShown()){
-						po.showPopup(false);
-						po.clear();
-						return;
-					}
-						
-					if(showPopup)
-						po.showCharacter();
-				}
-				
-				public void onPopupEvent(){
-					po.showPopup();
-					po.setShiftState(shift);
-				}
-				
-				@Override
-				public void afterKeyboardEvent(){
-					super.afterKeyboardEvent();
-					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
-						po.hideCharacter();
-					}
-					
-					// sendCompletionRequest();
-				}
-				
-				public void sendDefaultKeyboardEvent(View v){
-					if(!shown) super.sendDefaultKeyboardEvent(v);
-					else shown = false;
-				}
-				
-				@Override
-				public void switchLanguage(){
-					if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_LC_ON_EMOJI)){
-						SuperBoardApplication.getNextLanguage();
-						setPrefs();
-					} else {
-						openEmojiLayout();
-					}
-				}
-				
-				@Override
-				public void openEmojiLayout(){
-					showEmojiView(true);
-				}
-				
-				@Override
-				public void playSound(int event){
-					if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
-					AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
-					switch(event){
-						case Keyboard.KEYCODE_DONE:
-							audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
-							break;
-						case Keyboard.KEYCODE_DELETE:
-							audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
-							break;
-						case KeyEvent.KEYCODE_SPACE:
-							audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
-							break;
-						default:
-							audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
-							break;
-					}
-				}
-			};
+			sb = new SuperBoardImpl(this);
 			sb.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			appname = getString(R.string.app_name);
 			String abc = "ABC";
@@ -298,22 +218,8 @@ public class InputService extends InputMethodService implements
 			
 			kbd = new String[][][]{kbdSym1,kbdSym2,kbdSym3,kbdNums};
 
-			try {
-				String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
-				cl = SuperBoardApplication.getKeyboardLanguage(lang);
-				if(!cl.language.equals(lang)){
-					throw new RuntimeException("Where is the layout JSON file (in assets)?");
-				}
-				String[][] lkeys = LayoutUtils.getLayoutKeys(cl.layout);
-				sb.addRows(0,lkeys);
-				lkeys = LayoutUtils.getLayoutKeys(cl.popup);
-				sb.setLayoutPopup(0,lkeys);
-				if(cl.midPadding && lkeys != null){
-					sb.setRowPadding(0,lkeys.length/2,DensityUtils.wpInt(2));
-				}
-			} catch(Throwable e){
-				throw new RuntimeException(e);
-			}
+			loadKeyboardLayout();
+
 			sb.createLayoutWithRows(kbd[0],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[1],KeyboardType.SYMBOL);
 			sb.createLayoutWithRows(kbd[2],KeyboardType.SYMBOL);		
@@ -524,7 +430,7 @@ public class InputService extends InputMethodService implements
 			sl.setOnQuickMenuItemClickListener(topBarDisabled ? null : this);
 			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 			if(!lang.equals(cl.language)){
-				setKeyboardLayout(lang);
+				loadKeyboardLayout();
 			}
 			List<List<KeyOptions>> kOpt = cl.layout;
 			for(int i = 0;i < kOpt.size();i++){
@@ -551,18 +457,19 @@ public class InputService extends InputMethodService implements
 		
 		sendCompletionRequest();
 	}
-	
-	private void setKeyboardLayout(String lang){
+	private void loadKeyboardLayout() {
 		try {
+			String lang = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
+			int keyboardIndex = sb.findNormalKeyboardIndex();
 			Language l = SuperBoardApplication.getKeyboardLanguage(lang);
 			if(!l.language.equals(lang)){
 				throw new RuntimeException("Where is the layout JSON file (in assets)?");
 			}
 			String[][] lkeys = LayoutUtils.getLayoutKeys(l.layout);
 			sb.replaceNormalKeyboard(lkeys);
-			sb.setLayoutPopup(sb.findNormalKeyboardIndex(),LayoutUtils.getLayoutKeys(l.popup));
+			sb.setLayoutPopup(keyboardIndex, LayoutUtils.getLayoutKeys(l.popup));
 			if(l.midPadding && lkeys != null){
-				sb.setRowPadding(sb.findNormalKeyboardIndex(),lkeys.length/2,DensityUtils.wpInt(2));
+				sb.setRowPadding(keyboardIndex,lkeys.length/2,DensityUtils.wpInt(2));
 			}
 			LayoutUtils.setKeyOpts(l,sb);
 			cl = l;
@@ -673,6 +580,93 @@ public class InputService extends InputMethodService implements
 					break;
 				default:
 					sb.sendKeyEvent(action);
+					break;
+			}
+		}
+	}
+
+	private class SuperBoardImpl extends SuperBoard {
+		private SuperBoardImpl(Context context) {
+			super(context);
+		}
+
+		private boolean shown = false;
+
+		@Override
+		public void beforeKeyboardEvent(View v) {
+			boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
+			boolean disablePopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP);
+
+			if(showPopup || !disablePopup)
+				po.setKey((SuperBoard.Key)v);
+		}
+
+		@Override
+		public void onKeyboardEvent(View v){
+			boolean showPopup = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
+			shown = po.isShown();
+
+			if(shown){
+				po.showPopup(false);
+				po.clear();
+				return;
+			}
+
+			if(showPopup)
+				po.showCharacter();
+		}
+
+		public void onPopupEvent(){
+			po.showPopup();
+			po.setShiftState(shift);
+		}
+
+		@Override
+		public void afterKeyboardEvent(){
+			super.afterKeyboardEvent();
+			if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)){
+				po.hideCharacter();
+			}
+
+			// sendCompletionRequest();
+		}
+
+		public void sendDefaultKeyboardEvent(View v){
+			if(!shown) super.sendDefaultKeyboardEvent(v);
+			else shown = false;
+		}
+
+		@Override
+		public void switchLanguage(){
+			if(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_KEYBOARD_LC_ON_EMOJI)){
+				SuperBoardApplication.getNextLanguage();
+				setPrefs();
+			} else {
+				openEmojiLayout();
+			}
+		}
+
+		@Override
+		public void openEmojiLayout(){
+			showEmojiView(true);
+		}
+
+		@Override
+		public void playSound(int event){
+			if(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+			AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
+			switch(event){
+				case Keyboard.KEYCODE_DONE:
+					audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+					break;
+				case Keyboard.KEYCODE_DELETE:
+					audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+					break;
+				case KeyEvent.KEYCODE_SPACE:
+					audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+					break;
+				default:
+					audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
 					break;
 			}
 		}
