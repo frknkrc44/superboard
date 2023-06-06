@@ -13,6 +13,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
@@ -847,6 +848,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 								 ? sText.toUpperCase(loc)
 								 : sText.toLowerCase(loc));
 					t.setSelected(false);
+				} else {
+					if (t.getTag(TAG_NP) != null) {
+						String[] values = t.getTag(TAG_NP).toString().split(":");
+						int keyEvent = Integer.parseInt(values[0]);
+						if (keyEvent == Keyboard.KEYCODE_SHIFT) {
+							t.changeState(state);
+						}
+					}
 				}
 			}
 		}
@@ -1055,24 +1064,26 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 	}
 
-	protected class Key extends RelativeLayout {
-		
+	public class Key extends RelativeLayout {
+
 		TextView label, sublabel;
 		ImageView icon;
+		View state;
 		protected int shr = 0, shc = 0, txtst = 0;
-		
+		private int stateCount = 1, currentState = 1;
+
 		public boolean isKeyIconSet(){
 			return icon.getDrawable() != null;
 		}
-		
+
 		public int getKeyWidth(){
 			return getLayoutParams().width;
 		}
-		
+
 		protected int getTextColor(){
 			return keyclr;
 		}
-		
+
 		Key(Context context){
 			super(context);
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
@@ -1080,14 +1091,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			label.setLayoutParams(new RelativeLayout.LayoutParams(-1,-1));
 			sublabel = new TextView(context);
 			RelativeLayout.LayoutParams subParams = new RelativeLayout.LayoutParams(-2,-2);
-			subParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-			subParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+			subParams.addRule(ALIGN_PARENT_RIGHT, TRUE);
+			subParams.addRule(ALIGN_PARENT_TOP, TRUE);
 			int margin = DensityUtils.mpInt(1.5f);
 			subParams.rightMargin = subParams.topMargin = margin;
 			sublabel.setLayoutParams(subParams);
 			icon = new ImageView(context);
 			RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(-1,-1);
-			iconParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+			iconParams.addRule(CENTER_IN_PARENT, TRUE);
 			icon.setLayoutParams(iconParams);
 			addView(label);
 			addView(sublabel);
@@ -1106,6 +1117,46 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			setOnTouchListener(SuperBoard.this);
 		}
 
+		public void setStateCount(int stateCount) {
+			if (stateCount < 1) {
+				return;
+			}
+
+			if (state == null) {
+				RelativeLayout.LayoutParams stateParams =
+						new RelativeLayout.LayoutParams(
+								DensityUtils.mpInt(4), DensityUtils.mpInt(1));
+				stateParams.bottomMargin = DensityUtils.mpInt(2);
+				stateParams.addRule(ALIGN_PARENT_BOTTOM, TRUE);
+				stateParams.addRule(CENTER_HORIZONTAL, TRUE);
+				state = new View(getContext());
+				state.setLayoutParams(stateParams);
+				GradientDrawable stateDrawable = new GradientDrawable();
+				stateDrawable.setColor(txtclr);
+				stateDrawable.setAlpha(0);
+				stateDrawable.setCornerRadius(DensityUtils.dpInt(16));
+				state.setBackgroundDrawable(stateDrawable);
+				addView(state);
+			}
+
+			this.stateCount = stateCount;
+			if (currentState >= stateCount) {
+				currentState = stateCount - 1;
+			}
+			changeState(currentState);
+		}
+
+		public void changeState(int newState) {
+			if (newState >= stateCount) {
+				return;
+			}
+
+			currentState = newState;
+			state.getBackground().setAlpha((int)(255*(float)currentState/Math.max(1, stateCount-1)));
+			GradientDrawable gradientDrawable = (GradientDrawable) state.getBackground();
+			gradientDrawable.setColor(txtclr);
+		}
+
 		public void setBackground(Drawable b){
 			setBackgroundDrawable(b);
 		}
@@ -1114,61 +1165,58 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		public void setBackgroundDrawable(Drawable b){
 			super.setBackgroundDrawable(b == null ? null : b.getConstantState().newDrawable());
 		}
-		
+
 		public void setKeyIcon(Drawable dr){
 			setKeyImageVisible(true);
 			icon.setImageDrawable(dr);
-			dr.setColorFilter(txtclr,PorterDuff.Mode.SRC_ATOP);
+			setKeyItemColor(txtclr);
 		}
-		
-		public void setKeyIcon(int res){
-			setKeyIcon(getResources().getDrawable(res));
-		}
-		
+
 		public void setKeyItemColor(int color){
 			label.setTextColor(txtclr=color);
 			sublabel.setTextColor(ColorUtils.convertARGBtoRGB(color) - 0x66000000);
 			if(isKeyIconSet()){
 				getKeyIcon().setColorFilter(color,PorterDuff.Mode.SRC_ATOP);
 			}
+			changeState(currentState);
 		}
-		
+
 		public void setText(CharSequence text){
 			setKeyImageVisible(false);
 			label.setText(text);
 		}
-		
+
 		public void setSubText(CharSequence text){
 			setKeyImageVisible(false);
 			sublabel.setText(text);
 		}
-		
+
 		public CharSequence getText(){
 			return label.getText();
 		}
-		
+
 		public CharSequence getSubText(){
 			return sublabel.getText();
 		}
-		
+
 		public Drawable getKeyIcon(){
 			return icon.getDrawable();
 		}
-		
+
 		protected CharSequence getHint(){
 			return label.getHint();
 		}
-		
+
 		public void setKeyImageVisible(boolean visible){
 			icon.setVisibility(visible?VISIBLE:GONE);
 			label.setVisibility(visible?GONE:VISIBLE);
 			sublabel.setVisibility(ppreview&&!visible?VISIBLE:GONE);
 		}
-		
+
 		protected void setHint(CharSequence cs){
 			label.setHint(cs);
 		}
-		
+
 		private void setKeyTextSize(float size){
 			label.setTextSize(txtsze=size);
 			sublabel.setTextSize(label.getTextSize() / 3);
@@ -1176,17 +1224,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			vp.width = -1;
 			vp.height = (int)(size*iconmulti);
 		}
-		
+
 		private void setKeyShadow(int radius, int color){
 			label.setShadowLayer(shr=radius,0,0,shc=color);
 		}
-		
+
 		public void setKeyTextStyle(int style){
 			TextType[] arr = TextType.values();
 			setKeyTextStyle(arr[(arr.length - 1) < style ? 0 : style]);
 			txtst = style;
 		}
-		
+
 		public void setKeyTextStyle(TextType style){
 			if(style == null){
 				style = TextType.regular;
@@ -1260,32 +1308,32 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			}
 			sublabel.setTypeface(label.getTypeface());
 		}
-		
+
 		protected TextView getTextView(){
 			return label;
 		}
-		
+
 		protected TextView getSubTextView(){
 			return sublabel;
 		}
-		
+
 		protected ImageView getImageView(){
 			return icon;
 		}
-		
+
 		@Override
 		public Key clone(){
 			return clone(false);
 		}
-		
+
 		public Key clone(boolean disableTouchEvent){
-			return clone(new Key(getContext()),disableTouchEvent);
+			return clone(new Key(getContext()), disableTouchEvent);
 		}
-		
+
 		public Key clone(Key k){
 			return clone(k,false);
 		}
-		
+
 		@SuppressLint("ClickableViewAccessibility")
 		public Key clone(Key k, boolean disableTouchEvent){
 			Rect r = getBackground().getBounds();

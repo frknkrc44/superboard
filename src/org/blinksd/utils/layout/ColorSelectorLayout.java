@@ -27,7 +27,6 @@ import android.widget.TextView;
 import org.blinksd.Defaults;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.AppSettingsV2;
-import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.board.SuperBoard;

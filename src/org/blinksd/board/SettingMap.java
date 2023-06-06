@@ -14,6 +14,7 @@ import org.blinksd.board.AppSettingsV2.SettingType;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.layout.BaseMap;
+import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.system.SystemUtils;
 
 import java.util.ArrayList;

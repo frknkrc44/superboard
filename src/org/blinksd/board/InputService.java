@@ -39,8 +39,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.board.LayoutUtils.KeyOptions;
-import org.blinksd.board.LayoutUtils.Language;
+import org.blinksd.utils.layout.LayoutUtils;
+import org.blinksd.utils.layout.LayoutUtils.KeyOptions;
+import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;

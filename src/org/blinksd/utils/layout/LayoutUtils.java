@@ -1,4 +1,4 @@
-package org.blinksd.board;
+package org.blinksd.utils.layout;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -13,6 +13,9 @@ import android.os.Build;
 import android.view.KeyEvent;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.R;
+import org.blinksd.board.SettingMap;
+import org.blinksd.board.SuperBoard;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
@@ -228,6 +231,7 @@ public class LayoutUtils {
 				switch(ko.pressKeyCode){
 					case Keyboard.KEYCODE_SHIFT:
 						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_SHIFT));
+						sb.getKey(0,i,g).setStateCount(3);
 						break;
 					case Keyboard.KEYCODE_DELETE:
 						sb.setKeyDrawable(0,i,g, icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_DELETE));
@@ -244,7 +248,7 @@ public class LayoutUtils {
 						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_ENTER));
 						break;
 					case SuperBoard.KEYCODE_SWITCH_LANGUAGE:
-						sb.setKeyDrawable(0,i,g,R.drawable.sym_keyboard_language);
+						sb.setKeyDrawable(0,i,g, R.drawable.sym_keyboard_language);
 						break;
 					case SuperBoard.KEYCODE_OPEN_EMOJI_LAYOUT:
 						sb.setKeyDrawable(0,i,g,icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_EMOJI));

@@ -5,8 +5,8 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.blinksd.board.LayoutUtils;
-import org.blinksd.board.LayoutUtils.Language;
+import org.blinksd.utils.layout.LayoutUtils;
+import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.board.SettingMap;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ThemeUtils;
@@ -14,6 +14,7 @@ import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
 import org.blinksd.utils.dictionary.DictionaryDB;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.SpaceBarThemeUtils;
+import org.blinksd.utils.system.EmojiUtils;
 import org.superdroid.db.SuperDBHelper;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class SuperBoardApplication extends Application {
 	private static String fontPath = null;
 	private static IconThemeUtils icons;
 	private static SpaceBarThemeUtils spaceBars;
+	private static EmojiUtils emojiUtils;
 	private static List<ThemeHolder> themes;
 	private static DictionaryDB dictDB;
     
@@ -45,6 +47,7 @@ public class SuperBoardApplication extends Application {
 		appDB = SuperDBHelper.getDefault(getApplicationContext());
 		icons = new IconThemeUtils();
 		spaceBars = new SpaceBarThemeUtils();
+		emojiUtils = new EmojiUtils();
 		settingMap = new SettingMap();
 		fontPath = getApplication().getExternalCacheDir()+"/font.ttf";
 		getCustomFont(); // start to load custom Typeface
@@ -103,6 +106,10 @@ public class SuperBoardApplication extends Application {
 	
 	public static SpaceBarThemeUtils getSpaceBarStyles(){
 		return spaceBars;
+	}
+
+	public static EmojiUtils getEmojiUtils() {
+		return emojiUtils;
 	}
 	
 	public static Typeface getCustomFont(){

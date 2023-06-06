@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.utils.image.ImageUtils;
 

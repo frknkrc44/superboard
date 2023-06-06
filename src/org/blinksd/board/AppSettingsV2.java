@@ -11,8 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -30,6 +28,7 @@ import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.image.ImageUtils;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutCreator;
+import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.layout.SettingsCategorizedListView;
 import org.superdroid.db.SuperDBHelper;
 

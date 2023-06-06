@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.utils.layout.LayoutUtils;
 
 import java.util.ArrayList;
 

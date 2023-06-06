@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.utils.layout.LayoutUtils;
 import org.superdroid.db.SuperDBHelper;
 
 public class BoardPopup extends SuperBoard {

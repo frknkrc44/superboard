@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.board.LayoutUtils;
+import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.board.api.parcelables.IconThemeParcel;
 import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;

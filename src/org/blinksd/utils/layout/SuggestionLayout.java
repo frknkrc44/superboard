@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
-import org.blinksd.board.LayoutUtils;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.color.ColorUtils;
