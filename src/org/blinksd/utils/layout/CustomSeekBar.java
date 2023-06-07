@@ -23,7 +23,7 @@ class CustomSeekBar extends SeekBar {
 	CustomSeekBar(Context c){
 		super(c);
 		setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50),-2,0));
-		int p = SuperBoard.dp(4);
+		int p = DensityUtils.dpInt(4);
 		setPadding(p*4,p,p*4,p);
 		if(Build.VERSION.SDK_INT >= 21)
 			setSplitTrack(false);
@@ -31,8 +31,9 @@ class CustomSeekBar extends SeekBar {
 	}
 
 	void drawSeekBar(){
-		if(Build.VERSION.SDK_INT < 21){
-			Bitmap b = Bitmap.createBitmap(SuperBoard.dp(36),SuperBoard.dp(36),Bitmap.Config.ARGB_8888);
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+			int thumbSize = DensityUtils.dpInt(36);
+			Bitmap b = Bitmap.createBitmap(thumbSize, thumbSize, Bitmap.Config.ARGB_8888);
 			Canvas c = new Canvas(b);
 			Paint p = new Paint();
 			int color = 0xFFDEDEDE;
@@ -45,7 +46,7 @@ class CustomSeekBar extends SeekBar {
 			ld.setColorFilter(p.getColor(),PorterDuff.Mode.SRC_ATOP);
 			setProgressDrawable(ld);
 		} else {
-			int color = Build.VERSION.SDK_INT >= 31 
+			int color = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 				? getResources().getColor(android.R.color.system_accent1_200)
 				: 0xFFDEDEDE;
 			setThumbTintList(ColorStateList.valueOf(color));

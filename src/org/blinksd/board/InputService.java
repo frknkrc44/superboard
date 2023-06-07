@@ -5,8 +5,8 @@ import static android.media.AudioManager.FX_KEYPRESS_RETURN;
 import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
 import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.os.Build.VERSION.SDK_INT;
-import static org.blinksd.board.SuperBoard.KeyboardType;
-import static org.blinksd.board.SuperBoard.dp;
+import static org.blinksd.board.SuperBoard.KeyboardType;;
+import static org.blinksd.utils.layout.DensityUtils.mpInt;
 import static org.blinksd.utils.system.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.system.SystemUtils.detectNavbar;
 import static org.blinksd.utils.system.SystemUtils.isColorized;
@@ -303,8 +303,8 @@ public class InputService extends InputMethodService implements
 			ll = new LinearLayout(this);
 			ll.setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
 			ll.setOrientation(LinearLayout.VERTICAL);
-			sl = new SuggestionLayout(this);
-			sl.setLayoutParams(new FrameLayout.LayoutParams(-1, dp(56)));
+			sl = new SuggestionLayout(sb);
+			sl.setLayoutParams(new FrameLayout.LayoutParams(-1, mpInt(12)));
 			sl.setId(android.R.attr.shape);
 			// sl.setOnSuggestionSelectedListener(this);
 			// setCandidatesView(sl);
@@ -403,7 +403,7 @@ public class InputService extends InputMethodService implements
 			sb.setLongPressMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
 			sb.setKeyVibrateDuration(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
 			sb.setKeysTextColor(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR));
-			sb.setKeysTextSize(DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+			sb.setKeysTextSize(mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
 			sb.setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
 			sb.setIconSizeMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
 			sb.setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
@@ -629,6 +629,9 @@ public class InputService extends InputMethodService implements
 				po.hideCharacter();
 			}
 
+			if (sl != null) {
+				sl.retheme();
+			}
 			// sendCompletionRequest();
 		}
 

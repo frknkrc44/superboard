@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.inputmethodservice.Keyboard;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
+import org.blinksd.board.SuperBoard;
 import org.blinksd.utils.color.ColorUtils;
 import org.superdroid.db.SuperDBHelper;
 
@@ -39,9 +41,11 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
 	private final LinearLayout mQuickMenuLayout;
     // private LoadDictTask mLoadDictTask;
+	private final SuperBoard superBoard;
 	
-	public SuggestionLayout(Context context){
-		super(context);
+	public SuggestionLayout(SuperBoard superBoard){
+		super(superBoard.getContext());
+		Context context = superBoard.getContext();
 		mCompletionsLayout = new LinearLayout(context);
 		mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
 		HorizontalScrollView scroller = new HorizontalScrollView(context);
@@ -55,6 +59,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		mQuickMenuLayout.setVisibility(GONE);
 		mQuickMenuLayout.setGravity(Gravity.CENTER);
 		addView(mQuickMenuLayout);
+		this.superBoard = superBoard;
 		fillQuickMenu();
 	}
 	
@@ -121,8 +126,18 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
 	private void fillQuickMenu() {
 		addQMItem(1, R.drawable.arrow_left);
+		addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
 		addQMItem(3, R.drawable.more_control);
+		addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
 		addQMItem(2, R.drawable.arrow_right);
+	}
+
+	private void addQMItemStateful(int tag, String text) {
+		SuperBoard.Key key = superBoard.createKey(text, null);
+		superBoard.setPressEventForKey(key, tag, true);
+		key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
+		key.setStateCount(3);
+		mQuickMenuLayout.addView(key);
 	}
 
 	private void addQMItem(int tag, int drawableRes) {
@@ -213,28 +228,60 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		}
 
 		for (int i = 0;i < mQuickMenuLayout.getChildCount();i++) {
-			ImageButton btn = (ImageButton) mQuickMenuLayout.getChildAt(i);
+			View view = mQuickMenuLayout.getChildAt(i);
 			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
 			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-			Drawable keybg = LayoutUtils.getKeyBg(keyClr,keyPressClr,true);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-				btn.setBackground(keybg);
-			} else {
-				btn.setBackgroundDrawable(keybg);
-			}
+			Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				btn.setImageTintList(ColorStateList.valueOf(color));
-				btn.setBackgroundTintList(new ColorStateList(new int[][]{
-						{android.R.attr.state_enabled, android.R.attr.state_pressed},
-						{}
-				}, new int[]{
-						keyPressClr,
-						keyClr
-				}));
-			} else {
-				btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-				btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
+			if (view instanceof SuperBoard.Key) {
+				SuperBoard.Key key = (SuperBoard.Key) view;
+				key.setKeyItemColor(color);
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					key.setBackground(keyPressBg);
+				} else {
+					key.setBackgroundDrawable(keyPressBg);
+				}
+
+				int textSize = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE);
+				key.setKeyTextSize(textSize);
+
+				int shr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
+						shc = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_SHADOWCLR);
+				key.setKeyShadow(shr,shc);
+
+				key.setKeyImageVisible(key.isKeyIconSet());
+
+				switch (key.getNormalPressEvent().first) {
+					case SuperBoard.KEYCODE_TOGGLE_CTRL:
+						key.changeState(superBoard.getCtrlState());
+						break;
+					case SuperBoard.KEYCODE_TOGGLE_ALT:
+						key.changeState(superBoard.getAltState());
+						break;
+				}
+			} else if (view instanceof ImageButton) {
+				ImageButton btn = (ImageButton) view;
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+					btn.setBackground(keyPressBg);
+				} else {
+					btn.setBackgroundDrawable(keyPressBg);
+				}
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					btn.setImageTintList(ColorStateList.valueOf(color));
+					btn.setBackgroundTintList(new ColorStateList(new int[][]{
+							{android.R.attr.state_enabled, android.R.attr.state_pressed},
+							{}
+					}, new int[]{
+							keyPressClr,
+							keyClr
+					}));
+				} else {
+					btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+					btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
+				}
 			}
 		}
 	}

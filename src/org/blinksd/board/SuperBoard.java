@@ -25,6 +25,9 @@ import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Pair;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,11 +43,14 @@ import android.widget.TextView;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.layout.DensityUtils;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 public class SuperBoard extends FrameLayout implements OnTouchListener {
 
-	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0, shclr = -1, txtclr = Color.WHITE, txts = 0, vib = 0, mult = 1, act = MotionEvent.ACTION_UP, iconmulti = 1;
+	protected int selected = 0, shift = 0, keyclr = -1, hp = 40, wp = 100, y, shrad = 0,
+			shclr = -1, txtclr = Color.WHITE, txts = 0, vib = 0, mult = 1,
+			act = MotionEvent.ACTION_UP, iconmulti = 1, ctrl = 0, alt = 0;
 	protected float txtsze = -1;
 	protected static final int TAG_LP = R.string.app_name, TAG_NP = R.string.hello_world;
 	private boolean clear = false;
@@ -53,18 +59,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	private boolean ppreview = false;
 	protected Drawable keybg = null;
 	private final String KEY_REPEAT = "10RePeAt01";
-	private String[] x;
 	private Typeface cFont = Typeface.DEFAULT;
 	
 	public static final int KEYCODE_CLOSE_KEYBOARD = -100;
 	public static final int KEYCODE_SWITCH_LANGUAGE = -101;
 	public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
+	public static final int KEYCODE_TOGGLE_CTRL = -103;
+	public static final int KEYCODE_TOGGLE_ALT = -104;
 	
 	public static final int SHIFT_OFF = 0;
 	public static final int SHIFT_ON = 1;
 	public static final int SHIFT_LOCKED = 2;
 
-	private MyHandler mHandler = new MyHandler();
+	private final MyHandler mHandler = new MyHandler();
 
 	private class MyHandler extends Handler {
 		private MyHandler() {
@@ -90,7 +97,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			removeAndSendMessage(obtainMessage(msgId, obj));
 		}
 
-		public void obtainAndSendMessageDelayed(int msgId, Object obj, long delay) {
+		public void obtainAndSendMessageDelayed(int msgId, View obj, long delay) {
 			removeAndSendMessageDelayed(obtainMessage(msgId, obj), delay);
 		}
 
@@ -116,9 +123,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 								onPopupEvent();
 								removeAndSendEmptyMessage(3);
 							} else if(isHasLongPressEvent(v)){
-								String[] a = v.getTag(TAG_LP).toString().split(":");
-								y = Integer.parseInt(a[0]);
-								if(Boolean.parseBoolean(a[1])){
+								Pair<Integer, Boolean> a = ((Key) v).getLongPressEvent();
+								y = a.first;
+								if(a.second){
 									sendKeyEvent(y);
 								} else {
 									commitText((char)y+"");
@@ -143,7 +150,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 						sendDefaultKeyboardEvent(v);
 						if(isRepeat){
 							Message n = obtainMessage(1,msg.obj);
-							sendMessageDelayed(n, ((mult>1?15:20)*mult)*(lng?1:20));
+							sendMessageDelayed(n, ((long) (mult > 1 ? 15 : 20) *mult)*(lng?1:20));
 							if(!lng) lng = true;
 						} else {
 							removeAndSendEmptyMessage(3);
@@ -163,7 +170,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					break;
 			}
 		}
-	};
+	}
 	
 	private final Vibrator vb;
 
@@ -224,10 +231,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	
 	public void setPadding(int p){
 		setPadding(p,p,p,p);
-	}
-
-	public static int dp(int px){
-		return (int)(Resources.getSystem().getDisplayMetrics().density * px);
 	}
 	
 	public void setCustomFont(Typeface type){
@@ -657,11 +660,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	
 	public void addKeyToRow(int keyboardIndex, int rowIndex, String key, String subKey){
 		Row r = getRow(keyboardIndex, rowIndex);
+		Key k = createKey(key, subKey);
+		r.addKey(k);
+		r.setKeyWidths();
+	}
+
+	public Key createKey(String key, String subKey) {
 		Key k = new Key(getContext());
 		k.setText(key);
 		k.setSubText(subKey);
-		r.addKey(k);
-		r.setKeyWidths();
+		return k;
 	}
 	
 	public void addRow(int keyboardIndex,String[] keys){
@@ -693,8 +701,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		beforeKeyboardEvent(v);
 
 		if(v.getTag(TAG_NP) != null){
-			x = v.getTag(TAG_NP).toString().split(":");
-			switch(y = Integer.parseInt(x[0])){
+			Pair<Integer, Boolean> currentKey = v.getNormalPressEvent();
+			switch(y = currentKey.first){
+				case KEYCODE_TOGGLE_CTRL:
+					setCtrlState();
+					break;
+				case KEYCODE_TOGGLE_ALT:
+					setAltState();
+					break;
 				case Keyboard.KEYCODE_SHIFT:
 					setShiftState();
 					break;
@@ -703,8 +717,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					break;
 				case Keyboard.KEYCODE_MODE_CHANGE:
 					setEnabledLayout(selected==0?findSymbolKeyboardIndex():findNormalKeyboardIndex());
-					if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
-						updateKeyState();
+					updateKeyState();
 					break;
 				case Keyboard.KEYCODE_ALT:
 					setEnabledLayout((selected + 1) % getChildCount());
@@ -728,22 +741,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					}
 					break;
 				default:
-					if(Boolean.parseBoolean(x[1])){
+					if(currentKey.second){
 						sendKeyEvent(y);
 					} else {
 						commitText((char)y+"");
 					}
 
-					if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
-						updateKeyState();
+					updateKeyState();
 					break;
 			}
 			playSound(y);
 		} else {
 			commitText(v.getText().toString());
-
-			if(getEnabledLayoutIndex() == findNormalKeyboardIndex() && shift != 2)
-				updateKeyState();
+			updateKeyState();
 
 			playSound(0);
 		}
@@ -773,8 +783,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	 */
 	public void fakeKeyboardEvent(Key v){
 		if(v.getTag(TAG_NP) != null){
-			x = v.getTag(TAG_NP).toString().split(":");
-			y = Integer.parseInt(x[0]);
+			Pair<Integer, Boolean> currentKey = v.getNormalPressEvent();
+			y = currentKey.first;
 			playSound(y);
 			return;
 		}
@@ -801,11 +811,82 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			case KEYCODE_OPEN_EMOJI_LAYOUT:
 				openEmojiLayout();
 				break;
+			case KEYCODE_TOGGLE_CTRL:
+			case KEYCODE_TOGGLE_ALT:
+				break;
 			default:
-				int[] actions = {MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP};
-				for (int action : actions)
-					getCurrentIC().sendKeyEvent(new KeyEvent(action,code));	
+				int metaState = 0;
+
+				if (getCtrlState() > 0) {
+					metaState |= KeyEvent.META_CTRL_LEFT_ON | KeyEvent.META_CTRL_ON;
+					sendCtrl(true);
+				}
+
+				if (getAltState() > 0) {
+					metaState |= KeyEvent.META_ALT_LEFT_ON | KeyEvent.META_ALT_ON;
+					sendAlt(true);
+				}
+
+				sendKeyUpDown(code, metaState);
+
+				if (getCtrlState() > 0) {
+					sendCtrl(false);
+				}
+
+				if (getAltState() > 0) {
+					sendAlt(false);
+				}
 		}
+	}
+
+	private void sendCtrl(boolean down) {
+		int metaState = KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON;
+		if (down) {
+			sendKeyDown(KeyEvent.KEYCODE_CTRL_LEFT, metaState);
+		} else {
+			sendKeyUp(KeyEvent.KEYCODE_CTRL_LEFT, metaState);
+		}
+	}
+
+	private void sendAlt(boolean down) {
+		int metaState = KeyEvent.META_ALT_ON | KeyEvent.META_ALT_LEFT_ON;
+		if (down) {
+			sendKeyDown(KeyEvent.KEYCODE_ALT_LEFT, metaState);
+		} else {
+			sendKeyUp(KeyEvent.KEYCODE_ALT_LEFT, metaState);
+		}
+	}
+
+	private void sendKeyUpDown(int code) {
+		int metaState = 0;
+
+		if (getCtrlState() > 0) {
+			metaState |= KeyEvent.META_CTRL_LEFT_ON | KeyEvent.META_CTRL_ON;
+		}
+
+		if (getAltState() > 0) {
+			metaState |= KeyEvent.META_ALT_LEFT_ON | KeyEvent.META_ALT_ON;
+		}
+
+		sendKeyUpDown(code, metaState);
+	}
+
+	private void sendKeyUpDown(int code, int metaState) {
+		sendKeyUp(code, metaState);
+		sendKeyDown(code, metaState);
+	}
+
+	private void sendKeyUp(int code, int metaState) {
+		sendKeyAction(code, KeyEvent.ACTION_UP, metaState);
+	}
+
+	private void sendKeyDown(int code, int metaState) {
+		sendKeyAction(code, KeyEvent.ACTION_DOWN, metaState);
+	}
+
+	private void sendKeyAction(int code, int action, int metaState) {
+		KeyEvent event = new KeyEvent(0, 0, action, code, 0, metaState);
+		getCurrentIC().sendKeyEvent(event);
 	}
 	
 	private void performEditorAction(int action){
@@ -814,8 +895,79 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
 	public final void commitText(String text){
 		if(text == null) return;
+		boolean modifiersEnabled = false;
+
+		if (getCtrlState() > 0) {
+			sendCtrl(true);
+			modifiersEnabled = true;
+		}
+
+		if (getAltState() > 0) {
+			sendAlt(true);
+			modifiersEnabled = true;
+		}
+
+		if (modifiersEnabled) {
+			if (text.length() < 2 && Charset.forName("US-ASCII").newEncoder().canEncode(text)) {
+				// Copied from https://stackoverflow.com/a/31625638
+				KeyCharacterMap charMap;
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
+				else
+					charMap = KeyCharacterMap.load(KeyCharacterMap.ALPHA);
+
+				sendKeyUpDown(charMap.getEvents(new char[]{text.charAt(0)})[0].getKeyCode());
+			} else {
+				sendText(text);
+			}
+		} else {
+			sendText(text);
+		}
+
+		if (getCtrlState() > 0) {
+			sendCtrl(false);
+		}
+
+		if (getAltState() > 0) {
+			sendAlt(false);
+		}
+	}
+
+	private void sendText(String text) {
 		getCurrentIC().commitText(text,text.length());
 		getCurrentIC().finishComposingText();
+	}
+
+	public int getCtrlState() {
+		return ctrl;
+	}
+
+	private void setCtrlState() {
+		setCtrlState((ctrl+1) % 3);
+	}
+
+	public void setCtrlState(int state) {
+		if (state >= 3 || state < 0) {
+			state = 0;
+		}
+
+		ctrl = state;
+	}
+
+	public int getAltState() {
+		return alt;
+	}
+
+	private void setAltState() {
+		setAltState((alt+1) % 3);
+	}
+
+	public void setAltState(int state) {
+		if (state >= 3 || state < 0) {
+			state = 0;
+		}
+
+		alt = state;
 	}
 	
 	public int getShiftState(){
@@ -850,8 +1002,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					t.setSelected(false);
 				} else {
 					if (t.getTag(TAG_NP) != null) {
-						String[] values = t.getTag(TAG_NP).toString().split(":");
-						int keyEvent = Integer.parseInt(values[0]);
+						Pair<Integer, Boolean> values = t.getNormalPressEvent();
+						int keyEvent = values.first;
 						if (keyEvent == Keyboard.KEYCODE_SHIFT) {
 							t.changeState(state);
 						}
@@ -892,6 +1044,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	int action = 0;
 
 	public void updateKeyState(InputMethodService s){
+		if (ctrl != 2) {
+			setCtrlState(0);
+		}
+
+		if (alt != 2) {
+			setAltState(0);
+		}
+
+		if (getEnabledLayoutIndex() != findNormalKeyboardIndex() || shift == 2) {
+			return;
+		}
+
+
 		EditorInfo ei = s.getCurrentInputEditorInfo();
 		
 		action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
@@ -958,7 +1123,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			for(int g = 0;g < r.getChildCount();g++){
 				Key t = (Key) r.getChildAt(g);
 				if((t.getText() != null && t.getText().charAt(0) == keyAction) ||
-					(t.getTag(TAG_NP) != null && Integer.parseInt(t.getTag(TAG_NP).toString().split(":")[0]) == keyAction)){
+					(t.getTag(TAG_NP) != null && t.getNormalPressEvent().first == keyAction)){
 					return t;
 				}
 			}
@@ -979,15 +1144,23 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 	}
 	
 	public void setPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode, boolean isEvent){
-		getKey(keyboardIndex, rowIndex, keyIndex).setTag(TAG_NP,keyCode+":"+isEvent);
+		setPressEventForKey(getKey(keyboardIndex, rowIndex, keyIndex), keyCode, isEvent);
+	}
+
+	public void setPressEventForKey(Key key, int keyCode, boolean isEvent) {
+		key.setTag(TAG_NP, new Pair<>(keyCode, isEvent));
 	}
 	
 	public void setLongPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode){
 		setLongPressEventForKey(keyboardIndex, rowIndex, keyIndex, keyCode, true);
 	}
-	
+
 	public void setLongPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode, boolean isEvent){
-		getKey(keyboardIndex, rowIndex, keyIndex).setTag(TAG_LP,keyCode+":"+isEvent);
+		setLongPressEventForKey(getKey(keyboardIndex, rowIndex, keyIndex), keyCode, isEvent);
+	}
+
+	public void setLongPressEventForKey(Key key, int keyCode, boolean isEvent){
+		key.setTag(TAG_LP, new Pair<>(keyCode, isEvent));
 	}
 	
 	public void setDisablePopup(boolean val){
@@ -1070,7 +1243,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		ImageView icon;
 		View state;
 		protected int shr = 0, shc = 0, txtst = 0;
-		private int stateCount = 1, currentState = 1;
+		private int stateCount = 1, currentState = 0;
 
 		public boolean isKeyIconSet(){
 			return icon.getDrawable() != null;
@@ -1084,7 +1257,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			return keyclr;
 		}
 
-		Key(Context context){
+		protected Key(Context context){
 			super(context);
 			setLayoutParams(new LinearLayout.LayoutParams(-1,-1,1));
 			label = new TextView(context);
@@ -1117,6 +1290,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			setOnTouchListener(SuperBoard.this);
 		}
 
+		public Pair<Integer, Boolean> getNormalPressEvent() {
+			return (Pair<Integer, Boolean>) getTag(TAG_NP);
+		}
+
+		public Pair<Integer, Boolean> getLongPressEvent() {
+			return (Pair<Integer, Boolean>) getTag(TAG_LP);
+		}
+
 		public void setStateCount(int stateCount) {
 			if (stateCount < 1) {
 				return;
@@ -1147,13 +1328,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 
 		public void changeState(int newState) {
+			if (state == null) {
+				return;
+			}
+
 			if (newState >= stateCount) {
 				return;
 			}
 
 			currentState = newState;
-			state.getBackground().setAlpha((int)(255*(float)currentState/Math.max(1, stateCount-1)));
+
 			GradientDrawable gradientDrawable = (GradientDrawable) state.getBackground();
+			gradientDrawable.setAlpha((int)(255*(float)currentState/Math.max(1, stateCount-1)));
 			gradientDrawable.setColor(txtclr);
 		}
 
@@ -1217,7 +1403,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			label.setHint(cs);
 		}
 
-		private void setKeyTextSize(float size){
+		public void setKeyTextSize(float size){
 			label.setTextSize(txtsze=size);
 			sublabel.setTextSize(label.getTextSize() / 3);
 			ViewGroup.LayoutParams vp = icon.getLayoutParams();
@@ -1225,7 +1411,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			vp.height = (int)(size*iconmulti);
 		}
 
-		private void setKeyShadow(int radius, int color){
+		public void setKeyShadow(int radius, int color){
 			label.setShadowLayer(shr=radius,0,0,shc=color);
 		}
 
