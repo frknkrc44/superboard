@@ -30,6 +30,7 @@ public class SetupActivityV2 extends Activity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();
     int currentPage = 0;
+    boolean selectedCheckerRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,14 @@ public class SetupActivityV2 extends Activity {
                         this, R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_select,
                 R.string.wizard_selectbtn,
-                v -> v.post(new ImeSelectedCheckerRunnable()),
+                v -> {
+                    ((InputMethodManager)getSystemService(
+                            Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
+
+                    if (!selectedCheckerRunning) {
+                        v.post(new ImeSelectedCheckerRunnable());
+                    }
+                },
                 false,
                 true
         ));
@@ -202,15 +210,15 @@ public class SetupActivityV2 extends Activity {
         @Override
         public void run() {
             if(isInputMethodNotSelected()) {
-                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
-                findViewById(android.R.id.content).postDelayed(this, 2000);
+                selectedCheckerRunning = true;
+                findViewById(android.R.id.content).postDelayed(this, 500);
                 return;
             }
 
             changePage(currentPage + 1);
+            selectedCheckerRunning = false;
         }
     }
-
     private class PageContent {
         private final Drawable image;
         private final String text;
