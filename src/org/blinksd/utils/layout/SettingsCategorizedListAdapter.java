@@ -18,13 +18,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.AppSettingsV2;
@@ -225,7 +225,6 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		int pad = (int)(getListPreferredItemHeight() / 4);
 		boolean val = getAppDB().getBoolean(key,(boolean) getSettings().getDefaults(key));
 
-
 		if(Build.VERSION.SDK_INT >= 21) {
 			YSwitch swtch = LayoutCreator.createFilledYSwitch(AbsListView.class,mContext,getTranslation(key),val,switchListener);
 			swtch.setMinHeight((int) getListPreferredItemHeight());
@@ -272,9 +271,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter{
 		tv.setText(getTranslation(key));
 		tv.setSingleLine();
 		ll.addView(tv);
-		ToggleButton tb = new ToggleButton(mContext);
-		tb.setTextOff("");
-		tb.setTextOn("");
+		CheckBox tb = new CheckBox(mContext);
 		tb.setLayoutParams(new LinearLayout.LayoutParams(-2, -2, 0));
 		tb.setChecked(val);
 		tb.setPadding(pad,0,pad,0);

@@ -902,7 +902,7 @@ public class YSwitch extends YCompoundButton {
         // recursively with a different value, so load the REAL value...
         checked = isChecked();
 
-        if (isAttachedToWindow() && isLaidOut()) {
+        if ((isAttachedToWindow() && isLaidOut()) && SDK_INT >= LOLLIPOP) {
             animateThumbToCheckedState(checked);
         } else {
             // Immediately move the thumb to the new position.
