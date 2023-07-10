@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.inputmethodservice.Keyboard;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;

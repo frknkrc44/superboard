@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoard;
 
 import java.lang.reflect.Field;
 

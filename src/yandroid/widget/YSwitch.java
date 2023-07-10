@@ -19,12 +19,12 @@ package yandroid.widget;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.N;
 
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -859,20 +859,14 @@ public class YSwitch extends YCompoundButton {
         cancelSuperTouch(ev);
     }
 
+    @TargetApi(N)
     private void animateThumbToCheckedState(boolean newCheckedState) {
         final float targetPosition = newCheckedState ? 1 : 0;
-        if (SDK_INT >= ICE_CREAM_SANDWICH) {
-            mPositionAnimator = ObjectAnimator.ofFloat(this,
-                    SDK_INT >= N
-                            ? PropertyUtils.THUMB_POS
-                            : PropertyUtils.THUMB_POS_COMPAT, targetPosition);
-            mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
-            if (SDK_INT >= JELLY_BEAN_MR2) {
-                mPositionAnimator.setAutoCancel(true);
-            }
-            mPositionAnimator.start();
-        }
-
+        mPositionAnimator = ObjectAnimator.ofFloat(this,
+                PropertyUtils.THUMB_POS, targetPosition);
+        mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
+        mPositionAnimator.setAutoCancel(true);
+        mPositionAnimator.start();
     }
 
     private void cancelPositionAnimator() {

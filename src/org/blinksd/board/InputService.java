@@ -5,7 +5,7 @@ import static android.media.AudioManager.FX_KEYPRESS_RETURN;
 import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
 import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.os.Build.VERSION.SDK_INT;
-import static org.blinksd.board.SuperBoard.KeyboardType;;
+import static org.blinksd.board.SuperBoard.KeyboardType;
 import static org.blinksd.utils.layout.DensityUtils.mpInt;
 import static org.blinksd.utils.system.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.system.SystemUtils.detectNavbar;
