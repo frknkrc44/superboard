@@ -58,7 +58,8 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	SET_THEME_PRESET = "keyboard_theme_preset",
 	SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi",
 	SET_IMPORT_DICT_PACK = "import_dict_pack",
-	SET_DISABLE_TOP_BAR = "disable_top_bar";
+	SET_DISABLE_TOP_BAR = "disable_top_bar",
+	SET_DISABLE_NUMBER_ROW = "disable_number_row";
 
 	public SettingMap(){
 		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.STR_SELECTOR);
@@ -79,6 +80,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 		putGeneral(SET_DISABLE_REPEAT,SettingType.BOOL);
 		putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL);
 		putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
+		putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL);
 		if(Build.VERSION.SDK_INT >= 31)
 			putTheming(SET_USE_MONET, SettingType.BOOL);
 		putTheming(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
@@ -227,6 +229,8 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 					return Defaults.DISABLE_SUGGESTIONS;
 				case SET_DISABLE_TOP_BAR:
 					return Defaults.DISABLE_TOP_BAR;
+				case SET_DISABLE_NUMBER_ROW:
+					return Defaults.DISABLE_NUMBER_ROW;
 				case SET_USE_MONET:
 					return Defaults.USE_MONET;
 				case SET_ENABLE_POPUP_PREVIEW:

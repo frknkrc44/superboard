@@ -24,7 +24,7 @@ public class Defaults {
 	public static final int KEY_FONT_TYPE = 0;
 	public static final int ICON_SIZE_MULTIPLIER = 3;
 	
-	public static final String KEYBOARD_LANGUAGE_KEY = "tr_TR_Q";
+	public static final String KEYBOARD_LANGUAGE_KEY = "en_US";
 	public static final String KEYBOARD_SPACETYPE = "theme";
 	public static final String ICON_THEME = "theme_default";
 	public static final String THEME_PRESET = "default";
@@ -37,9 +37,10 @@ public class Defaults {
 	public static final boolean COLORIZE_NAVBAR_ALT = false;
 	public static final boolean DISABLE_POPUP = false;
 	public static final boolean DISABLE_REPEAT = false;
-	public static final boolean DISABLE_SUGGESTIONS = false;
+	public static final boolean DISABLE_SUGGESTIONS = true;
 	public static final boolean USE_MONET = false;
 	public static final boolean ENABLE_POPUP_PREVIEW = false;
 	public static final boolean KILL_BACKGROUND = false;
 	public static final boolean DISABLE_TOP_BAR = false;
+	public static final boolean DISABLE_NUMBER_ROW = false;
 }

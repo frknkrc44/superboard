@@ -2,6 +2,7 @@ package org.blinksd.utils.system;
 
 import static android.os.Build.VERSION.SDK_INT;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -64,6 +65,7 @@ public class SystemUtils {
 			KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
 	}
 
+	@SuppressLint("ResourceType")
 	public static View createNavbarLayout(Context ctx, int color){
 		View v = new View(ctx);
 		v.setId(android.R.attr.gravity);
@@ -123,7 +125,11 @@ public class SystemUtils {
 	}
 
 	private static boolean isTablet(Context ctx){
-		return ctx.getResources().getConfiguration().smallestScreenWidthDp >= 600;
+		if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			return ctx.getResources().getConfiguration().smallestScreenWidthDp >= 600;
+		}
+
+		return false;
 	}
 	
 	private static boolean isLand(Context ctx){

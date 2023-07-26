@@ -29,6 +29,7 @@
 	<string name="settings_disable_repeat">Disable character repeating on long press</string>
 	<string name="settings_disable_top_bar">Disable top bar</string>
 	<string name="settings_disable_suggestions">Disable word suggestions</string>
+	<string name="settings_disable_number_row">Disable number row (beta)</string>
 	<string name="settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet">Use monet colors (beta)</string>
 	<string name="settings_detect_capslock">Detect capslock status automatically</string>

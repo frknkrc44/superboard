@@ -39,8 +39,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
 	private final LinearLayout mQuickMenuLayout;
-    // private LoadDictTask mLoadDictTask;
-	private final SuperBoard superBoard;
+	private SuperBoard superBoard;
 	
 	public SuggestionLayout(SuperBoard superBoard){
 		super(superBoard.getContext());
@@ -71,43 +70,29 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	}
 	
 	public void setCompletion(ExtractedText text, String lang){
-		mCompletionsLayout.removeAllViews();
-
-		if(text == null)
-			return;
-			
-		setCompletionText(text.text, lang);
+		setCompletionText(text == null ? "" : text.text, lang);
 	}
 	
-	public void setCompletionText(CharSequence text, final String lang){
+	public void setCompletionText(CharSequence text, String lang){
 		mCompletionsLayout.removeAllViews();
 		
 		if(text == null)
 			text = "";
-            
-        /*    
-        if(text.length() < 1) {
-            SuperBoardApplication.mainHandler.postDelayed(() -> {
-                for(LoadDictTask task : mLoadDictTasks){
-				    task.cancel(true);
-				    mLoadDictTasks.remove(task);
-		        }
-                mCompletionsLayout.removeAllViews();
-            }, 300);
-            return;
-        }
-        */
+
+		if (lang == null)
+			lang = this.superBoard.getKeyboardLanguage().getLanguage();
         
 		String str = text.toString().trim();
 		mCompleteText = str;
 
-		toggleQuickMenu(str.length() < 1);
+		if (str.length() < 1) {
+			toggleQuickMenu(false);
+		}
 
 		str = str.substring(str.lastIndexOf(' ')+1);
 		str = str.substring(str.lastIndexOf('\n')+1);
 		mLastText = str;
 		LoadDictTask task = new LoadDictTask();
-        // mLoadDictTask = task;
 		mLoadDictTasks.add(task);
 		task.execute(lang, str);
 	}
@@ -127,6 +112,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		addQMItem(1, R.drawable.arrow_left);
 		addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
 		addQMItem(3, R.drawable.more_control);
+		addQMItem(4, R.drawable.number);
 		addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
 		addQMItem(2, R.drawable.arrow_right);
 	}
@@ -135,7 +121,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		SuperBoard.Key key = superBoard.createKey(text, null);
 		superBoard.setPressEventForKey(key, tag, true);
 		key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
-		key.setStateCount(3);
+		key.setStateCount(2);
 		mQuickMenuLayout.addView(key);
 	}
 
@@ -146,9 +132,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		btn.setTag(tag);
 		btn.setOnClickListener(mOnQMClickListener);
 		int color = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR);
-		int pad = DensityUtils.dpInt(8);
+		int pad = DensityUtils.dpInt(16);
 		btn.setScaleType(ImageView.ScaleType.FIT_CENTER);
-		btn.setPadding(pad, pad, pad, pad);
+		btn.setPadding(pad / 2, pad, pad / 2, pad);
 		int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
 		int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
 		Drawable keybg = LayoutUtils.getKeyBg(keyClr,keyPressClr,true);
@@ -228,8 +214,8 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
 		for (int i = 0;i < mQuickMenuLayout.getChildCount();i++) {
 			View view = mQuickMenuLayout.getChildAt(i);
-			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
-			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+			int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_BGCLR);
+			int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
 			Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
 
 			if (view instanceof SuperBoard.Key) {
@@ -261,6 +247,11 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 				}
 			} else if (view instanceof ImageButton) {
 				ImageButton btn = (ImageButton) view;
+
+				if ((int) btn.getTag() == 4) {
+					boolean numDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+					btn.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
+				}
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 					btn.setBackground(keyPressBg);
@@ -295,12 +286,10 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 	private class LoadDictTask {
         public void execute(String... args) {
             onPreExecute();
-            SuperBoardApplication.mainHandler.postDelayed(() -> {
-                mThreadPool.execute(() -> {
-                    List<String> out = doInBackground(args);
-                    SuperBoardApplication.mainHandler.post(() -> onPostExecute(out));
-                });
-            }, 100);
+			mThreadPool.execute(() -> {
+				List<String> out = doInBackground(args);
+				SuperBoardApplication.mainHandler.post(() -> onPostExecute(out));
+			});
         }
         
         private void cancel(boolean terminate) {
@@ -310,15 +299,6 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         }
         
 		protected void onPreExecute(){
-            /*
-            try {
-                if (mLoadDictTask != null) {
-                    mLoadDictTask.cancel(true);
-                    mLoadDictTask = this;
-                }
-            } catch (Throwable t) {}
-            */
-            
 			try {
 				for(LoadDictTask task : mLoadDictTasks){
                     if(task != this) {
@@ -326,20 +306,22 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 					    mLoadDictTasks.remove(task);
                     }
 				}
-			} catch(Throwable t){}
+			} catch(Throwable ignored){}
 		}
 
 		protected List<String> doInBackground(String[] p1){
-			return SuperBoardApplication.getDictDB().getQuery(p1[0].toLowerCase(), p1[1].toLowerCase());
+			String lang = p1[0].toLowerCase();
+			String prefix = p1[1].toLowerCase();
+			return SuperBoardApplication.getDictDB().getQuery(lang, prefix);
 		}
 
 		protected void onPostExecute(final List<String> result){
-			toggleQuickMenu(result.size() < 1);
-
             if (!mLoadDictTasks.contains(this)) {
                 return;
             }
-            
+
+			toggleQuickMenu(result.size() < 1);
+
 			mCompletionsLayout.removeAllViews();
 			
 			for(String item : result)
@@ -350,7 +332,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 		}
 	}
 
-	private OnClickListener mOnQMClickListener = (v) -> {
+	private final OnClickListener mOnQMClickListener = (v) -> {
 		assert (mOnQuickMenuItemClickListener != null)
 				: "OnQuickMenuItemClickListener is not specified";
 
@@ -363,6 +345,13 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 				break;
 			case 3:
 				mOnQuickMenuItemClickListener.onQuickMenuItemClick(KeyEvent.KEYCODE_NUM);
+				break;
+			case 4:
+				superBoard.setEnabledLayout(
+						superBoard.isNumberKeyboard(superBoard.getCurrentKeyboardIndex())
+						? SuperBoard.KeyboardType.TEXT
+						: SuperBoard.KeyboardType.NUMBER
+				);
 				break;
 		}
 	};

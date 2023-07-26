@@ -259,6 +259,7 @@ public class InputService extends InputMethodService implements
 			sb.setPressEventForKey(3,-1,4,KeyEvent.KEYCODE_DPAD_DOWN);
 			sb.setPressEventForKey(3,-1,5,KeyEvent.KEYCODE_DPAD_RIGHT);
 			sb.setPressEventForKey(3,-1,7,KeyEvent.KEYCODE_PASTE);
+			sb.setDisableModifierForKeyboard(3, true);
 			
 			for(int i = 2;i < 6;i++)
 				sb.setKeyRepeat(3,-1,i);
@@ -426,6 +427,7 @@ public class InputService extends InputMethodService implements
 			sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
 			boolean sugDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
 			boolean topBarDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
+			boolean numDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
 			sl.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
 			sl.setOnSuggestionSelectedListener(sugDisabled ? null : this);
 			sl.setOnQuickMenuItemClickListener(topBarDisabled ? null : this);
@@ -439,13 +441,17 @@ public class InputService extends InputMethodService implements
 				for(int g = 0;g < subKOpt.size();g++){
 					KeyOptions ko = subKOpt.get(g);
 					if(ko.darkerKeyTint){
-						sb.setKeyTintColor(sb.getKey(0,i,g),y,yp);
+						sb.setKeyTintColor(sb.getKey(0, i, g), y, yp);
 					}
+
 					if(ko.pressKeyCode == Keyboard.KEYCODE_DONE){
-						sb.setKeyTintColor(sb.getKey(0,i,g),z,zp);
+						sb.setKeyTintColor(sb.getKey(0, i, g), z, zp);
 					}
 				}
 			}
+
+			sb.getRow(0, 0).setVisibility(numDisabled ? View.GONE : View.VISIBLE);
+
 			sb.setKeyboardLanguage(cl.language);
 			adjustNavbar(c);
 			if(emoji != null){

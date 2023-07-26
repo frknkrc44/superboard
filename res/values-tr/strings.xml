@@ -23,7 +23,8 @@
 	<string name="settings_colorize_navbar_alt">Gezinme çubuğuna renk uygula (Android 9+)</string>
 	<string name="settings_disable_popup">Açılır pencereleri kapat</string>
 	<string name="settings_disable_repeat">Basılı tutunca karakter tekrarlamayı kapat</string>
-	<string name="settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
+    <string name="settings_disable_number_row">Numara satırını devre dışı bırak (beta)</string>
+    <string name="settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
 	<string name="settings_disable_top_bar">Üst barı devre dışı bırak</string>
 	<string name="settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
 	<string name="settings_use_monet">Sistem renklerini kullan (beta)</string>

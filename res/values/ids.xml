@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="gradient_selector" type="id" />
+    <item name="disable_type_modifier" type="id" />
+    <item name="key_repeat" type="id" />
+    <item name="key_np" type="id" />
+    <item name="key_lp" type="id" />
 </resources>
