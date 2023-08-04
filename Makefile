@@ -57,8 +57,8 @@ generate:
 	$(KEYTOOL) -genkey -noprompt -keyalg RSA -alias $(KEYALIAS) -dname "CN=Hostname, OU=OrganizationalUnit, O=Organization, L=City, S=State, C=Country" -keystore $(KEYFILE) -storepass $(STOREPASS) -keypass $(KEYPASS) -validity 3650
 # clear:
 # 	rm -rf bin gen
-# install:
-# 	$(ADB) install -r bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk
+install:
+	$(ADB) install -r app/build/outputs/apk/*/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk
 # mkdirs:
 # 	mkdir aidl 2> /dev/null || true
 # 	mkdir bin 2> /dev/null || true

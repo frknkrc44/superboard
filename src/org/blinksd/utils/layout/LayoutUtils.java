@@ -313,9 +313,13 @@ public class LayoutUtils {
 		return gd;
 	}
 
-	public static Drawable getSelectableItemBg(Context context, int textColor){
+	public static Drawable getSelectableItemBg(Context context, int textColor) {
+		return getSelectableItemBg(context, textColor, false);
+	}
+
+	public static Drawable getSelectableItemBg(Context context, int textColor, boolean darker){
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			return null;
+			return getCircleButtonBackground(true);
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			int resId = context.getTheme().obtainStyledAttributes(
@@ -323,20 +327,16 @@ public class LayoutUtils {
 			).getResourceId(0,0);
 			Drawable d = getDrawableCompat(context, resId, null);
 			int color = textColor - 0x88000000;
-			try {
-				if(d.getClass().getSimpleName().contains("RippleDrawable")){
-					Method m = d.getClass().getDeclaredMethod("setColor", ColorStateList.class);
-					m.setAccessible(true);
-					m.invoke(d,new ColorStateList(new int[][]{new int[]{android.R.attr.state_enabled}},new int[]{color}));
-				} else {
-					d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-				}
-			} catch(Throwable ignored) {}
+			d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 			return d;
 		}
 
 		GradientDrawable content = new GradientDrawable();
-		content.setColor(ColorUtils.getAccentColor());
+		int accent = ColorUtils.getAccentColor();
+		if (darker) {
+			accent = ColorUtils.getDarkerColor(accent);
+		}
+		content.setColor(accent);
 		int padding = DensityUtils.dpInt(16);
 		content.setCornerRadius(padding);
 

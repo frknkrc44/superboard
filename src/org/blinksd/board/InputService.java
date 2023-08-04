@@ -153,8 +153,10 @@ public class InputService extends InputMethodService implements
 	@Override
 	public void onFinishInput(){
 		super.onFinishInput();
-		if(sb != null)
+		if(sb != null) {
 			sb.updateKeyState(this);
+			sb.resetToNormalLayout();
+		}
 		
 		if(po != null){
 			po.showPopup(false);
@@ -581,13 +583,10 @@ public class InputService extends InputMethodService implements
 	@Override
 	public void onQuickMenuItemClick(int action) {
 		if (sb != null) {
-			switch (action) {
-				case KeyEvent.KEYCODE_NUM:
-					sb.setEnabledLayout(sb.getEnabledLayoutIndex() != 3 ? 3 : 0);
-					break;
-				default:
-					sb.sendKeyEvent(action);
-					break;
+			if (action == KeyEvent.KEYCODE_NUM) {
+				sb.setEnabledLayout(sb.getEnabledLayoutIndex() != 3 ? 3 : 0);
+			} else {
+				sb.sendKeyEvent(action);
 			}
 		}
 	}

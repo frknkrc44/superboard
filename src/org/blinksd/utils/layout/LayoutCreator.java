@@ -75,15 +75,15 @@ public class LayoutCreator {
 	
 	public static LinearLayout createGridBox(Context ctx, int rowCount, int columnCount){
 		LinearLayout main = createVerticalLayout(ctx);
-		for(int i = 0;i < rowCount;i++){
+		for(int i = 0;i < columnCount;i++){
 			LinearLayout hor = createHorizontalLayout(ctx);
-			for(int j = 0;j < columnCount;j++){
+			for(int j = 0;j < rowCount;j++){
 				Button btn = createButton(ctx);
 				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1,-2,1);
 				int m = DensityUtils.dpInt(8);
-				lp.setMargins(m,m,j == columnCount - 1 ? m : 0,i == rowCount - 1 ? m : 0);
+				lp.setMargins(m,m,j == rowCount - 1 ? m : 0,i == columnCount - 1 ? m : 0);
 				btn.setLayoutParams(lp);
-				btn.setTag((i*columnCount)+j);
+				btn.setTag((i*rowCount)+j);
 				hor.addView(btn);
 			}
 			main.addView(hor);

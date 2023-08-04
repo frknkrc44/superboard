@@ -40,7 +40,12 @@ public class AppSettingsV2 extends Activity {
 	private SuperBoard kbdPreview;
 	private ImageView backgroundImageView;
 	private SettingsCategorizedListView mSettView;
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setKeyPrefs();
+	}
 
 	public void recreate() {
 		if(Build.VERSION.SDK_INT >= 11) {

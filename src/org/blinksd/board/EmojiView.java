@@ -34,17 +34,18 @@ public class EmojiView extends LinearLayout {
 	
 	private float txtsze;
 	private int keyclr;
-	private Drawable drw, emptyDrawable = new ColorDrawable();
+	private Drawable drw;
+	private final Drawable emptyDrawable = new ColorDrawable();
 	private TabWidget tw;
 	private TabHost th;
-	private View.OnClickListener oclick;
+	private View.OnClickListener onclick;
 
 	private static String[][] emojis;
 	
 	public EmojiView(SuperBoard sb, View.OnClickListener ocl){
 		this(sb.getContext());
 		getEmojis(sb);
-		oclick = ocl;
+		onclick = ocl;
 		applyTheme(sb);
 	}
 
@@ -96,7 +97,7 @@ public class EmojiView extends LinearLayout {
 			drw = new ColorDrawable(0);
 		}
 		removeAllViewsInLayout();
-		apply(oclick);
+		apply(onclick);
 		System.gc();
 	}
 	
@@ -223,7 +224,7 @@ public class EmojiView extends LinearLayout {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView v = (TextView) new TextView(EmojiView.this.getContext());
+			TextView v = new TextView(EmojiView.this.getContext());
 			v.setBackgroundDrawable(drw.getConstantState().newDrawable());
 			v.setTextColor(keyclr);
 			v.setGravity(Gravity.CENTER);

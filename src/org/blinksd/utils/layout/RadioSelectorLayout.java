@@ -5,31 +5,18 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RadioSelectorLayout {
-	
 	private RadioSelectorLayout(){}
-	
-	public static final View getRadioSelectorLayout(Context ctx, int selection, String[] items){
-		List<String> itemOut = new ArrayList<String>();
-		for(String item : items){
-			itemOut.add(item);
-		}
-		return getRadioSelectorLayout(ctx, selection, itemOut);
-	}
-	
-	public static final View getRadioSelectorLayout(Context ctx, int selection, List<String> items){
+
+	public static View getRadioSelectorLayout(Context ctx, int selection, List<String> items){
 		final RadioGroup rg = new RadioGroup(ctx);
 		int i = DensityUtils.dpInt(8);
 		rg.setPadding(i,i,i,i);
 		rg.setTag(selection);
-		rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId){
-				rg.setTag(checkedId);
-			}
-		});
+		rg.setOnCheckedChangeListener((group, checkedId) -> rg.setTag(checkedId));
 		i = 0;
 		for(String key : items){
 			CustomRadioButton rb = new CustomRadioButton(ctx);
@@ -41,5 +28,4 @@ public class RadioSelectorLayout {
 		}
 		return rg;
 	}
-	
 }

@@ -1,5 +1,7 @@
 package org.blinksd.utils.layout;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -12,15 +14,7 @@ import org.blinksd.board.AppSettingsV2;
 import org.blinksd.sdb.SuperMiniDB;
 
 public class NumberSelectorLayout {
-
 	private NumberSelectorLayout(){}
-	
-	private static SuperMiniDB db;
-	
-	static {
-		db = SuperBoardApplication.getApplicationDatabase();
-	}
-	
 	public static View getNumberSelectorLayout(final AppSettingsV2 ctx, final boolean isFloat, final int min, int max, int val){
 		final LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class,ctx);
 		main.setGravity(Gravity.CENTER);
@@ -30,7 +24,9 @@ public class NumberSelectorLayout {
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2,-2);
 		lp.bottomMargin = DensityUtils.dpInt(8);
 		text.setLayoutParams(lp);
-		text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
+		}
 		text.setText(getProgressString(val,isFloat));
 		main.addView(text);
 		
@@ -58,7 +54,9 @@ public class NumberSelectorLayout {
 	}
 	
 	private static String getProgressString(int val, boolean isFloat){
-		return isFloat ? DensityUtils.getFloatNumberFromInt(val) + "" : val + "";
+		return isFloat
+				? String.valueOf(DensityUtils.getFloatNumberFromInt(val))
+				: String.valueOf(val);
 	}
 	
 }

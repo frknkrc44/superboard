@@ -64,7 +64,7 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	public SettingMap(){
 		putGeneral(SET_KEYBOARD_LANG_SELECT,SettingType.STR_SELECTOR);
 		putGeneral(SET_IMPORT_DICT_PACK,SettingType.REDIRECT);
-		putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.SELECTOR);
+		putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,SettingType.REDIRECT);
 		putTheming(SET_KEYBOARD_SPACETYPE_SELECT,SettingType.STR_SELECTOR);
 		putThemingAdvanced(SET_THEME_PRESET,SettingType.THEME_SELECTOR);
 		putTheming(SET_ICON_THEME,SettingType.STR_SELECTOR);
@@ -139,8 +139,11 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 	}
 	
 	public Intent getRedirect(Context context, final String key) {
-		if (SET_IMPORT_DICT_PACK.equals(key)) {
-			return new Intent(context, DictionaryImportActivity.class);
+		switch (key) {
+			case SET_IMPORT_DICT_PACK:
+				return new Intent(context, DictionaryImportActivity.class);
+			case SET_KEYBOARD_TEXTTYPE_SELECT:
+				return new Intent(context, FontSelector.class);
 		}
 		return null;
 	}
@@ -149,11 +152,13 @@ public class SettingMap extends BaseMap<String,SettingItem> {
 		switch(key){
 			case SET_KEYBOARD_LANG_SELECT:
 				return LayoutUtils.getKeyListFromLanguageList();
+			/*
 			case SET_KEYBOARD_TEXTTYPE_SELECT:
 				ArrayList<String> textTypes = new ArrayList<>();
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())
 					textTypes.add(type.name());
 				return textTypes;
+			*/
 			case SET_KEYBOARD_SPACETYPE_SELECT:
 				return (ArrayList<String>) SuperBoardApplication.getSpaceBarStyles().keyList();
 			case SET_ICON_THEME:

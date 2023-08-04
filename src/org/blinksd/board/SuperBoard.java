@@ -571,6 +571,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			getChildAt(selected).setVisibility(VISIBLE);
 		} else throw new RuntimeException("Invalid keyboard index number");
 	}
+
+	public void resetToNormalLayout() {
+		setEnabledLayout(KeyboardType.TEXT);
+	}
 	
 	public void setLayoutType(int keyboardIndex, KeyboardType type){
 		getKeyboard(keyboardIndex).setTag(type);
@@ -593,8 +597,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		LinearLayout ll = new LinearLayout(getContext());
 		ll.setLayoutParams(new LayoutParams(-1,getLayoutParams().height));
 		ll.setOrientation(LinearLayout.VERTICAL);
-		ll.setTag(type);
 		addView(ll);
+		setLayoutType(getChildCount() - 1, type);
 		if(getChildCount() != 1){
 			ll.setVisibility(GONE);
 		}
@@ -747,7 +751,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 					if(currentKey.second){
 						sendKeyEvent(y);
 					} else {
-						commitText((char)y+"");
+						commitText(String.valueOf((char) y));
 					}
 
 					updateKeyState();
@@ -1452,76 +1456,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 		}
 
 		public void setKeyTextStyle(TextType style){
-			if(style == null){
-				style = TextType.regular;
-			}
-			switch(style){
-				case regular:
-					label.setTypeface(Typeface.DEFAULT);
-					break;
-				case bold:
-					label.setTypeface(Typeface.DEFAULT_BOLD);
-					break;
-				case italic:
-					label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
-					break;
-				case bold_italic:
-					label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
-					break;
-				case condensed:
-					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.NORMAL));
-					break;
-				case condensed_bold:
-					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
-					break;
-				case condensed_italic:
-					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
-					break;
-				case condensed_bold_italic:
-					label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
-					break;
-				case serif:
-					label.setTypeface(Typeface.SERIF);
-					break;
-				case serif_bold:
-					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
-					break;
-				case serif_italic:
-					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
-					break;
-				case serif_bold_italic:
-					label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
-					break;
-				case monospace:
-					label.setTypeface(Typeface.MONOSPACE);
-					break;
-				case monospace_bold:
-					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
-					break;
-				case monospace_italic:
-					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
-					break;
-				case monospace_bold_italic:
-					label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
-					break;
-				case serif_monospace:
-					label.setTypeface(Typeface.create("serif-monospace",Typeface.NORMAL));
-					break;
-				case serif_monospace_bold:
-					label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD));
-					break;
-				case serif_monospace_italic:
-					label.setTypeface(Typeface.create("serif-monospace",Typeface.ITALIC));
-					break;
-				case serif_monospace_bold_italic:
-					label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
-					break;
-				case custom:
-					// Contains a system problem about custom font files,
-					// Custom fonts applying too slowly and I can't fix it!
-					label.setTypeface(cFont);
-					break;
-			}
+			setTypefaceFromTextType(label, style, cFont);
 			sublabel.setTypeface(label.getTypeface());
 		}
 
@@ -1634,6 +1569,79 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 			}
 
 			return 0;
+		}
+	}
+
+	public static void setTypefaceFromTextType(TextView label, TextType style, Typeface customFont) {
+		if(style == null){
+			style = TextType.regular;
+		}
+		switch(style){
+			case regular:
+				label.setTypeface(Typeface.DEFAULT);
+				break;
+			case bold:
+				label.setTypeface(Typeface.DEFAULT_BOLD);
+				break;
+			case italic:
+				label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.ITALIC));
+				break;
+			case bold_italic:
+				label.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD_ITALIC));
+				break;
+			case condensed:
+				label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.NORMAL));
+				break;
+			case condensed_bold:
+				label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD));
+				break;
+			case condensed_italic:
+				label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.ITALIC));
+				break;
+			case condensed_bold_italic:
+				label.setTypeface(Typeface.create("sans-serif-condensed",Typeface.BOLD_ITALIC));
+				break;
+			case serif:
+				label.setTypeface(Typeface.SERIF);
+				break;
+			case serif_bold:
+				label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
+				break;
+			case serif_italic:
+				label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.ITALIC));
+				break;
+			case serif_bold_italic:
+				label.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD_ITALIC));
+				break;
+			case monospace:
+				label.setTypeface(Typeface.MONOSPACE);
+				break;
+			case monospace_bold:
+				label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD));
+				break;
+			case monospace_italic:
+				label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.ITALIC));
+				break;
+			case monospace_bold_italic:
+				label.setTypeface(Typeface.create(Typeface.MONOSPACE,Typeface.BOLD_ITALIC));
+				break;
+			case serif_monospace:
+				label.setTypeface(Typeface.create("serif-monospace",Typeface.NORMAL));
+				break;
+			case serif_monospace_bold:
+				label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD));
+				break;
+			case serif_monospace_italic:
+				label.setTypeface(Typeface.create("serif-monospace",Typeface.ITALIC));
+				break;
+			case serif_monospace_bold_italic:
+				label.setTypeface(Typeface.create("serif-monospace",Typeface.BOLD_ITALIC));
+				break;
+			case custom:
+				// Contains a system problem about custom font files,
+				// Custom fonts applying too slowly and I can't fix it!
+				label.setTypeface(customFont);
+				break;
 		}
 	}
 	

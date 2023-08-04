@@ -15,6 +15,10 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     compileSdk keystoreProperties['TARGETSDK'].toInteger()
 
+    buildFeatures {
+        aidl true
+    }
+
     defaultConfig {
         applicationId "org.blinksd.board"
         minSdk keystoreProperties['MINSDK'].toInteger()
@@ -53,20 +57,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'org.blinksd.board'
 }
 
 dependencies {
 }
 
-task pre(type: Exec) {
-    workingDir(rootProject.projectDir)
-    commandLine('make', 'langpacks', 'optimize', 'keystore')
-}
-
-android.applicationVariants.all { variant ->
-    variant.outputs.all {
+android.applicationVariants.configureEach { variant ->
+    variant.outputs.configureEach {
         outputFileName = "FBoard-v${variant.versionName}.apk"
     }
 }
 
-preBuild.dependsOn ':app:pre'
+preBuild.dependsOn ':pre'
