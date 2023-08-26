@@ -16,7 +16,7 @@ import org.blinksd.SuperBoardApplication;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutCreator;
 import org.blinksd.utils.layout.LayoutUtils;
-import org.superdroid.db.SuperDBHelper;
+import org.blinksd.sdb.SuperDBHelper;
 
 public class FontSelector extends Activity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
@@ -30,7 +30,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
         currentFont = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
         View main = createMainLayout();
 
-        if(Build.VERSION.SDK_INT >= 31){
+        if (Build.VERSION.SDK_INT >= 31) {
             getWindow().getDecorView().setFitsSystemWindows(true);
             main.setFitsSystemWindows(false);
             getWindow().setNavigationBarColor(0);
@@ -48,11 +48,11 @@ public class FontSelector extends Activity implements View.OnClickListener {
         int rowCount = 3;
         int columnCount = values.length / rowCount;
         LinearLayout main = LayoutCreator.createVerticalLayout(this);
-        for(int i = 0;i < columnCount;i++){
+        for (int i = 0; i < columnCount; i++) {
             LinearLayout hor = LayoutCreator.createHorizontalLayout(this);
-            for(int j = 0;j < rowCount;j++){
+            for (int j = 0; j < rowCount; j++) {
                 hor.addView(createFontItemLayout(
-                        values[(i*rowCount)+j], i, j, rowCount, columnCount));
+                        values[(i * rowCount) + j], i, j, rowCount, columnCount));
             }
             main.addView(hor);
         }
@@ -66,10 +66,10 @@ public class FontSelector extends Activity implements View.OnClickListener {
         LinearLayout btn = new LinearLayout(this);
         btn.setOrientation(LinearLayout.VERTICAL);
         int size = DensityUtils.wpInt(33);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size,1);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size, 1);
         int m = DensityUtils.dpInt(8);
-        lp.setMargins(m,m,j == rowCount - 1 ? m : 0,i == columnCount - 1 ? m : 0);
-        btn.setPadding(m,m,m,m);
+        lp.setMargins(m, m, j == rowCount - 1 ? m : 0, i == columnCount - 1 ? m : 0);
+        btn.setPadding(m, m, m, m);
         btn.setLayoutParams(lp);
         TextView textView = new TextView(this);
         textView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));

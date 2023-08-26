@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
+
 /**
  * Space is a lightweight View subclass that may be used to create gaps between components
  * in general purpose layouts.
@@ -34,27 +35,21 @@ public final class SpaceCompat extends View {
             setVisibility(INVISIBLE);
         }
     }
+
     /**
      * {@inheritDoc}
      */
     public SpaceCompat(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     /**
      * {@inheritDoc}
      */
     public SpaceCompat(Context context) {
         this(context, null);
     }
-    /**
-     * Draw nothing.
-     *
-     * @param canvas an unused parameter.
-     */
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void draw(Canvas canvas) {
-    }
+
     /**
      * Compare to: {@link View#getDefaultSize(int, int)}
      * If mode is AT_MOST, return the child size instead of the parent size
@@ -76,6 +71,17 @@ public final class SpaceCompat extends View {
         }
         return result;
     }
+
+    /**
+     * Draw nothing.
+     *
+     * @param canvas an unused parameter.
+     */
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void draw(Canvas canvas) {
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(

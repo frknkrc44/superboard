@@ -6,9 +6,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ResourceParcel implements Parcelable {
-    public final String mResName;
-    public final Bitmap mBitmap;
-
     public static final Parcelable.Creator<ResourceParcel> CREATOR
             = new Parcelable.Creator<ResourceParcel>() {
         public ResourceParcel createFromParcel(Parcel in) {
@@ -19,6 +16,8 @@ public class ResourceParcel implements Parcelable {
             return new ResourceParcel[size];
         }
     };
+    public final String mResName;
+    public final Bitmap mBitmap;
 
     ResourceParcel(Parcel in) {
         mResName = in.readString();

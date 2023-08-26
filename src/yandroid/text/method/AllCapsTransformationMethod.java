@@ -27,9 +27,8 @@ import java.util.Locale;
  */
 public class AllCapsTransformationMethod implements TransformationMethod2 {
     private static final String TAG = "AllCapsTransformation";
-
-    private boolean mEnabled;
     private final Locale mLocale;
+    private boolean mEnabled;
 
     public AllCapsTransformationMethod(Context context) {
         mLocale = context.getResources().getConfiguration().locale;
@@ -46,7 +45,7 @@ public class AllCapsTransformationMethod implements TransformationMethod2 {
 
     @Override
     public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction,
-            Rect previouslyFocusedRect) {
+                               Rect previouslyFocusedRect) {
     }
 
     @Override

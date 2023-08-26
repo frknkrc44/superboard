@@ -5,13 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class IconThemeParcel implements Parcelable {
-    public final String mThemeName;
-    public final ResourceParcel mShiftImage;
-    public final ResourceParcel mEmojiImage;
-    public final ResourceParcel mSpaceImage;
-    public final ResourceParcel mReturnImage;
-    public final ResourceParcel mDeleteImage;
-
     public static final Parcelable.Creator<IconThemeParcel> CREATOR
             = new Parcelable.Creator<IconThemeParcel>() {
         public IconThemeParcel createFromParcel(Parcel in) {
@@ -22,6 +15,12 @@ public class IconThemeParcel implements Parcelable {
             return new IconThemeParcel[size];
         }
     };
+    public final String mThemeName;
+    public final ResourceParcel mShiftImage;
+    public final ResourceParcel mEmojiImage;
+    public final ResourceParcel mSpaceImage;
+    public final ResourceParcel mReturnImage;
+    public final ResourceParcel mDeleteImage;
 
     private IconThemeParcel(Parcel in) {
         mThemeName = in.readString();

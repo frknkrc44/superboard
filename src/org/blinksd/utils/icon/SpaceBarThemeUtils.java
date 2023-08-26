@@ -3,25 +3,25 @@ package org.blinksd.utils.icon;
 import org.blinksd.Defaults;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.layout.BaseMap;
-import org.superdroid.db.SuperDBHelper;
+import org.blinksd.sdb.SuperDBHelper;
 
-public class SpaceBarThemeUtils extends BaseMap<String,Integer> {
-	public static final int SPACEBAR_DEFAULT = 0, SPACEBAR_TEXT = 1, SPACEBAR_HIDE = 2;
-	
-	public SpaceBarThemeUtils(){
-		put("theme", SPACEBAR_DEFAULT);
-		put("text", SPACEBAR_TEXT);
-		put("daisy", org.blinksd.board.R.drawable.sym_keyboard_daisy);
-		put("spacebar", org.blinksd.board.R.drawable.sym_keyboard_spacebar);
-		put("hide", SPACEBAR_HIDE);
-	}
-	
-	public int getIconResource(){
-		String key = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_SPACETYPE_SELECT);
-		return getIconResource(key);
-	}
+public class SpaceBarThemeUtils extends BaseMap<String, Integer> {
+    public static final int SPACEBAR_DEFAULT = 0, SPACEBAR_TEXT = 1, SPACEBAR_HIDE = 2;
 
-	public int getIconResource(String themeKey){
-		return get(containsKey(themeKey) ? themeKey : Defaults.KEYBOARD_SPACETYPE);
-	}
+    public SpaceBarThemeUtils() {
+        put("theme", SPACEBAR_DEFAULT);
+        put("text", SPACEBAR_TEXT);
+        put("daisy", org.blinksd.board.R.drawable.sym_keyboard_daisy);
+        put("spacebar", org.blinksd.board.R.drawable.sym_keyboard_spacebar);
+        put("hide", SPACEBAR_HIDE);
+    }
+
+    public int getIconResource() {
+        String key = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_SPACETYPE_SELECT);
+        return getIconResource(key);
+    }
+
+    public int getIconResource(String themeKey) {
+        return get(containsKey(themeKey) ? themeKey : Defaults.KEYBOARD_SPACETYPE);
+    }
 }

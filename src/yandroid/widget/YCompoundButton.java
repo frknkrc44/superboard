@@ -56,22 +56,19 @@ import yandroid.util.Styleable;
  * </p>
  */
 public abstract class YCompoundButton extends Button implements Checkable {
+    private static final int[] CHECKED_STATE_SET = {
+            android.R.attr.state_checked
+    };
     private boolean mChecked;
     private int mButtonResource;
     private boolean mBroadcasting;
-
     private Drawable mButtonDrawable;
     private ColorStateList mButtonTintList = null;
     private PorterDuff.Mode mButtonTintMode = null;
     private boolean mHasButtonTint = false;
     private boolean mHasButtonTintMode = false;
-
     private OnCheckedChangeListener mOnCheckedChangeListener;
     private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
-
-    private static final int[] CHECKED_STATE_SET = {
-        android.R.attr.state_checked
-    };
 
     public YCompoundButton(Context context) {
         this(context, null);
@@ -96,12 +93,12 @@ public abstract class YCompoundButton extends Button implements Checkable {
             setButtonDrawable(d);
         }
 
-        if(SDK_INT >= LOLLIPOP) {
+        if (SDK_INT >= LOLLIPOP) {
             if (a.hasValue(Styleable.getKey("CompoundButton_buttonTintMode"))) {
-            mButtonTintMode = parseTintMode(a.getInt(
-                    Styleable.getKey("CompoundButton_buttonTintMode"), -1), mButtonTintMode);
-            mHasButtonTintMode = true;
-        }
+                mButtonTintMode = parseTintMode(a.getInt(
+                        Styleable.getKey("CompoundButton_buttonTintMode"), -1), mButtonTintMode);
+                mHasButtonTintMode = true;
+            }
 
             if (a.hasValue(Styleable.getKey("CompoundButton_buttonTint"))) {
                 mButtonTintList = a.getColorStateList(Styleable.getKey("CompoundButton_buttonTint"));
@@ -119,18 +116,25 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 
     @TargetApi(11)
-	private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
+    private PorterDuff.Mode parseTintMode(int value, PorterDuff.Mode defaultMode) {
         switch (value) {
-            case 3: return PorterDuff.Mode.SRC_OVER;
-            case 5: return PorterDuff.Mode.SRC_IN;
-            case 9: return PorterDuff.Mode.SRC_ATOP;
-            case 14: return PorterDuff.Mode.MULTIPLY;
-            case 15: return PorterDuff.Mode.SCREEN;
-            case 16: return PorterDuff.Mode.ADD;
-            default: return defaultMode;
+            case 3:
+                return PorterDuff.Mode.SRC_OVER;
+            case 5:
+                return PorterDuff.Mode.SRC_IN;
+            case 9:
+                return PorterDuff.Mode.SRC_ATOP;
+            case 14:
+                return PorterDuff.Mode.MULTIPLY;
+            case 15:
+                return PorterDuff.Mode.SCREEN;
+            case 16:
+                return PorterDuff.Mode.ADD;
+            default:
+                return defaultMode;
         }
     }
-	
+
     public void toggle() {
         setChecked(!mChecked);
     }
@@ -180,7 +184,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
                 mOnCheckedChangeWidgetListener.onCheckedChanged(this, mChecked);
             }
 
-            mBroadcasting = false;            
+            mBroadcasting = false;
         }
     }
 
@@ -206,25 +210,11 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 
     /**
-     * Interface definition for a callback to be invoked when the checked state
-     * of a compound button changed.
-     */
-    public static interface OnCheckedChangeListener {
-        /**
-         * Called when the checked state of a compound button has changed.
-         *
-         * @param buttonView The compound button view whose state has changed.
-         * @param isChecked  The new checked state of buttonView.
-         */
-        void onCheckedChanged(YCompoundButton buttonView, boolean isChecked);
-    }
-
-    /**
      * Set the button graphic to a given Drawable, identified by its resource
      * id.
      *
      * @param resid the resource id of the drawable to use as the button
-     *        graphic
+     *              graphic
      */
     public void setButtonDrawable(int resid) {
         if (resid != 0 && resid == mButtonResource) {
@@ -256,7 +246,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
             if (d != null) {
                 d.setCallback(this);
-                if(SDK_INT >= M) {
+                if (SDK_INT >= M) {
                     d.setLayoutDirection(getLayoutDirection());
                 }
                 if (d.isStateful()) {
@@ -270,6 +260,15 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 
     /**
+     * @return the tint applied to the button drawable
+     * @attr ref android.R.styleable#CompoundButton_buttonTint
+     * @see #setButtonTintList(ColorStateList)
+     */
+    public ColorStateList getButtonTintList() {
+        return mButtonTintList;
+    }
+
+    /**
      * Applies a tint to the button drawable. Does not modify the current tint
      * mode, which is {@link PorterDuff.Mode#SRC_IN} by default.
      * <p>
@@ -279,7 +278,6 @@ public abstract class YCompoundButton extends Button implements Checkable {
      * {@link Drawable#setTintList(ColorStateList)}.
      *
      * @param tint the tint to apply, may be {@code null} to clear tint
-     *
      * @attr ref android.R.styleable#CompoundButton_buttonTint
      * @see #setButtonTintList(ColorStateList)
      * @see Drawable#setTintList(ColorStateList)
@@ -292,12 +290,12 @@ public abstract class YCompoundButton extends Button implements Checkable {
     }
 
     /**
-     * @return the tint applied to the button drawable
-     * @attr ref android.R.styleable#CompoundButton_buttonTint
-     * @see #setButtonTintList(ColorStateList)
+     * @return the blending mode used to apply the tint to the button drawable
+     * @attr ref android.R.styleable#CompoundButton_buttonTintMode
+     * @see #setButtonTintMode(PorterDuff.Mode)
      */
-    public ColorStateList getButtonTintList() {
-        return mButtonTintList;
+    public PorterDuff.Mode getButtonTintMode() {
+        return mButtonTintMode;
     }
 
     /**
@@ -318,17 +316,8 @@ public abstract class YCompoundButton extends Button implements Checkable {
         applyButtonTint();
     }
 
-    /**
-     * @return the blending mode used to apply the tint to the button drawable
-     * @attr ref android.R.styleable#CompoundButton_buttonTintMode
-     * @see #setButtonTintMode(PorterDuff.Mode)
-     */
-    public PorterDuff.Mode getButtonTintMode() {
-        return mButtonTintMode;
-    }
-
     private void applyButtonTint() {
-        if(SDK_INT < LOLLIPOP) {
+        if (SDK_INT < LOLLIPOP) {
             return;
         }
 
@@ -361,7 +350,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        if(SDK_INT >= ICE_CREAM_SANDWICH) {
+        if (SDK_INT >= ICE_CREAM_SANDWICH) {
             info.setClassName(YCompoundButton.class.getName());
             info.setCheckable(true);
             info.setChecked(mChecked);
@@ -379,11 +368,11 @@ public abstract class YCompoundButton extends Button implements Checkable {
         }
         return padding;
     }
-	
-	public boolean isLayoutRtl(){
-		return SDK_INT >= JELLY_BEAN_MR1 &&
+
+    public boolean isLayoutRtl() {
+        return SDK_INT >= JELLY_BEAN_MR1 &&
                 getResources().getConfiguration().getLayoutDirection() == Configuration.SCREENLAYOUT_LAYOUTDIR_RTL;
-	}
+    }
 
     @Override
     public int getCompoundPaddingRight() {
@@ -432,7 +421,7 @@ public abstract class YCompoundButton extends Button implements Checkable {
 
             final Drawable background = getBackground();
             if (background != null) {
-                if(SDK_INT >= LOLLIPOP) {
+                if (SDK_INT >= LOLLIPOP) {
                     background.setHotspotBounds(left, top, right, bottom);
                 } else {
                     background.setBounds(left, top, right, bottom);
@@ -467,13 +456,13 @@ public abstract class YCompoundButton extends Button implements Checkable {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        
+
         if (mButtonDrawable != null) {
             int[] myDrawableState = getDrawableState();
-            
+
             // Set the state of the Drawable
             mButtonDrawable.setState(myDrawableState);
-            
+
             invalidate();
         }
     }
@@ -500,19 +489,75 @@ public abstract class YCompoundButton extends Button implements Checkable {
         }
     }
 
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.checked = isChecked();
+        return ss;
+    }
+
+    /**
+     * Fix an Android bug by check class of Parcelable object
+     * <p>
+     * BUG: java.lang.ClassCastException: android.view.AbsSavedState$1
+     * cannot be cast to android.widget.CompoundButton$SavedState
+     *
+     * @author frknkrc44
+     */
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof AbsSavedState) {
+            AbsSavedState ss = (AbsSavedState) state;
+            super.onRestoreInstanceState(ss.getSuperState());
+            if (ss instanceof SavedState) {
+                SavedState st = (SavedState) ss;
+                setChecked(st.checked);
+            }
+            requestLayout();
+            return;
+        }
+        super.onRestoreInstanceState(state);
+        requestLayout();
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when the checked state
+     * of a compound button changed.
+     */
+    public static interface OnCheckedChangeListener {
+        /**
+         * Called when the checked state of a compound button has changed.
+         *
+         * @param buttonView The compound button view whose state has changed.
+         * @param isChecked  The new checked state of buttonView.
+         */
+        void onCheckedChanged(YCompoundButton buttonView, boolean isChecked);
+    }
+
     public static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         boolean checked;
 
         public SavedState(Parcelable superState) {
             super(superState);
         }
-        
+
         /**
          * Constructor called from {@link #CREATOR}
          */
         private SavedState(Parcel in) {
             super(in);
-            checked = (Boolean)in.readValue(getClass().getClassLoader());
+            checked = (Boolean) in.readValue(getClass().getClassLoader());
         }
 
         @Override
@@ -527,48 +572,5 @@ public abstract class YCompoundButton extends Button implements Checkable {
                     + Integer.toHexString(System.identityHashCode(this))
                     + " checked=" + checked + "}";
         }
-
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState ss = new SavedState(superState);
-        ss.checked = isChecked();
-        return ss;
-    }
-
-	/**
-	 * Fix an Android bug by check class of Parcelable object
-	 *
-	 * BUG: java.lang.ClassCastException: android.view.AbsSavedState$1
-	 *      cannot be cast to android.widget.CompoundButton$SavedState
-	 * 
-	 * @author frknkrc44
-	 */
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-		if(state instanceof AbsSavedState){
-			AbsSavedState ss = (AbsSavedState) state;
-			super.onRestoreInstanceState(ss.getSuperState());
-			if(ss instanceof SavedState){
-				SavedState st = (SavedState) ss;
-				setChecked(st.checked);
-			}
-			requestLayout();
-			return;
-		}
-		super.onRestoreInstanceState(state);
-		requestLayout();
     }
 }

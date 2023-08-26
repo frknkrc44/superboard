@@ -78,7 +78,7 @@ public class SetupActivityV2 extends Activity {
                 R.string.wizard_select,
                 R.string.wizard_selectbtn,
                 v -> {
-                    ((InputMethodManager)getSystemService(
+                    ((InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();
 
                     if (!selectedCheckerRunning) {
@@ -111,7 +111,7 @@ public class SetupActivityV2 extends Activity {
 
         changePage(0);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getWindow().getDecorView().setFitsSystemWindows(true);
             ((ViewGroup) findViewById(android.R.id.content))
                     .getChildAt(0).setFitsSystemWindows(false);
@@ -121,13 +121,13 @@ public class SetupActivityV2 extends Activity {
         }
     }
 
-    private boolean isInputMethodDisabled(){
+    private boolean isInputMethodDisabled() {
         String defaultIME = Settings.Secure.getString(
                 getContentResolver(), Settings.Secure.ENABLED_INPUT_METHODS);
         return TextUtils.isEmpty(defaultIME) || !defaultIME.contains(getPackageName());
     }
 
-    private boolean isInputMethodNotSelected(){
+    private boolean isInputMethodNotSelected() {
         String defaultIME = Settings.Secure.getString(
                 getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
         return TextUtils.isEmpty(defaultIME) || !defaultIME.contains(getPackageName());
@@ -145,26 +145,29 @@ public class SetupActivityV2 extends Activity {
                     .alpha(0)
                     .setDuration(duration)
                     .setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {}
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                        }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    contentView.removeAllViews();
-                    View view = new ImageTextAndButtonView(
-                            SetupActivityV2.this, content,
-                            content.extraNextButton, content.smallImage);
-                    view.setAlpha(0);
-                    contentView.addView(view);
-                    view.animate().alpha(1).setDuration(duration).start();
-                }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            contentView.removeAllViews();
+                            View view = new ImageTextAndButtonView(
+                                    SetupActivityV2.this, content,
+                                    content.extraNextButton, content.smallImage);
+                            view.setAlpha(0);
+                            contentView.addView(view);
+                            view.animate().alpha(1).setDuration(duration).start();
+                        }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {}
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                        }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {}
-            }).start();
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+                        }
+                    }).start();
         } else {
             contentView.removeAllViews();
             contentView.addView(new ImageTextAndButtonView(
@@ -180,7 +183,8 @@ public class SetupActivityV2 extends Activity {
             ApplicationInfo applicationInfo =
                     packageManager.getApplicationInfo(getPackageName(), 0);
             return applicationInfo.loadIcon(packageManager);
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         return null;
     }
 
@@ -190,14 +194,15 @@ public class SetupActivityV2 extends Activity {
             ApplicationInfo applicationInfo =
                     packageManager.getApplicationInfo(getPackageName(), 0);
             return applicationInfo.loadLabel(packageManager).toString();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         return getResources().getString(R.string.app_name);
     }
 
     private class ImeEnabledCheckerRunnable implements Runnable {
         @Override
         public void run() {
-            if(isInputMethodDisabled()) {
+            if (isInputMethodDisabled()) {
                 findViewById(android.R.id.content).postDelayed(this, 250);
                 return;
             }
@@ -209,7 +214,7 @@ public class SetupActivityV2 extends Activity {
     private class ImeSelectedCheckerRunnable implements Runnable {
         @Override
         public void run() {
-            if(isInputMethodNotSelected()) {
+            if (isInputMethodNotSelected()) {
                 selectedCheckerRunning = true;
                 findViewById(android.R.id.content).postDelayed(this, 500);
                 return;
@@ -219,6 +224,7 @@ public class SetupActivityV2 extends Activity {
             selectedCheckerRunning = false;
         }
     }
+
     private class PageContent {
         private final Drawable image;
         private final String text;
@@ -261,7 +267,7 @@ public class SetupActivityV2 extends Activity {
             addView(textView);
             addView(buttonView);
             int imageSize = DensityUtils.dpInt(96);
-            int imageLayoutSize = smallImage ? (int)(imageSize / 2f) : imageSize;
+            int imageLayoutSize = smallImage ? (int) (imageSize / 2f) : imageSize;
             imageView.setLayoutParams(new LayoutParams(imageLayoutSize, imageLayoutSize));
             buttonView.setLayoutParams(new LayoutParams(imageSize * 3, -2));
             setGravity(Gravity.CENTER);

@@ -91,7 +91,11 @@ public class YSwitch extends YCompoundButton {
     private static final int SANS = 1;
     private static final int SERIF = 2;
     private static final int MONOSPACE = 3;
-
+    private static final int[] CHECKED_STATE_SET = {
+            android.R.attr.state_checked
+    };
+    @SuppressWarnings("hiding")
+    private final Rect mTempRect = new Rect();
     private Drawable mThumbDrawable;
     private Drawable mTrackDrawable;
     private int mThumbTextPadding;
@@ -101,59 +105,50 @@ public class YSwitch extends YCompoundButton {
     private CharSequence mTextOn;
     private CharSequence mTextOff;
     private boolean mShowText;
-
     private int mTouchMode;
     private int mTouchSlop;
     private float mTouchX;
     private float mTouchY;
     private VelocityTracker mVelocityTracker = VelocityTracker.obtain();
     private int mMinFlingVelocity;
-
     private float mThumbPosition;
-
     /**
      * Width required to draw the switch track and thumb. Includes padding and
      * optical bounds for both the track and thumb.
      */
     private int mSwitchWidth;
-
     /**
      * Height required to draw the switch track and thumb. Includes padding and
      * optical bounds for both the track and thumb.
      */
     private int mSwitchHeight;
-
     /**
      * Width of the thumb's content region. Does not include padding or
      * optical bounds.
      */
     private int mThumbWidth;
-
-    /** Left bound for drawing the switch track and thumb. */
+    /**
+     * Left bound for drawing the switch track and thumb.
+     */
     private int mSwitchLeft;
-
-    /** Top bound for drawing the switch track and thumb. */
+    /**
+     * Top bound for drawing the switch track and thumb.
+     */
     private int mSwitchTop;
-
-    /** Right bound for drawing the switch track and thumb. */
+    /**
+     * Right bound for drawing the switch track and thumb.
+     */
     private int mSwitchRight;
-
-    /** Bottom bound for drawing the switch track and thumb. */
+    /**
+     * Bottom bound for drawing the switch track and thumb.
+     */
     private int mSwitchBottom;
-
     private TextPaint mTextPaint;
     private ColorStateList mTextColors;
     private Layout mOnLayout;
     private Layout mOffLayout;
     private TransformationMethod2 mSwitchTransformationMethod;
     private ObjectAnimator mPositionAnimator;
-
-    @SuppressWarnings("hiding")
-    private final Rect mTempRect = new Rect();
-
-    private static final int[] CHECKED_STATE_SET = {
-        android.R.attr.state_checked
-    };
 
     /**
      * Construct a new Switch with default styling.
@@ -169,7 +164,7 @@ public class YSwitch extends YCompoundButton {
      * attributes as requested.
      *
      * @param context The Context that will determine this widget's theming.
-     * @param attrs Specification of attributes that should deviate from default styling.
+     * @param attrs   Specification of attributes that should deviate from default styling.
      */
     public YSwitch(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.switchStyle);
@@ -179,11 +174,11 @@ public class YSwitch extends YCompoundButton {
      * Construct a new Switch with a default style determined by the given theme attribute,
      * overriding specific style attributes as requested.
      *
-     * @param context The Context that will determine this widget's theming.
-     * @param attrs Specification of attributes that should deviate from the default styling.
+     * @param context      The Context that will determine this widget's theming.
+     * @param attrs        Specification of attributes that should deviate from the default styling.
      * @param defStyleAttr An attribute in the current theme that contains a
-     *        reference to a style resource that supplies default values for
-     *        the view. Can be 0 to not look for defaults.
+     *                     reference to a style resource that supplies default values for
+     *                     the view. Can be 0 to not look for defaults.
      */
     public YSwitch(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
@@ -195,16 +190,16 @@ public class YSwitch extends YCompoundButton {
      * attribute or style resource, overriding specific style attributes as
      * requested.
      *
-     * @param context The Context that will determine this widget's theming.
-     * @param attrs Specification of attributes that should deviate from the
-     *        default styling.
+     * @param context      The Context that will determine this widget's theming.
+     * @param attrs        Specification of attributes that should deviate from the
+     *                     default styling.
      * @param defStyleAttr An attribute in the current theme that contains a
-     *        reference to a style resource that supplies default values for
-     *        the view. Can be 0 to not look for defaults.
-     * @param defStyleRes A resource identifier of a style resource that
-     *        supplies default values for the view, used only if
-     *        defStyleAttr is 0 or can not be found in the theme. Can be 0
-     *        to not look for defaults.
+     *                     reference to a style resource that supplies default values for
+     *                     the view. Can be 0 to not look for defaults.
+     * @param defStyleRes  A resource identifier of a style resource that
+     *                     supplies default values for the view, used only if
+     *                     defStyleAttr is 0 or can not be found in the theme. Can be 0
+     *                     to not look for defaults.
      */
     public YSwitch(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -213,10 +208,10 @@ public class YSwitch extends YCompoundButton {
 
         final Resources res = getResources();
         mTextPaint.density = res.getDisplayMetrics().density;
-		TextPaintUtils.setCompatibilityScaling(mTextPaint,res);
+        TextPaintUtils.setCompatibilityScaling(mTextPaint, res);
         //mTextPaint.setCompatibilityScaling(res.getCompatibilityInfo().applicationScale);
 
-		final TypedArray a = context.obtainStyledAttributes(
+        final TypedArray a = context.obtainStyledAttributes(
                 attrs, Styleable.getStyleable("Switch"), defStyleAttr, defStyleRes);
         mThumbDrawable = a.getDrawable(Styleable.getKey("Switch_thumb"));
         if (mThumbDrawable != null) {
@@ -230,18 +225,18 @@ public class YSwitch extends YCompoundButton {
         mTextOff = a.getText(Styleable.getKey("Switch_textOff"));
         mShowText = a.getBoolean(Styleable.getKey("Switch_showText"), true);
         mThumbTextPadding = a.getDimensionPixelSize(
-				Styleable.getKey("Switch_thumbTextPadding"), 0);
+                Styleable.getKey("Switch_thumbTextPadding"), 0);
         mSwitchMinWidth = a.getDimensionPixelSize(
-				Styleable.getKey("Switch_switchMinWidth"), 0);
+                Styleable.getKey("Switch_switchMinWidth"), 0);
         mSwitchPadding = a.getDimensionPixelSize(
-				Styleable.getKey("Switch_switchPadding"), 0);
-		
-		if(SDK_INT >= 21){
-			mSplitTrack = a.getBoolean(Styleable.getKey("Switch_splitTrack"), false);
-		}
+                Styleable.getKey("Switch_switchPadding"), 0);
+
+        if (SDK_INT >= 21) {
+            mSplitTrack = a.getBoolean(Styleable.getKey("Switch_splitTrack"), false);
+        }
 
         final int appearance = a.getResourceId(
-				Styleable.getKey("Switch_switchTextAppearance"), 0);
+                Styleable.getKey("Switch_switchTextAppearance"), 0);
         if (appearance != 0) {
             setSwitchTextAppearance(context, appearance);
         }
@@ -265,14 +260,14 @@ public class YSwitch extends YCompoundButton {
     public void setSwitchTextAppearance(Context context, int resid) {
         TypedArray appearance =
                 context.obtainStyledAttributes(resid,
-						Styleable.getStyleable("TextAppearance"));
+                        Styleable.getStyleable("TextAppearance"));
 
         ColorStateList colors;
         int ts;
 
         colors = appearance.getColorStateList(
-				Styleable.getKey("TextAppearance_textColor"));
-			
+                Styleable.getKey("TextAppearance_textColor"));
+
         if (colors != null) {
             mTextColors = colors;
         } else {
@@ -281,8 +276,8 @@ public class YSwitch extends YCompoundButton {
         }
 
         ts = appearance.getDimensionPixelSize(
-				Styleable.getKey("TextAppearance_textSize"), 0);
-			
+                Styleable.getKey("TextAppearance_textSize"), 0);
+
         if (ts != 0) {
             if (ts != mTextPaint.getTextSize()) {
                 mTextPaint.setTextSize(ts);
@@ -293,14 +288,14 @@ public class YSwitch extends YCompoundButton {
         int typefaceIndex, styleIndex;
 
         typefaceIndex = appearance.getInt(
-				Styleable.getKey("TextAppearance_typeface"), -1);
+                Styleable.getKey("TextAppearance_typeface"), -1);
         styleIndex = appearance.getInt(
-				Styleable.getKey("TextAppearance_textStyle"), -1);
+                Styleable.getKey("TextAppearance_textStyle"), -1);
 
         setSwitchTypefaceByIndex(typefaceIndex, styleIndex);
 
         boolean allCaps = appearance.getBoolean(
-				Styleable.getKey("TextAppearance_textAllCaps"), false);
+                Styleable.getKey("TextAppearance_textAllCaps"), false);
         if (allCaps) {
             mSwitchTransformationMethod = new AllCapsTransformationMethod(getContext());
             mSwitchTransformationMethod.setLengthChangesAllowed(true);
@@ -377,10 +372,19 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
+     * Get the amount of horizontal padding between the switch and the associated text.
+     *
+     * @return Amount of padding in pixels
+     * @attr ref android.R.styleable#Switch_switchPadding
+     */
+    public int getSwitchPadding() {
+        return mSwitchPadding;
+    }
+
+    /**
      * Set the amount of horizontal padding between the switch and the associated text.
      *
      * @param pixels Amount of padding in pixels
-     *
      * @attr ref android.R.styleable#Switch_switchPadding
      */
     public void setSwitchPadding(int pixels) {
@@ -389,14 +393,14 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
-     * Get the amount of horizontal padding between the switch and the associated text.
+     * Get the minimum width of the switch in pixels. The switch's width will be the maximum
+     * of this value and its measured width as determined by the switch drawables and text used.
      *
-     * @return Amount of padding in pixels
-     *
-     * @attr ref android.R.styleable#Switch_switchPadding
+     * @return Minimum width of the switch in pixels
+     * @attr ref android.R.styleable#Switch_switchMinWidth
      */
-    public int getSwitchPadding() {
-        return mSwitchPadding;
+    public int getSwitchMinWidth() {
+        return mSwitchMinWidth;
     }
 
     /**
@@ -404,7 +408,6 @@ public class YSwitch extends YCompoundButton {
      * of this value and its measured width as determined by the switch drawables and text used.
      *
      * @param pixels Minimum width of the switch in pixels
-     *
      * @attr ref android.R.styleable#Switch_switchMinWidth
      */
     public void setSwitchMinWidth(int pixels) {
@@ -413,22 +416,19 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
-     * Get the minimum width of the switch in pixels. The switch's width will be the maximum
-     * of this value and its measured width as determined by the switch drawables and text used.
+     * Get the horizontal padding around the text drawn on the switch itself.
      *
-     * @return Minimum width of the switch in pixels
-     *
-     * @attr ref android.R.styleable#Switch_switchMinWidth
+     * @return Horizontal padding for switch thumb text in pixels
+     * @attr ref android.R.styleable#Switch_thumbTextPadding
      */
-    public int getSwitchMinWidth() {
-        return mSwitchMinWidth;
+    public int getThumbTextPadding() {
+        return mThumbTextPadding;
     }
 
     /**
      * Set the horizontal padding around the text drawn on the switch itself.
      *
      * @param pixels Horizontal padding for switch thumb text in pixels
-     *
      * @attr ref android.R.styleable#Switch_thumbTextPadding
      */
     public void setThumbTextPadding(int pixels) {
@@ -437,21 +437,29 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
-     * Get the horizontal padding around the text drawn on the switch itself.
+     * Set the drawable used for the track that the switch slides within.
      *
-     * @return Horizontal padding for switch thumb text in pixels
-     *
-     * @attr ref android.R.styleable#Switch_thumbTextPadding
+     * @param resId Resource ID of a track drawable
+     * @attr ref android.R.styleable#Switch_track
      */
-    public int getThumbTextPadding() {
-        return mThumbTextPadding;
+    public void setTrackResource(int resId) {
+        setTrackDrawable(getContext().getResources().getDrawable(resId));
+    }
+
+    /**
+     * Get the drawable used for the track that the switch slides within.
+     *
+     * @return Track drawable
+     * @attr ref android.R.styleable#Switch_track
+     */
+    public Drawable getTrackDrawable() {
+        return mTrackDrawable;
     }
 
     /**
      * Set the drawable used for the track that the switch slides within.
      *
      * @param track Track drawable
-     *
      * @attr ref android.R.styleable#Switch_track
      */
     public void setTrackDrawable(Drawable track) {
@@ -466,25 +474,25 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
-     * Set the drawable used for the track that the switch slides within.
+     * Set the drawable used for the switch "thumb" - the piece that the user
+     * can physically touch and drag along the track.
      *
-     * @param resId Resource ID of a track drawable
-     *
-     * @attr ref android.R.styleable#Switch_track
+     * @param resId Resource ID of a thumb drawable
+     * @attr ref android.R.styleable#Switch_thumb
      */
-    public void setTrackResource(int resId) {
-        setTrackDrawable(getContext().getResources().getDrawable(resId));
+    public void setThumbResource(int resId) {
+        setThumbDrawable(getContext().getResources().getDrawable(resId));
     }
 
     /**
-     * Get the drawable used for the track that the switch slides within.
+     * Get the drawable used for the switch "thumb" - the piece that the user
+     * can physically touch and drag along the track.
      *
-     * @return Track drawable
-     *
-     * @attr ref android.R.styleable#Switch_track
+     * @return Thumb drawable
+     * @attr ref android.R.styleable#Switch_thumb
      */
-    public Drawable getTrackDrawable() {
-        return mTrackDrawable;
+    public Drawable getThumbDrawable() {
+        return mThumbDrawable;
     }
 
     /**
@@ -492,7 +500,6 @@ public class YSwitch extends YCompoundButton {
      * can physically touch and drag along the track.
      *
      * @param thumb Thumb drawable
-     *
      * @attr ref android.R.styleable#Switch_thumb
      */
     public void setThumbDrawable(Drawable thumb) {
@@ -507,27 +514,12 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
-     * Set the drawable used for the switch "thumb" - the piece that the user
-     * can physically touch and drag along the track.
+     * Returns whether the track should be split by the thumb.
      *
-     * @param resId Resource ID of a thumb drawable
-     *
-     * @attr ref android.R.styleable#Switch_thumb
+     * @attr ref android.R.styleable#Switch_splitTrack
      */
-    public void setThumbResource(int resId) {
-        setThumbDrawable(getContext().getResources().getDrawable(resId));
-    }
-
-    /**
-     * Get the drawable used for the switch "thumb" - the piece that the user
-     * can physically touch and drag along the track.
-     *
-     * @return Thumb drawable
-     *
-     * @attr ref android.R.styleable#Switch_thumb
-     */
-    public Drawable getThumbDrawable() {
-        return mThumbDrawable;
+    public boolean getSplitTrack() {
+        return mSplitTrack;
     }
 
     /**
@@ -536,21 +528,11 @@ public class YSwitch extends YCompoundButton {
      * then the thumb will be drawn into the resulting gap.
      *
      * @param splitTrack Whether the track should be split by the thumb
-     *
      * @attr ref android.R.styleable#Switch_splitTrack
      */
     public void setSplitTrack(boolean splitTrack) {
         mSplitTrack = splitTrack;
         invalidate();
-    }
-
-    /**
-     * Returns whether the track should be split by the thumb.
-     *
-     * @attr ref android.R.styleable#Switch_splitTrack
-     */
-    public boolean getSplitTrack() {
-        return mSplitTrack;
     }
 
     /**
@@ -592,6 +574,14 @@ public class YSwitch extends YCompoundButton {
     }
 
     /**
+     * @return whether the on/off text should be displayed
+     * @attr ref android.R.styleable#Switch_showText
+     */
+    public boolean getShowText() {
+        return mShowText;
+    }
+
+    /**
      * Sets whether the on/off text should be displayed.
      *
      * @param showText {@code true} to display on/off text
@@ -602,14 +592,6 @@ public class YSwitch extends YCompoundButton {
             mShowText = showText;
             requestLayout();
         }
-    }
-
-    /**
-     * @return whether the on/off text should be displayed
-     * @attr ref android.R.styleable#Switch_showText
-     */
-    public boolean getShowText() {
-        return mShowText;
     }
 
     @Override
@@ -630,14 +612,14 @@ public class YSwitch extends YCompoundButton {
         if (mThumbDrawable != null) {
             // Cached thumb width does not include padding.
             mThumbDrawable.getPadding(padding);
-			if(mThumbDrawable.getIntrinsicWidth() < 1 && mThumbDrawable.getIntrinsicHeight() < 1){
-				Rect r = mThumbDrawable.getBounds();
-				thumbWidth = r.right - padding.left - padding.right;
-				thumbHeight = r.bottom;
-			} else {
-				thumbWidth = mThumbDrawable.getIntrinsicWidth() - padding.left - padding.right;
-				thumbHeight = mThumbDrawable.getIntrinsicHeight();
-			}
+            if (mThumbDrawable.getIntrinsicWidth() < 1 && mThumbDrawable.getIntrinsicHeight() < 1) {
+                Rect r = mThumbDrawable.getBounds();
+                thumbWidth = r.right - padding.left - padding.right;
+                thumbHeight = r.bottom;
+            } else {
+                thumbWidth = mThumbDrawable.getIntrinsicWidth() - padding.left - padding.right;
+                thumbHeight = mThumbDrawable.getIntrinsicHeight();
+            }
         } else {
             thumbWidth = 0;
             thumbHeight = 0;
@@ -656,11 +638,11 @@ public class YSwitch extends YCompoundButton {
         final int trackHeight;
         if (mTrackDrawable != null) {
             mTrackDrawable.getPadding(padding);
-			if(mTrackDrawable.getIntrinsicHeight() < 1){
-				trackHeight = thumbHeight;
-			} else {
-				trackHeight = mTrackDrawable.getIntrinsicHeight();
-			}
+            if (mTrackDrawable.getIntrinsicHeight() < 1) {
+                trackHeight = thumbHeight;
+            } else {
+                trackHeight = mTrackDrawable.getIntrinsicHeight();
+            }
         } else {
             padding.setEmpty();
             trackHeight = 0;
@@ -688,8 +670,8 @@ public class YSwitch extends YCompoundButton {
         if (measuredHeight < switchHeight) {
             setMeasuredDimension(
                     SDK_INT >= HONEYCOMB
-                    ? getMeasuredWidthAndState()
-                    : getMeasuredWidth(), switchHeight);
+                            ? getMeasuredWidthAndState()
+                            : getMeasuredWidth(), switchHeight);
         }
     }
 
@@ -705,10 +687,10 @@ public class YSwitch extends YCompoundButton {
 
     private Layout makeLayout(CharSequence text) {
         CharSequence transformed = (mSwitchTransformationMethod != null)
-                    ? mSwitchTransformationMethod.getTransformation(text, this)
-                    : text;
+                ? mSwitchTransformationMethod.getTransformation(text, this)
+                : text;
 
-        if(transformed == null)
+        if (transformed == null)
             transformed = "";
 
         return new StaticLayout(transformed, mTextPaint,
@@ -814,8 +796,8 @@ public class YSwitch extends YCompoundButton {
 
         return super.onTouchEvent(ev);
     }
-	
-	private float constrain(float amount, float low, float high) {
+
+    private float constrain(float amount, float low, float high) {
         return amount < low ? low : (amount > high ? high : amount);
     }
 
@@ -877,16 +859,6 @@ public class YSwitch extends YCompoundButton {
 
     private boolean getTargetCheckedState() {
         return mThumbPosition > 0.5f;
-    }
-
-    /**
-     * Sets the thumb position as a decimal value between 0 (off) and 1 (on).
-     *
-     * @param position new position between [0,1]
-     */
-    public void setThumbPosition(float position) {
-        mThumbPosition = position;
-        invalidate();
     }
 
     @Override
@@ -1039,7 +1011,7 @@ public class YSwitch extends YCompoundButton {
 
             final Drawable background = getBackground();
             if (background != null) {
-                if(SDK_INT >= LOLLIPOP) {
+                if (SDK_INT >= LOLLIPOP) {
                     background.setHotspotBounds(thumbLeft, switchTop, thumbRight, switchBottom);
                 } else {
                     background.setBounds(thumbLeft, switchTop, thumbRight, switchBottom);
@@ -1254,7 +1226,7 @@ public class YSwitch extends YCompoundButton {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        if(SDK_INT >= ICE_CREAM_SANDWICH) {
+        if (SDK_INT >= ICE_CREAM_SANDWICH) {
             info.setClassName(YSwitch.class.getName());
             CharSequence switchText = isChecked() ? mTextOn : mTextOff;
             if (!TextUtils.isEmpty(switchText)) {
@@ -1272,5 +1244,15 @@ public class YSwitch extends YCompoundButton {
 
     public float getThumbPosition() {
         return mThumbPosition;
+    }
+
+    /**
+     * Sets the thumb position as a decimal value between 0 (off) and 1 (on).
+     *
+     * @param position new position between [0,1]
+     */
+    public void setThumbPosition(float position) {
+        mThumbPosition = position;
+        invalidate();
     }
 }

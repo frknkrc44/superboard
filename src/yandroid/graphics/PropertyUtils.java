@@ -8,8 +8,6 @@ import android.util.FloatProperty;
 import yandroid.widget.YSwitch;
 
 public class PropertyUtils {
-    private PropertyUtils() {}
-
     @TargetApi(N)
     public static final FloatProperty<YSwitch> THUMB_POS = new FloatProperty<YSwitch>("thumbPos") {
         @Override
@@ -22,4 +20,7 @@ public class PropertyUtils {
             object.setThumbPosition(value);
         }
     };
+
+    private PropertyUtils() {
+    }
 }

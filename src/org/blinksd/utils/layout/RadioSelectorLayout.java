@@ -4,28 +4,27 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RadioSelectorLayout {
-	private RadioSelectorLayout(){}
+    private RadioSelectorLayout() {
+    }
 
-	public static View getRadioSelectorLayout(Context ctx, int selection, List<String> items){
-		final RadioGroup rg = new RadioGroup(ctx);
-		int i = DensityUtils.dpInt(8);
-		rg.setPadding(i,i,i,i);
-		rg.setTag(selection);
-		rg.setOnCheckedChangeListener((group, checkedId) -> rg.setTag(checkedId));
-		i = 0;
-		for(String key : items){
-			CustomRadioButton rb = new CustomRadioButton(ctx);
-			rb.setId(i);
-			rb.setChecked(i == selection);
-			rb.setText(key);
-			rg.addView(rb);
-			i++;
-		}
-		return rg;
-	}
+    public static View getRadioSelectorLayout(Context ctx, int selection, List<String> items) {
+        final RadioGroup rg = new RadioGroup(ctx);
+        int i = DensityUtils.dpInt(8);
+        rg.setPadding(i, i, i, i);
+        rg.setTag(selection);
+        rg.setOnCheckedChangeListener((group, checkedId) -> rg.setTag(checkedId));
+        i = 0;
+        for (String key : items) {
+            CustomRadioButton rb = new CustomRadioButton(ctx);
+            rb.setId(i);
+            rb.setChecked(i == selection);
+            rb.setText(key);
+            rg.addView(rb);
+            i++;
+        }
+        return rg;
+    }
 }

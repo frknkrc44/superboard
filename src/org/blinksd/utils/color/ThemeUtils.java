@@ -17,29 +17,30 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ThemeUtils {
-    private ThemeUtils() {}
+    private ThemeUtils() {
+    }
 
-    public static ThemeHolder getUserThemeFromCodeName(List<ThemeHolder> themes, String name){
-        for(ThemeHolder holder : themes){
-            if(holder.codeName.equals(name) && holder.isUserTheme){
+    public static ThemeHolder getUserThemeFromCodeName(List<ThemeHolder> themes, String name) {
+        for (ThemeHolder holder : themes) {
+            if (holder.codeName.equals(name) && holder.isUserTheme) {
                 return holder;
             }
         }
         return null;
     }
 
-    public static ThemeHolder getThemeFromCodeName(List<ThemeHolder> themes, String name){
-        for(ThemeHolder holder : themes){
-            if(holder.codeName.equals(name)){
+    public static ThemeHolder getThemeFromCodeName(List<ThemeHolder> themes, String name) {
+        for (ThemeHolder holder : themes) {
+            if (holder.codeName.equals(name)) {
                 return holder;
             }
         }
         return null;
     }
 
-    public static int getThemeIndexFromCodeName(List<ThemeHolder> themes, String name){
-        for(int i = 0;i < themes.size();i++){
-            if(themes.get(i).codeName.equals(name)){
+    public static int getThemeIndexFromCodeName(List<ThemeHolder> themes, String name) {
+        for (int i = 0; i < themes.size(); i++) {
+            if (themes.get(i).codeName.equals(name)) {
                 return i;
             }
         }
@@ -50,9 +51,9 @@ public class ThemeUtils {
         return getThemeNames(getThemes());
     }
 
-    public static List<String> getThemeNames(List<ThemeHolder> themes){
+    public static List<String> getThemeNames(List<ThemeHolder> themes) {
         List<String> themeNames = new ArrayList<>();
-        for(ThemeHolder holder : themes)
+        for (ThemeHolder holder : themes)
             themeNames.add(holder.name);
         return themeNames;
     }
@@ -60,7 +61,7 @@ public class ThemeUtils {
     public static File getUserThemesDir() {
         File themesDir = new File(SuperBoardApplication.getApplication().getFilesDir() + "/themes");
 
-        if(!themesDir.exists()){
+        if (!themesDir.exists()) {
             themesDir.mkdirs();
         }
 
@@ -69,18 +70,18 @@ public class ThemeUtils {
 
     public static List<ThemeHolder> getThemes() throws IOException, JSONException {
         List<ThemeHolder> holders = new ArrayList<>();
-        
+
         // Import default themes
         AssetManager assets = SuperBoardApplication.getApplication().getAssets();
-		String subdir = "themes";
-		String[] items = assets.list(subdir);
-		Arrays.sort(items);
-		for(String str : items){
-			if(str.endsWith(".json")){
-				Scanner sc = new Scanner(assets.open(subdir + "/" + str));
-				String s = "";
-				while(sc.hasNext()) s += sc.nextLine();
-				sc.close();
+        String subdir = "themes";
+        String[] items = assets.list(subdir);
+        Arrays.sort(items);
+        for (String str : items) {
+            if (str.endsWith(".json")) {
+                Scanner sc = new Scanner(assets.open(subdir + "/" + str));
+                String s = "";
+                while (sc.hasNext()) s += sc.nextLine();
+                sc.close();
                 holders.add(new ThemeHolder(s, false));
             }
         }
@@ -88,11 +89,11 @@ public class ThemeUtils {
         // Import themes by using keyboard theme api
         File themesDir = getUserThemesDir();
 
-        for(String file : themesDir.list()) {
+        for (String file : themesDir.list()) {
             Scanner sc = new Scanner(new File(themesDir + "/" + file));
-			String s = "";
-			while(sc.hasNext()) s += sc.nextLine();
-			sc.close();
+            String s = "";
+            while (sc.hasNext()) s += sc.nextLine();
+            sc.close();
             holders.add(new ThemeHolder(s, true));
         }
 
@@ -100,10 +101,10 @@ public class ThemeUtils {
     }
 
     public static class ThemeHolder {
-        public final String name, codeName, fontType, iconTheme, 
-                            backgroundColor, primaryColor, secondaryColor, 
-                            enterColor, textShadowColor, textColor, 
-                            primaryPressColor, secondaryPressColor, enterPressColor;
+        public final String name, codeName, fontType, iconTheme,
+                backgroundColor, primaryColor, secondaryColor,
+                enterColor, textShadowColor, textColor,
+                primaryPressColor, secondaryPressColor, enterPressColor;
         public final int keyPadding, keyRadius, textSize, textShadow;
         public final boolean isUserTheme;
 
@@ -155,22 +156,22 @@ public class ThemeUtils {
         private String getString(JSONObject json, String key, String userAttr) {
             try {
                 return json.has(key) ? (json.getString(key) + userAttr) : "";
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 return "";
             }
         }
 
         private int getInt(JSONObject json, String key) {
             String str = getString(json, key);
-            if(str.length() < 1) {
+            if (str.length() < 1) {
                 return -1;
             }
 
             try {
                 double convert = Double.parseDouble(str);
-                int convertInt = (int)(10 * convert);
+                int convertInt = (int) (10 * convert);
                 return convertInt;
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 return -1;
             }
         }
@@ -178,7 +179,7 @@ public class ThemeUtils {
         private void putControlledColor(String key, String color) {
             SuperMiniDB smdb = SuperBoardApplication.getApplicationDatabase();
             SettingMap sMap = SuperBoardApplication.getSettings();
-            if(color.trim().length() < 1) {
+            if (color.trim().length() < 1) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
             }
@@ -188,7 +189,7 @@ public class ThemeUtils {
         private void putControlledString(String key, String value) {
             SuperMiniDB smdb = SuperBoardApplication.getApplicationDatabase();
             SettingMap sMap = SuperBoardApplication.getSettings();
-            if(value.trim().length() < 1) {
+            if (value.trim().length() < 1) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
             }
@@ -198,7 +199,7 @@ public class ThemeUtils {
         private void putControlledInt(String key, int value) {
             SuperMiniDB smdb = SuperBoardApplication.getApplicationDatabase();
             SettingMap sMap = SuperBoardApplication.getSettings();
-            if(value < 0) {
+            if (value < 0) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
             }
@@ -210,13 +211,13 @@ public class ThemeUtils {
                 SettingMap sMap = SuperBoardApplication.getSettings();
                 List textTypes = sMap.getSelector(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
                 putControlledInt(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, textTypes.indexOf(fontType));
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 putControlledInt(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, -1);
             }
 
             try {
-                 putControlledString(SettingMap.SET_ICON_THEME, iconTheme);
-            } catch(Throwable t) {
+                putControlledString(SettingMap.SET_ICON_THEME, iconTheme);
+            } catch (Throwable t) {
                 putControlledInt(SettingMap.SET_ICON_THEME, -1);
             }
             putControlledColor(SettingMap.SET_KEYBOARD_BGCLR, backgroundColor);

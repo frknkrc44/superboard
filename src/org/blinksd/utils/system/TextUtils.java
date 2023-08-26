@@ -6,9 +6,29 @@ import android.os.Build;
 import android.util.Pair;
 
 public class TextUtils {
-    public TextUtils() {}
-
+    // U+DFFFD which is very end of unassigned plane.
+    private static final String TOFU_STRING = "\uDB3F\uDFFD";
+    private static final String EM_STRING = "m";
+    private static final ThreadLocal<Pair<Rect, Rect>> sRectThreadLocal = new ThreadLocal<>();
     private final Paint paint = new Paint();
+
+    // THIS PART IS COPIED FROM
+    // https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/core/core/src/main/java/androidx/core/graphics/PaintCompat.java
+
+    public TextUtils() {
+    }
+
+    private static Pair<Rect, Rect> obtainEmptyRects() {
+        Pair<Rect, Rect> rects = sRectThreadLocal.get();
+        if (rects == null) {
+            rects = new Pair<>(new Rect(), new Rect());
+            sRectThreadLocal.set(rects);
+        } else {
+            rects.first.setEmpty();
+            rects.second.setEmpty();
+        }
+        return rects;
+    }
 
     public Rect getTextBounds(float textSize, String text) {
         Rect bounds = new Rect();
@@ -27,19 +47,11 @@ public class TextUtils {
         return hasGlyph(paint, text);
     }
 
-    // THIS PART IS COPIED FROM
-    // https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/core/core/src/main/java/androidx/core/graphics/PaintCompat.java
-
-    // U+DFFFD which is very end of unassigned plane.
-    private static final String TOFU_STRING = "\uDB3F\uDFFD";
-    private static final String EM_STRING = "m";
-    private static final ThreadLocal<Pair<Rect, Rect>> sRectThreadLocal = new ThreadLocal<>();
-
     /**
      * Determine whether the typeface set on the paint has a glyph supporting the
      * string in a backwards compatible way.
      *
-     * @param paint the paint instance to check
+     * @param paint  the paint instance to check
      * @param string the string to test whether there is glyph support
      * @return true if the typeface set on the given paint has a glyph for the string
      */
@@ -93,17 +105,5 @@ public class TextUtils {
         paint.getTextBounds(TOFU_STRING, 0, TOFU_STRING.length(), rects.first);
         paint.getTextBounds(string, 0, length, rects.second);
         return !rects.first.equals(rects.second);
-    }
-
-    private static Pair<Rect, Rect> obtainEmptyRects() {
-        Pair<Rect, Rect> rects = sRectThreadLocal.get();
-        if (rects == null) {
-            rects = new Pair<>(new Rect(), new Rect());
-            sRectThreadLocal.set(rects);
-        } else {
-            rects.first.setEmpty();
-            rects.second.setEmpty();
-        }
-        return rects;
     }
 }

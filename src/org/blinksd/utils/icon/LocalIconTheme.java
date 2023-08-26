@@ -10,6 +10,9 @@ import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.api.parcelables.IconThemeParcel;
 
 public class LocalIconTheme {
+    public static final int SYM_TYPE_SHIFT = 0, SYM_TYPE_EMOJI = 1,
+            SYM_TYPE_SPACE = 2, SYM_TYPE_ENTER = 3,
+            SYM_TYPE_DELETE = 4;
     public final Drawable shiftIcon;
     public final Drawable emojiIcon;
     public final Drawable spaceIcon;
@@ -17,7 +20,7 @@ public class LocalIconTheme {
     public final Drawable deleteIcon;
 
     public LocalIconTheme(Drawable shiftIcon, Drawable emojiIcon, Drawable spaceIcon,
-                   Drawable returnIcon, Drawable deleteIcon) {
+                          Drawable returnIcon, Drawable deleteIcon) {
         this.shiftIcon = shiftIcon;
         this.emojiIcon = emojiIcon;
         this.spaceIcon = spaceIcon;
@@ -57,7 +60,7 @@ public class LocalIconTheme {
     }
 
     private static Drawable getDrawable(int res) {
-        switch(res){
+        switch (res) {
             case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
             case SpaceBarThemeUtils.SPACEBAR_TEXT:
                 return null;
@@ -90,8 +93,4 @@ public class LocalIconTheme {
 
         return new ColorDrawable();
     }
-
-    public static final int SYM_TYPE_SHIFT = 0, SYM_TYPE_EMOJI = 1,
-            SYM_TYPE_SPACE = 2, SYM_TYPE_ENTER = 3,
-            SYM_TYPE_DELETE = 4;
 }
