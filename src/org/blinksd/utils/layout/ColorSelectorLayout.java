@@ -30,10 +30,10 @@ import org.blinksd.board.AppSettingsV2;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.board.SuperBoard;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.color.HSVColorUtils;
-import org.blinksd.sdb.SuperDBHelper;
 
 public class ColorSelectorLayout {
 
@@ -42,6 +42,7 @@ public class ColorSelectorLayout {
     private static TextView prev;
     private static CustomSeekBar a, r, g, b, h, s, v;
     private static EditText hexIn;
+
     private ColorSelectorLayout() {
     }
 

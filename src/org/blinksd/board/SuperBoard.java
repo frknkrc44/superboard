@@ -42,6 +42,8 @@ import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.layout.DensityUtils;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SuperBoard extends FrameLayout implements OnTouchListener {
@@ -353,7 +355,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setIconSizeMultiplier(int multi) {
         iconmulti = multi;
-        setKeysTextSize((int) txtsze, true);
+        applyIconMultiply();
     }
 
     private boolean isHasPopup(View v) {
@@ -416,6 +418,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 }
             });
         keyclr = color;
+    }
+
+    private void applyIconMultiply() {
+        applyToAllKeys(new ApplyToKeyRunnable() {
+            public void run(Key key) {
+                key.applyIconMultiply();
+            }
+        });
     }
 
     public void setKeysTextSize(final int size) {
@@ -1160,6 +1170,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         getServiceContext().requestHideSelf(0);
     }
 
+    public List<Integer> findKeyboardIndexes(KeyboardType type) {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            if (getChildAt(i).getTag() != null &&
+                    getChildAt(i).getTag().equals(type)) {
+                indexes.add(i);
+            }
+        }
+
+        return indexes;
+    }
+
     public int findKeyboardIndex(KeyboardType type) {
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i).getTag() != null &&
@@ -1319,7 +1341,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
-    public enum KeyboardType {TEXT, SYMBOL, NUMBER}
+    public enum KeyboardType {TEXT, SYMBOL, NUMBER, FN}
 
     public enum TextType {
         regular,
@@ -1625,6 +1647,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             setKeyItemColor(txtclr);
         }
 
+        public void setKeyIcon(int iconRes) {
+            setKeyIcon(getContext().getResources().getDrawable(iconRes));
+        }
+
         protected CharSequence getHint() {
             return label.getHint();
         }
@@ -1642,9 +1668,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyTextSize(float size) {
             label.setTextSize(txtsze = size);
             sublabel.setTextSize(label.getTextSize() / 3);
+            applyIconMultiply();
+        }
+
+        public void applyIconMultiply() {
             ViewGroup.LayoutParams vp = icon.getLayoutParams();
             vp.width = -1;
-            vp.height = (int) (size * iconmulti);
+            vp.height = (int) (txtsze * iconmulti);
         }
 
         public void setKeyShadow(int radius, int color) {

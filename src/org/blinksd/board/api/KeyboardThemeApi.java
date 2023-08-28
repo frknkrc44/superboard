@@ -155,6 +155,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             fos.write(langPkgStr.getBytes());
             fos.flush();
             fos.close();
+            SuperBoardApplication.reloadLanguageCache();
             return LANG_PKG_IMPORT_SUCCESS;
         } catch (Throwable t) {
             // do nothing
@@ -164,7 +165,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public boolean isLangPkgImported(String name) {
-        LayoutUtils.Language eqlang = LayoutUtils.getLanguage(SuperBoardApplication.getApplication(), name, true);
+        LayoutUtils.Language eqlang = SuperBoardApplication.getKeyboardLanguage(name, true);
         return eqlang.name.equals(name);
     }
 

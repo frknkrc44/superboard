@@ -22,9 +22,9 @@ import android.view.WindowManager;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.InputService;
 import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.layout.DensityUtils;
-import org.blinksd.sdb.SuperDBHelper;
 
 import java.lang.reflect.Method;
 

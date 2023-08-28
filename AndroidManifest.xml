@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:versionCode="39"
-    android:versionName="3.31">
+	android:versionCode="40"
+    android:versionName="3.32">
 	
 	<uses-sdk android:minSdkVersion="9"
 		android:targetSdkVersion="33" />
@@ -48,6 +48,9 @@
 		<activity
 			android:launchMode="singleTask"
 			android:name=".FontSelector"/>
+		<activity
+			android:launchMode="singleTask"
+			android:name=".KeyboardLayoutSelector"/>
 		<service
             android:exported="true"
 			android:name=".InputService"

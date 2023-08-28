@@ -341,7 +341,19 @@ public class ImageSelectorLayout {
         Canvas drw = new Canvas(out);
         gd.draw(drw);
         return out;
-    }    private static final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
+    }
+
+    private static class GradientOrientation {
+        private GradientOrientation() {
+        }
+
+        public static GradientDrawable.Orientation getFromIndex(int index) {
+            GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
+            return values[index % values.length];
+        }
+    }
+
+    private static final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
 
         @SuppressLint("ResourceType")
         @Override
@@ -369,17 +381,6 @@ public class ImageSelectorLayout {
         }
 
     };
-
-    private static class GradientOrientation {
-        private GradientOrientation() {
-        }
-
-        public static GradientDrawable.Orientation getFromIndex(int index) {
-            GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
-            return values[index % values.length];
-        }
-    }
-
 
 
 }

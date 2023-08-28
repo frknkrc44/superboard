@@ -11,14 +11,18 @@ package org.blinksd.sdb;
  ----------------------------
 */
 
+import android.annotation.SuppressLint;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,22 +30,22 @@ import java.util.TreeSet;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
 public class SuperMiniDB {
 
-    public static final String QUERY_RULE_STARTSWITH = "SW",
-            QUERY_RULE_ENDSWITH = "EW",
+    public static final String QUERY_RULE_STARTS_WITH = "SW",
+            QUERY_RULE_ENDS_WITH = "EW",
             QUERY_RULE_EQUALS = "EQ",
             QUERY_RULE_CONTAINS = "CT";
-    private final HashMap<String, String> hm1 = new HashMap<String, String>();
-    private String su, sv, sq;
-    private boolean dbRemoved = false, clean = true;
-    private File folder, tf;
+    private final HashMap<String, String> hm1 = new HashMap<>();
+    private boolean dbRemoved = false;
+    private File folder;
     private FileOutputStream os = null;
 
-    public SuperMiniDB(String dbName, File path, boolean dontRead) {
+    public SuperMiniDB(String dbName, File path, boolean notRead) {
         init(dbName, path);
-        if (!dontRead) {
-            read();
+        if (!notRead) {
+            readAll();
         }
     }
 
@@ -72,54 +76,54 @@ public class SuperMiniDB {
     }
 
     public final long getLong(String key, long def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Long.parseLong(s);
+            return s.equals(String.valueOf(def)) ? def : Long.parseLong(s);
         } catch (Throwable t) {
             return def;
         }
     }
 
     public final byte getByte(String key, byte def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Byte.parseByte(s);
+            return s.equals(String.valueOf(def)) ? def : Byte.parseByte(s);
         } catch (Throwable t) {
             return def;
         }
     }
 
     public final int getInteger(String key, int def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Integer.parseInt(s);
+            return s.equals(String.valueOf(def)) ? def : Integer.parseInt(s);
         } catch (Throwable t) {
             return def;
         }
     }
 
     public final float getFloat(String key, float def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Float.parseFloat(s);
+            return s.equals(String.valueOf(def)) ? def : Float.parseFloat(s);
         } catch (Throwable t) {
             return def;
         }
     }
 
     public final double getDouble(String key, double def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Double.parseDouble(s);
+            return s.equals(String.valueOf(def)) ? def : Double.parseDouble(s);
         } catch (Throwable t) {
             return def;
         }
     }
 
     public final boolean getBoolean(String key, boolean def) {
-        String s = getString(key, def + "");
+        String s = getString(key, String.valueOf(def));
         try {
-            return s.equals(def + "") ? def : Boolean.parseBoolean(s);
+            return s.equals(String.valueOf(def)) ? def : Boolean.parseBoolean(s);
         } catch (Throwable t) {
             return def;
         }
@@ -142,7 +146,7 @@ public class SuperMiniDB {
     }
 
     public final void putLong(String key, long value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
     public final void putByte(String key, byte value) {
@@ -150,7 +154,7 @@ public class SuperMiniDB {
     }
 
     public final void putByte(String key, byte value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
     public final void putInteger(String key, int value) {
@@ -158,7 +162,7 @@ public class SuperMiniDB {
     }
 
     public final void putInteger(String key, int value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
     public final void putFloat(String key, float value) {
@@ -166,7 +170,7 @@ public class SuperMiniDB {
     }
 
     public final void putFloat(String key, float value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
     public final void putDouble(String key, double value) {
@@ -174,7 +178,7 @@ public class SuperMiniDB {
     }
 
     public final void putDouble(String key, double value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
     public final void putBoolean(String key, boolean value) {
@@ -182,23 +186,22 @@ public class SuperMiniDB {
     }
 
     public final void putBoolean(String key, boolean value, boolean permanent) {
-        putString(key, value + "", permanent);
+        putString(key, String.valueOf(value), permanent);
     }
 
-    public final Map getDatabaseDump() {
+    public final Map<String, String> getDatabaseDump() {
         return hm1;
     }
 
-    public final void putDatabaseDump(Map dump) {
+    public final void putDatabaseDump(Map<String, String> dump) {
         hm1.clear();
         hm1.putAll(dump);
     }
 
     public final void removeKeyFromDB(String key) {
         hm1.remove(key);
-        tf = new File(folder + File.separator + key);
+        File tf = new File(folder + File.separator + key);
         tf.delete();
-        tf = null;
     }
 
     public final void removeDB() {
@@ -207,10 +210,11 @@ public class SuperMiniDB {
         dbRemoved = true;
     }
 
-    private final void removeRecursive(File f) {
+    private void removeRecursive(File f) {
         if (f.isDirectory()) {
-            if (f.listFiles().length > 0) {
-                for (File g : f.listFiles()) {
+            File[] files = f.listFiles();
+            if (files != null) {
+                for (File g : files) {
                     removeRecursive(g);
                 }
             }
@@ -219,12 +223,11 @@ public class SuperMiniDB {
     }
 
     public final void clearRAM() {
-        clean = true;
         hm1.clear();
     }
 
     public final boolean isRAMClean() {
-        return clean;
+        return hm1.isEmpty();
     }
 
     public final void exportToDir(File dir) {
@@ -237,15 +240,7 @@ public class SuperMiniDB {
 
     public final void refresh() {
         writeAll();
-        read();
-    }
-
-    public final void onlyRead() {
-        read();
-    }
-
-    public final void onlyWrite() {
-        writeAll();
+        readAll();
     }
 
     public final void writeKey(Object key) {
@@ -260,23 +255,24 @@ public class SuperMiniDB {
         try {
             if (((String) key).length() > 0) {
                 if (os != null) os.close();
-                tf = new File(dir + File.separator + key);
+                File tf = new File(dir + File.separator + key);
                 os = new FileOutputStream(tf);
-                os.write(hm1.get(key).getBytes());
+                os.write(Objects.requireNonNull(hm1.get(key)).getBytes());
                 os.flush();
             }
         } catch (Exception e) {
             // do nothing
         } finally {
             try {
+                assert os != null;
                 os.close();
                 os = null;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
 
-    private void writeAll() {
+    public void writeAll() {
         writeAll(folder);
     }
 
@@ -289,7 +285,7 @@ public class SuperMiniDB {
     public final void readKey(String key) {
         try {
             parseValues(new File(folder + File.separator + key));
-        } catch (FileNotFoundException e) {
+        } catch (Throwable ignored) {
         }
     }
 
@@ -298,43 +294,33 @@ public class SuperMiniDB {
         readKey(key);
     }
 
-    private void read() {
+    public void readAll() {
         hm1.clear();
-        clean = false;
         if (!dbRemoved) {
             try {
                 if (folder.exists()) {
-                    for (File f : folder.listFiles()) {
+                    for (File f : Objects.requireNonNull(folder.listFiles())) {
                         parseValues(f);
                     }
                 } else folder.mkdirs();
-            } catch (Exception e) {
+            } catch (Throwable ignored) {
             }
         }
     }
 
     private void parseValues(File f) throws FileNotFoundException {
-        sq = "";
+        StringBuilder sq = new StringBuilder();
         Scanner sc = new Scanner(f);
-        while (sc.hasNext()) append(0, sc.nextLine());
-        hm1.put(f.getName(), sq);
-        sq = "";
-        sc = null;
+        while (sc.hasNext()) sq.append(sc.nextLine());
+        hm1.put(f.getName(), sq.toString());
     }
 
-    private final String encode(String in) {
+    private String encode(String in) {
         return Crypt.encode(folder.getAbsolutePath().hashCode(), in);
     }
 
-    private final String decode(String in) {
+    private String decode(String in) {
         return Crypt.decode(folder.getAbsolutePath().hashCode(), in);
-    }
-
-    private String append(int i, String c) {
-        if (i == 0) sq += c;
-        else if (i == 1) su += c;
-        else sv += c;
-        return i == 0 ? sq : i == 1 ? su : sv;
     }
 
     public Object[] getKeys(boolean descending) {
@@ -346,7 +332,7 @@ public class SuperMiniDB {
         if (!sort) {
             return s.toArray();
         }
-        TreeSet<String> x = new TreeSet<String>(s);
+        TreeSet<String> x = new TreeSet<>(s);
         if (descending) {
             s = x.descendingSet();
             return s.toArray();
@@ -368,17 +354,17 @@ public class SuperMiniDB {
         if (ruleArr.length < 2 || ruleArr[0].trim().length() < 1 || ruleArr[1].trim().length() < 1) {
             throw new RuntimeException("invalid rule");
         }
-        List<String> keys = new ArrayList<String>(hm1.keySet());
-        Map<String, String> out = new HashMap<String, String>();
+        List<String> keys = new ArrayList<>(hm1.keySet());
+        Map<String, String> out = new HashMap<>();
         switch (ruleArr[0].trim()) {
-            case QUERY_RULE_STARTSWITH:
+            case QUERY_RULE_STARTS_WITH:
                 for (String key : keys) {
                     if (key.startsWith(ruleArr[1].trim())) {
                         out.put(key, getString(key, ""));
                     }
                 }
                 break;
-            case QUERY_RULE_ENDSWITH:
+            case QUERY_RULE_ENDS_WITH:
                 for (String key : keys) {
                     if (key.endsWith(ruleArr[1].trim())) {
                         out.put(key, getString(key, ""));
@@ -408,28 +394,29 @@ public class SuperMiniDB {
     private static class Crypt {
 
         private static SecretKeySpec secretKey;
-        private static byte[] keyBuf;
         private static Cipher cipher;
 
+        @SuppressLint({"GetInstance", "NewApi"})
         public static void setKey(int key) {
             try {
                 cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
                 MessageDigest sha = MessageDigest.getInstance("SHA-1");
-                keyBuf = Integer.toString(key).getBytes("UTF-8");
+                byte[] keyBuf = Integer.toString(key).getBytes(StandardCharsets.UTF_8);
                 byte[] newBuf = new byte[16];
-                System.arraycopy(sha.digest(keyBuf), 0, newBuf, 0, 16);
-                // keyBuf = Arrays.copyOf(sha.digest(keyBuf), 16);
+                System.arraycopy(sha.digest(keyBuf), 0, newBuf, 0, newBuf.length);
                 secretKey = new SecretKeySpec(newBuf, "AES");
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
         }
 
+        @SuppressLint("NewApi")
         static String encode(int ck, String s) {
             try {
                 setKey(ck);
                 cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-                return new String(Base64EXT.encode(cipher.doFinal(s.getBytes("UTF-8")), Base64EXT.DEFAULT));
+                return new String(Base64EXT.encode(
+                        cipher.doFinal(s.getBytes(StandardCharsets.UTF_8)), Base64EXT.DEFAULT));
             } catch (Throwable e) {
                 return s;
             }

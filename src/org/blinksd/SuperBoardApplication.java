@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import org.blinksd.board.SettingMap;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
@@ -15,12 +16,13 @@ import org.blinksd.utils.icon.SpaceBarThemeUtils;
 import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.utils.system.TextUtils;
-import org.blinksd.sdb.SuperDBHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executors;
 
 public class SuperBoardApplication extends Application {
 
@@ -42,7 +44,7 @@ public class SuperBoardApplication extends Application {
         return dictDB;
     }
 
-    public static boolean isDictsReady() {
+    public static boolean isDictDBReady() {
         return dictDB != null && dictDB.isReady;
     }
 
@@ -106,12 +108,29 @@ public class SuperBoardApplication extends Application {
     }
 
     public static Language getCurrentKeyboardLanguage() {
+        return getCurrentKeyboardLanguage(false);
+    }
+
+    public static Language getCurrentKeyboardLanguage(boolean onlyUser) {
         String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
-        return getKeyboardLanguage(appDB.getString(key, (String) settingMap.getDefaults(key)));
+        return getKeyboardLanguage(
+                appDB.getString(key, (String) settingMap.getDefaults(key)), onlyUser);
     }
 
     public static Language getKeyboardLanguage(String name) {
-        return languageCache.containsKey(name) ? languageCache.get(name) : LayoutUtils.getEmptyLanguage();
+        return getKeyboardLanguage(name, false);
+    }
+
+    public static Language getKeyboardLanguage(String name, boolean onlyUser) {
+        Language ret = languageCache.containsKey(name)
+                ? Objects.requireNonNull(languageCache.get(name))
+                : LayoutUtils.emptyLanguage;
+
+        if ((!ret.userLanguage) && onlyUser) {
+            return LayoutUtils.emptyLanguage;
+        }
+
+        return ret;
     }
 
     public static void getNextLanguage() {
@@ -133,8 +152,7 @@ public class SuperBoardApplication extends Application {
                     return;
                 }
                 appDB.putString(key, l.language);
-                appDB.onlyWrite();
-                return;
+                appDB.writeAll();
             }
         }
     }
@@ -143,23 +161,25 @@ public class SuperBoardApplication extends Application {
      * Returns human readable language name list
      */
     public static List<String> getLanguageHRNames() {
-        List<String> langKeys = new ArrayList<String>(languageCache.keySet());
-        List<String> out = new ArrayList<String>();
+        List<String> langKeys = new ArrayList<>(languageCache.keySet());
+        List<String> out = new ArrayList<>();
         for (String key : langKeys) {
             Language lang = languageCache.get(key);
-            out.add(lang.label);
+            if (lang != null) out.add(lang.label);
         }
         return out;
     }
 
     public static List<String> getLanguageTypes() {
-        List<String> langKeys = new ArrayList<String>(languageCache.keySet());
-        List<String> out = new ArrayList<String>();
+        List<String> langKeys = new ArrayList<>(languageCache.keySet());
+        List<String> out = new ArrayList<>();
         for (String key : langKeys) {
             Language lang = languageCache.get(key);
-            String name = lang.language.split("_")[0].toLowerCase();
-            if (!out.contains(name))
-                out.add(name);
+            if (lang != null) {
+                String name = lang.language.split("_")[0].toLowerCase();
+                if (!out.contains(name))
+                    out.add(name);
+            }
         }
         return out;
     }
@@ -184,20 +204,19 @@ public class SuperBoardApplication extends Application {
         fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
         getCustomFont(); // start to load custom Typeface
 
+        reloadLanguageCache();
+        reloadThemeCache();
+
+        Executors.newSingleThreadExecutor()
+                .execute(() -> dictDB = new DictionaryDB(appContext));
+    }
+
+    public static void reloadLanguageCache() {
         try {
-            languageCache = LayoutUtils.getLanguageList(getApplicationContext());
+            languageCache = LayoutUtils.getLanguageList(getApplication());
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
-
-        reloadThemeCache();
-
-        new Thread() {
-            public void run() {
-                dictDB = new DictionaryDB(appContext);
-                // dictDB.fillDB();
-            }
-        }.start();
     }
 
     @Override

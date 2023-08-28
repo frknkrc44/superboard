@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutUtils;
-import org.blinksd.sdb.SuperDBHelper;
 
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {

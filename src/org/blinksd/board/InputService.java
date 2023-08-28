@@ -39,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
@@ -49,11 +50,11 @@ import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.layout.LayoutUtils.KeyOptions;
 import org.blinksd.utils.layout.LayoutUtils.Language;
 import org.blinksd.utils.layout.SuggestionLayout;
-import org.blinksd.sdb.SuperDBHelper;
 
 import java.io.File;
 import java.util.List;
 
+@SuppressWarnings({"deprecation", "InlinedApi"})
 public class InputService extends InputMethodService implements
         SuggestionLayout.OnSuggestionSelectedListener,
         SuggestionLayout.OnQuickMenuItemClickListener {
@@ -192,6 +193,7 @@ public class InputService extends InputMethodService implements
 
     public void sendCompletionRequest() {
         boolean sugDisabled = sl == null ||
+                !SuperBoardApplication.isDictDBReady() ||
                 SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
         if (sb == null) return;
         InputConnection ic = sb.getCurrentIC();
@@ -206,7 +208,7 @@ public class InputService extends InputMethodService implements
     private void setLayout() {
         if (sd == null) {
             sd = SuperBoardApplication.getApplicationDatabase();
-            registerReceiver(r, new IntentFilter(COLORIZE_KEYBOARD));
+            registerReceiver(r, new IntentFilter(COLORIZE_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
         }
         if (sb == null) {
             sb = new SuperBoardImpl(this);
@@ -223,14 +225,16 @@ public class InputService extends InputMethodService implements
                     {"√", "ℕ", "★", "×", "™", "‰", "∛", "^", "~", "±"},
                     {"♣", "♠", "♪", "♥", "♦", "≈", "Π", "¶", "§", "∆"},
                     {"←", "↑", "↓", "→", "∞", "≠", "_", "℅", "‘", "’"},
-                    {"S3", "¡", "•", "°", "¢", "|", "\\", "¿", ""},
+                    {"S1", "¡", "•", "°", "¢", "|", "\\", "¿", ""},
                     {abc, "₺", appname, "…", ""}
             }, kbdSym3 = {
-                    {"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8"},
-                    {"F9", "F10", "F11", "F12", "P↓", "P↑", "INS", "DEL"},
-                    {"TAB", "ENTER", "HOME", "ESC", "PREV", "PLAY", "STOP", "NEXT"},
-                    {"", "", "END", "", "BS", "PAUSE", "CUT", "COPY"},
-                    {abc, "", "←", "↑", "↓", "→", "", "PASTE"}
+                    {"INS", "HOME",  "↑",     "P↑",    "ESC"               },
+                    {"BS",  "←",     "ENTER", "→",     "TAB"               },
+                    {"DEL", "END",   "↓",     "P↓",    "MENU"              },
+                    {"CUT", "COPY",  "PASTE",                              },
+                    {"F1",  "F2",    "F3",    "F4",    "F5",   "F6"        },
+                    {"F7",  "F8",    "F9",    "F10",   "F11",  "F12"       },
+                    {abc,   "PREV",  "PLAY",  "PAUSE", "NEXT",             }
             }, kbdNums = {
                     {"-", ".", ",", "ABC"},
                     {"1", "2", "3", "+"},
@@ -245,51 +249,58 @@ public class InputService extends InputMethodService implements
 
             sb.createLayoutWithRows(kbd[0], KeyboardType.SYMBOL);
             sb.createLayoutWithRows(kbd[1], KeyboardType.SYMBOL);
-            sb.createLayoutWithRows(kbd[2], KeyboardType.SYMBOL);
+            sb.createLayoutWithRows(kbd[2], KeyboardType.FN);
             sb.createLayoutWithRows(kbd[3], KeyboardType.NUMBER);
 
             sb.setPressEventForKey(1, 3, 0, Keyboard.KEYCODE_ALT);
-            sb.setPressEventForKey(2, 3, 0, Keyboard.KEYCODE_ALT);
-            sb.setPressEventForKey(3, -1, 0, Keyboard.KEYCODE_MODE_CHANGE);
 
             sb.setPressEventForKey(-1, 0, -1, Keyboard.KEYCODE_ALT);
             sb.setPressEventForKey(-1, -2, -1, Keyboard.KEYCODE_DELETE);
             sb.setKeyRepeat(-1, -2, -1);
             sb.setPressEventForKey(-1, -1, -1, Keyboard.KEYCODE_DONE);
 
-            sb.setPressEventForKey(3, 1, 4, KeyEvent.KEYCODE_PAGE_DOWN);
-            sb.setPressEventForKey(3, 1, 5, KeyEvent.KEYCODE_PAGE_UP);
-            sb.setPressEventForKey(3, 1, 6, KeyEvent.KEYCODE_INSERT);
-            sb.setPressEventForKey(3, 1, 7, KeyEvent.KEYCODE_FORWARD_DEL);
-            sb.setPressEventForKey(3, 2, 0, KeyEvent.KEYCODE_TAB);
-            sb.setPressEventForKey(3, 2, 1, '\n', false);
-            sb.setPressEventForKey(3, 2, 2, KeyEvent.KEYCODE_MOVE_HOME);
-            sb.setPressEventForKey(3, 2, 3, KeyEvent.KEYCODE_ESCAPE);
-            sb.setPressEventForKey(3, 2, 4, KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-            sb.setPressEventForKey(3, 2, 5, KeyEvent.KEYCODE_MEDIA_PLAY);
-            sb.setPressEventForKey(3, 2, 6, KeyEvent.KEYCODE_MEDIA_STOP);
-            sb.setPressEventForKey(3, 2, 7, KeyEvent.KEYCODE_MEDIA_NEXT);
+            sb.setPressEventForKey(3, 0, 0, KeyEvent.KEYCODE_INSERT);
+            sb.setPressEventForKey(3, 0, 1, KeyEvent.KEYCODE_MOVE_HOME);
+            sb.setPressEventForKey(3, 0, 2, KeyEvent.KEYCODE_DPAD_UP);
+            sb.setPressEventForKey(3, 0, 3, KeyEvent.KEYCODE_PAGE_UP);
+            sb.setPressEventForKey(3, 0, 4, KeyEvent.KEYCODE_ESCAPE);
 
-            sb.setPressEventForKey(3, 3, 2, KeyEvent.KEYCODE_MOVE_END);
-            sb.setPressEventForKey(3, 3, 4, KeyEvent.KEYCODE_DEL);
-            sb.setPressEventForKey(3, 3, 5, KeyEvent.KEYCODE_MEDIA_PAUSE);
-            sb.setPressEventForKey(3, 3, 6, KeyEvent.KEYCODE_CUT);
-            sb.setPressEventForKey(3, 3, 7, KeyEvent.KEYCODE_COPY);
+            sb.setPressEventForKey(3, 1, 0, KeyEvent.KEYCODE_FORWARD_DEL);
+            sb.setPressEventForKey(3, 1, 1, KeyEvent.KEYCODE_DPAD_LEFT);
+            sb.setPressEventForKey(3, 1, 2, '\n', false);
+            sb.setPressEventForKey(3, 1, 3, KeyEvent.KEYCODE_DPAD_RIGHT);
+            sb.setPressEventForKey(3, 1, 4, KeyEvent.KEYCODE_TAB);
 
-            sb.setPressEventForKey(3, -1, 2, KeyEvent.KEYCODE_DPAD_LEFT);
-            sb.setPressEventForKey(3, -1, 3, KeyEvent.KEYCODE_DPAD_UP);
-            sb.setPressEventForKey(3, -1, 4, KeyEvent.KEYCODE_DPAD_DOWN);
-            sb.setPressEventForKey(3, -1, 5, KeyEvent.KEYCODE_DPAD_RIGHT);
-            sb.setPressEventForKey(3, -1, 7, KeyEvent.KEYCODE_PASTE);
+            sb.setPressEventForKey(3, 2, 0, KeyEvent.KEYCODE_DEL);
+            sb.setPressEventForKey(3, 2, 1, KeyEvent.KEYCODE_MOVE_END);
+            sb.setPressEventForKey(3, 2, 2, KeyEvent.KEYCODE_DPAD_DOWN);
+            sb.setPressEventForKey(3, 2, 3, KeyEvent.KEYCODE_PAGE_DOWN);
+            sb.setPressEventForKey(3, 2, 4, KeyEvent.KEYCODE_MENU);
+
+            sb.setPressEventForKey(3, 3, 0, KeyEvent.KEYCODE_CUT);
+            sb.setPressEventForKey(3, 3, 1, KeyEvent.KEYCODE_COPY);
+            sb.setPressEventForKey(3, 3, 2, KeyEvent.KEYCODE_PASTE);
+
+            sb.setPressEventForKey(3, 6, 1, KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+            sb.setKeyDrawable(3, 6, 1, android.R.drawable.ic_media_previous);
+
+            sb.setPressEventForKey(3, 6, 2, KeyEvent.KEYCODE_MEDIA_PLAY);
+            sb.setKeyDrawable(3, 6, 2, android.R.drawable.ic_media_play);
+
+            sb.setPressEventForKey(3, 6, 3, KeyEvent.KEYCODE_MEDIA_PAUSE);
+            sb.setKeyDrawable(3, 6, 3, android.R.drawable.ic_media_pause);
+
+            sb.setPressEventForKey(3, 6, 4, KeyEvent.KEYCODE_MEDIA_NEXT);
+            sb.setKeyDrawable(3, 6, 4, android.R.drawable.ic_media_next);
+
+            sb.setPressEventForKey(3, -1, 0, Keyboard.KEYCODE_MODE_CHANGE);
+
             sb.setDisableModifierForKeyboard(3, true);
 
-            for (int i = 2; i < 6; i++)
-                sb.setKeyRepeat(3, -1, i);
-
-            for (int i = 0; i < 2; i++) {
-                for (int g = 0; g < 8; g++) {
-                    if (i > 0 && g > 3) break;
-                    sb.setPressEventForKey(3, i, g, KeyEvent.KEYCODE_F1 + (g + (i * 8)));
+            // set Fx buttons
+            for (int i = 4; i < 6; i++) {
+                for (int g = 0; g < 6; g++) {
+                    sb.setPressEventForKey(3, i, g, KeyEvent.KEYCODE_F1 + (g + (i * 6)));
                 }
             }
 
@@ -329,9 +340,6 @@ public class InputService extends InputMethodService implements
             sl = new SuggestionLayout(sb);
             sl.setLayoutParams(new FrameLayout.LayoutParams(-1, mpInt(12)));
             sl.setId(android.R.attr.shape);
-            // sl.setOnSuggestionSelectedListener(this);
-            // setCandidatesView(sl);
-            // setCandidatesViewShown(true);
             ll.addView(sl);
             ll.addView(sb);
             if (emoji != null) {
@@ -386,7 +394,9 @@ public class InputService extends InputMethodService implements
             IconThemeUtils icons = SuperBoardApplication.getIconThemes();
             sb.setKeyDrawable(-1, -2, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
             sb.setKeyDrawable(-1, -1, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
-            for (int i = 1; i < 3; i++) {
+            sb.setKeyDrawable(3, 1, 2, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
+            List<Integer> indexes = sb.findKeyboardIndexes(KeyboardType.SYMBOL);
+            for (int i : indexes) {
                 sb.setKeyDrawable(i, 3, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
                 sb.setKeyDrawable(i, 4, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
                 LayoutUtils.setSpaceBarViewPrefs(icons, sb.getKey(i, 4, 2), appname);
@@ -456,6 +466,9 @@ public class InputService extends InputMethodService implements
             boolean sugDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
             boolean topBarDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
             boolean numDisabled = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+            sb.setPressEventForKey(2, 3, 0,
+                    topBarDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
+            sb.getKey(2, 3, 0).setText(topBarDisabled ? "S3" : "S1");
             sl.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             sl.setOnSuggestionSelectedListener(sugDisabled ? null : this);
             sl.setOnQuickMenuItemClickListener(topBarDisabled ? null : this);
@@ -599,6 +612,7 @@ public class InputService extends InputMethodService implements
     }
 
     private class SuperBoardImpl extends SuperBoard {
+        private boolean shown = false;
         private SuperBoardImpl(Context context) {
             super(context);
         }
@@ -607,7 +621,8 @@ public class InputService extends InputMethodService implements
         public void onKeyboardEvent(View v) {
             if (sl != null) sl.setAllKeyLockStatus();
 
-            if (po.isShown()) {
+            shown = po.isShown();
+            if (shown) {
                 po.showPopup(false);
                 po.clear();
                 return;
@@ -640,8 +655,8 @@ public class InputService extends InputMethodService implements
         }
 
         public void sendDefaultKeyboardEvent(View v) {
-            if (!po.isShown())
-                super.sendDefaultKeyboardEvent(v);
+            if (!shown) super.sendDefaultKeyboardEvent(v);
+            else shown = false;
         }
 
         @Override

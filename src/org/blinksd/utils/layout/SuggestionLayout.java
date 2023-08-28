@@ -23,8 +23,8 @@ import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.board.SuperBoard;
-import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.sdb.SuperDBHelper;
+import org.blinksd.utils.color.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressLint("ViewConstructor")
 public class SuggestionLayout extends FrameLayout implements View.OnClickListener {
-    private final LinearLayout mCompletionsLayout;
+    private final LinearLayout mCompletionsLayout, mCompletionsLayoutRoot;
+    private final ImageView mReturnToQuickMenu;
     private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private final LinearLayout mQuickMenuLayout;
@@ -69,12 +70,38 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     public SuggestionLayout(SuperBoard superBoard) {
         super(superBoard.getContext());
         Context context = superBoard.getContext();
+
+        mCompletionsLayoutRoot = new LinearLayout(context);
+        mCompletionsLayoutRoot.setLayoutParams(new LayoutParams(-1, -1));
+
+        mReturnToQuickMenu = new ImageButton(context);
+        int size = DensityUtils.dpInt(56);
+        LinearLayout.LayoutParams returnToQMParams =
+                new LinearLayout.LayoutParams(size, -1, 0);
+        returnToQMParams.rightMargin = returnToQMParams.leftMargin =
+                returnToQMParams.bottomMargin = returnToQMParams.topMargin = DensityUtils.dpInt(8);
+
+        mReturnToQuickMenu.setPadding(
+                returnToQMParams.leftMargin * 2,
+                returnToQMParams.topMargin * 2,
+                returnToQMParams.leftMargin * 2,
+                returnToQMParams.topMargin * 2
+        );
+        mReturnToQuickMenu.setLayoutParams(returnToQMParams);
+        mReturnToQuickMenu.setImageResource(R.drawable.sym_keyboard_close);
+        mReturnToQuickMenu.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mReturnToQuickMenu.setId(android.R.id.button1);
+        mReturnToQuickMenu.setOnClickListener(v -> toggleQuickMenu(true));
+        mCompletionsLayoutRoot.addView(mReturnToQuickMenu);
+
         mCompletionsLayout = new LinearLayout(context);
-        mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
+        mCompletionsLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
+
         HorizontalScrollView scroller = new HorizontalScrollView(context);
-        scroller.setLayoutParams(new LayoutParams(-1, -1));
+        scroller.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
         scroller.addView(mCompletionsLayout);
-        addView(scroller);
+        mCompletionsLayoutRoot.addView(scroller);
+        addView(mCompletionsLayoutRoot);
 
         // Add quick menu layout
         mQuickMenuLayout = new LinearLayout(context);
@@ -111,7 +138,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         mCompleteText = str;
 
         if (str.length() < 1 || str.charAt(str.length() - 1) == ' ') {
-            toggleQuickMenu(true);
+            LoadDictTask task = new LoadDictTask();
+            mLoadDictTasks.add(task);
+            task.execute(lang, "");
             return;
         }
 
@@ -132,7 +161,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         }
 
         mQuickMenuLayout.setVisibility(show ? VISIBLE : GONE);
-        mCompletionsLayout.setVisibility(show ? GONE : VISIBLE);
+        mCompletionsLayoutRoot.setVisibility(show ? GONE : VISIBLE);
     }
 
     private void fillQuickMenu() {
@@ -197,9 +226,11 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         tv.setTextSize(textSize);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
+        /*
         if (mCompletionsLayout.getChildCount() < 1) {
             params.leftMargin = pad;
         }
+        */
         tv.setLayoutParams(params);
         tv.setPadding(pad, pad, pad, pad);
         tv.setEllipsize(TextUtils.TruncateAt.END);
@@ -221,22 +252,27 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         return gd;
     }
 
+    private void setBackground(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(drawable);
+        } else {
+            view.setBackgroundDrawable(drawable);
+        }
+    }
+
     public void reTheme() {
+        mReturnToQuickMenu.setVisibility(mOnQuickMenuItemClickListener != null ? VISIBLE : GONE);
+
         int color = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
+        setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
+        mReturnToQuickMenu.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(textSize);
-            GradientDrawable gd = new GradientDrawable();
-            gd.setColor(ColorUtils.getColorWithAlpha(color, 70));
-            gd.setCornerRadius(16);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                tv.setBackground(getSuggestionItemBackground());
-            } else {
-                tv.setBackgroundDrawable(getSuggestionItemBackground());
-            }
+            setBackground(tv, getSuggestionItemBackground());
         }
 
         for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
@@ -249,11 +285,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 SuperBoard.Key key = (SuperBoard.Key) view;
                 key.setKeyItemColor(color);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    key.setBackground(keyPressBg);
-                } else {
-                    key.setBackgroundDrawable(keyPressBg);
-                }
+                setBackground(key, keyPressBg);
 
                 int textSize = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE);
                 key.setKeyTextSize(textSize);
@@ -273,11 +305,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                     btn.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    btn.setBackground(keyPressBg);
-                } else {
-                    btn.setBackgroundDrawable(keyPressBg);
-                }
+                setBackground(btn, keyPressBg);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     btn.setImageTintList(ColorStateList.valueOf(color));
@@ -348,8 +376,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         private void cancel() {
             try {
                 mThreadPool.awaitTermination(1, TimeUnit.MILLISECONDS);
-            } catch (Throwable ignored) {
-            }
+            } catch (Throwable ignored) {}
         }
 
         protected void onPreExecute() {
@@ -365,8 +392,13 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         }
 
         protected List<String> doInBackground(String[] p1) {
-            String lang = p1[0].toLowerCase();
             String prefix = p1[1].toLowerCase();
+
+            if (TextUtils.isEmpty(prefix)) {
+                return new ArrayList<>();
+            }
+
+            String lang = p1[0].toLowerCase();
             return SuperBoardApplication.getDictDB().getQuery(lang, prefix);
         }
 
@@ -377,6 +409,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
             toggleQuickMenu(result.size() < 1);
 
+            ((HorizontalScrollView) mCompletionsLayout.getParent()).scrollTo(0, 0);
             mCompletionsLayout.removeAllViews();
 
             for (String item : result)

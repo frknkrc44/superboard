@@ -8,9 +8,9 @@ import android.os.Build;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.SettingMap;
-import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.layout.DensityUtils;
 
+@SuppressWarnings("unused")
 public class SuperDBHelper {
 
     private SuperDBHelper() {
@@ -28,8 +28,8 @@ public class SuperDBHelper {
         SuperMiniDB db = SuperBoardApplication.getApplicationDatabase();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
-            db.putString(key, "" + SuperBoardApplication.getSettings().getDefaults(key));
-            db.refreshKey(key);
+            db.putString(key, String.valueOf(SuperBoardApplication.getSettings().getDefaults(key)));
+            db.writeKey(key);
         }
         return db.getString(key, ret);
     }

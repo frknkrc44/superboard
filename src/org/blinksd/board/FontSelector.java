@@ -13,15 +13,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutCreator;
 import org.blinksd.utils.layout.LayoutUtils;
-import org.blinksd.sdb.SuperDBHelper;
 
 public class FontSelector extends Activity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
-    String[] fontTypeTranslations;
-    int currentFont;
+    private String[] fontTypeTranslations;
+    private int currentFont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

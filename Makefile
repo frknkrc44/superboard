@@ -73,6 +73,6 @@ install:
 # 	$(ADB) push bin/$(NAME).apk /sdcard
 langpacks:
 	cd SuperBoardLayoutCreator && \
-		${SHELL} create_packs.sh $(JAVADIR)
+		${SHELL} create_packs.sh
 keystore:
 	${SHELL} apply_keystore_props.sh

@@ -14,7 +14,6 @@ import org.blinksd.board.AppSettingsV2.SettingType;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.layout.BaseMap;
-import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.system.SystemUtils;
 
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_DISABLE_NUMBER_ROW = "disable_number_row";
 
     public SettingMap() {
-        putGeneral(SET_KEYBOARD_LANG_SELECT, SettingType.STR_SELECTOR);
+        putGeneral(SET_KEYBOARD_LANG_SELECT, SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK, SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT, SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
@@ -142,6 +141,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         switch (key) {
             case SET_IMPORT_DICT_PACK:
                 return new Intent(context, DictionaryImportActivity.class);
+            case SET_KEYBOARD_LANG_SELECT:
+                return new Intent(context, KeyboardLayoutSelector.class);
             case SET_KEYBOARD_TEXTTYPE_SELECT:
                 return new Intent(context, FontSelector.class);
         }
@@ -150,9 +151,9 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 
     public ArrayList<String> getSelector(final String key) {
         switch (key) {
+            /*
             case SET_KEYBOARD_LANG_SELECT:
                 return LayoutUtils.getKeyListFromLanguageList();
-			/*
 			case SET_KEYBOARD_TEXTTYPE_SELECT:
 				ArrayList<String> textTypes = new ArrayList<>();
 				for(SuperBoard.TextType type : SuperBoard.TextType.values())

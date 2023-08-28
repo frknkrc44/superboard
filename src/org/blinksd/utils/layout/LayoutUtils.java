@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -16,13 +17,13 @@ import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
 import org.blinksd.board.SettingMap;
 import org.blinksd.board.SuperBoard;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.color.ColorUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.blinksd.sdb.SuperDBHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +35,14 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class LayoutUtils {
+    public static final Language emptyLanguage;
 
-    private LayoutUtils() {
+    static {
+        emptyLanguage = new Language();
+        emptyLanguage.layout = emptyLanguage.popup = new ArrayList<>();
     }
+
+    private LayoutUtils() {}
 
     private static List<List<KeyOptions>> createLayoutFromJSON(JSONArray jsonData) throws JSONException {
         List<List<KeyOptions>> jsonList = new ArrayList<>();
@@ -115,7 +121,7 @@ public class LayoutUtils {
         return null;
     }
 
-    public static Language createLanguage(String fileData, boolean userTheme) throws JSONException {
+    public static Language createLanguage(String fileData, boolean userLanguage) throws JSONException {
         Language l = new Language();
         JSONObject main = new JSONObject(fileData);
         l.name = main.getString("name");
@@ -127,7 +133,7 @@ public class LayoutUtils {
         l.language = main.getString("language");
         l.layout = createLayoutFromJSON(main.getJSONArray("layout"));
         l.popup = createLayoutFromJSON(main.getJSONArray("popup"));
-        l.userTheme = userTheme;
+        l.userLanguage = userLanguage;
         return l;
     }
 
@@ -136,29 +142,6 @@ public class LayoutUtils {
 		return getLanguage(ctx, name, false);
 	}
 	*/
-
-    public static Language getLanguage(Context ctx, String name, boolean onlyUser) {
-        try {
-            HashMap<String, Language> llist = getLanguageList(ctx);
-            if (llist.containsKey(name)) {
-                Language lang = llist.get(name);
-                if (lang != null && onlyUser) {
-                    if (lang.userTheme)
-                        return lang;
-                    return getEmptyLanguage();
-                }
-                return lang;
-            }
-        } catch (Throwable ignored) {
-        }
-        return getEmptyLanguage();
-    }
-
-    public static Language getEmptyLanguage() {
-        Language l = new Language();
-        l.layout = l.popup = new ArrayList<>();
-        return l;
-    }
 
     public static File getUserLanguageFilesDir() {
         File file = new File(SuperBoardApplication.getApplication().getFilesDir() + "/langpacks");
@@ -319,6 +302,11 @@ public class LayoutUtils {
     }
 
     public static Drawable getSelectableItemBg(Context context, int textColor, boolean darker) {
+        return getSelectableItemBg(context, textColor, darker, false);
+    }
+
+    public static Drawable getSelectableItemBg(
+            Context context, int textColor, boolean darker, boolean transparent) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             return getCircleButtonBackground(true);
 
@@ -326,15 +314,15 @@ public class LayoutUtils {
             int resId = context.getTheme().obtainStyledAttributes(
                     new int[]{android.R.attr.selectableItemBackground}
             ).getResourceId(0, 0);
-            Drawable d = getDrawableCompat(context, resId, null);
+            Drawable d = getDrawableCompat(context, resId, transparent ? 0 : null);
             int color = textColor - 0x88000000;
             d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             return d;
         }
 
         GradientDrawable content = new GradientDrawable();
-        int accent = ColorUtils.getAccentColor();
-        if (darker) {
+        int accent = transparent ? 0 : ColorUtils.getAccentColor();
+        if (darker && !transparent) {
             accent = ColorUtils.getDarkerColor(accent);
         }
         content.setColor(accent);
@@ -343,7 +331,8 @@ public class LayoutUtils {
 
         return new RippleDrawable(
                 ColorStateList.valueOf(textColor - 0x88000000),
-                content, null
+                content,
+                transparent ? new ColorDrawable(textColor - 0x88000000) : null
         );
     }
 
@@ -352,6 +341,11 @@ public class LayoutUtils {
                 ? context.getResources().getDrawable(resId, context.getTheme())
                 : context.getResources().getDrawable(resId);
         if (tintColor != null) {
+            if (tintColor == 0) {
+                GradientDrawable gradientDrawable = (GradientDrawable) drawable;
+                gradientDrawable.setColor(0);
+            }
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP);
             } else {
@@ -368,7 +362,7 @@ public class LayoutUtils {
         public boolean enabled;
         public int enabledSdk = 1;
         public boolean midPadding;
-        public boolean userTheme;
+        public boolean userLanguage;
         public String author = "";
         public String language = "";
         public List<List<KeyOptions>> layout;

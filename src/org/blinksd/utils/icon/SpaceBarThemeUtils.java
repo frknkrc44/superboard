@@ -2,8 +2,8 @@ package org.blinksd.utils.icon;
 
 import org.blinksd.Defaults;
 import org.blinksd.board.SettingMap;
-import org.blinksd.utils.layout.BaseMap;
 import org.blinksd.sdb.SuperDBHelper;
+import org.blinksd.utils.layout.BaseMap;
 
 public class SpaceBarThemeUtils extends BaseMap<String, Integer> {
     public static final int SPACEBAR_DEFAULT = 0, SPACEBAR_TEXT = 1, SPACEBAR_HIDE = 2;

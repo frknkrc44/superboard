@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.image.ImageUtils;
@@ -30,14 +31,13 @@ import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.layout.LayoutCreator;
 import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.layout.SettingsCategorizedListView;
-import org.blinksd.sdb.SuperDBHelper;
 
 import java.io.File;
 import java.util.concurrent.Executors;
 
 public class AppSettingsV2 extends Activity {
     private LinearLayout main;
-    private SuperBoard kbdPreview;
+    public SuperBoard kbdPreview;
     private ImageView backgroundImageView;
     private SettingsCategorizedListView mSettView;
 
