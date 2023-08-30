@@ -6,5 +6,5 @@ do
     echo $i
     java $i
 done
-mv *.json ../assets/langpacks/
+mv *.json ../app/src/main/assets/langpacks/
 rm -f *.class
