@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 
 public class SuperBoardApplication extends Application {
 
@@ -200,19 +199,19 @@ public class SuperBoardApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = this;
-        appDB = SuperDBHelper.getDefault(getApplicationContext());
-        icons = new IconThemeUtils();
-        spaceBars = new SpaceBarThemeUtils();
-        emojiUtils = new TextUtilsCompat();
         settingMap = new SettingMap();
-        fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
-        getCustomFont(); // start to load custom Typeface
-
         reloadLanguageCache();
-        reloadThemeCache();
 
-        Executors.newSingleThreadExecutor()
-                .execute(() -> dictDB = new DictionaryDB(appContext));
+        appDB = SuperDBHelper.getDefaultAsync(this, () -> {
+            fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
+            getCustomFont();
+            
+            dictDB = new DictionaryDB(this);
+            icons = new IconThemeUtils();
+            spaceBars = new SpaceBarThemeUtils();
+            emojiUtils = new TextUtilsCompat();
+            reloadThemeCache();
+        });
     }
 
     public static void reloadLanguageCache() {

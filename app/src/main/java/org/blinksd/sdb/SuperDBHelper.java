@@ -24,6 +24,10 @@ public class SuperDBHelper {
         return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), key);
     }
 
+    public static SuperMiniDB getDefaultAsync(Context c, Runnable onLoadFinished) {
+        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), onLoadFinished);
+    }
+
     public static String getValueOrDefault(String key) {
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
