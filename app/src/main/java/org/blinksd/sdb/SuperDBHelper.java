@@ -9,6 +9,7 @@ import android.os.Build;
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.layout.DensityUtils;
+import org.frknkrc44.minidb.SuperMiniDB;
 
 @SuppressWarnings("unused")
 public class SuperDBHelper {

@@ -5,7 +5,7 @@ import android.graphics.Color;
 
 import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.SettingMap;
-import org.blinksd.sdb.SuperMiniDB;
+import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -180,7 +180,7 @@ public class ThemeUtils {
         private void putControlledColor(String key, String color) {
             SuperMiniDB smdb = SuperBoardApplication.getAppDB();
             SettingMap sMap = SuperBoardApplication.getSettings();
-            if (color.trim().length() < 1) {
+            if (color.trim().isEmpty()) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
             }
@@ -190,7 +190,7 @@ public class ThemeUtils {
         private void putControlledString(String key, String value) {
             SuperMiniDB smdb = SuperBoardApplication.getAppDB();
             SettingMap sMap = SuperBoardApplication.getSettings();
-            if (value.trim().length() < 1) {
+            if (value.trim().isEmpty()) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
             }

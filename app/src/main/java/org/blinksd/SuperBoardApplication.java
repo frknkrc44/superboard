@@ -7,7 +7,6 @@ import android.os.Looper;
 
 import org.blinksd.board.SettingMap;
 import org.blinksd.sdb.SuperDBHelper;
-import org.blinksd.sdb.SuperMiniDB;
 import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.color.ThemeUtils.ThemeHolder;
 import org.blinksd.utils.dictionary.DictionaryDB;
@@ -16,6 +15,7 @@ import org.blinksd.utils.icon.SpaceBarThemeUtils;
 import org.blinksd.utils.layout.LayoutUtils;
 import org.blinksd.utils.sb.Language;
 import org.blinksd.utils.system.TextUtilsCompat;
+import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.io.File;
 import java.util.ArrayList;
