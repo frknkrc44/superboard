@@ -10,6 +10,7 @@ import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -286,12 +287,13 @@ public class ColorSelectorLayout {
         SuperBoard sb = new SuperBoard(ctx) {
             @Override
             protected void sendDefaultKeyboardEvent(View v) {
-                if (v.getTag(TAG_NP) != null) {
-                    String[] x = v.getTag(TAG_NP).toString().split(":");
-                    switch (Integer.parseInt(x[0])) {
+                Pair<Integer, Boolean> pair = ((SuperBoard.Key) v).getNormalPressEvent();
+
+                if (pair != null) {
+                    switch (pair.first) {
                         case Keyboard.KEYCODE_DELETE:
                             String s = hexIn.getText().toString();
-                            if (s.length() > 0) {
+                            if (!s.isEmpty()) {
                                 hexIn.setText(s.substring(0, s.length() - 1));
                             }
                             break;
