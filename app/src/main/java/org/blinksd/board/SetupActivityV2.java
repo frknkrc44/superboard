@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -122,15 +123,25 @@ public class SetupActivityV2 extends Activity {
     }
 
     private boolean isInputMethodDisabled() {
-        String defaultIME = Settings.Secure.getString(
-                getContentResolver(), Settings.Secure.ENABLED_INPUT_METHODS);
-        return TextUtils.isEmpty(defaultIME) || !defaultIME.contains(getPackageName());
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        for (InputMethodInfo info : inputMethodManager.getEnabledInputMethodList()) {
+            if (info.getPackageName().equals(getPackageName())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean isInputMethodNotSelected() {
-        String defaultIME = Settings.Secure.getString(
-                getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
-        return TextUtils.isEmpty(defaultIME) || !defaultIME.contains(getPackageName());
+        try {
+            String defaultIME = Settings.Secure.getString(
+                    getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
+            return TextUtils.isEmpty(defaultIME) || !defaultIME.contains(getPackageName());
+        } catch (Throwable ignored) {}
+
+        return false;
     }
 
     private void changePage(int page) {
