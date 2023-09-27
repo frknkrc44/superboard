@@ -1,8 +1,10 @@
 package org.blinksd.board;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -15,9 +17,8 @@ import org.blinksd.utils.layout.LayoutUtils;
 public class BoardPopup extends SuperBoard {
     private static final int[] pos = new int[2];
     private static int khp = 0;
-    private final ViewGroup mRoot;
     private final Key mKey;
-    private final View popupFilter;
+    private final View popupFilter, mRoot;
 
     @SuppressLint("ClickableViewAccessibility")
     public BoardPopup(ViewGroup root) {
@@ -42,6 +43,8 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void setKeyboardPrefs() {
+        setKeyboardHeight(10);
+        popupFilter.getLayoutParams().height = getKeyboardHeight();
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
         int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
@@ -73,11 +76,15 @@ public class BoardPopup extends SuperBoard {
         setKeysTextType(key.txtst);
         setKeysShadow(key.shr, key.shc);
         setKeysTextSize((int) board.txtsze);
-        mKey.getTextView().setTextSize(board.txtsze);
+        mKey.setKeyTextSize(board.txtsze);
         setKeyboardPrefs();
     }
 
     public void showCharacter() {
+        if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideCharacter();
+        }
+
         mKey.setVisibility(VISIBLE);
     }
 
@@ -89,10 +96,26 @@ public class BoardPopup extends SuperBoard {
         hideCharacter();
         CharSequence hint = mKey.getHint();
         String str = hint != null ? hint.toString().trim() : "";
-        setVisibility(visible && str.length() > 0 ? VISIBLE : GONE);
+        boolean useFC = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
+        visible = visible && !str.isEmpty();
+        setVisibility(visible && !useFC ? VISIBLE : GONE);
         popupFilter.setVisibility(getVisibility());
-        if (isShown()) {
-            setCharacters(str);
+
+        if (visible) {
+            if (useFC) {
+                String ret = Character.toString(str.charAt(0));
+                ret = getCase(ret, getShiftState() > 0);
+
+                commitText(ret);
+
+                if (getShiftState() == SHIFT_ON) {
+                    setShiftState(SHIFT_OFF);
+                }
+
+                afterKeyboardEvent();
+            } else {
+                setCharacters(str);
+            }
         }
     }
 
@@ -131,7 +154,7 @@ public class BoardPopup extends SuperBoard {
                 }
                 break;
             }
-            if (!x[0].equals("") && k > 1) addRow(0, x);
+            if (!x[0].isEmpty() && k > 1) addRow(0, x);
         }
         for (int i = 0; i < getKeyboard(0).getChildCount(); i++) {
             getRow(0, i).setKeyWidths();

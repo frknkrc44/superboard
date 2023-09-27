@@ -17,15 +17,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -51,9 +55,13 @@ import org.blinksd.utils.sb.KeyOptions;
 import org.blinksd.utils.sb.Language;
 import org.blinksd.utils.layout.SuggestionLayout;
 import org.blinksd.utils.sb.RowOptions;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 @SuppressWarnings({"deprecation", "InlinedApi"})
 public class InputService extends InputMethodService implements
@@ -362,18 +370,19 @@ public class InputService extends InputMethodService implements
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        try {
-            setPrefs(newConfig);
-        } catch (Throwable t) {
-            System.exit(0);
+        if (isInputViewShown()) {
+            try {
+                setPrefs();
+                hideWindow();
+                Thread.sleep(1000);
+                requestShowSelf(0);
+            } catch (Throwable t) {
+                System.exit(0);
+            }
         }
     }
 
     public void setPrefs() {
-        setPrefs(getResources().getConfiguration());
-    }
-
-    public void setPrefs(Configuration conf) {
         if (sb != null) {
             sb.fixHeight();
 
@@ -391,7 +400,9 @@ public class InputService extends InputMethodService implements
             sb.setShiftDetection(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
             sb.setRepeating(!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_REPEAT));
             sb.updateKeyState(this);
-            float ori = conf.orientation == Configuration.ORIENTATION_LANDSCAPE ? 1.3f : 1;
+            int orientation = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
+            boolean isRotated = orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270;
+            float ori = isRotated ? 1.3f : 1;
             sb.setKeyboardHeight((int) (SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) * ori));
             File img;
             int c = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
@@ -437,16 +448,18 @@ public class InputService extends InputMethodService implements
             int yp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
             int z = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_BGCLR);
             int zp = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
+            Drawable key2Bg = LayoutUtils.getKeyBg(y, yp, true);
+            Drawable enterBg = LayoutUtils.getKeyBg(z, zp, true);
             for (int i = 0; i < kbd.length; i++) {
                 if (i != 0) {
                     if (i < 3) {
-                        sb.setKeyTintColor(i, 3, 0, y, yp);
-                        sb.setKeyTintColor(i, 3, -1, y, yp);
-                        for (int h = 3; h < 5; h++) sb.setKeyTintColor(i, h, 0, y, yp);
-                        sb.setKeyTintColor(i, 4, 1, y, yp);
-                        sb.setKeyTintColor(i, 4, 3, y, yp);
+                        sb.setKeyBackground(i, 3, 0, key2Bg);
+                        sb.setKeyBackground(i, 3, -1, key2Bg);
+                        for (int h = 3; h < 5; h++) sb.setKeyBackground(i, h, 0, key2Bg);
+                        sb.setKeyBackground(i, 4, 1, key2Bg);
+                        sb.setKeyBackground(i, 4, 3, key2Bg);
                     }
-                    if (i != 3) sb.setKeyTintColor(i, -1, -1, z, zp);
+                    if (i != 3) sb.setKeyBackground(i, -1, -1, enterBg);
                 }
             }
             sb.setDisablePopup(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_DISABLE_POPUP));
@@ -469,11 +482,11 @@ public class InputService extends InputMethodService implements
                 for (int g = 0; g < subKOpt.keys.size(); g++) {
                     KeyOptions ko = subKOpt.keys.get(g);
                     if (ko.darkerKeyTint) {
-                        sb.setKeyTintColor(sb.getKey(0, i, g), y, yp);
+                        sb.setKeyBackground(0, i, g, key2Bg);
                     }
 
                     if (ko.pressKeyCode == Keyboard.KEYCODE_DONE) {
-                        sb.setKeyTintColor(sb.getKey(0, i, g), z, zp);
+                        sb.setKeyBackground(0, i, g, enterBg);
                     }
                 }
             }
@@ -601,6 +614,7 @@ public class InputService extends InputMethodService implements
         private boolean shown = false;
         private SuperBoardImpl(Context context) {
             super(context);
+            setSpecialCases(LayoutUtils.getSpecialCases());
         }
 
         @Override
@@ -625,6 +639,7 @@ public class InputService extends InputMethodService implements
         }
 
         public void onPopupEvent() {
+            po.setShiftState(getShiftState());
             po.showPopup(true);
             po.setShiftState(getShiftState());
         }
@@ -690,6 +705,7 @@ public class InputService extends InputMethodService implements
     private class BoardPopupImpl extends BoardPopup {
         public BoardPopupImpl(ViewGroup root) {
             super(root);
+            setSpecialCases(LayoutUtils.getSpecialCases());
         }
 
         @Override

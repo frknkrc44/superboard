@@ -200,17 +200,10 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             btn.setImageTintList(ColorStateList.valueOf(color));
-            btn.setBackgroundTintList(new ColorStateList(new int[][]{
-                    {android.R.attr.state_enabled, android.R.attr.state_pressed},
-                    {}
-            }, new int[]{
-                    keyPressClr,
-                    keyClr
-            }));
         } else {
             btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
         }
+
         mQuickMenuLayout.addView(btn);
     }
 
@@ -302,16 +295,8 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     btn.setImageTintList(ColorStateList.valueOf(color));
-                    btn.setBackgroundTintList(new ColorStateList(new int[][]{
-                            {android.R.attr.state_enabled, android.R.attr.state_pressed},
-                            {}
-                    }, new int[]{
-                            keyPressClr,
-                            keyClr
-                    }));
                 } else {
                     btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    btn.setColorFilter(ColorUtils.getColorWithAlpha(color, 70), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         }

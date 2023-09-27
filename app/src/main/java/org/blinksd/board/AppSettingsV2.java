@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -117,14 +118,16 @@ public class AppSettingsV2 extends Activity {
         int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
         int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         kbdPreview.setKeysBackground(LayoutUtils.getKeyBg(keyClr, keyPressClr, true));
+        Drawable key2Bg = LayoutUtils.getKeyBg(
+                getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
+                getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR), true);
+        Drawable enterBg = LayoutUtils.getKeyBg(
+                getIntOrDefault(SettingMap.SET_ENTER_BGCLR),
+                getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR), true);
         kbdPreview.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
                 getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-        kbdPreview.setKeyTintColor(0, 0, 2,
-                getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
-                getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
-        kbdPreview.setKeyTintColor(0, 0, -1,
-                getIntOrDefault(SettingMap.SET_ENTER_BGCLR),
-                getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
+        kbdPreview.setKeyBackground(0, 0, 2, key2Bg);
+        kbdPreview.setKeyBackground(0, 0, -1, enterBg);
         kbdPreview.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
         kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
         kbdPreview.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));

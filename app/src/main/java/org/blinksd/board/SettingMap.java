@@ -13,6 +13,7 @@ import org.blinksd.board.AppSettingsV2.SettingItem;
 import org.blinksd.board.AppSettingsV2.SettingType;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
 import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.layout.BaseMap;
 import org.blinksd.utils.system.SystemUtils;
 
@@ -32,10 +33,12 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_PLAY_SND_PRESS = "play_snd_press",
             SET_KEY_BGCLR = "key_bgclr",
             SET_KEY_PRESS_BGCLR = "key_press_bgclr",
+            SET_KEY_BG_TYPE = "key_bg_type",
             SET_KEY2_BGCLR = "key2_bgclr",
             SET_KEY2_PRESS_BGCLR = "key2_press_bgclr",
             SET_ENTER_BGCLR = "enter_bgclr",
             SET_ENTER_PRESS_BGCLR = "enter_press_bgclr",
+            SET_KEY_GRADIENT_ORIENTATION = "key_gradient_orientation",
             SET_KEY_SHADOWCLR = "key_shadowclr",
             SET_KEY_PADDING = "key_padding",
             SET_KEY_RADIUS = "key_radius",
@@ -58,7 +61,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi",
             SET_IMPORT_DICT_PACK = "import_dict_pack",
             SET_DISABLE_TOP_BAR = "disable_top_bar",
-            SET_DISABLE_NUMBER_ROW = "disable_number_row";
+            SET_DISABLE_NUMBER_ROW = "disable_number_row",
+            SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character";
 
     public SettingMap() {
         putGeneral(SET_KEYBOARD_LANG_SELECT, SettingType.REDIRECT);
@@ -67,6 +71,10 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
         putThemingAdvanced(SET_THEME_PRESET, SettingType.THEME_SELECTOR);
         putTheming(SET_ICON_THEME, SettingType.STR_SELECTOR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            putTheming(SET_KEY_BG_TYPE, SettingType.SELECTOR);
+            putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
+        }
         putThemingAdvanced(SET_KEYBOARD_BGIMG, SettingType.IMAGE);
         putGeneral(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
         putGeneral(SET_PLAY_SND_PRESS, SettingType.BOOL);
@@ -76,6 +84,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         if (Build.VERSION.SDK_INT >= 28)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL);
         putGeneral(SET_DISABLE_POPUP, SettingType.BOOL);
+        putGeneral(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL);
         putGeneral(SET_DISABLE_REPEAT, SettingType.BOOL);
         putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL);
         putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
@@ -160,6 +169,10 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 					textTypes.add(type.name());
 				return textTypes;
 			*/
+            case SET_KEY_BG_TYPE:
+                return (ArrayList<String>) ThemeUtils.getKeyBgTypes();
+            case SET_KEY_GRADIENT_ORIENTATION:
+                return (ArrayList<String>) ThemeUtils.getKeyBgOrientationTypes();
             case SET_KEYBOARD_SPACETYPE_SELECT:
                 return (ArrayList<String>) SuperBoardApplication.getSpaceBarStyles().keyList();
             case SET_ICON_THEME:
@@ -217,6 +230,10 @@ public class SettingMap extends BaseMap<String, SettingItem> {
                     int pressColor = ColorUtils.getDarkerColor(color);
                     arr.recycle();
                     return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
+                case SET_KEY_BG_TYPE:
+                    return Defaults.KEY_BACKGROUND_TYPE;
+                case SET_KEY_GRADIENT_ORIENTATION:
+                    return Defaults.KEY_BACKGROUND_ORIENTATION_TYPE;
                 case SET_KEY_SHADOWCLR:
                     return Defaults.KEY_TEXT_SHADOW_COLOR;
                 case SET_KEY_TEXTCLR:
@@ -237,6 +254,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
                     return Defaults.DISABLE_TOP_BAR;
                 case SET_DISABLE_NUMBER_ROW:
                     return Defaults.DISABLE_NUMBER_ROW;
+                case SET_USE_FIRST_POPUP_CHARACTER:
+                    return Defaults.USE_FIRST_POPUP_CHARACTER;
                 case SET_USE_MONET:
                     return Defaults.USE_MONET;
                 case SET_ENABLE_POPUP_PREVIEW:

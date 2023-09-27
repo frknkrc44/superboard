@@ -1,5 +1,6 @@
 package org.blinksd.utils.layout;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
@@ -20,6 +21,7 @@ import org.blinksd.board.SettingMap;
 import org.blinksd.board.SuperBoard;
 import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.color.ColorUtils;
+import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.sb.KeyOptions;
@@ -34,7 +36,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -154,6 +158,26 @@ public class LayoutUtils {
         if (!file.exists())
             file.mkdirs();
         return file;
+    }
+
+    public static Map<String, String> getSpecialCases() {
+        Map<String, String> out = new HashMap<>();
+
+        try {
+            AssetManager assets = SuperBoardApplication.getApplication().getAssets();
+            Scanner sc = new Scanner(assets.open("special_cases.json"));
+            StringBuilder s = new StringBuilder();
+            while (sc.hasNext()) s.append(sc.nextLine());
+            sc.close();
+            JSONObject obj = new JSONObject(s.toString());
+
+            for (Iterator<String> it = obj.keys(); it.hasNext(); ) {
+                String key = it.next();
+                out.put(key, obj.getString(key));
+            }
+        } catch (Throwable ignored) {}
+
+        return out;
     }
 
     public static HashMap<String, Language> getLanguageList(Context ctx) throws IOException, JSONException {
@@ -285,15 +309,62 @@ public class LayoutUtils {
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static void setButtonGradientOrientation(GradientDrawable gd) {
+        switch (SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
+            case ThemeUtils.KEY_BG_ORIENTATION_TB:
+                gd.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_BT:
+                gd.setOrientation(GradientDrawable.Orientation.BOTTOM_TOP);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_LR:
+                gd.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_RL:
+                gd.setOrientation(GradientDrawable.Orientation.RIGHT_LEFT);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_TL_BR:
+                gd.setOrientation(GradientDrawable.Orientation.TL_BR);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_TR_BL:
+                gd.setOrientation(GradientDrawable.Orientation.TR_BL);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_BL_TR:
+                gd.setOrientation(GradientDrawable.Orientation.BL_TR);
+                break;
+            case ThemeUtils.KEY_BG_ORIENTATION_BR_TL:
+                gd.setOrientation(GradientDrawable.Orientation.BR_TL);
+                break;
+        }
+    }
+
     public static Drawable getButtonBackground(int clr, int pressClr, int radius, int stroke, boolean pressEffect) {
         GradientDrawable gd = new GradientDrawable();
-        gd.setColor(clr);
+
+        boolean isGrad = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
+        if (isGrad) {
+            gd.setColors(new int[]{clr, pressClr});
+            setButtonGradientOrientation(gd);
+        } else {
+            gd.setColor(clr);
+        }
+
         gd.setCornerRadius(radius);
         gd.setStroke(stroke, 0);
+
         if (pressEffect) {
             StateListDrawable d = new StateListDrawable();
             GradientDrawable pd = new GradientDrawable();
-            pd.setColor(pressClr);
+
+            if (isGrad) {
+                pd.setColors(new int[]{pressClr, clr});
+                setButtonGradientOrientation(pd);
+            } else {
+                pd.setColor(pressClr);
+            }
+
             pd.setCornerRadius(radius);
             pd.setStroke(stroke, 0);
             d.addState(new int[]{android.R.attr.state_selected}, pd);
@@ -301,6 +372,7 @@ public class LayoutUtils {
             d.addState(new int[]{}, gd);
             return d;
         }
+
         return gd;
     }
 

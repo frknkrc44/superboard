@@ -43,8 +43,10 @@ import org.blinksd.utils.layout.DensityUtils;
 import org.blinksd.utils.system.TextUtilsCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class SuperBoard extends FrameLayout implements OnTouchListener {
@@ -80,6 +82,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private Typeface cFont = Typeface.DEFAULT;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
+    private Map<String, String> specialCases = new HashMap<>();
 
     public SuperBoard(Context c) {
         super(c);
@@ -207,6 +210,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         cFont = type;
     }
 
+    public void setSpecialCases(Map<String, String> items) {
+        specialCases.clear();
+        specialCases.putAll(items);
+    }
+
     public int getKeyboardHeight() {
         return getLayoutParams().height;
     }
@@ -287,6 +295,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void setKeyTintColor(int keyboardIndex, int rowIndex, int keyIndex, int normalColor, int pressColor) {
         setKeyTintColor(getKey(keyboardIndex, rowIndex, keyIndex), normalColor, pressColor);
+    }
+
+    public void setKeyBackground(int keyboardIndex, int rowIndex, int keyIndex, Drawable background) {
+        getKey(keyboardIndex, rowIndex, keyIndex).setBackground(background);
     }
 
     public ColorStateList getTintListWithStates(int normalColor, int pressColor) {
@@ -962,6 +974,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return shift;
     }
 
+    public String getCase(String character, boolean upper) {
+        character = character.toLowerCase(loc);
+
+        if(specialCases.containsKey(character)) {
+            return upper ? specialCases.get(character) : character;
+        }
+
+        return upper ? character.toUpperCase(loc) : character;
+    }
+
     public void setShiftState(int state) {
         if (state == shift) {
             return;
@@ -977,12 +999,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 if (!isKeyHasEvent(t) && t.getText() != null) {
                     String tText = t.getText().toString();
                     String sText = t.getSubText().toString();
-                    t.setText(state > 0
-                            ? tText.toUpperCase(loc)
-                            : tText.toLowerCase(loc));
-                    t.setSubText(state > 0
-                            ? sText.toUpperCase(loc)
-                            : sText.toLowerCase(loc));
+                    t.setText(getCase(tText, state > 0));
+                    t.setSubText(getCase(sText, state > 0));
                     t.setSelected(false);
                 } else {
                     if (t.getTag(TAG_NP) != null) {
