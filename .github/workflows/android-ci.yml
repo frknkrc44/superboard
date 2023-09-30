@@ -49,8 +49,8 @@ jobs:
     - name: Build the app
       run: ./gradlew assembleDebug
 
-    - name: Upload apk
+    - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
-        name: Debug apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: Debug APK
+        path: app/build/outputs/apk/debug/FBoard-v*.apk
