@@ -48,18 +48,19 @@ jobs:
         distribution: temurin
         java-version: 17.X
 
-    - name: Build the app
-      run: |
-        ./gradlew clean assembleDebug
-        ./gradlew clean assembleRelease
+    - name: Build debug
+      run: ./gradlew clean assembleDebug
 
-    - name: Upload Debug APK
+    - name: Upload debug APK
       uses: actions/upload-artifact@v3
       with:
         name: Debug APK
         path: app/build/outputs/apk/debug/FBoard-v*.apk
 
-    - name: Upload Release APK
+    - name: Build release
+      run: ./gradlew clean assembleRelease
+
+    - name: Upload release APK
       uses: actions/upload-artifact@v3
       with:
         name: Release APK
