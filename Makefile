@@ -48,7 +48,7 @@ all: langpacks rmdirs optimize keystore
 # 	$(ZIPALIGN) -v -p 4 bin/$(NAME).ap_ bin/$(NAME)-aligned.ap_
 # 	mv bin/$(NAME)-aligned.ap_ bin/$(NAME).ap_
 optimize:
-	optipng -o7 `find $(RES) -name "*.png"`
+	optipng -quiet -o7 `find $(RES) -name "*.png"`
 # sign:
 # 	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk bin/$(NAME).ap_
 # 	#rm -f bin/$(NAME).ap_
