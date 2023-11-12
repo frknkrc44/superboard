@@ -34,10 +34,8 @@ jobs:
         sudo apt-get install optipng -y
 
     - name: Prepare the signature key
-      env:
-        SIGNATURE_ENCRYPTED: "${{ secrets.SIGNATURE_ENCRYPTED }}"
-        SIGNATURE_PASSWORD: "${{ secrets.SIGNATURE_PASSWORD }}"
       run: |
+        export SIGNATURE_ENCRYPTED="${{ secrets.SIGNATURE_ENCRYPTED }}"
         if [ ! -z "${SIGNATURE_ENCRYPTED}" ]
         then
           echo "No signature secret found, generating a random key..."
@@ -46,7 +44,7 @@ jobs:
           echo "Extracting the signature key..."
           echo "${SIGNATURE_ENCRYPTED}" > key.jks.b64
           base64 -d key.jks.b64 > key.jks
-          sed -i -e "s/STOREPASS=.*/STOREPASS=${SIGNATURE_PASSWORD}/" -e "s/KEYPASS=.*/KEYPASS=${SIGNATURE_PASSWORD}/" keystore.properties
+          sed -i -e "s/STOREPASS=.*/STOREPASS=${{ secrets.SIGNATURE_PASSWORD }}/" -e "s/KEYPASS=.*/KEYPASS=${{ secrets.SIGNATURE_PASSWORD }}/" keystore.properties
           cat keystore.properties
         fi
 
