@@ -26,6 +26,7 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+          key.jks
         key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
     - name: Install requirements
@@ -35,17 +36,10 @@ jobs:
 
     - name: Prepare the signature key
       run: |
-        export SIGNATURE_ENCRYPTED="${{ secrets.SIGNATURE_ENCRYPTED }}"
-        if [ ! -z "${SIGNATURE_ENCRYPTED}" ]
+        if [ ! -f key.jks ]
         then
-          echo "No signature secret found, generating a random key..."
+          echo "No signature key found, generating a random key..."
           make generate
-        else
-          echo "Extracting the signature key..."
-          echo "${SIGNATURE_ENCRYPTED}" > key.jks.b64
-          base64 -d key.jks.b64 > key.jks
-          sed -i -e "s/STOREPASS=.*/STOREPASS=${{ secrets.SIGNATURE_PASSWORD }}/" -e "s/KEYPASS=.*/KEYPASS=${{ secrets.SIGNATURE_PASSWORD }}/" keystore.properties
-          cat keystore.properties
         fi
 
     - name: Set up JDK 17
