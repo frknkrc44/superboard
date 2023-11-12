@@ -18,11 +18,7 @@ public class SuperDBHelper {
     }
 
     public static SuperMiniDB getDefault(Context c) {
-        return new SuperMiniDB(c.getPackageName(), c.getFilesDir());
-    }
-
-    public static SuperMiniDB getDefault(Context c, String key) {
-        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), key);
+        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), false);
     }
 
     public static SuperMiniDB getDefaultAsync(Context c, Runnable onLoadFinished) {
