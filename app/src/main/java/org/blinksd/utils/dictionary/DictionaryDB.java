@@ -49,6 +49,19 @@ public class DictionaryDB extends SQLiteOpenHelper {
         return mReadDatabase;
     }
 
+    public int getTableLength(String language) {
+        try {
+            Cursor cursor = getReadableDatabase()
+                    .rawQuery("SELECT COUNT(*) FROM LANG_" + language, null);
+            cursor.moveToFirst();
+            int ret = cursor.getInt(0);
+            cursor.close();
+            return ret;
+        } catch (Throwable ignored) {
+            return 0;
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase p1) {
         List<String> types = SuperBoardApplication.getLanguageTypes();

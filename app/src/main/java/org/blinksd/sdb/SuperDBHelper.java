@@ -25,7 +25,7 @@ public class SuperDBHelper {
         return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), onLoadFinished);
     }
 
-    public static String getValueOrDefault(String key) {
+    public static String getStringOrDefault(String key) {
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
@@ -35,36 +35,36 @@ public class SuperDBHelper {
         return db.getString(key, ret);
     }
 
-    public static float getFloatedIntValueOrDefault(String key) {
-        return DensityUtils.getFloatNumberFromInt(getIntValueOrDefault(key));
+    public static float getFloatedIntOrDefault(String key) {
+        return DensityUtils.getFloatNumberFromInt(getIntOrDefault(key));
     }
 
-    public static int getIntValueOrDefault(String key) {
-        if (Build.VERSION.SDK_INT >= 31 && getBooleanValueOrDefault(SettingMap.SET_USE_MONET)) {
+    public static int getIntOrDefault(String key) {
+        if (Build.VERSION.SDK_INT >= 31 && getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
             return getMonetColorValue(key);
         }
 
-        return Integer.parseInt(getValueOrDefault(key));
+        return Integer.parseInt(getStringOrDefault(key));
     }
 
-    public static boolean getBooleanValueOrDefault(String key) {
-        return Boolean.parseBoolean(getValueOrDefault(key));
+    public static boolean getBooleanOrDefault(String key) {
+        return Boolean.parseBoolean(getStringOrDefault(key));
     }
 
-    public static long getLongValueOrDefault(String key) {
-        return Long.parseLong(getValueOrDefault(key));
+    public static long getLongOrDefault(String key) {
+        return Long.parseLong(getStringOrDefault(key));
     }
 
-    public static float getFloatValueOrDefault(String key) {
-        return Float.parseFloat(getValueOrDefault(key));
+    public static float getFloatOrDefault(String key) {
+        return Float.parseFloat(getStringOrDefault(key));
     }
 
-    public static double getDoubleValueOrDefault(String key) {
-        return Double.parseDouble(getValueOrDefault(key));
+    public static double getDoubleOrDefault(String key) {
+        return Double.parseDouble(getStringOrDefault(key));
     }
 
-    public static byte getByteValueOrDefault(String key) {
-        return Byte.parseByte(getValueOrDefault(key));
+    public static byte getByteOrDefault(String key) {
+        return Byte.parseByte(getStringOrDefault(key));
     }
 
     @TargetApi(31)
@@ -91,6 +91,6 @@ public class SuperDBHelper {
                 return res.getColor(dark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_900);
         }
 
-        return Integer.parseInt(getValueOrDefault(key));
+        return Integer.parseInt(getStringOrDefault(key));
     }
 }

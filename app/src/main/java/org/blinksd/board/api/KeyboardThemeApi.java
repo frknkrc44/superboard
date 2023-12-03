@@ -1,13 +1,17 @@
 package org.blinksd.board.api;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.InputService;
+import org.blinksd.board.SettingMap;
 import org.blinksd.board.api.parcelables.IconThemeParcel;
 import org.blinksd.utils.color.ThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
 import org.blinksd.utils.layout.LayoutUtils;
+import org.blinksd.utils.layout.SettingsCategorizedListAdapter;
 import org.blinksd.utils.sb.Language;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +29,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             THEME_IMPORT_FAILED_UNKNOWN = -1;
 
     public static final int IMAGE_IMPORT_SUCCESS = 0,
-            IMAGE_IMPORT_FAILED_INVALID = 1,
-            IMAGE_IMPORT_FAILED_UNKNOWN = -1;
+            IMAGE_IMPORT_FAILED = 1;
 
     public static final int ICON_THEME_IMPORT_SUCCESS = 0,
             ICON_THEME_IMPORT_FAILED_EXISTS = 1,
@@ -103,7 +106,38 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public int importBgImage(Bitmap bmp) {
-        return IMAGE_IMPORT_FAILED_UNKNOWN;
+        FileOutputStream outputStream = null;
+        try {
+            File file = SuperBoardApplication.getBackgroundImageFile();
+            outputStream = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            SettingsCategorizedListAdapter.setColorsFromBitmap(bmp);
+
+            // disable monet because we're imported a background image
+            // and pulled colors from it
+            SuperBoardApplication.getAppDB()
+                    .putBoolean(SettingMap.SET_USE_MONET, false, true);
+
+            restartKeyboard();
+            return IMAGE_IMPORT_SUCCESS;
+        } catch (Throwable e) {
+            return IMAGE_IMPORT_FAILED;
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (Throwable ignored) {}
+        }
+    }
+
+    public static void restartKeyboard() {
+        try {
+            SuperBoardApplication.getApplication()
+                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD));
+        } catch (Throwable e) {
+            // do nothing
+        }
     }
 
     @Override

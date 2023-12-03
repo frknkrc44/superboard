@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -96,7 +95,7 @@ public class BoardPopup extends SuperBoard {
         hideCharacter();
         CharSequence hint = mKey.getHint();
         String str = hint != null ? hint.toString().trim() : "";
-        boolean useFC = SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
+        boolean useFC = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
         visible = visible && !str.isEmpty();
         setVisibility(visible && !useFC ? VISIBLE : GONE);
         popupFilter.setVisibility(getVisibility());
@@ -176,6 +175,6 @@ public class BoardPopup extends SuperBoard {
     }
 
     public int getIntOrDefault(String key) {
-        return SuperDBHelper.getIntValueOrDefault(key);
+        return SuperDBHelper.getIntOrDefault(key);
     }
 }

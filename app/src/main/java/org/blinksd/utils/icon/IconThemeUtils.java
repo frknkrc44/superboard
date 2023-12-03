@@ -117,7 +117,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
     }
 
     public Drawable getIconResource(int type) {
-        String key = SuperDBHelper.getValueOrDefault(SettingMap.SET_ICON_THEME);
+        String key = SuperDBHelper.getStringOrDefault(SettingMap.SET_ICON_THEME);
         return getIconResource(key, type);
     }
 

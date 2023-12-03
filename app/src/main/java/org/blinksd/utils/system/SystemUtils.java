@@ -129,7 +129,7 @@ public class SystemUtils {
     }
 
     public static boolean isColorized() {
-        return !(isNotColorizeNavbar() || !SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_COLORIZE_NAVBAR));
+        return !(isNotColorizeNavbar() || !SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR));
     }
 
     private static boolean isTablet(Context ctx) {

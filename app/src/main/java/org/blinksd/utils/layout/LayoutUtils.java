@@ -12,7 +12,6 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import org.blinksd.SuperBoardApplication;
@@ -241,7 +240,7 @@ public class LayoutUtils {
                     sb.setKeyRepeat(0, i, g);
                 }
                 IconThemeUtils icons = SuperBoardApplication.getIconThemes();
-                String theme = SuperDBHelper.getValueOrDefault(SettingMap.SET_ICON_THEME);
+                String theme = SuperDBHelper.getStringOrDefault(SettingMap.SET_ICON_THEME);
                 switch (ko.pressKeyCode) {
                     case Keyboard.KEYCODE_SHIFT:
                         sb.setKeyDrawable(0, i, g, icons.getIconResource(theme, LocalIconTheme.SYM_TYPE_SHIFT));
@@ -270,7 +269,7 @@ public class LayoutUtils {
                 }
             }
         }
-        int iconmulti = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER);
+        int iconmulti = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER);
         sb.setIconSizeMultiplier(iconmulti);
     }
 
@@ -294,8 +293,8 @@ public class LayoutUtils {
     }
 
     public static Drawable getKeyBg(int clr, int pressClr, boolean pressEffect) {
-        int radius = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_RADIUS)));
-        int stroke = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PADDING)));
+        int radius = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
+        int stroke = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PADDING)));
         return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
     }
 
@@ -311,7 +310,7 @@ public class LayoutUtils {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void setButtonGradientOrientation(GradientDrawable gd) {
-        switch (SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
+        switch (SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
             case ThemeUtils.KEY_BG_ORIENTATION_TB:
                 gd.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
                 break;
@@ -343,7 +342,7 @@ public class LayoutUtils {
         GradientDrawable gd = new GradientDrawable();
 
         boolean isGrad = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
+                SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
         if (isGrad) {
             gd.setColors(new int[]{clr, pressClr});
             setButtonGradientOrientation(gd);

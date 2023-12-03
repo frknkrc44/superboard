@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -55,6 +56,19 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
 
     private static final int TAG1 = R.id.key_np, TAG2 = R.id.key_lp;
     private final AppSettingsV2 mContext;
+
+    private boolean getSwitchEnabledFromDependency(String settingName) {
+        SettingItem item = getSettings().get(settingName);
+        boolean enabled = item.dependency == null;
+
+        if (!enabled) {
+            boolean value = SuperDBHelper.getBooleanOrDefault(item.dependency);
+            enabled = (boolean) item.dependencyEnabled == value;
+        }
+
+        return enabled;
+    }
+
     private final View.OnClickListener redirectListener = p1 -> {
         Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
         p1.getContext().startActivity(intent);
@@ -65,6 +79,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         public void onCheckedChanged(YCompoundButton buttonView, boolean isChecked) {
             String str = (String) buttonView.getTag();
             getAppDB().putBoolean(str, isChecked, true);
+            notifyDataSetChanged();
             mContext.restartKeyboard();
         }
 
@@ -75,6 +90,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             String str = (String) buttonView.getTag();
             getAppDB().putBoolean(str, isChecked, true);
+            buttonView.setEnabled(getSwitchEnabledFromDependency(str));
+            notifyDataSetChanged();
             mContext.restartKeyboard();
         }
 
@@ -218,7 +235,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             final boolean spaceSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_SPACETYPE_SELECT.equals(tag);
             final boolean themeSelector = item.type == SettingType.THEME_SELECTOR;
             if (langSelector || iconSelector || spaceSelector) {
-                String value = SuperDBHelper.getValueOrDefault(tag);
+                String value = SuperDBHelper.getStringOrDefault(tag);
                 if (langSelector)
                     val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
                 else if (iconSelector)
@@ -299,7 +316,10 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             gradientDrawable.setColor(color);
             gradientDrawable.setCornerRadius(DensityUtils.dpInt(16));
             gradientDrawable.setTint(color);
-            dialog.getWindow().getDecorView().setBackground(gradientDrawable);
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.getDecorView().setBackground(gradientDrawable);
+            }
         }
 
         dialog.show();
@@ -314,9 +334,21 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             Button btn1 = dialog.findViewById(android.R.id.button1);
             Button btn2 = dialog.findViewById(android.R.id.button2);
             Button btn3 = dialog.findViewById(android.R.id.button3);
-            if (btn1 != null) btn1.setTextColor(tint);
-            if (btn2 != null) btn2.setTextColor(tint);
-            if (btn3 != null) btn3.setTextColor(tint);
+
+            if (btn1 != null) {
+                btn1.setTextColor(tint);
+                btn1.setAllCaps(false);
+            }
+
+            if (btn2 != null) {
+                btn2.setTextColor(tint);
+                btn2.setAllCaps(false);
+            }
+
+            if (btn3 != null) {
+                btn3.setTextColor(tint);
+                btn3.setAllCaps(false);
+            }
         }
     }
 
@@ -352,12 +384,12 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
     public View getGroupView(int p1, boolean p2, View p3, ViewGroup p4) {
-        if (SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_USE_MONET) && getGroup(p1) == SettingCategory.THEMING_ADVANCED) {
+        if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET) && getGroup(p1) == SettingCategory.THEMING_ADVANCED) {
             // Disable advanced theming for monet mode
             return new SpaceCompat(p4.getContext());
         }
@@ -478,16 +510,20 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
     @SuppressLint("DiscouragedPrivateApi")
     private View createBoolSelector(String key) {
         int pad = (int) (getListPreferredItemHeight() / 4);
+
+        boolean enabled = getSwitchEnabledFromDependency(key);
         boolean val = getAppDB().getBoolean(key, (boolean) getSettings().getDefaults(key));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             YSwitch swtch = LayoutCreator.createFilledYSwitch(AbsListView.class, mContext, getTranslation(key), val, switchListener);
+            swtch.setEnabled(enabled);
             swtch.setMinHeight((int) getListPreferredItemHeight());
             swtch.setTag(key);
             swtch.setPadding(pad, 0, pad, 0);
             return swtch;
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             Switch swtch = new Switch(mContext);
+            swtch.setEnabled(enabled);
             swtch.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
             swtch.setChecked(val);
             swtch.setText(getTranslation(key));
@@ -522,6 +558,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         tv.setSingleLine();
         ll.addView(tv);
         CheckBox tb = new CheckBox(mContext);
+        tb.setEnabled(enabled);
         tb.setLayoutParams(new LinearLayout.LayoutParams(-2, -2, 0));
         tb.setChecked(val);
         tb.setPadding(pad, 0, pad, 0);
@@ -564,7 +601,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         return getTranslation(mContext, key);
     }
 
-    private void setColorsFromBitmap(Bitmap b) {
+    public static void setColorsFromBitmap(Bitmap b) {
         if (b == null) return;
         int c = ColorUtils.getBitmapColor(b);
         getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, c - 0xAA000000);

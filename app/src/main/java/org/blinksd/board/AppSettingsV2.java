@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.api.KeyboardThemeApi;
 import org.blinksd.sdb.SuperDBHelper;
 import org.blinksd.utils.icon.IconThemeUtils;
 import org.blinksd.utils.icon.LocalIconTheme;
@@ -115,8 +116,8 @@ public class AppSettingsV2 extends Activity {
         } else {
             backgroundImageView.setImageBitmap(null);
         }
-        int keyClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_BGCLR);
-        int keyPressClr = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+        int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BGCLR);
+        int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         kbdPreview.setKeysBackground(LayoutUtils.getKeyBg(keyClr, keyPressClr, true));
         Drawable key2Bg = LayoutUtils.getKeyBg(
                 getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
@@ -142,7 +143,7 @@ public class AppSettingsV2 extends Activity {
         kbdPreview.setKeyDrawable(0, 0, -1,
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
         kbdPreview.setKeyVibrateDuration(
-                SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
+                SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
         try {
             SuperBoardApplication.clearCustomFont();
             kbdPreview.setCustomFont(SuperBoardApplication.getCustomFont());
@@ -155,12 +156,12 @@ public class AppSettingsV2 extends Activity {
     }
 
     public int getIntOrDefault(String key) {
-        return SuperDBHelper.getIntValueOrDefault(key);
+        return SuperDBHelper.getIntOrDefault(key);
     }
 
     public void restartKeyboard() {
         setKeyPrefs();
-        sendBroadcast(new Intent(InputService.COLORIZE_KEYBOARD));
+        KeyboardThemeApi.restartKeyboard();
     }
 
     @Override
@@ -194,10 +195,14 @@ public class AppSettingsV2 extends Activity {
     public static class SettingItem {
         public final SettingCategory category;
         public final SettingType type;
+        public final String dependency;
+        public final Object dependencyEnabled;
 
-        public SettingItem(SettingCategory category, SettingType type) {
+        public SettingItem(SettingCategory category, SettingType type, String dependency, Object dependencyEnabled) {
             this.category = category;
             this.type = type;
+            this.dependency = dependency;
+            this.dependencyEnabled = dependencyEnabled;
         }
     }
 
@@ -240,7 +245,7 @@ public class AppSettingsV2 extends Activity {
 
         @Override
         public void playSound(int event) {
-            if (!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+            if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
             AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
             switch (event) {
                 case 3:

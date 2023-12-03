@@ -312,7 +312,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex, boolean repeat) {
-        getKey(keyboardIndex, rowIndex, keyIndex).setTag(TAG_KEY_REPEAT, repeat);
+        setKeyRepeat(getKey(keyboardIndex, rowIndex, keyIndex), repeat);
+    }
+
+    public void setKeyRepeat(SuperBoard.Key key) {
+        setKeyRepeat(key, true);
+    }
+
+    public void setKeyRepeat(SuperBoard.Key key, boolean repeat) {
+        key.setTag(TAG_KEY_REPEAT, repeat);
     }
 
     public boolean isKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex) {
@@ -713,6 +721,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case Keyboard.KEYCODE_DELETE:
                     sendKeyEvent(KeyEvent.KEYCODE_DEL);
+                    break;
+                case KeyEvent.KEYCODE_HENKAN:
+                    int fnIndex = findKeyboardIndex(KeyboardType.FN);
+                    setEnabledLayout(getEnabledLayoutIndex() != fnIndex ? fnIndex : 0);
+                    break;
+                case KeyEvent.KEYCODE_NUM:
+                    int numIndex = findKeyboardIndex(KeyboardType.NUMBER);
+                    setEnabledLayout(getEnabledLayoutIndex() != numIndex ? numIndex : 0);
                     break;
                 case Keyboard.KEYCODE_DONE:
                     switch (action) {

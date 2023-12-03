@@ -27,7 +27,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fontTypeTranslations = getResources().getStringArray(R.array.settings_keyboard_texttype_select);
-        currentFont = SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
+        currentFont = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
         View main = createMainLayout();
 
         if (Build.VERSION.SDK_INT >= 31) {

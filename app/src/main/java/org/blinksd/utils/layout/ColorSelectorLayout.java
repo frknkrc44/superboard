@@ -310,7 +310,7 @@ public class ColorSelectorLayout {
 
             @Override
             public void playSound(int event) {
-                if (!SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+                if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
                 AudioManager audMgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
                 switch (event) {
                     case 1:

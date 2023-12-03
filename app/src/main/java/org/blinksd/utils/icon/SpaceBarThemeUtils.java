@@ -17,7 +17,7 @@ public class SpaceBarThemeUtils extends BaseMap<String, Integer> {
     }
 
     public int getIconResource() {
-        String key = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_SPACETYPE_SELECT);
+        String key = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_SPACETYPE_SELECT);
         return getIconResource(key);
     }
 

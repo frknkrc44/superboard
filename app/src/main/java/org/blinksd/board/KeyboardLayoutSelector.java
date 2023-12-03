@@ -37,7 +37,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         Map<String, Language> languageList = SuperBoardApplication.getKeyboardLanguageList();
-        currentLayout = SuperDBHelper.getValueOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
+        currentLayout = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 
         int m = DensityUtils.dpInt(8);
 
@@ -170,10 +170,10 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
             setFocusable(false);
             setEnabled(false);
             setBackgroundColor(0);
-            setKeysTextSize(mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
-            setKeysTextType(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
-            setIconSizeMultiplier(SuperDBHelper.getIntValueOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
-            setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanValueOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
+            setKeysTextSize(mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+            setKeysTextType(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
+            setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+            setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
         }
 
         @Override

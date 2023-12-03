@@ -65,9 +65,9 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character";
 
     public SettingMap() {
-        putGeneral(SET_KEYBOARD_LANG_SELECT, SettingType.REDIRECT);
-        putGeneral(SET_IMPORT_DICT_PACK, SettingType.REDIRECT);
-        putTheming(SET_KEYBOARD_TEXTTYPE_SELECT, SettingType.REDIRECT);
+        putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
+        putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
+        putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
         putThemingAdvanced(SET_THEME_PRESET, SettingType.THEME_SELECTOR);
         putTheming(SET_ICON_THEME, SettingType.STR_SELECTOR);
@@ -80,15 +80,15 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         putGeneral(SET_PLAY_SND_PRESS, SettingType.BOOL);
         putGeneral(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
         if (!SystemUtils.isNotColorizeNavbar())
-            putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL);
+            putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
         if (Build.VERSION.SDK_INT >= 28)
-            putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL);
+            putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
         putGeneral(SET_DISABLE_POPUP, SettingType.BOOL);
-        putGeneral(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL);
+        putGeneral(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
         putGeneral(SET_DISABLE_REPEAT, SettingType.BOOL);
-        putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL);
+        putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
-        putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL);
+        putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         if (Build.VERSION.SDK_INT >= 31)
             putTheming(SET_USE_MONET, SettingType.BOOL);
         putTheming(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
@@ -115,15 +115,26 @@ public class SettingMap extends BaseMap<String, SettingItem> {
     }
 
     private void putGeneral(String name, SettingType type) {
-        put(name, new SettingItem(SettingCategory.GENERAL, type));
+        putGeneral(name, type, null, null);
+    }
+    private void putGeneral(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.GENERAL, type, dependency, dependencyEnabled));
     }
 
     private void putTheming(String name, SettingType type) {
-        put(name, new SettingItem(SettingCategory.THEMING, type));
+        putTheming(name, type, null, null);
+    }
+
+    private void putTheming(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.THEMING, type, dependency, dependencyEnabled));
     }
 
     private void putThemingAdvanced(String name, SettingType type) {
-        put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type));
+        putThemingAdvanced(name, type, null, null);
+    }
+
+    private void putThemingAdvanced(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type, dependency, dependencyEnabled));
     }
 
     public int getChildrenCount(SettingCategory category) {
@@ -229,6 +240,11 @@ public class SettingMap extends BaseMap<String, SettingItem> {
                     int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
                     int pressColor = ColorUtils.getDarkerColor(color);
                     arr.recycle();
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            arr.close();
+                        }
+                    } catch (Throwable ignored) {}
                     return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
                 case SET_KEY_BG_TYPE:
                     return Defaults.KEY_BACKGROUND_TYPE;
@@ -323,5 +339,4 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         }
         return nums;
     }
-
 }
