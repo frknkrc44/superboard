@@ -82,6 +82,7 @@ public class BoardPopup extends SuperBoard {
     public void showCharacter() {
         if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             hideCharacter();
+            return;
         }
 
         mKey.setVisibility(VISIBLE);
