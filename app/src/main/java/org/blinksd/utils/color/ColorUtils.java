@@ -199,6 +199,10 @@ public class ColorUtils {
         return Color.rgb(Color.red(color), Color.green(color), Color.blue(color));
     }
 
+    public static int setAlphaForColor(int alpha, int color) {
+        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+    }
+
     public static int getDarkerColor(int color) {
         int[] state = {Color.red(color), Color.green(color), Color.blue(color)};
         for (int i = 0; i < state.length; i++) {

@@ -69,14 +69,15 @@ public class InputService extends InputMethodService implements
     private RelativeLayout keyboardBackgroundHolder = null;
     private ImageView keyboardBackground = null;
     private Language currentLanguageCache;
-    private EmojiView emoji = null;
+    private EmojiView emojiView = null;
+    private ClipboardView clipboardView = null;
     private final BroadcastReceiver restartKeyboardReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context p1, Intent p2) {
             setPrefs();
         }
     };
-    private boolean showEmoji = false;
+    private boolean showEmoji = false, showClipboard = false;
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
         switch (num) {
@@ -193,8 +194,8 @@ public class InputService extends InputMethodService implements
             boardPopup.clear();
         }
 
-        if (emoji != null)
-            showEmojiView(false);
+        showEmojiView(false);
+        showClipboardView(false);
 
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(null, null);
@@ -338,14 +339,27 @@ public class InputService extends InputMethodService implements
             }
         }
 
-        if (Build.VERSION.SDK_INT >= 16 && emoji == null) {
-            emoji = new EmojiView(superBoardView, emojiClick);
-            emoji.setVisibility(View.GONE);
+        if (SDK_INT >= 11 && clipboardView == null) {
+            clipboardView = new ClipboardView(this);
+            clipboardView.setVisibility(View.GONE);
+
             if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                emoji.setBackground(superBoardView.getBackground());
+                clipboardView.setBackground(superBoardView.getBackground());
             } else {
-                emoji.setBackgroundDrawable(superBoardView.getBackground());
+                clipboardView.setBackgroundDrawable(superBoardView.getBackground());
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= 16 && emojiView == null) {
+            emojiView = new EmojiView(superBoardView, emojiClick);
+            emojiView.setVisibility(View.GONE);
+
+            if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                emojiView.setBackground(superBoardView.getBackground());
+            } else {
+                emojiView.setBackgroundDrawable(superBoardView.getBackground());
+            }
+
         }
 
         if (keyboardLayoutHolder == null) {
@@ -357,8 +371,11 @@ public class InputService extends InputMethodService implements
             suggestionLayout.setId(android.R.attr.shape);
             keyboardLayoutHolder.addView(suggestionLayout);
             keyboardLayoutHolder.addView(superBoardView);
-            if (emoji != null) {
-                keyboardLayoutHolder.addView(emoji);
+            if (emojiView != null) {
+                keyboardLayoutHolder.addView(emojiView);
+            }
+            if (clipboardView != null) {
+                keyboardLayoutHolder.addView(clipboardView);
             }
         }
 
@@ -490,9 +507,13 @@ public class InputService extends InputMethodService implements
 
             superBoardView.setKeyboardLanguage(currentLanguageCache.language);
             adjustNavbar(c);
-            if (emoji != null) {
-                emoji.applyTheme(superBoardView);
-                emoji.getLayoutParams().height = superBoardView.getKeyboardHeight();
+            if (emojiView != null) {
+                emojiView.applyTheme(superBoardView);
+                emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
+            }
+            if (clipboardView != null) {
+                clipboardView.getLayoutParams().height = superBoardView.getKeyboardHeight();
+                clipboardView.onPrimaryClipChanged();
             }
             SuperBoardApplication.clearCustomFont();
             superBoardView.setCustomFont(SuperBoardApplication.getCustomFont());
@@ -586,13 +607,26 @@ public class InputService extends InputMethodService implements
     }
 
     private void showEmojiView(boolean value) {
-        if (Build.VERSION.SDK_INT < 16) {
+        if (SDK_INT < 16 || emojiView == null) {
             return;
         }
         if (showEmoji != value) {
-            emoji.setVisibility(value ? View.VISIBLE : View.GONE);
+            showClipboardView(false);
+            emojiView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
             showEmoji = value;
+        }
+    }
+
+    private void showClipboardView(boolean value) {
+        if (SDK_INT < 11 || clipboardView == null) {
+            return;
+        }
+        if (showClipboard != value) {
+            showEmojiView(false);
+            clipboardView.setVisibility(value ? View.VISIBLE : View.GONE);
+            superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
+            showClipboard = value;
         }
     }
 
@@ -609,6 +643,10 @@ public class InputService extends InputMethodService implements
 
             if (showEmoji) {
                 showEmojiView(false);
+            }
+
+            if (showClipboard) {
+                showClipboardView(false);
             }
 
             shown = boardPopup.isShown();
@@ -651,13 +689,38 @@ public class InputService extends InputMethodService implements
             // sendCompletionRequest();
         }
 
+        @Override
         public void sendDefaultKeyboardEvent(View v) {
-            if (showEmoji) {
-                switch (((Key) v).getNormalPressEvent().first) {
+            Key key = (Key) v;
+
+            if (showEmoji && key.hasNormalPressEvent()) {
+                switch (key.getNormalPressEvent().first) {
                     case KeyEvent.KEYCODE_HENKAN: // symbol menu
                     case KeyEvent.KEYCODE_NUM:    // number menu
+                    case KeyEvent.KEYCODE_EISU:   // clipboard menu
                         showEmojiView(false);
+                        showClipboardView(false);
                         break;
+                }
+            }
+
+            if (key.hasNormalPressEvent()) {
+                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU) {
+                    showClipboardView(false);
+                }
+
+                switch (key.getNormalPressEvent().first) {
+                    case KeyEvent.KEYCODE_HENKAN: // symbol menu
+                        int fnIndex = findKeyboardIndex(KeyboardType.FN);
+                        setEnabledLayout(getEnabledLayoutIndex() != fnIndex ? fnIndex : 0);
+                        return;
+                    case KeyEvent.KEYCODE_NUM:    // number menu
+                        int numIndex = findKeyboardIndex(KeyboardType.NUMBER);
+                        setEnabledLayout(getEnabledLayoutIndex() != numIndex ? numIndex : 0);
+                        return;
+                    case KeyEvent.KEYCODE_EISU:   // clipboard menu
+                        showClipboardView(!showClipboard);
+                        return;
                 }
             }
 

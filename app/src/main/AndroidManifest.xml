@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:versionCode="43"
-    android:versionName="3.35">
+	android:versionCode="45"
+    android:versionName="3.37">
 	
 	<uses-sdk android:minSdkVersion="9"
 		android:targetSdkVersion="34" />
@@ -10,6 +10,9 @@
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
 		android:maxSdkVersion="32" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
+
+	<uses-permission android:name="android.permission.GET_CLIPS" />
+	<uses-permission android:name="android.permission.WRITE_CLIPS" />
 
 	<permission-group
 		android:name="org.blinksd.board.SuperBoard"

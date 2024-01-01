@@ -62,7 +62,9 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_IMPORT_DICT_PACK = "import_dict_pack",
             SET_DISABLE_TOP_BAR = "disable_top_bar",
             SET_DISABLE_NUMBER_ROW = "disable_number_row",
-            SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character";
+            SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character",
+            SET_CLIPBOARD_HISTORY = "clipboard_history",
+            SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons";
 
     public SettingMap() {
         putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
@@ -87,6 +89,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         putGeneral(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
         putGeneral(SET_DISABLE_REPEAT, SettingType.BOOL);
         putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
+        putGeneral(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
         putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         if (Build.VERSION.SDK_INT >= 31)
@@ -268,6 +271,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
                     return Defaults.DISABLE_SUGGESTIONS;
                 case SET_DISABLE_TOP_BAR:
                     return Defaults.DISABLE_TOP_BAR;
+                case SET_HIDE_TOP_BAR_FN_BUTTONS:
+                    return Defaults.HIDE_TOP_BAR_FN_BUTTONS;
                 case SET_DISABLE_NUMBER_ROW:
                     return Defaults.DISABLE_NUMBER_ROW;
                 case SET_USE_FIRST_POPUP_CHARACTER:

@@ -25,6 +25,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Numara satırını devre dışı bırak (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
 	<string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Üst barı devre dışı bırak</string>
+	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_symbols">Üst bar fonksiyon tuşlarını gizle</string>
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Sistem renklerini kullan (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>

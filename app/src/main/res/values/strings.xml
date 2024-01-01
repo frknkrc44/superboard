@@ -26,6 +26,7 @@
 	<string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
 	<string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
 	<string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
+	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_symbols">Hide top bar function buttons</string>
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
 	<string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
 	<string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>

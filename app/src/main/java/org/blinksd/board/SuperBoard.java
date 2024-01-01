@@ -722,14 +722,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 case Keyboard.KEYCODE_DELETE:
                     sendKeyEvent(KeyEvent.KEYCODE_DEL);
                     break;
-                case KeyEvent.KEYCODE_HENKAN:
-                    int fnIndex = findKeyboardIndex(KeyboardType.FN);
-                    setEnabledLayout(getEnabledLayoutIndex() != fnIndex ? fnIndex : 0);
-                    break;
-                case KeyEvent.KEYCODE_NUM:
-                    int numIndex = findKeyboardIndex(KeyboardType.NUMBER);
-                    setEnabledLayout(getEnabledLayoutIndex() != numIndex ? numIndex : 0);
-                    break;
                 case Keyboard.KEYCODE_DONE:
                     switch (action) {
                         case EditorInfo.IME_ACTION_DONE:
@@ -1566,6 +1558,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         protected float getTextSize() {
             return getTextView().getTextSize();
+        }
+
+        public boolean hasNormalPressEvent() {
+            return getTag(TAG_NP) != null;
+        }
+
+        public boolean hasLongPressEvent() {
+            return getTag(TAG_LP) != null;
         }
 
         @SuppressWarnings("unchecked")

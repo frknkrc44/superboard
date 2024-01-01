@@ -142,6 +142,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
         addQMItem(KeyEvent.KEYCODE_HENKAN, R.drawable.more_control, false);
         addQMItem(KeyEvent.KEYCODE_NUM, R.drawable.number, false);
+        addQMItem(KeyEvent.KEYCODE_EISU, R.drawable.clipboard, false);
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
         addQMItem(KeyEvent.KEYCODE_DPAD_RIGHT, R.drawable.arrow_right, true);
     }
@@ -236,9 +237,18 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
                 key.setKeyImageVisible(key.isKeyIconSet());
 
-                if (key.getNormalPressEvent().first == KeyEvent.KEYCODE_NUM) {
-                    boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
-                    key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
+                switch(key.getNormalPressEvent().first) {
+                    case KeyEvent.KEYCODE_NUM:
+                        boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+                        key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
+                        break;
+                    case KeyEvent.KEYCODE_DPAD_LEFT:
+                    case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    case SuperBoard.KEYCODE_TOGGLE_CTRL:
+                    case SuperBoard.KEYCODE_TOGGLE_ALT:
+                        boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
+                        key.setVisibility(fnDisabled ? View.GONE : View.VISIBLE);
+                        break;
                 }
 
                 setKeyLockStatus(key);
