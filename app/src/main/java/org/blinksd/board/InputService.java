@@ -339,17 +339,6 @@ public class InputService extends InputMethodService implements
             }
         }
 
-        if (SDK_INT >= 11 && clipboardView == null) {
-            clipboardView = new ClipboardView(this);
-            clipboardView.setVisibility(View.GONE);
-
-            if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                clipboardView.setBackground(superBoardView.getBackground());
-            } else {
-                clipboardView.setBackgroundDrawable(superBoardView.getBackground());
-            }
-        }
-
         if (Build.VERSION.SDK_INT >= 16 && emojiView == null) {
             emojiView = new EmojiView(superBoardView, emojiClick);
             emojiView.setVisibility(View.GONE);
@@ -373,9 +362,6 @@ public class InputService extends InputMethodService implements
             keyboardLayoutHolder.addView(superBoardView);
             if (emojiView != null) {
                 keyboardLayoutHolder.addView(emojiView);
-            }
-            if (clipboardView != null) {
-                keyboardLayoutHolder.addView(clipboardView);
             }
         }
 
@@ -517,6 +503,30 @@ public class InputService extends InputMethodService implements
             }
             SuperBoardApplication.clearCustomFont();
             superBoardView.setCustomFont(SuperBoardApplication.getCustomFont());
+        }
+
+        if (SDK_INT >= 11) {
+            boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
+                    SettingMap.SET_ENABLE_CLIPBOARD);
+
+            if (enableClipboard && clipboardView == null) {
+                clipboardView = new ClipboardView(this);
+                clipboardView.setVisibility(View.GONE);
+
+                if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                    clipboardView.setBackground(superBoardView.getBackground());
+                } else {
+                    clipboardView.setBackgroundDrawable(superBoardView.getBackground());
+                }
+
+                keyboardLayoutHolder.addView(clipboardView);
+            } else if (!enableClipboard && clipboardView != null) {
+                clipboardView.clearClipboard();
+                clipboardView.deInit();
+                keyboardLayoutHolder.removeView(clipboardView);
+                clipboardView = null;
+                System.gc();
+            }
         }
 
         sendCompletionRequest();

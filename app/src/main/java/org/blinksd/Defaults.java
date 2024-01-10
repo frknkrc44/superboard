@@ -1,5 +1,7 @@
 package org.blinksd;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import org.blinksd.utils.color.ThemeUtils;
 
 public class Defaults {
@@ -47,6 +49,7 @@ public class Defaults {
     public static final boolean KILL_BACKGROUND = false;
     public static final boolean DISABLE_TOP_BAR = false;
     public static final boolean HIDE_TOP_BAR_FN_BUTTONS = true;
+    public static final boolean ENABLE_CLIPBOARD = SDK_INT >= 11;
     public static final boolean DISABLE_NUMBER_ROW = false;
     public static final boolean USE_FIRST_POPUP_CHARACTER = false;
 }

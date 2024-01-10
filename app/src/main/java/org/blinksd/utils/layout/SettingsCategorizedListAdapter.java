@@ -512,7 +512,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         int pad = (int) (getListPreferredItemHeight() / 4);
 
         boolean enabled = getSwitchEnabledFromDependency(key);
-        boolean val = getAppDB().getBoolean(key, (boolean) getSettings().getDefaults(key));
+        boolean val = enabled && getAppDB().getBoolean(key, (boolean) getSettings().getDefaults(key));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             YSwitch swtch = LayoutCreator.createFilledYSwitch(AbsListView.class, mContext, getTranslation(key), val, switchListener);

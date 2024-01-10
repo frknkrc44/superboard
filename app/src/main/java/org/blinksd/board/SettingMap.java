@@ -64,7 +64,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_DISABLE_NUMBER_ROW = "disable_number_row",
             SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character",
             SET_CLIPBOARD_HISTORY = "clipboard_history",
-            SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons";
+            SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons",
+            SET_ENABLE_CLIPBOARD = "enable_clipboard";
 
     public SettingMap() {
         putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
@@ -90,6 +91,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         putGeneral(SET_DISABLE_REPEAT, SettingType.BOOL);
         putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putGeneral(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
         putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         if (Build.VERSION.SDK_INT >= 31)
@@ -273,6 +275,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
                     return Defaults.DISABLE_TOP_BAR;
                 case SET_HIDE_TOP_BAR_FN_BUTTONS:
                     return Defaults.HIDE_TOP_BAR_FN_BUTTONS;
+                case SET_ENABLE_CLIPBOARD:
+                    return Defaults.ENABLE_CLIPBOARD;
                 case SET_DISABLE_NUMBER_ROW:
                     return Defaults.DISABLE_NUMBER_ROW;
                 case SET_USE_FIRST_POPUP_CHARACTER:

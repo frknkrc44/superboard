@@ -7,9 +7,13 @@ import android.content.res.Resources;
 import android.os.Build;
 
 import org.blinksd.SuperBoardApplication;
+import org.blinksd.board.AppSettingsV2;
 import org.blinksd.board.SettingMap;
 import org.blinksd.utils.layout.DensityUtils;
 import org.frknkrc44.minidb.SuperMiniDB;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class SuperDBHelper {
@@ -49,6 +53,30 @@ public class SuperDBHelper {
 
     public static boolean getBooleanOrDefault(String key) {
         return Boolean.parseBoolean(getStringOrDefault(key));
+    }
+
+    public static boolean getBooleanOrDefaultResolved(String key) {
+        if (isBooleanDependencyResolved(key)) {
+            return getBooleanOrDefault(key);
+        }
+
+        return false;
+    }
+
+    private static boolean isBooleanDependencyResolved(final String key) {
+        AppSettingsV2.SettingItem item = SuperBoardApplication.getSettings().get(key);
+        List<String> checkedKeys = new ArrayList<>();
+        checkedKeys.add(key);
+
+        while (item.dependency != null && !checkedKeys.contains(item.dependency)) {
+            boolean depValue = getBooleanOrDefault(item.dependency);
+            if ((boolean) item.dependencyEnabled != depValue) return false;
+
+            checkedKeys.add(item.dependency);
+            item = SuperBoardApplication.getSettings().get(item.dependency);
+        }
+
+        return true;
     }
 
     public static long getLongOrDefault(String key) {

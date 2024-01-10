@@ -238,6 +238,10 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 key.setKeyImageVisible(key.isKeyIconSet());
 
                 switch(key.getNormalPressEvent().first) {
+                    case KeyEvent.KEYCODE_EISU:
+                        boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_ENABLE_CLIPBOARD);
+                        key.setVisibility(enableClipboard ? View.VISIBLE : View.GONE);
+                        break;
                     case KeyEvent.KEYCODE_NUM:
                         boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
                         key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);

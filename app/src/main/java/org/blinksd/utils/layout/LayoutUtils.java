@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -383,20 +384,28 @@ public class LayoutUtils {
         return getSelectableItemBg(context, textColor, darker, false);
     }
 
-    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static Drawable getTransSelectableItemBg(Context context, int textColor, boolean transparent) {
+        TypedArray array = context.getTheme().obtainStyledAttributes(
+                new int[]{android.R.attr.selectableItemBackground}
+        );
+        int resId = array.getResourceId(0, 0);
+        Drawable d = getDrawableCompat(context, resId, transparent ? 0 : null);
+        int color = textColor - 0x88000000;
+        d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            array.close();
+        }
+        return d;
+    }
+
     public static Drawable getSelectableItemBg(
             Context context, int textColor, boolean darker, boolean transparent) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             return getCircleButtonBackground(true);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            int resId = context.getTheme().obtainStyledAttributes(
-                    new int[]{android.R.attr.selectableItemBackground}
-            ).getResourceId(0, 0);
-            Drawable d = getDrawableCompat(context, resId, transparent ? 0 : null);
-            int color = textColor - 0x88000000;
-            d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            return d;
+            return getTransSelectableItemBg(context, textColor, transparent);
         }
 
         GradientDrawable content = new GradientDrawable();
@@ -434,7 +443,4 @@ public class LayoutUtils {
 
         return drawable;
     }
-
-
-
 }

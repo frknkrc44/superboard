@@ -46,29 +46,34 @@ public class ClipboardView extends LinearLayout
         init();
     }
 
+    public void deInit() {
+        if (clipboardManager != null) {
+            try {
+                clipboardManager.removePrimaryClipChangedListener(this);
+            } catch(Throwable ignored) {}
+        }
+    }
+
     private void init() {
         setOrientation(LinearLayout.VERTICAL);
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setGravity(Gravity.CENTER_HORIZONTAL);
 
         int buttonSize = DensityUtils.dpInt(48);
-        int buttonPadding = buttonSize / 6;
+        int buttonPadding = buttonSize / 4;
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         ImageButton button = new ImageButton(getContext());
-        button.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(getContext(), textColor));
+        button.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
+                getContext(), textColor, false));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
         button.setLayoutParams(buttonParams);
         button.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        button.setOnClickListener(V -> {
-            listView.removeAllViews();
-            clipboardHistory.clear();
-            syncClipboardCache();
-        });
+        button.setOnClickListener(V -> clearClipboard());
         button.setImageResource(R.drawable.sym_keyboard_close);
         button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
@@ -101,7 +106,7 @@ public class ClipboardView extends LinearLayout
 
     private void addClipView(String text, boolean addToHistory) {
         int buttonSize = DensityUtils.dpInt(48);
-        int buttonPadding = buttonSize / 6;
+        int buttonPadding = buttonSize / 4;
 
         LinearLayout clipLayout = new LinearLayout(getContext());
         LinearLayout.LayoutParams clipLayoutParams =
@@ -112,27 +117,28 @@ public class ClipboardView extends LinearLayout
         listView.addView(clipLayout, 0);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
-        view.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
-        view.setOnClickListener(this::selectClipItem);
-        clipLayout.addView(view);
+        View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
+        textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
+        textHolder.setOnClickListener(this::selectClipItem);
+        clipLayout.addView(textHolder);
 
-        TextView textView1 = view.findViewById(android.R.id.text1);
+        TextView textView1 = textHolder.findViewById(android.R.id.text1);
         textView1.setText(text);
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         textColor = ColorUtils.convertARGBtoRGB(textColor);
         textView1.setTextColor(textColor);
 
-        TextView textView2 = view.findViewById(android.R.id.text2);
+        TextView textView2 = textHolder.findViewById(android.R.id.text2);
         textView2.setText(dateFormat.format(Calendar.getInstance().getTime()));
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
         ImageButton button = new ImageButton(getContext());
-        button.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(getContext(), textColor));
+        button.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
+                getContext(), textColor, false));
         button.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         button.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        button.setOnClickListener(this::removeClipView);
+        button.setOnClickListener(v -> removeClipView(v, true));
         button.setImageResource(R.drawable.sym_keyboard_close);
         button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
@@ -158,13 +164,15 @@ public class ClipboardView extends LinearLayout
         addClipView(item, true);
     }
 
-    private void removeClipView(View view) {
-        removeClipView(view, true);
+    public void clearClipboard() {
+        listView.removeAllViews();
+        clipboardHistory.clear();
+        syncClipboardCache();
     }
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView((View) view.getParent());
-        clipboardHistory.remove((String) view.getTag());
+        clipboardHistory.remove((String) ((View) view.getParent()).getTag());
         if (sync) syncClipboardCache();
     }
 
