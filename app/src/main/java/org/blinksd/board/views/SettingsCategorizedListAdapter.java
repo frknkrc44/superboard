@@ -199,12 +199,13 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
                 p112.dismiss();
             });
             AlertDialog dialog = build.create();
-            dialogView = ImageSelectorLayout.getImageSelectorLayout(dialog, () -> {
+            dialogView = new ImageSelectorLayout(dialog, () -> {
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
                 mContext.startActivityForResult(Intent.createChooser(i, ""), 1);
             }, mContext::restartKeyboard, p1.getTag().toString());
+            dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 
             dialog.setView(dialogView);
             doHacksAndShow(dialog);

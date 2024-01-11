@@ -47,7 +47,7 @@ public class ColorSelectorLayout extends LinearLayout {
 
     public ColorSelectorLayout(Context ctx, int colorValue) {
         super(ctx);
-        setOrientation(LinearLayout.VERTICAL);
+        setOrientation(VERTICAL);
         TabWidget widget = new TabWidget(ctx);
         widget.setId(android.R.id.tabs);
         this.colorValue = colorValue;
