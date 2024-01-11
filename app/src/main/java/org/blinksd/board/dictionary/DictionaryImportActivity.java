@@ -14,10 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.blinksd.SuperBoardApplication;
 import org.blinksd.board.R;
-import org.blinksd.utils.dictionary.DictionaryDB;
-import org.blinksd.utils.layout.DensityUtils;
+import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.utils.DensityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

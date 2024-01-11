@@ -14,8 +14,7 @@ import java.lang.reflect.Field;
 
 public class Styleable {
 
-    private Styleable() {
-    }
+    private Styleable() {}
 
     /**
      * Get int array to get style indexes
@@ -59,7 +58,7 @@ public class Styleable {
      *
      * @author frknkrc44
      */
-    @SuppressLint("PrivateApi")
+    @SuppressLint({"PrivateApi", "DiscouragedApi"})
     private static Object getObject(String requestedName) {
         requestedName = requestedName.trim();
 

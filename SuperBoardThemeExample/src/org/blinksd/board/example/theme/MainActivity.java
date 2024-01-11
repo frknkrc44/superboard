@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import org.blinksd.board.api.IKeyboardThemeApi;
+import org.blinksd.board.services.IKeyboardThemeApi;
 
 public class MainActivity extends Activity {
 
