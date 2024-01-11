@@ -208,15 +208,18 @@ public class ClipboardView extends LinearLayout
     @Override
     public void onPrimaryClipChanged() {
         if (clipboardManager.hasPrimaryClip()) {
-            CharSequence text = Objects.requireNonNull(clipboardManager.getPrimaryClip())
-                    .getItemAt(0).getText();
-            if (text == null) {
-                return;
-            }
+            ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
 
-            String primaryText = text.toString();
-            if (listView.findViewWithTag(primaryText) == null) {
-                addClipView(primaryText, true);
+            for (int i = 0; i < data.getItemCount(); i++) {
+                CharSequence text = data.getItemAt(i).getText();
+                if (text == null) {
+                    return;
+                }
+
+                String primaryText = text.toString();
+                if (listView.findViewWithTag(primaryText) == null) {
+                    addClipView(primaryText, true);
+                }
             }
         }
     }
