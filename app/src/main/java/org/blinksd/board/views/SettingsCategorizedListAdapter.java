@@ -85,18 +85,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         }
 
     };
-    private final CompoundButton.OnCheckedChangeListener switchListenerAPI19 = new CompoundButton.OnCheckedChangeListener() {
 
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            String str = (String) buttonView.getTag();
-            getAppDB().putBoolean(str, isChecked, true);
-            buttonView.setEnabled(getSwitchEnabledFromDependency(str));
-            notifyDataSetChanged();
-            mContext.restartKeyboard();
-        }
-
-    };
     public View dialogView;
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
 
@@ -516,38 +505,23 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         boolean enabled = getSwitchEnabledFromDependency(key);
         boolean val = enabled && getAppDB().getBoolean(key, (boolean) getSettings().getDefaults(key));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             Switch swtch = LayoutCreator.createFilledSwitch(AbsListView.class, mContext, getTranslation(key), val, switchListener);
             swtch.setEnabled(enabled);
             swtch.setMinHeight((int) getListPreferredItemHeight());
             swtch.setTag(key);
             swtch.setPadding(pad, 0, pad, 0);
-            return swtch;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Switch swtch = new Switch(mContext);
-            swtch.setEnabled(enabled);
-            swtch.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
-            swtch.setChecked(val);
-            swtch.setText(getTranslation(key));
-            swtch.setOnCheckedChangeListener(switchListenerAPI19);
-            if (Build.VERSION.SDK_INT >= 16) {
-                swtch.setThumbResource(R.drawable.switch_thumb);
-                swtch.setTrackResource(R.drawable.switch_track);
-                int tint = ColorUtils.getAccentColor();
-                swtch.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
-                swtch.getTrackDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
-            }
-            swtch.setTextOn("");
-            swtch.setTextOff("");
-            swtch.setPadding(pad, 0, pad, 0);
-            int minW = DensityUtils.dpInt(32);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                swtch.setSwitchMinWidth(minW);
-            else
-                setSwitchMinWidthOldAndroids(swtch, minW);
 
-            swtch.setMinHeight((int) getListPreferredItemHeight());
-            swtch.setTag(key);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                int minW = DensityUtils.dpInt(32);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    swtch.setSwitchMinWidth(minW);
+                } else {
+                    setSwitchMinWidthOldAndroids(swtch, minW);
+                }
+            }
+
             return swtch;
         }
 
@@ -564,7 +538,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         tb.setLayoutParams(new LinearLayout.LayoutParams(-2, -2, 0));
         tb.setChecked(val);
         tb.setPadding(pad, 0, pad, 0);
-        tb.setOnCheckedChangeListener(switchListenerAPI19);
+        tb.setOnCheckedChangeListener(switchListener);
         ll.addView(tb);
         return ll;
     }
