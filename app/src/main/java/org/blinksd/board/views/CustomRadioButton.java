@@ -1,5 +1,6 @@
 package org.blinksd.board.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -20,17 +21,20 @@ public class CustomRadioButton extends RadioButton {
         setPadding(i, 0, i, 0);
         if (Build.VERSION.SDK_INT < 21) {
             Drawable drw = getButtonDrawable();
-            if (drw != null) {
-                drw.setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_IN);
+
+            if (drw == null) {
+                return;
             }
 
-            if (Build.VERSION.SDK_INT < 16) {
+            drw.setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_IN);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setPadding(i + drw.getIntrinsicWidth(), 0, i, 0);
             }
         } else {
             setPadding(i, 0, i, 0);
             int color = 0xFFDEDEDE;
-            if (Build.VERSION.SDK_INT >= 31) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 color = getResources().getColor(android.R.color.system_accent1_200, c.getTheme());
             }
             setButtonTintList(ColorStateList.valueOf(color));
@@ -38,12 +42,11 @@ public class CustomRadioButton extends RadioButton {
 
             setBackground(null);
         }
-
-        //setRadioButton();
     }
 
+    @SuppressLint("DiscouragedPrivateApi")
     public Drawable getButtonDrawable() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return super.getButtonDrawable();
         }
 

@@ -1,5 +1,6 @@
 package org.blinksd.board.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -25,7 +26,7 @@ class CustomSeekBar extends SeekBar {
         setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50), -2, 0));
         int p = DensityUtils.dpInt(4);
         setPadding(p * 4, p, p * 4, p);
-        if (Build.VERSION.SDK_INT >= 21)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             setSplitTrack(false);
         drawSeekBar();
     }
@@ -56,16 +57,16 @@ class CustomSeekBar extends SeekBar {
         }
     }
 
+    @SuppressLint("DiscouragedPrivateApi")
     public Drawable getThumb() {
-        if (Build.VERSION.SDK_INT >= 16)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
             return super.getThumb();
 
         try {
             Field thumb = AbsSeekBar.class.getDeclaredField("mThumb");
             thumb.setAccessible(true);
             return (Drawable) thumb.get(this);
-        } catch (Throwable t) {
-        }
+        } catch (Throwable ignored) {}
 
         return null;
     }
