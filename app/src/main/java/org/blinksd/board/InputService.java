@@ -510,7 +510,7 @@ public class InputService extends InputMethodService implements
                     SettingMap.SET_ENABLE_CLIPBOARD);
 
             if (enableClipboard && clipboardView == null) {
-                clipboardView = new ClipboardView(this);
+                clipboardView = new ClipboardView(superBoardView);
                 clipboardView.setVisibility(View.GONE);
 
                 if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {

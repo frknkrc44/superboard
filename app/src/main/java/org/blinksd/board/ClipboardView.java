@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,11 @@ public class ClipboardView extends LinearLayout
 
     private List<String> clipboardHistory;
 
-    public ClipboardView(Context context) {
-        super(context);
+    private final SuperBoard superBoard;
+
+    public ClipboardView(SuperBoard superBoard) {
+        super(superBoard.getContext());
+        this.superBoard = superBoard;
         init();
     }
 
@@ -120,6 +124,7 @@ public class ClipboardView extends LinearLayout
         View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
         textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
         textHolder.setOnClickListener(this::selectClipItem);
+        textHolder.setOnLongClickListener(this::selectAndUseClipItem);
         clipLayout.addView(textHolder);
 
         TextView textView1 = textHolder.findViewById(android.R.id.text1);
@@ -148,6 +153,17 @@ public class ClipboardView extends LinearLayout
             clipboardHistory.add(text);
             syncClipboardCache();
         }
+    }
+
+    private boolean selectAndUseClipItem(View view) {
+        selectClipItem(view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
+        } else {
+            superBoard.setCtrlState(1);
+            superBoard.sendKeyEvent(KeyEvent.KEYCODE_V);
+        }
+        return true;
     }
 
     private void selectClipItem(View view) {
