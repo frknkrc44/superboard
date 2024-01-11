@@ -13,6 +13,9 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {
@@ -107,7 +110,7 @@ public class BoardPopup extends SuperBoard {
         if (visible) {
             if (useFC) {
                 String ret = Character.toString(str.charAt(0));
-                ret = getCase(ret, getShiftState() > 0);
+                ret = getCase(ret, getShiftState() > SHIFT_OFF);
 
                 commitText(ret);
 
@@ -130,8 +133,14 @@ public class BoardPopup extends SuperBoard {
 
     private void setCharacters(String chr) {
         clear();
-        String[] u = chr.split("");
-        createPopup(u);
+        String[] chars = chr.split("");
+
+        List<String> uppercaseCharacters = new ArrayList<>();
+        for (String c : chars) {
+            uppercaseCharacters.add(getCase(c, getShiftState() > SHIFT_OFF));
+        }
+
+        createPopup(uppercaseCharacters.toArray(chars));
         setKeysShadow(mKey.shr, mKey.shc);
     }
 
