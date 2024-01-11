@@ -1,5 +1,6 @@
 package org.blinksd.board.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -15,6 +16,7 @@ import org.blinksd.utils.LayoutCreator;
 
 import java.util.TreeMap;
 
+@SuppressLint("ViewConstructor")
 public class ColorSelectorItemLayout extends LinearLayout {
 
     private final ImageView img;

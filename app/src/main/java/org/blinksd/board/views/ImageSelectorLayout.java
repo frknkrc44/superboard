@@ -47,7 +47,6 @@ import java.util.TreeMap;
 
 public class ImageSelectorLayout {
 
-    @SuppressLint("StaticFieldLeak")
     private static ImageView prev;
     private static Bitmap temp;
     private static TreeMap<Integer, Integer> colorList;
@@ -57,7 +56,8 @@ public class ImageSelectorLayout {
         public void onClick(final View p1) {
             Context ctx = p1.getContext();
             int tag = (int) p1.getTag();
-            final View px = ColorSelectorLayout.getColorSelectorLayout(ctx, tag);
+            final View px = new ColorSelectorLayout(ctx, tag);
+            px.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
             AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
             build.setTitle(((TextView) p1.findViewById(android.R.id.text1)).getText());
             build.setView(px);

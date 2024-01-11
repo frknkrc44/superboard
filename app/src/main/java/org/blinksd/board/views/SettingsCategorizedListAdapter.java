@@ -24,6 +24,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -108,7 +109,8 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             final String tag = p1.getTag().toString();
             build.setTitle(getTranslation(tag));
             final int val = mContext.getIntOrDefault(tag);
-            dialogView = ColorSelectorLayout.getColorSelectorLayout(mContext, p1.getTag().toString());
+            dialogView = new ColorSelectorLayout(mContext, p1.getTag().toString());
+            dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
             build.setView(dialogView);
             build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
             build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
