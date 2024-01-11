@@ -110,7 +110,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
                 d1.dismiss();
             });
             build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
-                int tagVal = (int) dialogView.findViewById(android.R.id.tabs).getTag();
+                int tagVal = ((ColorSelectorLayout) dialogView).colorValue;
                 if (tagVal != val) {
                     getAppDB().putInteger(tag, tagVal, true);
                     ImageView img = p1.findViewById(android.R.id.icon);

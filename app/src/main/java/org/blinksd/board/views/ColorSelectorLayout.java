@@ -43,7 +43,7 @@ public class ColorSelectorLayout extends LinearLayout {
     private final CustomSeekBar a;
     private CustomSeekBar r, g, b, h, s, v;
     private EditText hexIn;
-    private int colorValue;
+    public int colorValue;
 
     public ColorSelectorLayout(Context ctx, int colorValue) {
         super(ctx);
