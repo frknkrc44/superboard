@@ -140,7 +140,7 @@ public class SuperBoardApplication extends Application {
         ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(languageCache);
         String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
         String sel = appDB.getString(key, (String) settingMap.getDefaults(key));
-        if (!sel.equals("")) {
+        if (!sel.isEmpty()) {
             int index = -1;
             for (int i = 0; i < ll.size(); i++) {
                 if (ll.get(i).equals(sel)) {

@@ -290,7 +290,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
     public static String getTranslation(Context ctx, String key) {
         String requestedKey = "settings_" + key;
         try {
-            int id = R.string.class.getDeclaredField(requestedKey).getInt(null);
+            int id = ctx.getResources().getIdentifier(requestedKey, "string", ctx.getPackageName());
             return ctx.getString(id);
         } catch (Throwable ignored) {}
         return requestedKey;
@@ -598,7 +598,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
     private List<String> getArrayAsList(String key) {
         int id;
         try {
-            id = R.array.class.getDeclaredField("settings_" + key).getInt(null);
+            id = mContext.getResources().getIdentifier("settings_" + key, "array", mContext.getPackageName());
         } catch (Throwable t) {
             id = 0;
         }
