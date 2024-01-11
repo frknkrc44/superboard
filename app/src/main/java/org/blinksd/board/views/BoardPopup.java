@@ -71,6 +71,7 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void setKey(SuperBoard board, Key key) {
+        setShiftState(board.getShiftState());
         key.clone(mKey);
         key.getLocationInWindow(pos);
         setKeysTextColor(key.getTextColor());
