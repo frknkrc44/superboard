@@ -1,23 +1,26 @@
 package org.blinksd.utils;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import yandroid.widget.YCompoundButton;
-import yandroid.widget.YSwitch;
 
 @SuppressWarnings("unused")
 public class LayoutCreator {
@@ -168,29 +171,54 @@ public class LayoutCreator {
         }
     }
 
-    public static YSwitch createYSwitch(Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener) {
-        YSwitch sw = (YSwitch) getView(YSwitch.class, ctx);
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static Switch createSwitch(Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {
+        Switch sw = (Switch) getView(Switch.class, ctx);
         sw.setText(text);
         sw.setChecked(on);
         sw.setOnCheckedChangeListener(listener);
-        sw.setThumbResource(R.drawable.switch_thumb);
-        sw.setTrackResource(R.drawable.switch_track);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            sw.setThumbResource(R.drawable.switch_thumb);
+            sw.setTrackResource(R.drawable.switch_track);
+        }
+
         int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
                 ? ctx.getResources().getColor(android.R.color.system_accent1_200, ctx.getTheme())
                 : ColorUtils.getAccentColor();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sw.getThumbDrawable().setTint(tint);
             sw.getTrackDrawable().setTint(tint);
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             sw.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
-            sw.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            sw.getTrackDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            setSwitchThumbAPI14(sw, tint);
         }
 
         return sw;
     }
 
-    public static YSwitch createFilledYSwitch(Class<?> rootViewClass, Context ctx, String text, boolean on, YCompoundButton.OnCheckedChangeListener listener) {
-        YSwitch view = createYSwitch(ctx, text, on, listener);
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @SuppressLint("DiscouragedPrivateApi")
+    private static void setSwitchThumbAPI14(Switch switchWidget, int tint) {
+        try {
+            Field thumbField = Switch.class.getDeclaredField("mThumbDrawable");
+            Drawable thumbDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_thumb);
+            thumbDrawable.setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            thumbField.set(switchWidget, thumbDrawable);
+
+            Field trackField = Switch.class.getDeclaredField("mTrackDrawable");
+            Drawable trackDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_track);
+            trackDrawable.setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            trackField.set(switchWidget, trackDrawable);
+        } catch (Throwable ignored) {}
+    }
+
+    public static Switch createFilledSwitch(Class<?> rootViewClass, Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {
+        Switch view = createSwitch(ctx, text, on, listener);
         view.setLayoutParams(createLayoutParams(rootViewClass, -1, -2));
         return view;
     }

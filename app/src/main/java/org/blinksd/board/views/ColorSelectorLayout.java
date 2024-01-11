@@ -21,14 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
-import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.activities.AppSettingsV2;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;

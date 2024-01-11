@@ -177,7 +177,6 @@ public class ImageSelectorLayout {
             TabSpec ts = host.newTabSpec(stra[i]);
             TextView tv = (TextView) LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
-            assert pr != null;
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
             tv.setText(stra[i]);

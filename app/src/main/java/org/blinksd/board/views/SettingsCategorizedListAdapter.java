@@ -53,9 +53,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import yandroid.widget.YCompoundButton;
-import yandroid.widget.YSwitch;
-
 public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
 
     private static final int TAG1 = R.id.key_np, TAG2 = R.id.key_lp;
@@ -77,10 +74,10 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
         p1.getContext().startActivity(intent);
     };
-    private final YSwitch.OnCheckedChangeListener switchListener = new YSwitch.OnCheckedChangeListener() {
+    private final Switch.OnCheckedChangeListener switchListener = new Switch.OnCheckedChangeListener() {
 
         @Override
-        public void onCheckedChanged(YCompoundButton buttonView, boolean isChecked) {
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             String str = (String) buttonView.getTag();
             getAppDB().putBoolean(str, isChecked, true);
             notifyDataSetChanged();
@@ -520,7 +517,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         boolean val = enabled && getAppDB().getBoolean(key, (boolean) getSettings().getDefaults(key));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            YSwitch swtch = LayoutCreator.createFilledYSwitch(AbsListView.class, mContext, getTranslation(key), val, switchListener);
+            Switch swtch = LayoutCreator.createFilledSwitch(AbsListView.class, mContext, getTranslation(key), val, switchListener);
             swtch.setEnabled(enabled);
             swtch.setMinHeight((int) getListPreferredItemHeight());
             swtch.setTag(key);
