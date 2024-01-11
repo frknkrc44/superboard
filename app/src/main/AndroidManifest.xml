@@ -27,33 +27,40 @@
         android:theme="@style/AppTheme"
 		android:resizeableActivity="true"
 		tools:targetApi="n">
+
 		<activity
             android:exported="true"
-			android:launchMode="singleTask"
+			android:launchMode="singleTop"
 			android:name=".activities.SetupActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 		<activity
 			android:launchMode="singleTask"
             android:name=".activities.AppSettingsV2"
 			android:exported="false"
             android:label="@string/settings_activity"/>
+
 		<activity
 			android:launchMode="singleTask"
 			android:exported="false"
             android:name=".dictionary.DictionaryImportActivity"/>
+
 		<activity
 			android:launchMode="singleTask"
 			android:exported="false"
 			android:name=".activities.FontSelector"/>
+
 		<activity
 			android:launchMode="singleTask"
 			android:exported="false"
 			android:name=".activities.KeyboardLayoutSelector"/>
+
 		<service
+			android:process=":board"
             android:exported="true"
 			android:name=".InputService"
 			android:permission="android.permission.BIND_INPUT_METHOD">
@@ -62,10 +69,12 @@
             </intent-filter> 
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
+
 		<service
 			android:exported="true"
 			android:name=".services.KeyboardThemeService"
 			android:permission="org.blinksd.board.BIND_THEME_API" />
+
     </application>
 
 </manifest>
