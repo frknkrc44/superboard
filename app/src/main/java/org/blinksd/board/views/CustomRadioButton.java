@@ -44,6 +44,7 @@ public class CustomRadioButton extends RadioButton {
         }
     }
 
+    /** @noinspection JavaReflectionMemberAccess*/
     @SuppressLint("DiscouragedPrivateApi")
     public Drawable getButtonDrawable() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

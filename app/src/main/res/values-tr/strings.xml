@@ -25,7 +25,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Numara satırını devre dışı bırak (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
 	<string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Üst barı devre dışı bırak</string>
-	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_symbols">Üst bar fonksiyon tuşlarını gizle</string>
+	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Üst bar fonksiyon tuşlarını gizle</string>
 	<string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Kopyalama panosunu etkinleştir</string>
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Sistem renklerini kullan (beta)</string>
@@ -80,7 +80,7 @@
 	<string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Yedekle</string>
 	<string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Geri yükle</string>
 	<string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Bütün öğeler</string>
-	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, ...)</string>
+	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, …)</string>
 	<string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Diğerleri</string>
 	
 	<!-- Dictionary importer resources -->
@@ -90,13 +90,15 @@
 	<string name="settings_dict_import_delete_duplicates">Fazlalıklar siliniyor</string>
 	
 	<!-- List selector resources -->
-	<string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+	<string-array name="settings_keyboard_icon_theme"
+		tools:keep="@array/settings_keyboard_icon_theme">
 		<item>Varsayılan</item>
 		<item>Materyal</item>
 		<item>Kayısı</item>
 	</string-array>
 	
-	<string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+	<string-array name="settings_keyboard_spacetype_select"
+		tools:keep="@array/settings_keyboard_spacetype_select">
 		<item>Tema varsayılanı</item>
 		<item>Seçili dil</item>
 		<item>Papatya</item>
@@ -110,12 +112,14 @@
 		<item>Gelişmiş Temalama</item>
 	</string-array>
 
-	<string-array name="settings_key_bg_type">
+	<string-array name="settings_key_bg_type"
+		tools:keep="@array/settings_key_bg_type">
 		<item>Düz</item>
 		<item>Gradyan</item>
 	</string-array>
 
-	<string-array name="settings_key_gradient_orientation">
+	<string-array name="settings_key_gradient_orientation"
+		tools:keep="@array/settings_key_gradient_orientation">
 		<item>Üst → alt</item>
 		<item>Alt → üst</item>
 		<item>Sol → sağ</item>

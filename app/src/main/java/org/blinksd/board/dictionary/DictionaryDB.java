@@ -28,7 +28,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
     }
 
     public static String escapeString(String str) {
-        if (str != null && str.length() > 0) {
+        if (str != null && !str.isEmpty()) {
             str = str.replace("\\", "\\\\");
             str = str.replace("'", "`");
             str = str.replace("\0", "\\0");
@@ -153,7 +153,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
     }
 
     private List<String> getQuery(String lang, String prefix, boolean internalCheck) {
-        List<String> out = new ArrayList<String>();
+        List<String> out = new ArrayList<>();
 
         if (!isReady && !internalCheck) return out;
 
@@ -169,7 +169,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
                     .append(escapeString(lang.trim().toLowerCase()));
 
             if (!internalCheck) {
-                if (prefix == null || prefix.length() < 1)
+                if (prefix == null || prefix.isEmpty())
                     return out;
 
                 sb.append(" WHERE word")
@@ -198,6 +198,7 @@ public class DictionaryDB extends SQLiteOpenHelper {
         return out;
     }
 
+    /** @noinspection UnusedAssignment*/
     @Override
     public void onUpgrade(SQLiteDatabase p1, int oldVersion, int newVersion) {
         int current = oldVersion;
@@ -216,10 +217,9 @@ public class DictionaryDB extends SQLiteOpenHelper {
 
             isReady = false;
             for (String table : tables) {
-                StringBuilder sb = new StringBuilder("ALTER TABLE ");
-                sb.append(table);
-                sb.append(" ADD COLUMN usage_count INTEGER DEFAULT 0");
-                p1.execSQL(sb.toString());
+                String sb = "ALTER TABLE " + table +
+                        " ADD COLUMN usage_count INTEGER DEFAULT 0";
+                p1.execSQL(sb);
             }
             isReady = true;
             cursor.close();
@@ -228,8 +228,8 @@ public class DictionaryDB extends SQLiteOpenHelper {
     }
 
     public interface OnSaveProgressListener {
-        public static final int STATE_IMPORT = 0;
-        public static final int STATE_DELETE_DUPLICATES = 1;
+        int STATE_IMPORT = 0;
+        int STATE_DELETE_DUPLICATES = 1;
 
         void onProgress(int current, int state);
     }

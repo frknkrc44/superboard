@@ -13,6 +13,7 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
+/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {
     private static final int[] pos = new int[2];

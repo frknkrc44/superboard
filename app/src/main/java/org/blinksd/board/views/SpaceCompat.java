@@ -24,6 +24,8 @@ import android.view.View;
 /**
  * Space is a lightweight View subclass that may be used to create gaps between components
  * in general purpose layouts.
+ *
+ * @noinspection NullableProblems
  */
 public final class SpaceCompat extends View {
     /**
@@ -79,8 +81,7 @@ public final class SpaceCompat extends View {
      */
     @SuppressLint("MissingSuperCall")
     @Override
-    public void draw(Canvas canvas) {
-    }
+    public void draw(Canvas canvas) {}
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

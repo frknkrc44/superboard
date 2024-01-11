@@ -26,7 +26,7 @@
 	<string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
 	<string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
 	<string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
-	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_symbols">Hide top bar function buttons</string>
+	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
 	<string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
 	<string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
@@ -90,7 +90,7 @@
 	<string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
 	<string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restore</string>
 	<string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">All items</string>
-	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, ...)</string>
+	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
 	<string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
 
 	<!-- Dictionary importer resources -->
@@ -124,13 +124,15 @@
 		<item>Custom (in app data folder)</item>
 	</string-array>
 
-	<string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+	<string-array name="settings_keyboard_icon_theme"
+		tools:keep="@array/settings_keyboard_icon_theme">
 		<item>Default</item>
 		<item>Material</item>
 		<item>Apricot</item>
 	</string-array>
 
-	<string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+	<string-array name="settings_keyboard_spacetype_select"
+		tools:keep="@array/settings_keyboard_spacetype_select">
 		<item>Theme default</item>
 		<item>Selected language</item>
 		<item>Daisy</item>
@@ -144,12 +146,14 @@
 		<item>Advanced Theming</item>
 	</string-array>
 
-	<string-array name="settings_key_bg_type">
+	<string-array name="settings_key_bg_type"
+		tools:keep="@array/settings_key_bg_type">
 		<item>Flat</item>
 		<item>Gradient</item>
 	</string-array>
 
-	<string-array name="settings_key_gradient_orientation">
+	<string-array name="settings_key_gradient_orientation"
+		tools:keep="@array/settings_key_gradient_orientation">
 		<item>Top → bottom</item>
 		<item>Bottom → top</item>
 		<item>Left → right</item>

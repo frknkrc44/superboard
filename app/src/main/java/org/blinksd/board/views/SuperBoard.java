@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class SuperBoard extends FrameLayout implements OnTouchListener {
@@ -83,7 +84,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private Typeface cFont = Typeface.DEFAULT;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
-    private Map<String, String> specialCases = new HashMap<>();
+    private final Map<String, String> specialCases = new HashMap<>();
 
     public SuperBoard(Context c) {
         super(c);
@@ -260,7 +261,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setBackgroundDrawable(Drawable background) {
-        super.setBackgroundDrawable(background.getConstantState().newDrawable());
+        super.setBackgroundDrawable(Objects.requireNonNull(background.getConstantState()).newDrawable());
     }
 
     public void setKeyVibrateDuration(int dur) {
@@ -806,6 +807,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return getServiceContext().getCurrentInputConnection();
     }
 
+    @SuppressLint("InlinedApi")
     public void sendKeyEvent(int code) {
         switch (code) {
             case KEYCODE_CLOSE_KEYBOARD:
@@ -849,6 +851,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
+    @SuppressLint("InlinedApi")
     private void sendCtrl(boolean down) {
         int metaState = KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON;
         if (down) {
@@ -867,6 +870,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
+    @SuppressLint("InlinedApi")
     private void sendKeyUpDown(int code) {
         int metaState = 0;
 
@@ -1638,7 +1642,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         @Override
         public void setBackgroundDrawable(Drawable b) {
-            super.setBackgroundDrawable(b == null ? null : b.getConstantState().newDrawable());
+            super.setBackgroundDrawable(b == null ? null : Objects.requireNonNull(b.getConstantState()).newDrawable());
         }
 
         public void setKeyItemColor(int color) {

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:versionCode="46"
-    android:versionName="3.38">
-	
-	<uses-sdk android:minSdkVersion="9"
-		android:targetSdkVersion="34" />
+	xmlns:tools="http://schemas.android.com/tools">
 	
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
 		android:maxSdkVersion="32" />
@@ -44,15 +39,19 @@
 		<activity
 			android:launchMode="singleTask"
             android:name=".activities.AppSettingsV2"
+			android:exported="false"
             android:label="@string/settings_activity"/>
 		<activity
 			android:launchMode="singleTask"
+			android:exported="false"
             android:name=".dictionary.DictionaryImportActivity"/>
 		<activity
 			android:launchMode="singleTask"
+			android:exported="false"
 			android:name=".activities.FontSelector"/>
 		<activity
 			android:launchMode="singleTask"
+			android:exported="false"
 			android:name=".activities.KeyboardLayoutSelector"/>
 		<service
             android:exported="true"

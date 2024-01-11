@@ -3,6 +3,7 @@ package org.blinksd.utils.superboard;
 import java.util.ArrayList;
 import java.util.List;
 
+/** @noinspection NullableProblems*/
 public class RowOptions {
     public final List<KeyOptions> keys;
     public final boolean enablePadding;

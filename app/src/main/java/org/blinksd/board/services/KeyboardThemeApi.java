@@ -201,8 +201,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public boolean isLangPkgImported(String name) {
-        Language eqlang = SuperBoardApplication.getKeyboardLanguage(name, true);
-        return eqlang.name.equals(name);
+        return SuperBoardApplication.getKeyboardLanguage(name, true).name.equals(name);
     }
 
     private static class MissingKeysException extends RuntimeException {

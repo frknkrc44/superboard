@@ -30,8 +30,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
+@SuppressWarnings("deprecation")
 public class EmojiView extends LinearLayout {
 
     private static String[][] emojis;
@@ -148,7 +150,7 @@ public class EmojiView extends LinearLayout {
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(txtsze);
             ts.setIndicator(tv);
-            tv.setBackgroundDrawable(drw.getConstantState().newDrawable());
+            tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             final int x = i;
             ts.setContent(p1 -> emojiList(x));
             th.addTab(ts);
@@ -162,7 +164,7 @@ public class EmojiView extends LinearLayout {
             Button tv = new Button(getContext());
             tv.setLayoutParams(new LayoutParams(size, -1, 0));
             tv.setTextColor(keyclr);
-            tv.setBackgroundDrawable(drw.getConstantState().newDrawable());
+            tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             tv.setGravity(Gravity.CENTER);
             tv.setText("A");
             tv.setTag(num);
@@ -171,7 +173,7 @@ public class EmojiView extends LinearLayout {
             return tv;
         } else {
             ImageButton iv = new ImageButton(getContext());
-            iv.setBackgroundDrawable(drw.getConstantState().newDrawable());
+            iv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             iv.setLayoutParams(new LayoutParams(size, size, 0));
             iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
             iv.setAdjustViewBounds(true);
@@ -228,7 +230,7 @@ public class EmojiView extends LinearLayout {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView v = new TextView(EmojiView.this.getContext());
-            v.setBackgroundDrawable(drw.getConstantState().newDrawable());
+            v.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             v.setTextColor(keyclr);
             v.setGravity(Gravity.CENTER);
             v.setSingleLine();

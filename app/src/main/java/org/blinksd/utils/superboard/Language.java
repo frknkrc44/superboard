@@ -1,6 +1,5 @@
 package org.blinksd.utils.superboard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Language {
@@ -8,7 +7,6 @@ public class Language {
     public String label = "";
     public boolean enabled;
     public int enabledSdk = 1;
-    public List<Integer> paddingEnabledIndexes = new ArrayList<>();
     public boolean userLanguage;
     public String author = "";
     public String language = "";

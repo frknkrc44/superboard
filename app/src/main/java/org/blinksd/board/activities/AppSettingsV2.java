@@ -234,6 +234,7 @@ public class AppSettingsV2 extends Activity {
 
     }
 
+    /** @noinspection unused*/
     private class PreviewBoard extends SuperBoard {
         public PreviewBoard(Context c) {
             super(c);

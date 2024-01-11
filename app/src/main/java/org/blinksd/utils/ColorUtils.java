@@ -205,7 +205,7 @@ public class ColorUtils {
     public static int getDarkerColor(int color) {
         int[] state = {Color.red(color), Color.green(color), Color.blue(color)};
         for (int i = 0; i < state.length; i++) {
-            state[i] /= 1.2;
+            state[i] = (int) (state[i] / 1.2f);
         }
         return Color.argb(Color.alpha(color), state[0], state[1], state[2]);
     }
@@ -216,9 +216,15 @@ public class ColorUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getAccentColor() {
-        TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
+        TypedArray arr = SuperBoardApplication.getApplication()
+                .obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
         int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
         arr.recycle();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                arr.close();
+            } catch (Throwable ignored) {}
+        }
         return color;
     }
 

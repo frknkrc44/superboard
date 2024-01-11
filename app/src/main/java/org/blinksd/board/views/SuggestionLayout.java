@@ -138,6 +138,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         mCompletionsLayoutRoot.setVisibility(show ? GONE : VISIBLE);
     }
 
+    @SuppressLint("InlinedApi")
     private void fillQuickMenu() {
         addQMItem(KeyEvent.KEYCODE_DPAD_LEFT, R.drawable.arrow_left, true);
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");

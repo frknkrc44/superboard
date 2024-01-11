@@ -166,6 +166,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         finish();
     }
 
+    /** @noinspection unused*/
     private static class SuperBoardPreview extends SuperBoard {
         public SuperBoardPreview(Context c) {
             super(c);

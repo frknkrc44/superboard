@@ -287,6 +287,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         return SuperBoardApplication.getSettings();
     }
 
+    @SuppressLint("DiscouragedApi")
     public static String getTranslation(Context ctx, String key) {
         String requestedKey = "settings_" + key;
         try {
@@ -542,6 +543,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         return ll;
     }
 
+    /** @noinspection JavaReflectionMemberAccess*/
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @SuppressLint("SoonBlockedPrivateApi")
     private void setSwitchMinWidthOldAndroids(Switch swtch, int minW) {
@@ -595,6 +597,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
         getAppDB().writeAll();
     }
 
+    @SuppressLint("DiscouragedApi")
     private List<String> getArrayAsList(String key) {
         int id;
         try {

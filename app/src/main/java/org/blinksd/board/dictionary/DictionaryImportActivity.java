@@ -78,6 +78,7 @@ public class DictionaryImportActivity extends Activity {
     public void onBackPressed() {
     }
 
+    /** @noinspection unused*/
     private class DictLoadTask implements DictionaryDB.OnSaveProgressListener {
 
         @Override
@@ -123,6 +124,7 @@ public class DictionaryImportActivity extends Activity {
             try {
                 Uri uri = p1[0];
                 returnCursor = getContentResolver().query(uri, null, null, null, null);
+                assert returnCursor != null;
                 int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 returnCursor.moveToFirst();
 
@@ -135,8 +137,7 @@ public class DictionaryImportActivity extends Activity {
                 InputStream pfd = getContentResolver().openInputStream(uri);
 
                 SuperBoardApplication.getDictDB().saveToDB(name, pfd, this);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             } finally {
                 if (returnCursor != null) {
                     returnCursor.close();

@@ -26,10 +26,10 @@ public class ColorSelectorItemLayout extends LinearLayout {
         super(ctx);
         setLayoutParams(new LayoutParams(-1, -2));
         img = LayoutCreator.createImageView(ctx);
-        int height = (int) getListPreferredItemHeight();
-        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, height, height));
+        int size = (int) getListPreferredItemHeight();
+        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size));
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        int pad = height / 4;
+        int pad = size / 4;
         img.setPadding(pad, pad, pad, pad);
         TextView btn = LayoutCreator.createTextView(ctx);
         LayoutParams lp = new LayoutParams(-1, -1, 1);
@@ -37,10 +37,10 @@ public class ColorSelectorItemLayout extends LinearLayout {
         btn.setId(android.R.id.text1);
         btn.setGravity(Gravity.CENTER_VERTICAL);
         btn.setTextColor(0xFFFFFFFF);
-        btn.setMinHeight(height);
+        btn.setMinHeight(size);
         addView(img);
         addView(btn);
-        setMinimumHeight(height);
+        setMinimumHeight(size);
         setId(index);
         switch (index) {
             case -1:
@@ -61,12 +61,12 @@ public class ColorSelectorItemLayout extends LinearLayout {
         updateColorView(color);
         btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_item"));
         ImageView del = LayoutCreator.createImageView(ctx);
-        lp = new LayoutParams(height, height, 0);
+        lp = new LayoutParams(size, size, 0);
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
         del.setImageResource(R.drawable.sym_keyboard_close);
         del.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
-        pad *= 1.5;
+        pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
         del.setOnClickListener(gradientDelColorListener);
         del.setId(index);

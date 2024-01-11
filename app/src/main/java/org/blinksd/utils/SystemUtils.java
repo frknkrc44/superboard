@@ -23,6 +23,7 @@ import org.blinksd.board.InputService;
 import org.blinksd.board.SuperBoardApplication;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class SystemUtils {
 
@@ -40,6 +41,7 @@ public class SystemUtils {
         return "";
     }
 
+    /** @noinspection DataFlowIssue*/
     @SuppressLint("PrivateApi")
     public static boolean detectNavbar(InputService inputService) {
         if (SDK_INT >= 14) {
@@ -49,11 +51,11 @@ public class SystemUtils {
                 Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
                 Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
                 if (SDK_INT < 29) {
-                    Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar");
+                    Method hasNavigationBar = Objects.requireNonNull(windowManagerService).getClass().getMethod("hasNavigationBar");
                     return (boolean) hasNavigationBar.invoke(windowManagerService);
                 }
-                Method hasNavigationBar = windowManagerService.getClass().getMethod("hasNavigationBar", int.class);
-                Display dsp = inputService.getWindow().getWindow().getWindowManager().getDefaultDisplay();
+                Method hasNavigationBar = Objects.requireNonNull(windowManagerService).getClass().getMethod("hasNavigationBar", int.class);
+                Display dsp = Objects.requireNonNull(inputService.getWindow().getWindow()).getWindowManager().getDefaultDisplay();
                 return (boolean) hasNavigationBar.invoke(windowManagerService, dsp.getDisplayId());
             } catch (Throwable e) {
                 Log.e("Navbar", "Navbar detection failed by internal system APIs because ...", e);
@@ -106,6 +108,7 @@ public class SystemUtils {
         }
     }
 
+    /** @noinspection JavaReflectionMemberAccess*/
     public static int navbarH(Context ctx) {
         if (isColorized()) {
             if (!isGesturesEnabled() && isLand(ctx) && !isTablet(ctx)) return 0;
@@ -119,7 +122,7 @@ public class SystemUtils {
                         .getDeclaredField("navigation_bar_height").getInt(null);
             } catch (Throwable ignored) {}
 
-            return (int) (resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0);
+            return resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0;
         }
         return 0;
     }

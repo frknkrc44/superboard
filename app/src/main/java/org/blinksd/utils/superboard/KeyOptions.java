@@ -1,5 +1,6 @@
 package org.blinksd.utils.superboard;
 
+/** @noinspection NullableProblems*/
 public class KeyOptions {
     public String key;
     public int width = 0;
@@ -13,14 +14,14 @@ public class KeyOptions {
     @Override
     public String toString() {
         return "KeyOptions{" +
-                "key='" + key + '\''/* +
+                "key='" + key + '\'' +
                 ", width=" + width +
                 ", pressKeyCode=" + pressKeyCode +
                 ", longPressKeyCode=" + longPressKeyCode +
                 ", repeat=" + repeat +
                 ", pressIsNotEvent=" + pressIsNotEvent +
                 ", longPressIsNotEvent=" + longPressIsNotEvent +
-                ", darkerKeyTint=" + darkerKeyTint*/ +
+                ", darkerKeyTint=" + darkerKeyTint +
                 '}';
     }
 }

@@ -35,10 +35,13 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
+/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
+@SuppressWarnings("deprecation")
 public class ColorSelectorLayout extends LinearLayout {
-    private TextView prev;
-    private CustomSeekBar a, r, g, b, h, s, v;
+    private final TextView prev;
+    private final CustomSeekBar a;
+    private CustomSeekBar r, g, b, h, s, v;
     private EditText hexIn;
     private int colorValue;
 
@@ -96,7 +99,7 @@ public class ColorSelectorLayout extends LinearLayout {
                     v.setProgress(hsv[2]);
                     break;
                 case 2:
-                    hexIn.setText(getColorString(false, false));
+                    hexIn.setText(getColorString(false));
                     break;
             }
         });
@@ -239,7 +242,7 @@ public class ColorSelectorLayout extends LinearLayout {
         hexIn.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         hexIn.setEnabled(false);
         hexIn.setGravity(Gravity.CENTER);
-        hexIn.setText(getColorString(false, false));
+        hexIn.setText(getColorString(false));
         hexIn.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -261,6 +264,9 @@ public class ColorSelectorLayout extends LinearLayout {
         });
 
         SuperBoard sb = new SuperBoard(ctx) {
+
+            /** @noinspection unused*/
+            @SuppressLint("SetTextI18n")
             @Override
             protected void sendDefaultKeyboardEvent(View v) {
                 Pair<Integer, Boolean> pair = ((SuperBoard.Key) v).getNormalPressEvent();
@@ -336,30 +342,29 @@ public class ColorSelectorLayout extends LinearLayout {
     }
 
     private void setPreview(TextView x) {
-        x.setText(getColorString(true, false));
+        x.setText(getColorString(true));
         x.setTextColor(ColorUtils.satisfiesTextContrast(colorValue) ? 0xFF212121 : 0XFFDEDEDE);
         x.setBackgroundColor(colorValue);
     }
 
-    private String getColorString(boolean showColorInt, boolean addHashtag) {
+    private String getColorString(boolean showColorInt) {
         return getColorString(
                 Color.alpha(colorValue), Color.red(colorValue), Color.green(colorValue), Color.blue(colorValue),
-                showColorInt, addHashtag
+                showColorInt
         );
     }
 
-    private String getColorString(int a, int r, int g, int b, boolean showColorInt, boolean addHashtag) {
+    private String getColorString(int a, int r, int g, int b, boolean showColorInt) {
         String aColorStr = getHexColorString(a);
         String rColorStr = getHexColorString(r);
         String gColorStr = getHexColorString(g);
         String bColorStr = getHexColorString(b);
 
         String hexColor = String.format("%s%s%s%s", aColorStr, rColorStr, gColorStr, bColorStr).toUpperCase();
-        String retColor = showColorInt
+
+        return showColorInt
                 ? String.format("%s\n(%s, %s, %s, %s)", hexColor, a, r, g, b)
                 : hexColor;
-
-        return addHashtag ? String.format("#%s", retColor) : retColor;
     }
 
     private String getHexColorString(int x) {

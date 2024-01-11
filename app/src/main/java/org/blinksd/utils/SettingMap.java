@@ -131,11 +131,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
     }
 
     private void putThemingAdvanced(String name, SettingType type) {
-        putThemingAdvanced(name, type, null, null);
-    }
-
-    private void putThemingAdvanced(String name, SettingType type, String dependency, Object dependencyEnabled) {
-        put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type, dependency, dependencyEnabled));
+        put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type, null, null));
     }
 
     public int getChildrenCount(SettingCategory category) {
@@ -172,15 +168,6 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 
     public ArrayList<String> getSelector(final String key) {
         switch (key) {
-            /*
-            case SET_KEYBOARD_LANG_SELECT:
-                return LayoutUtils.getKeyListFromLanguageList();
-			case SET_KEYBOARD_TEXTTYPE_SELECT:
-				ArrayList<String> textTypes = new ArrayList<>();
-				for(SuperBoard.TextType type : SuperBoard.TextType.values())
-					textTypes.add(type.name());
-				return textTypes;
-			*/
             case SET_KEY_BG_TYPE:
                 return (ArrayList<String>) ThemeUtils.getKeyBgTypes();
             case SET_KEY_GRADIENT_ORIENTATION:

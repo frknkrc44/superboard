@@ -45,6 +45,7 @@ import org.blinksd.utils.LayoutUtils;
 import java.io.File;
 import java.util.TreeMap;
 
+@SuppressWarnings("deprecation")
 public class ImageSelectorLayout {
 
     private static ImageView prev;
@@ -212,6 +213,7 @@ public class ImageSelectorLayout {
         return true;
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     @SuppressLint("MissingPermission")
     private static View getPhotoSelector(final Dialog win, final Runnable onImageSelectPressed,
                                          final Runnable onRestartKeyboard) {
@@ -241,7 +243,7 @@ public class ImageSelectorLayout {
             w.setOnClickListener(p1 -> {
                 if (isPermGranted(ctx)) {
                     WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
-                    Drawable d = null;
+                    Drawable d;
                     if (wm.getWallpaperInfo() != null) {
                         Toast.makeText(p1.getContext(), "You're using live wallpaper, loading thumbnail ...", Toast.LENGTH_SHORT).show();
                         d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
@@ -323,7 +325,7 @@ public class ImageSelectorLayout {
     }
 
     private static int[] getGradientColors() {
-        if (colorList.size() < 1) return new int[]{0, 0};
+        if (colorList.isEmpty()) return new int[]{0, 0};
         Object[] ar = colorList.values().toArray();
         int size = ar.length == 1 ? 2 : ar.length;
         int[] out = new int[size];

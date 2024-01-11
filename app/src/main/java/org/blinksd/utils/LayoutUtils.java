@@ -147,6 +147,7 @@ public class LayoutUtils {
         return l;
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     public static File getUserLanguageFilesDir() {
         File file = new File(SuperBoardApplication.getAppFilesDir() + "/langpacks");
         if (!file.exists())
@@ -179,6 +180,7 @@ public class LayoutUtils {
         AssetManager assets = ctx.getAssets();
         String subdir = "langpacks";
         String[] items = assets.list(subdir);
+        assert items != null;
         Arrays.sort(items);
         for (String str : items) {
             if (str.endsWith(".json")) {

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
     public IconThemeUtils() {
@@ -43,6 +44,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
         loadImportedIcons();
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     private File getIconFolder() {
         File iconFolder = new File(SuperBoardApplication.getApplication().getFilesDir(), "icon_themes");
         if (!iconFolder.exists()) {
@@ -53,7 +55,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
 
     private void loadImportedIcons() {
         File mainFolder = getIconFolder();
-        for (File themeFolder : mainFolder.listFiles()) {
+        for (File themeFolder : Objects.requireNonNull(mainFolder.listFiles())) {
             String themeName = themeFolder.getName();
             Drawable shiftIcon = loadFromFile(new File(themeFolder, "shift"));
             Drawable emojiIcon = loadFromFile(new File(themeFolder, "emoji"));
@@ -75,6 +77,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
         return themeFolder.exists();
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     public void importIconTheme(String themeName, LocalIconTheme iconTheme) {
         File mainFolder = getIconFolder();
         File themeFolder = new File(mainFolder, String.format("%s_(I)", themeName));
@@ -105,8 +108,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
 
         try (FileInputStream stream = new FileInputStream(file)) {
             return new BitmapDrawable(BitmapFactory.decodeStream(stream));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
             return null;
         }
     }

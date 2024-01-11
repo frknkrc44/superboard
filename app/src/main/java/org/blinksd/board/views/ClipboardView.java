@@ -159,6 +159,7 @@ public class ClipboardView extends LinearLayout
         }
     }
 
+    /** @noinspection SameReturnValue*/
     private boolean selectAndUseClipItem(View view) {
         selectClipItem(view);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

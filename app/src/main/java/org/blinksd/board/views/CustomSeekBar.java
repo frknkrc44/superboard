@@ -57,6 +57,7 @@ class CustomSeekBar extends SeekBar {
         }
     }
 
+    /** @noinspection JavaReflectionMemberAccess*/
     @SuppressLint("DiscouragedPrivateApi")
     public Drawable getThumb() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)

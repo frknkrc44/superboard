@@ -122,7 +122,7 @@ public class LayoutCreator {
     }
 
     public static ArrayList<Button> getButtonsFromGridBox(ViewGroup box) {
-        ArrayList<Button> btnList = new ArrayList<Button>();
+        ArrayList<Button> btnList = new ArrayList<>();
         for (int i = 0; i < box.getChildCount(); i++) {
             ViewGroup group = (ViewGroup) box.getChildAt(i);
             for (int j = 0; j < group.getChildCount(); j++) {
@@ -201,6 +201,7 @@ public class LayoutCreator {
         return sw;
     }
 
+    /** @noinspection JavaReflectionMemberAccess*/
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @SuppressLint("DiscouragedPrivateApi")
     private static void setSwitchThumbAPI14(Switch switchWidget, int tint) {

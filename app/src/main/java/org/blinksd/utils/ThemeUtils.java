@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 @SuppressWarnings("unused")
@@ -89,6 +90,7 @@ public class ThemeUtils {
         return themeNames;
     }
 
+    /** @noinspection ResultOfMethodCallIgnored*/
     public static File getUserThemesDir() {
         File themesDir = new File(SuperBoardApplication.getApplication().getFilesDir() + "/themes");
 
@@ -106,26 +108,27 @@ public class ThemeUtils {
         AssetManager assets = SuperBoardApplication.getApplication().getAssets();
         String subdir = "themes";
         String[] items = assets.list(subdir);
+        assert items != null;
         Arrays.sort(items);
         for (String str : items) {
             if (str.endsWith(".json")) {
                 Scanner sc = new Scanner(assets.open(subdir + "/" + str));
-                String s = "";
-                while (sc.hasNext()) s += sc.nextLine();
+                StringBuilder s = new StringBuilder();
+                while (sc.hasNext()) s.append(sc.nextLine());
                 sc.close();
-                holders.add(new ThemeHolder(s, false));
+                holders.add(new ThemeHolder(s.toString(), false));
             }
         }
 
         // Import themes by using keyboard theme api
         File themesDir = getUserThemesDir();
 
-        for (String file : themesDir.list()) {
+        for (String file : Objects.requireNonNull(themesDir.list())) {
             Scanner sc = new Scanner(new File(themesDir + "/" + file));
-            String s = "";
-            while (sc.hasNext()) s += sc.nextLine();
+            StringBuilder s = new StringBuilder();
+            while (sc.hasNext()) s.append(sc.nextLine());
             sc.close();
-            holders.add(new ThemeHolder(s, true));
+            holders.add(new ThemeHolder(s.toString(), true));
         }
 
         return holders;
@@ -259,7 +262,7 @@ public class ThemeUtils {
         public void applyTheme() {
             try {
                 SettingMap sMap = SuperBoardApplication.getSettings();
-                List textTypes = sMap.getSelector(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
+                List<String> textTypes = sMap.getSelector(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
                 putControlledInt(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, textTypes.indexOf(fontType));
             } catch (Throwable t) {
                 putControlledInt(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, -1);
