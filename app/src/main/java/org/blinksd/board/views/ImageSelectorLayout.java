@@ -58,7 +58,7 @@ public class ImageSelectorLayout extends LinearLayout {
         public void onClick(final View p1) {
             Context ctx = p1.getContext();
             int tag = (int) p1.getTag();
-            final View px = new ColorSelectorLayout(ctx, tag);
+            final ColorSelectorLayout px = new ColorSelectorLayout(ctx, tag);
             px.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
             AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
             build.setTitle(((TextView) p1.findViewById(android.R.id.text1)).getText());
@@ -69,7 +69,7 @@ public class ImageSelectorLayout extends LinearLayout {
             });
             build.setNegativeButton(android.R.string.cancel, (p112, p2) -> p112.dismiss());
             build.setPositiveButton(android.R.string.ok, (p0, p2) -> {
-                p1.setTag(px.findViewById(android.R.id.tabs).getTag());
+                p1.setTag(px.colorValue);
                 prev.setImageBitmap(convertGradientToBitmap());
                 System.gc();
                 p0.dismiss();
@@ -161,24 +161,27 @@ public class ImageSelectorLayout extends LinearLayout {
         });
         addView(host);
 
-        final String[] stra = {
+        final String[] tabTitles = {
                 "image_selector_photo",
                 "image_selector_gradient"
         };
 
-        for (int i = 0; i < stra.length; i++) {
-            stra[i] = SettingsCategorizedListAdapter.getTranslation(win.getContext(), stra[i]);
+        for (int i = 0; i < tabTitles.length; i++) {
+            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(win.getContext(), tabTitles[i]);
         }
 
         host.setup();
 
-        for (int i = 0; i < stra.length; i++) {
-            TabSpec ts = host.newTabSpec(stra[i]);
-            TextView tv = (TextView) LayoutInflater.from(win.getContext()).inflate(android.R.layout.simple_list_item_1, widget, false);
-            LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
+        for (int i = 0; i < tabTitles.length; i++) {
+            TabSpec ts = host.newTabSpec(tabTitles[i]);
+            TextView tv = (TextView) LayoutInflater.from(win.getContext())
+                    .inflate(android.R.layout.simple_list_item_1, widget, false);
+            LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) 
+                    LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
-            tv.setText(stra[i]);
+            tv.setText(tabTitles[i]);
+            tv.setText(tabTitles[i]);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);

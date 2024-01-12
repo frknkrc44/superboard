@@ -38,8 +38,8 @@ public class EmojiView extends LinearLayout {
 
     private static String[][] emojis;
     private final Drawable emptyDrawable = new ColorDrawable();
-    private float txtsze;
-    private int keyclr;
+    private float textSize;
+    private int keyTextColor;
     private Drawable drw;
     private TabWidget tw;
     private TabHost th;
@@ -97,8 +97,8 @@ public class EmojiView extends LinearLayout {
     }
 
     public void applyTheme(SuperBoard sb) {
-        txtsze = sb.getKeysTextSize();
-        keyclr = sb.getKeysTextColor();
+        textSize = sb.getKeysTextSize();
+        keyTextColor = sb.getKeysTextColor();
         drw = sb.keybg;
         if (drw == null) {
             drw = new ColorDrawable(0);
@@ -145,10 +145,10 @@ public class EmojiView extends LinearLayout {
             TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, tw, false);
             tv.setLayoutParams(new LayoutParams(-1, l, 1));
             tv.setText(emojis[i][0].trim());
-            tv.setTextColor(keyclr);
+            tv.setTextColor(keyTextColor);
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
-            tv.setTextSize(txtsze);
+            tv.setTextSize(textSize);
             ts.setIndicator(tv);
             tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             final int x = i;
@@ -163,12 +163,12 @@ public class EmojiView extends LinearLayout {
         if (num == -1) {
             Button tv = new Button(getContext());
             tv.setLayoutParams(new LayoutParams(size, -1, 0));
-            tv.setTextColor(keyclr);
+            tv.setTextColor(keyTextColor);
             tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             tv.setGravity(Gravity.CENTER);
             tv.setText("A");
             tv.setTag(num);
-            tv.setTextSize(txtsze);
+            tv.setTextSize(textSize);
             tv.setOnClickListener(ocl);
             return tv;
         } else {
@@ -180,7 +180,7 @@ public class EmojiView extends LinearLayout {
             int p = size / 4;
             iv.setPadding(p, p, p, p);
             iv.setImageResource(R.drawable.sym_keyboard_delete);
-            iv.setColorFilter(keyclr, PorterDuff.Mode.SRC_ATOP);
+            iv.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
             iv.setTag(num);
             iv.setOnClickListener(ocl);
             return iv;
@@ -192,7 +192,7 @@ public class EmojiView extends LinearLayout {
         gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
         gv.setLayoutParams(new LayoutParams(-1, -1));
         int columns = SuperBoardApplication.getTextUtils()
-                .getTextBounds(txtsze, emojis[0][0]).width() / 2;
+                .getTextBounds(textSize, emojis[0][0]).width() / 2;
         gv.setNumColumns(columns);
         gv.setGravity(Gravity.CENTER);
         gv.setSelector(emptyDrawable);
@@ -231,12 +231,12 @@ public class EmojiView extends LinearLayout {
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView v = new TextView(EmojiView.this.getContext());
             v.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
-            v.setTextColor(keyclr);
+            v.setTextColor(keyTextColor);
             v.setGravity(Gravity.CENTER);
             v.setSingleLine();
             v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
             v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
-            v.setTextSize(txtsze);
+            v.setTextSize(textSize);
             v.setText(getItem(position).trim());
             return v;
         }

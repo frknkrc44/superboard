@@ -200,18 +200,17 @@ public class SuperBoardApplication extends Application {
         super.onCreate();
         appContext = this;
         settingMap = new SettingMap();
+        appDB = SuperDBHelper.getDefault(this);
+
+        fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
+        getCustomFont();
         reloadLanguageCache();
 
-        appDB = SuperDBHelper.getDefaultAsync(this, () -> {
-            fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
-            getCustomFont();
-            
-            dictDB = new DictionaryDB(this);
-            icons = new IconThemeUtils();
-            spaceBars = new SpaceBarThemeUtils();
-            emojiUtils = new TextUtilsCompat();
-            reloadThemeCache();
-        });
+        dictDB = new DictionaryDB(this);
+        icons = new IconThemeUtils();
+        spaceBars = new SpaceBarThemeUtils();
+        emojiUtils = new TextUtilsCompat();
+        reloadThemeCache();
     }
 
     public static void reloadLanguageCache() {

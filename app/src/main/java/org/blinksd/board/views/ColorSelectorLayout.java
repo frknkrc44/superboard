@@ -74,18 +74,18 @@ public class ColorSelectorLayout extends LinearLayout {
         host.addView(holder);
         addView(host);
 
-        final String[] stra = {
+        final String[] tabTitles = {
                 "color_selector_rgb",
                 "color_selector_hsv",
                 "color_selector_hex"
         };
 
-        for (int i = 0; i < stra.length; i++) {
-            stra[i] = SettingsCategorizedListAdapter.getTranslation(ctx, stra[i]);
+        for (int i = 0; i < tabTitles.length; i++) {
+            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(ctx, tabTitles[i]);
         }
 
         host.setOnTabChangedListener(p1 -> {
-            a.setVisibility(p1.equals(stra[2]) ? View.GONE : View.VISIBLE);
+            a.setVisibility(p1.equals(tabTitles[2]) ? View.GONE : View.VISIBLE);
             switch (host.getCurrentTab()) {
                 case 0:
                     r.setProgress(Color.red(colorValue));
@@ -106,13 +106,13 @@ public class ColorSelectorLayout extends LinearLayout {
 
         host.setup();
 
-        for (int i = 0; i < stra.length; i++) {
-            TabSpec ts = host.newTabSpec(stra[i]);
+        for (int i = 0; i < tabTitles.length; i++) {
+            TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
-            tv.setText(stra[i]);
+            tv.setText(tabTitles[i]);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);
