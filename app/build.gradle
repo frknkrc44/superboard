@@ -26,6 +26,10 @@ android {
         viewBinding false
     }
 
+    androidResources {
+        generateLocaleConfig true
+    }
+
     defaultConfig {
         applicationId "org.blinksd.board"
         minSdk keystoreProperties['MINSDK'].toInteger()

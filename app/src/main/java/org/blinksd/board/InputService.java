@@ -501,10 +501,6 @@ public class InputService extends InputMethodService implements
                 emojiView.applyTheme(superBoardView);
                 emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
             }
-            if (clipboardView != null) {
-                clipboardView.getLayoutParams().height = superBoardView.getKeyboardHeight();
-                clipboardView.onPrimaryClipChanged();
-            }
             SuperBoardApplication.clearCustomFont();
             superBoardView.setCustomFont(SuperBoardApplication.getCustomFont());
         }
@@ -530,6 +526,11 @@ public class InputService extends InputMethodService implements
                 keyboardLayoutHolder.removeView(clipboardView);
                 clipboardView = null;
                 System.gc();
+            }
+
+            if (clipboardView != null) {
+                clipboardView.onPrimaryClipChanged();
+                clipboardView.reTheme();
             }
         }
 

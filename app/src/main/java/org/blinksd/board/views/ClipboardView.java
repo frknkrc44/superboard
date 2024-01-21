@@ -47,6 +47,7 @@ public class ClipboardView extends LinearLayout
     private List<String> clipboardHistory;
 
     private final SuperBoard superBoard;
+    private ImageButton clearAllButton;
 
     public ClipboardView(SuperBoard superBoard) {
         super(superBoard.getContext());
@@ -73,19 +74,19 @@ public class ClipboardView extends LinearLayout
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
-        ImageButton button = new ImageButton(getContext());
-        button.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
+        clearAllButton = new ImageButton(getContext());
+        clearAllButton.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
                 getContext(), textColor, false));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
-        button.setLayoutParams(buttonParams);
-        button.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        button.setOnClickListener(V -> clearClipboard());
-        button.setImageResource(R.drawable.sym_keyboard_close);
-        button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
-        addView(button);
+        clearAllButton.setLayoutParams(buttonParams);
+        clearAllButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        clearAllButton.setOnClickListener(V -> clearClipboard());
+        clearAllButton.setImageResource(R.drawable.sym_keyboard_close);
+        clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        addView(clearAllButton);
 
         listView = new LinearLayout(getContext());
         listView.setOrientation(LinearLayout.VERTICAL);
@@ -150,6 +151,7 @@ public class ClipboardView extends LinearLayout
         button.setOnClickListener(v -> removeClipView(v, true));
         button.setImageResource(R.drawable.sym_keyboard_close);
         button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        button.setId(R.id.gradient_selector);
         button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(button);
 
@@ -207,6 +209,28 @@ public class ClipboardView extends LinearLayout
                     clipboardHistory.toArray(new String[0]),
                     true
             );
+        }
+    }
+
+    public void reTheme() {
+        getLayoutParams().height = superBoard.getHeight();
+
+        int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        textColor = ColorUtils.convertARGBtoRGB(textColor);
+
+        clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View child = listView.getChildAt(i);
+
+            TextView textView1 = child.findViewById(android.R.id.text1);
+            textView1.setTextColor(textColor);
+
+            TextView textView2 = child.findViewById(android.R.id.text2);
+            textView2.setTextColor(textColor);
+
+            ImageButton button = child.findViewById(R.id.gradient_selector);
+            button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         }
     }
 

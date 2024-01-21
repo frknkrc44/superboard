@@ -8,10 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,7 +20,6 @@ import org.blinksd.board.InputService;
 import org.blinksd.board.SuperBoardApplication;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 public class SystemUtils {
 
@@ -41,26 +37,12 @@ public class SystemUtils {
         return "";
     }
 
-    /** @noinspection DataFlowIssue*/
     @SuppressLint("PrivateApi")
     public static boolean detectNavbar(InputService inputService) {
-        if (SDK_INT >= 14) {
-            try {
-                Class<?> serviceManager = Class.forName("android.os.ServiceManager");
-                IBinder serviceBinder = (IBinder) serviceManager.getMethod("getService", String.class).invoke(serviceManager, "window");
-                Class<?> stub = Class.forName("android.view.IWindowManager$Stub");
-                Object windowManagerService = stub.getMethod("asInterface", IBinder.class).invoke(stub, serviceBinder);
-                if (SDK_INT < 29) {
-                    Method hasNavigationBar = Objects.requireNonNull(windowManagerService).getClass().getMethod("hasNavigationBar");
-                    return (boolean) hasNavigationBar.invoke(windowManagerService);
-                }
-                Method hasNavigationBar = Objects.requireNonNull(windowManagerService).getClass().getMethod("hasNavigationBar", int.class);
-                Display dsp = Objects.requireNonNull(inputService.getWindow().getWindow()).getWindowManager().getDefaultDisplay();
-                return (boolean) hasNavigationBar.invoke(windowManagerService, dsp.getDisplayId());
-            } catch (Throwable e) {
-                Log.e("Navbar", "Navbar detection failed by internal system APIs because ...", e);
-            }
+        if (SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return WindowManagerServiceUtils.hasNavigationBar(inputService);
         }
+
         return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) &&
                 KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
     }
