@@ -553,6 +553,7 @@ public class InputService extends InputMethodService implements
                 superBoardView.setRowPadding(0, i, DensityUtils.wpInt(2));
             }
         }
+        superBoardView.setKeyboardLanguage(language.language);
         LayoutUtils.setKeyOpts(language, superBoardView);
         currentLanguageCache = language;
     }
