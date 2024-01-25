@@ -14,6 +14,14 @@ A basic keyboard app
 - F (TR)
 - Old Turkic
 
+You can add your own layout creator to SuperBoardLayoutCreator folder and it'll be generated automatically.
+
+### Some key events
+
+- Long press to !?# → Close keyboard
+- Long press to , (except DVORAK) → Send TAB key
+- Long press to ENTER → Open emoji keyboard
+
 ### Translations
 
 You can use [Crowdin](https://crowdin.com/project/superboard) for translations.
