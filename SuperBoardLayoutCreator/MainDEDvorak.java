@@ -33,7 +33,7 @@ public class MainDEDvorak {
                 {0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0},
-                {-100,9,0,0,-102}
+                {-100,0,0,0,-102}
         };
         boolean[][] repeats = {
                 {false,false,false,false,false,false,false,false,false,false},
@@ -54,7 +54,7 @@ public class MainDEDvorak {
                 {false,false,false,false,false,false,false,false,false,false},
                 {false,false,false,false,false,false,false,false,false,false},
                 {false,false,false,false,false,false,false,false,false},
-                {false,true,false,false,false}
+                {false,false,false,false,false}
         };
         boolean[][] darkerKeyTints = {
                 {false,false,false,false,false,false,false,false,false,false},
