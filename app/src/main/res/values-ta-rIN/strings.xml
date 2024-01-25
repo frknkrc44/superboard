@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">%s அமைவு வழிகாட்டிக்கு வரவேற்கிறோம்!</string>
+    <string name="wizard_nextbtn">அடுத்து</string>
+    <string name="wizard_enable">இந்த விசைப்பலகையை அமைப்புகளில் இயலுமைப்படுத்தவும்</string>
+    <string name="wizard_enablebtn">சிஸ்டம் அமைப்புகளைத் திற</string>
+    <string name="wizard_select">%s ஐ இயல்புநிலை விசைப்பலகையாகத் தேர்ந்தெடுக்கவும்</string>
+    <string name="wizard_selectbtn">விசைப்பலகை தேர்வுத் திரையைத் திற</string>
+    <string name="wizard_settings">விசைப்பலகையைத் தனிப்பயனாக்குக</string>
+    <string name="wizard_settingsbtn">விசைப்பலகை அமைப்பு திரையைத் திற</string>
+    <string name="wizard_finish">அமைப்பு முறை முடிந்தது!</string>
+    <string name="wizard_finishbtn">பூர்த்தி செய்</string>
+    <string name="keyboard_theme_api_perm_label">FBoard பயனாளர் தீம் API அணுகல்</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">அமைப்புகள்</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">விசைப்பலகை பின்னணி புகைப்படம்</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">தட்டச்சு செய்யும்போது எழுத்தைக் காண்பி</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Navbarல் வெளிப்படையான பின்னணியைப் பயன்படுத்து</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Navbarக்கு நிறமூட்டு (அண்ட்ராய்டு 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">பாப்பப் திறையை முடக்கு</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">அழுத்திப் பிடித்தால் எழுத்தைப் பலமுறை உள்ளிட வேண்டாம்</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">மேல் பட்டையை முடக்கு</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">மேல் பட்டையின் function பொத்தான்களை மறை</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">கிளிப்போர்டை பயன்படுத்து</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">சொற்களைப் பரிந்துரைக்க வேண்டாம்</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">எண்கள் வரிசையை முடக்கு (beta)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">அழுத்திப் பிடித்தால் செயலை அல்லது முதல் எழுத்தைக் காண்பி</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">மோனெட் நிறங்களைப் பயன்படுத்து (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">கேப்ஸ்லாக் நிலையைத் தானாக அறிந்துகொள்</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">இமோஜி பொத்தானை அழுத்திப் பிடித்தால் மொழியை மாற்று</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">விசையின் பின்னணி நிறத்தை உள்ளிடவும்</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">அழுத்திய விசையின் பின்னணி நிறத்தை உள்ளிடவும்</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">விசையின் எழுத்தின் நிழல் நிறம்</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">முதல் விசையின் பின்னணி நிறம்</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">இரண்டாம் விசையின் பின்னணி நிறம்</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">அழுத்திய முதல் விசையின் பின்னணி நிறம்</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">அழுத்திய இரண்டாம் விசையின் பின்னணி நிறம்</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">விசைப்பலகை பின்னணி நிறம்</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">விசையின் எழுத்து நிறம்</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">விசையை அழுத்தினால் ஒலி எழுப்பு</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM பயன்பாட்டைக் குறை (தொடக்க நேரத்தை அதிகரிக்கும்)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">அழுத்திப் பிடித்தால் முதல் பாப்பப் எழுத்தை உள்ளிடு (பாப்பப் திறை தேவை)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">புகைப்படம்</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">கிரேடியன்ட்</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">நிறம்</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">நிறம் சேர்</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">அதிகபட்சம் %s நிறங்கள் மட்டுமே</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">குறைந்தபட்சம் %s நிறங்கள் தேவை</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">நோக்குநிலையை மாற்று</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">படத்தைத் தேர்ந்தெடு</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">வால்பேப்பரை எடுத்துக்கொள்</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">சுழற்று</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">விசைப்பலகை மொழி</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">விசைப்பலகை எழுத்துரு</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">விசைப்பலகை தீம்</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">ஐகான் தீம்</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">ஸ்பேஸ் பார் வகை</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">விசை பின்னனி வகை</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">விசை பின்னனி கிரேடியன்ட் நோக்குநிலை</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">விசைப்பலகை பின்னணி புகைப்படம் தெளிவின்மை அளவு</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">விசை அழுத்தல் அதிர்வுறு நேரம்</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">விசைப்பலகை உயரம்</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">அழுத்திப் பிடித்திருக்கும் அவகாசப் பெருக்கி</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">விசை இடைவெளி</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">விசை ஆரம்</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">விசையின் எழுத்துரு அளவு</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">விசை நிழல் அளவு</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">விசை ஐகான் அளவு பெருக்கி</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">காப்புப்பிரதி உருவாக்கு</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">காப்புப்பிரதி மீட்டமை</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">அனைத்தையும்</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">தீம் மட்டும் (ஐகான், பின்னணி படம், நிரம், ...)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">மற்றவை</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">அகராதியை உள்ளிடு (.fbd)</string>
+    <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
+    <string name="settings_dict_import_count">%s சொல் அகராதியில் சேர்க்கப்பட்டது</string>
+    <string name="settings_dict_import_delete_duplicates">நகல்கள் நீக்கப்படுகின்றன</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>வழக்கமான</item>
+        <item>தடிமன்</item>
+        <item>சாய்வு</item>
+        <item>தடிமனான சாய்வு</item>
+        <item>சுருக்கப்பெற்ற</item>
+        <item>சுருக்கப்பெற்ற தடிமனான</item>
+        <item>சுருக்கப்பெற்ற சாய்வு</item>
+        <item>சுருக்கப்பெற்ற தடிமனான சாய்வு</item>
+        <item>செரிஃப்</item>
+        <item>தடிமனான செரிஃப்</item>
+        <item>சாய்வான செரிஃப்</item>
+        <item>தடிமனான சாய்வான செரிஃப்</item>
+        <item>சம இடைவெளி</item>
+        <item>தடிமனான சம இடைவெளி</item>
+        <item>சாய்வான சம இடைவெளி</item>
+        <item>சாய்வான தடிமனான சம இடைவெளி</item>
+        <item>சம இடைவெளி செரிஃப்</item>
+        <item>தடிமனான சம இடைவெளி செரிஃப்</item>
+        <item>சாய்வான சம இடைவெளி செரிஃப்</item>
+        <item>சாய்வான தடிமனான சம இடைவெளி செரிஃப்</item>
+        <item>விரும்பிய வகை (ஆப் டேட்டா ஃபோல்டரில்)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>இயல்புநிலை</item>
+        <item>மெட்டீரியல்</item>
+        <item>ஆப்ரிகாட்</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>இயல்புநிலை தீம்</item>
+        <item>தேர்ந்தெடுக்கப்பட்ட மொழி</item>
+        <item>டெய்சி</item>
+        <item>ஸ்பேஸ் பார்</item>
+        <item>வெறுமை</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>பொது அமைப்புகள்</item>
+        <item>தீம் அமைப்புகள்</item>
+        <item>மேலும் துல்லிய தீம் அமைப்புகள்</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>தட்டையான</item>
+        <item>கிரேடியன்ட்</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>மேலிருந்து கீழ்நோக்கி</item>
+        <item>கீழிருந்து மேல்நோக்கி</item>
+        <item>இடதிலிருந்து வலப்புறம்</item>
+        <item>வலதிலிருந்து இடப்புறம்</item>
+        <item>மேல் இடதிலிருந்து கீழ் வலப்புறம்</item>
+        <item>மேல் வடதிலிருந்து கீழ் இடப்புறம்</item>
+        <item>கீழ் இடதிலிருந்து மேல் வலப்புறம்</item>
+        <item>கீழ் வடதிலிருந்து மேல் இடப்புறம்</item>
+    </string-array>
+</resources>
