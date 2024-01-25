@@ -13,6 +13,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import org.blinksd.board.R;
@@ -184,13 +185,21 @@ public class LayoutUtils {
         Arrays.sort(items);
         for (String str : items) {
             if (str.endsWith(".json")) {
-                Scanner sc = new Scanner(assets.open(subdir + "/" + str));
-                StringBuilder s = new StringBuilder();
-                while (sc.hasNext()) s.append(sc.nextLine());
-                sc.close();
-                Language l = createLanguage(s.toString(), false);
-                if (l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk) {
-                    langs.put(l.language, l);
+                try {
+                    Scanner sc = new Scanner(assets.open(subdir + "/" + str));
+                    StringBuilder s = new StringBuilder();
+                    while (sc.hasNext()) s.append(sc.nextLine());
+                    sc.close();
+                    Language l = createLanguage(s.toString(), false);
+                    if (l.enabled && Build.VERSION.SDK_INT >= l.enabledSdk) {
+                        langs.put(l.language, l);
+                    }
+                } catch (Throwable e) {
+                    Log.d(
+                            LayoutUtils.class.getSimpleName(),
+                            "Language pack import failed for " + str,
+                            e
+                    );
                 }
             }
         }
