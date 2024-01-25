@@ -182,6 +182,11 @@ public class BoardPopup extends SuperBoard {
     }
 
     @Override
+    public int findKeyboardIndex(KeyboardType type) {
+        return super.findKeyboardIndex(KeyboardType.TEXT);
+    }
+
+    @Override
     public void clear() {
         super.clear();
         mKey.setHint(null);
