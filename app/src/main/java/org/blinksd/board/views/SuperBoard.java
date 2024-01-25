@@ -724,7 +724,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case Keyboard.KEYCODE_MODE_CHANGE:
                     setEnabledLayout(selected == 0 ? findSymbolKeyboardIndex() : findNormalKeyboardIndex());
-                    updateKeyState();
+                    setCtrlState(0);
+                    setAltState(0);
                     break;
                 case Keyboard.KEYCODE_ALT:
                     setEnabledLayout((selected + 1) % getChildCount());
@@ -1067,12 +1068,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public void updateKeyState(InputMethodService s) {
         setCtrlState(0);
         setAltState(0);
-
-        /*
-        if (getEnabledLayoutIndex() != findNormalKeyboardIndex() || shift == 2) {
-            return;
-        }
-        */
 
         EditorInfo ei = s.getCurrentInputEditorInfo();
 
