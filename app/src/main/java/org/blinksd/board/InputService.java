@@ -81,7 +81,6 @@ public class InputService extends InputMethodService implements
             setPrefs();
         }
     };
-    private boolean showEmoji = false, showClipboard = false;
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
         switch (num) {
@@ -424,10 +423,10 @@ public class InputService extends InputMethodService implements
                 }
             }
 
-            superBoardView.setBackgroundColor(c);
+            keyboardLayoutHolder.setBackgroundColor(c);
+            superBoardView.setBackgroundColor(Color.TRANSPARENT);
 
             if (suggestionLayout != null) {
-                suggestionLayout.setBackgroundColor(c);
                 suggestionLayout.reTheme();
             }
 
@@ -512,13 +511,6 @@ public class InputService extends InputMethodService implements
             if (enableClipboard && clipboardView == null) {
                 clipboardView = new ClipboardView(superBoardView);
                 clipboardView.setVisibility(View.GONE);
-
-                if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                    clipboardView.setBackground(superBoardView.getBackground());
-                } else {
-                    clipboardView.setBackgroundDrawable(superBoardView.getBackground());
-                }
-
                 keyboardLayoutHolder.addView(clipboardView);
             } else if (!enableClipboard && clipboardView != null) {
                 clipboardView.clearClipboard();
@@ -626,11 +618,10 @@ public class InputService extends InputMethodService implements
         if (SDK_INT < 16 || emojiView == null) {
             return;
         }
-        if (showEmoji != value) {
+        if (emojiView.isShown() != value) {
             showClipboardView(false);
             emojiView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
-            showEmoji = value;
         }
     }
 
@@ -638,11 +629,10 @@ public class InputService extends InputMethodService implements
         if (SDK_INT < 11 || clipboardView == null) {
             return;
         }
-        if (showClipboard != value) {
+        if (clipboardView.isShown() != value) {
             showEmojiView(false);
             clipboardView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
-            showClipboard = value;
         }
     }
 
@@ -658,11 +648,11 @@ public class InputService extends InputMethodService implements
         public void onKeyboardEvent(View v) {
             if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
 
-            if (showEmoji) {
+            if (emojiView.isShown()) {
                 showEmojiView(false);
             }
 
-            if (showClipboard) {
+            if (clipboardView.isShown()) {
                 showClipboardView(false);
             }
 
@@ -710,20 +700,13 @@ public class InputService extends InputMethodService implements
         public void sendDefaultKeyboardEvent(View v) {
             Key key = (Key) v;
 
-            if (showEmoji && key.hasNormalPressEvent()) {
-                switch (key.getNormalPressEvent().first) {
-                    case KeyEvent.KEYCODE_HENKAN: // symbol menu
-                    case KeyEvent.KEYCODE_NUM:    // number menu
-                    case KeyEvent.KEYCODE_EISU:   // clipboard menu
-                        showEmojiView(false);
-                        showClipboardView(false);
-                        break;
-                }
-            }
-
             if (key.hasNormalPressEvent()) {
-                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU) {
+                if (clipboardView.isShown() && key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU) {
                     showClipboardView(false);
+                }
+
+                if (emojiView.isShown() && key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA) {
+                    showEmojiView(false);
                 }
 
                 switch (key.getNormalPressEvent().first) {
@@ -736,7 +719,10 @@ public class InputService extends InputMethodService implements
                         setEnabledLayout(getEnabledLayoutIndex() != numIndex ? numIndex : 0);
                         return;
                     case KeyEvent.KEYCODE_EISU:   // clipboard menu
-                        showClipboardView(!showClipboard);
+                        showClipboardView(!clipboardView.isShown());
+                        return;
+                    case KeyEvent.KEYCODE_KANA:   // emoji menu
+                        showEmojiView(!emojiView.isShown());
                         return;
                 }
             }
