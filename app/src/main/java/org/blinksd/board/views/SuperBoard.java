@@ -1068,9 +1068,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         setCtrlState(0);
         setAltState(0);
 
+        /*
         if (getEnabledLayoutIndex() != findNormalKeyboardIndex() || shift == 2) {
             return;
         }
+        */
 
         EditorInfo ei = s.getCurrentInputEditorInfo();
 
