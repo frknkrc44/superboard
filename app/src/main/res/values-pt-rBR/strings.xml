@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">Bem-vindo ao assistente de instalação %s!</string>
+    <string name="wizard_nextbtn">Seguinte</string>
+    <string name="wizard_enable">Habilitar teclado a partir das configurações</string>
+    <string name="wizard_enablebtn">Abrir Ajustes do Sistema</string>
+    <string name="wizard_select">Selecione %s como o teclado padrão</string>
+    <string name="wizard_selectbtn">Abrir janela de seleção de teclado</string>
+    <string name="wizard_settings">Personalizar o seu teclado</string>
+    <string name="wizard_settingsbtn">Abrir configurações do teclado</string>
+    <string name="wizard_finish">Parabéns, o assistente de configuração foi concluído!</string>
+    <string name="wizard_finishbtn">Finalizar</string>
+    <string name="keyboard_theme_api_perm_label">Acesso ao tema API do usuário FBoard</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">Configurações:</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Imagem de fundo no teclado</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Mostrar caractere enquanto escreve</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Usar fundo transparente na barra de navegação</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Aplicar cor à barra de navegação (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Desativar menu pop-up</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Desativar caractere repetido no toque longo</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Desativar barra superior</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Ocultar botões da função na barra superior</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Habilitar área de transferência</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Desativar sugestão de palavras</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desativar linha de números (beta)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar um toque longo na ação ou primeiro caractere na tecla</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar cores do monet (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar status de capslock automaticamente</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Alternar o idioma do teclado pressionado para o botão emoji</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Digite a cor de fundo</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Digite a cor de fundo</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Cor da sombra do texto chave</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Primeira cor de fundo</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Segunda cor de fundo</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Primeira cor de fundo</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Segunda cor de fundo</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Cor de fundo do teclado</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Cor do texto chave</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Tocar som em eventos de pressionar tecla</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduz o uso de RAM (aumenta o atraso inicial)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use o primeiro caractere pop-up ao pressionar longamente (você deve ativar o menu pop-up)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Gradiente</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Cor</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Adicionar cor</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Ops! Limite máximo é %s</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Ops! Limite mínimo é %s</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Alterar orientação</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Selecionar imagem</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Obter plano de fundo</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Rotacionar</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Idioma do teclado</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Fontes do teclado</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Tema do teclado</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Tema dos icones</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Estilo barra de espaço</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Tipo de fundo chave</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Orientação gradiente do fundo chave</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Desfoque de fundo da imagem de teclado</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Duração da vibração do toque</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Altura do teclado</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Multiplicador de duração prolongada</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Preenchimento de tecla</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Raio da chave</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Tamanho do texto chave</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Tamanho da sombra da chave</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Tamanho do ícone chave</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Cópia de segurança</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restaurar</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Todos os itens</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (tema de ícone, imagem de fundo, cores, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Outros</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Importar pacote de dicionário (.fbd)</string>
+    <string name="settings_dict_importing">Importando, por favor, não feche este aplicativo</string>
+    <string name="settings_dict_import_count">Palavra %s importada</string>
+    <string name="settings_dict_import_delete_duplicates">Excluindo duplicados…</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>Regular</item>
+        <item>Negrito</item>
+        <item>Itálico</item>
+        <item>Negrito Itálico</item>
+        <item>Condensado</item>
+        <item>Condensado Negrito</item>
+        <item>Itálico Condensado</item>
+        <item>Itálico Negrito Condensado</item>
+        <item>Com serifa</item>
+        <item>Serif Negrito</item>
+        <item>Serif Italic</item>
+        <item>NotoSerif Negrito Itálico</item>
+        <item>Monoespaçado</item>
+        <item>Negrito monoespaçado</item>
+        <item>Monospace Italic</item>
+        <item>Itálico em negrito monoespaçado</item>
+        <item>Serif monoespaçada</item>
+        <item>Serif monoespaçada em negrito</item>
+        <item>Serif Monospace Italic</item>
+        <item>Serif Monospace Negrito Itálico</item>
+        <item>Personalizado (na pasta de dados do app)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>Padrão</item>
+        <item>Material</item>
+        <item>Damasco</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>Padrão do tema</item>
+        <item>Selecione o idioma</item>
+        <item>Margarida</item>
+        <item>Barra de espaço</item>
+        <item>Vazio</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>Geral</item>
+        <item>Temas</item>
+        <item>Tema Avançado</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>Plano</item>
+        <item>Gradiente</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>Superior → inferior</item>
+        <item>Inferior → superior</item>
+        <item>Esquerda → direita</item>
+        <item>Direita → esquerda</item>
+        <item>Superior esquerdo para inferior direito</item>
+        <item>Superior direito → canto inferior esquerdo</item>
+        <item>Inferior esquerdo para superior direito</item>
+        <item>Canto inferior direito → canto superior esquerdo</item>
+    </string-array>
+</resources>
