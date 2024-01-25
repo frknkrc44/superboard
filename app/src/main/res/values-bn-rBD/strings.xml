@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">%sবাংলা সেটআপ উইজার্ডে স্বাগতম!</string>
+    <string name="wizard_nextbtn">পরবর্তী</string>
+    <string name="wizard_enable">সেটিংস থেকে কীবোর্ড সক্ষম করুন</string>
+    <string name="wizard_enablebtn">সিস্টেম সেটিংস খুলুন</string>
+    <string name="wizard_select">আপনার ডিফল্ট কীবোর্ড হিসাবে %s নির্বাচন করুন</string>
+    <string name="wizard_selectbtn">কীবোর্ড নির্বাচন পপআপ খুলুন</string>
+    <string name="wizard_settings">আপনার কীবোর্ড নিজের মনের মত করুন</string>
+    <string name="wizard_settingsbtn">কিবোর্ড সেটিংস খুলুন</string>
+    <string name="wizard_finish">অভিনন্দন, আপনি সেটআপ উইজার্ড সম্পূর্ণ করেছেন!</string>
+    <string name="wizard_finishbtn">সমাপ্ত</string>
+    <string name="keyboard_theme_api_perm_label">FBoard ব্যবহারকারী থিম API অ্যাক্সেস</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">সেটিংস</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">কীবোর্ড ব্যাকগ্রাউন্ড ছবি</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">টাইপ করার সময় অক্ষর দেখান</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">নেভবারে স্বচ্ছ ব্যাকগ্রাউন্ড ব্যবহার করুন</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">নববারে রঙ প্রয়োগ করুন (অ্যান্ড্রয়েড ৯+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">পপআপ মেনু নিষ্ক্রিয় করুন</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">দীর্ঘ প্রেসে অক্ষর পুনরাবৃত্তি অক্ষম করুন</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">শীর্ষ বার অক্ষম করুন</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">শীর্ষ বার ফাংশন বোতাম লুকান</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">ক্লিপবোর্ড সক্ষম করুন</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">শব্দ পরামর্শ নিষ্ক্রিয়</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">সংখ্যা সারি অক্ষম করুন (বিটা)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">দীর্ঘ প্রেস অ্যাকশন দেখান বা কী-তে প্রথম অক্ষর পপআপ করুন</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">মোনেট রং ব্যবহার করুন (বিটা)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">ক্যাপসলক স্থিতি স্বয়ংক্রিয়ভাবে সনাক্ত করুন</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">ইমোজি বোতামে দীর্ঘক্ষণ চাপলে কীবোর্ডের ভাষা পরিবর্তন করুন</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">কী পটভূমির রঙ লিখুন</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">কী প্রেস ব্যাকগ্রাউন্ড রঙ লিখুন</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">মূল পাঠ্য ছায়া রঙ</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">প্রথম কী ব্যাকগ্রাউন্ড কালার</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">দ্বিতীয় কী ব্যাকগ্রাউন্ড কালার</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">প্রথম কী ব্যাকগ্রাউন্ড কালার</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">দ্বিতীয় কী ব্যাকগ্রাউন্ড কালার</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">কীবোর্ড ব্যাকগ্রাউন্ড রঙ</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">বাটন টেক্সট রঙ</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">কী প্রেস ইভেন্টে শব্দ চালান</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">র‍্যাম ব্যবহার কমান (init বিলম্ব বাড়ায়)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">দীর্ঘ প্রেসে প্রথম পপআপ অক্ষর ব্যবহার করুন (আপনাকে অবশ্যই পপআপ মেনু সক্ষম করতে হবে)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">ছবি</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">নতিমাত্রা</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">রং</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">রং যোগ করুন</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">%sবাংলা</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">%sবাংলা</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">অভিযোজন পরিবর্তন করুন</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">ছবি নির্বাচন করুন</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">ওয়ালপেপার পান</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">ঘোরান</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">কীবোর্ড ভাষা</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">কীবোর্ড ফন্ট</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">কীবোর্ড থিম</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">আইকোন থিম</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">স্পেস বার স্টাইল</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">বাটন ব্যাকগ্রাউন্ড ধরন</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">বাটন ব্যাকগ্রাউন্ড গ্রেডিয়েন্ট অভিযোজন</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">কীবোর্ড ব্যাকগ্রাউন্ড ইমেজ ঝাপসা</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">কী প্রেস কম্পন সময়কাল</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">কীবোর্ডের উচ্চতা</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">দীর্ঘ প্রেস সময়কাল গুণক</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">বাটন প্যাডিং</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">বাটন ব্যাসার্ধ</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">বাটন টেক্সট আকার</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">বাটন ছায়া আকার</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">আইকন আইকন আকার গুণক</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">ব্যাকআপ</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">পুনরুদ্ধার করুন</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">সকল প্রকার</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">অন্যান্য</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd) আমদানি করুন</string>
+    <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
+    <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
+    <string name="settings_dict_import_delete_duplicates">ডুপ্লিকেট মুছে ফেলা হচ্ছে</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>নিয়মিত</item>
+        <item>বোল্ড</item>
+        <item>ইটালিক</item>
+        <item>বোল্ড ইটালিক</item>
+        <item>কন্ডেন্সড</item>
+        <item>কন্ডেন্সড বোল্ড</item>
+        <item>কন্ডেন্সড ইটালিক</item>
+        <item>কন্ডেন্সড বোল্ড ইটালিক</item>
+        <item>সেরিফ</item>
+        <item>সেরিফ বোল্ড</item>
+        <item>সেরিফ ইটালিক</item>
+        <item>সেরিফ বোল্ড ইটালিক</item>
+        <item>মনোস্পেস</item>
+        <item>মনোস্পেস বোল্ড</item>
+        <item>মনোস্পেস ইটালিক</item>
+        <item>মনোস্পেস বোল্ড ইটালিক</item>
+        <item>সেরিফ মনোস্পেস</item>
+        <item>সেরিফ মনোস্পেস বোল্ড</item>
+        <item>সেরিফ মনোস্পেস ইটালিক</item>
+        <item>সেরিফ মনোস্পেস বোল্ড ইটালিক</item>
+        <item>কাস্টম (অ্যাপ ডেটা ফোল্ডারে)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>ডিফল্ট</item>
+        <item>মেটেরিয়াল</item>
+        <item>আপ্রিকোট</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>ডিফল্ট থিম</item>
+        <item>নির্বাচিত ভাষা</item>
+        <item>ফ্ুলপাছ</item>
+        <item>স্পেস বার</item>
+        <item>খালি</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>সাধারণ</item>
+        <item>থিমিং</item>
+        <item>উন্নত থিমিং</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>ফ্ল্যাট</item>
+        <item>নতিমাত্রা</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>উপরে→নিচে</item>
+        <item>নিচে→উপরে</item>
+        <item>বাম→ডান</item>
+        <item>ডান→বাম</item>
+        <item>উপরে বাম → নীচে ডান</item>
+        <item>উপরে ডান → নীচে বাম</item>
+        <item>নীচে বাম → উপরে ডান</item>
+        <item>নীচে ডান → উপরে বাম</item>
+    </string-array>
+</resources>

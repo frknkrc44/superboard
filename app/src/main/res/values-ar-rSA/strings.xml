@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">Welcome to %s setup wizard!</string>
+    <string name="wizard_nextbtn">Next</string>
+    <string name="wizard_enable">Enable keyboard from settings</string>
+    <string name="wizard_enablebtn">Open system settings</string>
+    <string name="wizard_select">Select %s as your default keyboard</string>
+    <string name="wizard_selectbtn">Open keyboard selection popup</string>
+    <string name="wizard_settings">Customize your keyboard</string>
+    <string name="wizard_settingsbtn">Open keyboard settings</string>
+    <string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
+    <string name="wizard_finishbtn">Finish</string>
+    <string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">Settings</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Keyboard background image</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Show character while typing</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Use transparent background at navbar</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Key text shadow color</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">First key background color</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Second key background color</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">First key press background color</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Photo</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Gradient</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Color</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Add color</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Change orientation</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Select image</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Get wallpaper</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Rotate</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Keyboard language</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Keyboard font</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Keyboard theme</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Icon theme</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Space bar style</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Key background type</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Key background gradient orientation</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Key text size</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Key shadow size</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Key icon size multiplier</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restore</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">All items</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd)</string>
+    <string name="settings_dict_importing">Importing, please don\'t close this app</string>
+    <string name="settings_dict_import_count">%s word imported</string>
+    <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>Regular</item>
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Bold Italic</item>
+        <item>Condensed</item>
+        <item>Condensed Bold</item>
+        <item>Condensed Italic</item>
+        <item>Condensed Bold Italic</item>
+        <item>Serif</item>
+        <item>Serif Bold</item>
+        <item>Serif Italic</item>
+        <item>Serif Bold Italic</item>
+        <item>Monospace</item>
+        <item>Monospace Bold</item>
+        <item>Monospace Italic</item>
+        <item>Monospace Bold Italic</item>
+        <item>Serif Monospace</item>
+        <item>Serif Monospace Bold</item>
+        <item>Serif Monospace Italic</item>
+        <item>Serif Monospace Bold Italic</item>
+        <item>Custom (in app data folder)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>Default</item>
+        <item>Material</item>
+        <item>Apricot</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>Theme default</item>
+        <item>Selected language</item>
+        <item>Daisy</item>
+        <item>Space bar</item>
+        <item>Empty</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>General</item>
+        <item>Theming</item>
+        <item>Advanced Theming</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>Flat</item>
+        <item>Gradient</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>Top → bottom</item>
+        <item>Bottom → top</item>
+        <item>Left → right</item>
+        <item>Right → left</item>
+        <item>Top left → bottom right</item>
+        <item>Top right → bottom left</item>
+        <item>Bottom left → top right</item>
+        <item>Bottom right → top left</item>
+    </string-array>
+</resources>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">Selamat datang di panduan pengaturan %s!</string>
+    <string name="wizard_nextbtn">Berikutnya</string>
+    <string name="wizard_enable">Aktifkan keyboard dari pengaturan</string>
+    <string name="wizard_enablebtn">Buka pengaturan sistem</string>
+    <string name="wizard_select">Pilih %s sebagai keyboard default Anda</string>
+    <string name="wizard_selectbtn">Buka popup pilihan keyboard</string>
+    <string name="wizard_settings">Sesuaikan papan ketik Anda</string>
+    <string name="wizard_settingsbtn">Buka pengaturan papan ketik</string>
+    <string name="wizard_finish">Selamat, Anda telah menyelesaikan wizard pengaturan!</string>
+    <string name="wizard_finishbtn">Menyelesaikan</string>
+    <string name="keyboard_theme_api_perm_label">Akses API Tema Pengguna FBoard</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">Pengaturan</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Gambar latar belakang papan ketik</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Tampilkan karakter saat mengetik</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Gunakan latar belakang transparan di navbar</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Menerapkan warna ke bilah navigasi (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Nonaktifkan menu pop-up</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Nonaktifkan pengulangan karakter saat ditekan lama</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Nonaktifkan bilah atas</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Sembunyikan tombol fungsi bilah atas</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Aktifkan papan klip</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Nonaktifkan saran kata</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nonaktifkan baris nomor (beta)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Tampilkan tindakan tekan lama atau munculkan karakter pertama pada tombol</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Gunakan warna monet (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Deteksi status capslock secara otomatis</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Ganti bahasa keyboard dengan menekan lama ke tombol emoji</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Masukkan warna latar belakang kunci</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Masukkan warna latar belakang penekanan tombol</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Warna bayangan teks kunci</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Warna latar belakang kunci pertama</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Warna latar belakang kunci kedua</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Warna latar belakang penekanan tombol pertama</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Warna latar belakang tekan tombol kedua</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Warna latar belakang papan ketik</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Warna teks kunci</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Memutar suara saat tombol ditekan</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Mengurangi penggunaan RAM (meningkatkan penundaan init)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Gunakan karakter popup pertama saat ditekan lama (Anda harus mengaktifkan menu popup)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Gradien</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Warna</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Tambahkan warna</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Ups! Batas maksimum adalah %s</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Ups! Batas minimum adalah %s</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Ubah orientasi</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Pilih gambar</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Dapatkan kertas dinding</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Memutar</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Bahasa papan ketik</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Font papan ketik</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Tema papan ketik</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Tema ikon</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Gaya bilah spasi</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Jenis latar belakang kunci</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Orientasi gradien latar belakang utama</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Gambar latar belakang keyboard kabur</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Durasi getar penekanan tombol</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Tinggi papan ketik</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Pengganda durasi tekan lama</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Bantalan kunci</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Jari-jari kunci</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Ukuran teks kunci</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Ukuran bayangan kunci</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Pengganda ukuran ikon kunci</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Cadangan</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Memulihkan</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Semua barang</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (tema ikon, gambar latar belakang, warna,…)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Yang lain</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Impor paket kamus (.fbd)</string>
+    <string name="settings_dict_importing">Mengimpor, mohon jangan tutup aplikasi ini</string>
+    <string name="settings_dict_import_count">%s kata diimpor</string>
+    <string name="settings_dict_import_delete_duplicates">Menghapus duplikat</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>Reguler</item>
+        <item>Tebal</item>
+        <item>Miring</item>
+        <item>Tebal miring</item>
+        <item>Condensed</item>
+        <item>Condensed Tebal</item>
+        <item>Condensed Miring</item>
+        <item>Condensed Tebal Miring</item>
+        <item>Serif</item>
+        <item>Serif Tebal</item>
+        <item>Serif Miring</item>
+        <item>Serif Tebal Miring</item>
+        <item>Monospace</item>
+        <item>Monospace Tebal</item>
+        <item>Monospace Miring</item>
+        <item>Monospace Tebal Miring</item>
+        <item>Minivan Serif</item>
+        <item>Serif Monospace Tebal</item>
+        <item>Serif Monospace Miring</item>
+        <item>Serif Monospace Tebal Miring</item>
+        <item>Kustom (dalam folder data aplikasi)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>Bawaan</item>
+        <item>Bahan</item>
+        <item>Aprikot</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>Default tema</item>
+        <item>Bahasa yang dipilih</item>
+        <item>Bunga aster</item>
+        <item>Bilah spasi</item>
+        <item>Kosong</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>Umum</item>
+        <item>Tema</item>
+        <item>Tema Tingkat Lanjut</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>Datar</item>
+        <item>Gradien</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>Atas → bawah</item>
+        <item>Bawah → atas</item>
+        <item>Kiri → kanan</item>
+        <item>Kanan → kiri</item>
+        <item>Kiri atas → kanan bawah</item>
+        <item>Kanan atas → kiri bawah</item>
+        <item>Kiri bawah → kanan atas</item>
+        <item>Kanan bawah → kiri atas</item>
+    </string-array>
+</resources>

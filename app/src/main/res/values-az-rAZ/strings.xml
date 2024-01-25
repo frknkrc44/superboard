@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Setup wizard resources -->
+    <string name="wizard_welcome">Xoş gəldiniz %s quraşdırma siyahısına!</string>
+    <string name="wizard_nextbtn">Növbəti</string>
+    <string name="wizard_enable">Parametrlərdən klaviaturanı aktiv edin</string>
+    <string name="wizard_enablebtn">Sistem parametrlərini açın</string>
+    <string name="wizard_select">Defolt klaviatura olaraq %s seçin</string>
+    <string name="wizard_selectbtn">Klaviatura seçimi açın</string>
+    <string name="wizard_settings">Klaviaturanızı fərdiləşdirin</string>
+    <string name="wizard_settingsbtn">Klaviatura parametrlərini açın</string>
+    <string name="wizard_finish">Təbriklər, Siz quraşdırma siyahısını başa çatırdınız!</string>
+    <string name="wizard_finishbtn">Bitdi</string>
+    <string name="keyboard_theme_api_perm_label">FBoard İstifadəçi Mövzusu API Girişi</string>
+    <!-- Settings resources -->
+    <string name="settings_activity">Parametrlər</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Klaviatura arxa fon şəkli</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Yazarkən xarakterləri göstərin</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Navbarda şəffaf fondan istifadə edin</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Navbara rəng tətbiq edin (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Açılan menyunu söndürün</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Uzun basdıqda simvolların təkrarlanmasını söndürün</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Üst çubuğu deaktiv edin</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Üst bar funksiyasının düymələrini gizlədin</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Mübadilə buferini aktivləşdirin</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Söz təkliflərini deaktiv edin</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nömrə sırasını deaktiv edin (beta)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Düymədə uzun basma hərəkətini və ya açılan ilk simvolu göstərin</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Monet rənglərindən istifadə edin (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Capslock statusunu avtomatik aşkar edin</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Emoji düyməsinə uzun basılanda klaviatura dilini dəyişin</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Əsas fon rəngini daxil edin</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Arxa fon rəngini daxil edin</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Açar mətnin kölgə rəngi</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Birinci əsas fon rəngi</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">İkinci əsas fon rəngi</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Birinci düyməni basaraq fon rəngi</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">İkinci düyməni basın fon rəngi</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Klaviatura fon rəngi</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Əsas mətn rəngi</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Düymələrə basma hadisələrində səs çalın</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM istifadəsini azaldın (başlanğıc gecikməsini artırır)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Uzun basaraq ilk pop-up simvolundan istifadə edin (açılan menyunu aktivləşdirməlisiniz)</string>
+    <!-- Color selector layout resources -->
+    <!-- Image selector resources -->
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Şəkil</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Qradient</string>
+    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Rəng</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Rəng əlavə edin</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Vay! Maksimum limit %s-dir</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Vay! Minimum limit %sdir</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Orientasiyanı dəyişdirin</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Şəkil seçin</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Divar kağızı alın</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Döndürün</string>
+    <!-- Radio selector resources -->
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Klaviatura dili</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Klaviatura şrifti</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Klaviatura mövzusu</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">İkon mövzusu</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Boşluq çubuğu üslubu</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Əsas fon növü</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Əsas fon qradient oriyentasiyası</string>
+    <!-- Number selector resources -->
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Klaviatura fon şəklinin bulanıqlığı</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Düyməni basmaq vibrasiya müddəti</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Klaviatura hündürlüyü</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Uzun basma müddəti multiplikatoru</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Açar doldurma</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Açar radiusu</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Açar mətn ölçüsü</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Açar kölgə ölçüsü</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Açar nişan ölçüsü çarpanı</string>
+    <!-- Backup/Restore options -->
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Yedəkləmə</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Bərpa et</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Bütün maddələr</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Mövzu (ikonik mövzu, fon şəkli, rənglər, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Digərləri</string>
+    <!-- Dictionary importer resources -->
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Lüğət paketini idxal edin (.fbd)</string>
+    <string name="settings_dict_importing">Import edilir, lütfən, bu proqramı bağlamayın</string>
+    <string name="settings_dict_import_count">%s söz idxal edildi</string>
+    <string name="settings_dict_import_delete_duplicates">Dublikatların silinməsi</string>
+    <!-- List selector resources -->
+    <string-array name="settings_keyboard_texttype_select">
+        <item>Daimi</item>
+        <item>Qalın</item>
+        <item>Kursiv</item>
+        <item>Qalın kursiv</item>
+        <item>Qatılaşdırılmış</item>
+        <item>Yoğun Qalın</item>
+        <item>Yoğun İtalik</item>
+        <item>Sıx Qalın İtalik</item>
+        <item>Serif</item>
+        <item>Serif Qalın</item>
+        <item>Serif kursiv</item>
+        <item>Serif qalın kursiv</item>
+        <item>Minivan</item>
+        <item>Minivan qalın</item>
+        <item>Minivan kursiv</item>
+        <item>Minivan qalın kursiv</item>
+        <item>Serif Minivan</item>
+        <item>Serif Minivan qalın</item>
+        <item>Serif Minivan kursiv</item>
+        <item>Serif Minivan Qalın Kursiv</item>
+        <item>Fərdi (tətbiq məlumat qovluğunda)</item>
+    </string-array>
+    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+        <item>Defolt</item>
+        <item>Material</item>
+        <item>Ərik</item>
+    </string-array>
+    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+        <item>Mövzu defolt</item>
+        <item>Dil seçin</item>
+        <item>Papatya</item>
+        <item>Boşluq çubuğu</item>
+        <item>Boş</item>
+    </string-array>
+    <string-array name="settings_categories">
+        <item>General</item>
+        <item>Mövzular</item>
+        <item>Təkmil Mövzu</item>
+    </string-array>
+    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+        <item>Düz</item>
+        <item>Qradient</item>
+    </string-array>
+    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+        <item>Üst → aşağı</item>
+        <item>Aşağı → yuxarı</item>
+        <item>Sol → sağ</item>
+        <item>Sağ → sol</item>
+        <item>Yuxarı sol → aşağı sağ</item>
+        <item>Yuxarı sağ → aşağı sol</item>
+        <item>Aşağı sol → yuxarı sağ</item>
+        <item>Aşağı sağ → yuxarı sol</item>
+    </string-array>
+</resources>
