@@ -1523,7 +1523,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public class Key extends RelativeLayout {
 
         protected int shr = 0, shc = 0, txtst = 0;
-        private final TextView label, sublabel;
+        private final TextView label, subLabel;
         private final ImageView icon;
         private View state;
         private int stateCount = 1, currentState = 0;
@@ -1532,20 +1532,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             super(context);
             setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             label = new TextView(context);
-            label.setLayoutParams(new RelativeLayout.LayoutParams(-1, -1));
-            sublabel = new TextView(context);
-            RelativeLayout.LayoutParams subParams = new RelativeLayout.LayoutParams(-2, -2);
+            label.setLayoutParams(new LayoutParams(-1, -1));
+            subLabel = new TextView(context);
+            LayoutParams subParams = new LayoutParams(-2, -2);
             subParams.addRule(ALIGN_PARENT_RIGHT, TRUE);
             subParams.addRule(ALIGN_PARENT_TOP, TRUE);
             int margin = DensityUtils.mpInt(1.5f);
             subParams.rightMargin = subParams.topMargin = margin;
-            sublabel.setLayoutParams(subParams);
+            subLabel.setLayoutParams(subParams);
             icon = new ImageView(context);
-            RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(-1, -1);
+            LayoutParams iconParams = new LayoutParams(-1, -1);
             iconParams.addRule(CENTER_IN_PARENT, TRUE);
             icon.setLayoutParams(iconParams);
             addView(label);
-            addView(sublabel);
+            addView(subLabel);
             addView(icon);
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             setKeyImageVisible(false);
@@ -1647,7 +1647,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void setKeyItemColor(int color) {
             label.setTextColor(txtclr = color);
-            sublabel.setTextColor(ColorUtils.convertARGBtoRGB(color) - 0x66000000);
+            subLabel.setTextColor(ColorUtils.convertARGBtoRGB(color) - 0x66000000);
             if (isKeyIconSet()) {
                 getKeyIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             }
@@ -1664,12 +1664,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public CharSequence getSubText() {
-            return sublabel.getText();
+            return subLabel.getText();
         }
 
         public void setSubText(CharSequence text) {
             setKeyImageVisible(false);
-            sublabel.setText(text);
+            subLabel.setText(text);
         }
 
         public Drawable getKeyIcon() {
@@ -1697,12 +1697,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyImageVisible(boolean visible) {
             icon.setVisibility(visible ? VISIBLE : GONE);
             label.setVisibility(visible ? GONE : VISIBLE);
-            sublabel.setVisibility(ppreview && !visible ? VISIBLE : GONE);
+            subLabel.setVisibility(ppreview && !visible ? VISIBLE : GONE);
         }
 
         public void setKeyTextSize(float size) {
             label.setTextSize(txtsze = size);
-            sublabel.setTextSize(label.getTextSize() / 3);
+            subLabel.setTextSize(label.getTextSize() / 3);
             applyIconMultiply();
         }
 
@@ -1724,7 +1724,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void setKeyTextStyle(TextType style) {
             setTypefaceFromTextType(label, style, cFont);
-            sublabel.setTypeface(label.getTypeface());
+            subLabel.setTypeface(label.getTypeface());
         }
 
         protected TextView getTextView() {
@@ -1732,7 +1732,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         protected TextView getSubTextView() {
-            return sublabel;
+            return subLabel;
         }
 
         protected ImageView getImageView() {
