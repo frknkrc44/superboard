@@ -13,3 +13,5 @@ gen/
 local.properties
 EmojiJsonCreator/emoji*.json
 .mypy_cache/
+
+app/src/main/assets/langpacks/*.json
