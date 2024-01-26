@@ -241,21 +241,29 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 key.setKeyImageVisible(key.isKeyIconSet());
 
                 switch(key.getNormalPressEvent().first) {
-                    case KeyEvent.KEYCODE_EISU:
+                    case KeyEvent.KEYCODE_EISU: {
                         boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_ENABLE_CLIPBOARD);
                         key.setVisibility(enableClipboard ? View.VISIBLE : View.GONE);
                         break;
-                    case KeyEvent.KEYCODE_NUM:
+                    }
+                    case KeyEvent.KEYCODE_NUM: {
                         boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
                         key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                         break;
+                    }
                     case KeyEvent.KEYCODE_DPAD_LEFT:
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
                     case SuperBoard.KEYCODE_TOGGLE_CTRL:
-                    case SuperBoard.KEYCODE_TOGGLE_ALT:
+                    case SuperBoard.KEYCODE_TOGGLE_ALT: {
                         boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
                         key.setVisibility(fnDisabled ? View.GONE : View.VISIBLE);
                         break;
+                    }
+                    case KeyEvent.KEYCODE_KANA: {
+                        boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
+                        key.setVisibility(fnDisabled ? View.VISIBLE : View.GONE);
+                        break;
+                    }
                 }
 
                 setKeyLockStatus(key);
