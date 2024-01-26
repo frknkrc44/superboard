@@ -716,12 +716,20 @@ public class InputService extends InputMethodService implements
 
                 switch (key.getNormalPressEvent().first) {
                     case KeyEvent.KEYCODE_HENKAN: // symbol menu
-                        int fnIndex = findKeyboardIndex(KeyboardType.FN);
-                        setEnabledLayout(getEnabledLayoutIndex() != fnIndex ? fnIndex : 0);
+                        int fnIndex = findFNKeyboardIndex();
+                        setEnabledLayout(
+                                getEnabledLayoutIndex() != fnIndex
+                                        ? fnIndex
+                                        : findNormalKeyboardIndex()
+                        );
                         return;
                     case KeyEvent.KEYCODE_NUM:    // number menu
-                        int numIndex = findKeyboardIndex(KeyboardType.NUMBER);
-                        setEnabledLayout(getEnabledLayoutIndex() != numIndex ? numIndex : 0);
+                        int numIndex = findNumberKeyboardIndex();
+                        setEnabledLayout(
+                                getEnabledLayoutIndex() != numIndex
+                                        ? numIndex
+                                        : findNormalKeyboardIndex()
+                        );
                         return;
                     case KeyEvent.KEYCODE_EISU:   // clipboard menu
                         showClipboardView(!clipboardView.isShown());

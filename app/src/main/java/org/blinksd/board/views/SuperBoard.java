@@ -69,14 +69,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private static Locale loc = new Locale("tr", "TR");
     private final MyHandler mHandler = new MyHandler();
     private final Vibrator vb;
-    private int keyclr = -1;
     private float txtsze = -1;
     protected Drawable keybg = null;
     InputMethodService curr = null;
-    int action = 0;
     private int selected = 0, shift = 0, hp = 40, wp = 100, y, shrad = 0,
             shclr = -1, txtclr = Color.WHITE, txts = 0, vib = 0, mult = 1,
-            act = MotionEvent.ACTION_UP, iconmulti = 1, ctrl = 0, alt = 0;
+            act = MotionEvent.ACTION_UP, iconmulti = 1, ctrl = 0, alt = 0,
+            action = 0, keyclr = -1;
     private boolean clear = false;
     private boolean lng = false;
     private boolean dpopup = false;
@@ -91,15 +90,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         if (c instanceof InputMethodService) {
             curr = (InputMethodService) c;
         }
-        if (Build.VERSION.SDK_INT < 31)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
             vb = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
         else {
             VibratorManager vm = (VibratorManager) c.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
             vb = vm.getDefaultVibrator();
         }
+
         // trigSystemSuggestions();
         setLayoutParams(new LayoutParams(-1, -1));
-        setBackgroundColor(0xFF212121);
+        // setBackgroundColor(0xFF212121);
         createEmptyLayout();
         setKeyboardHeight(hp);
     }
@@ -723,7 +724,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     setEnabledLayout((selected - 1) >= 0 ? selected - 1 : findSymbolKeyboardIndex());
                     break;
                 case Keyboard.KEYCODE_MODE_CHANGE:
-                    setEnabledLayout(selected == 0 ? findSymbolKeyboardIndex() : findNormalKeyboardIndex());
+                    setEnabledLayout(
+                            selected == findNormalKeyboardIndex()
+                                    ? findSymbolKeyboardIndex()
+                                    : findNormalKeyboardIndex()
+                    );
                     setCtrlState(0);
                     setAltState(0);
                     break;
@@ -1095,23 +1100,24 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 break;
         }
 
-        Key k;
         switch (ei.inputType & InputType.TYPE_MASK_VARIATION) {
             case InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
-            case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS:
-                k = findKeyByLabel(0, ",");
+            case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS: {
+                Key k = findKeyByLabel(0, ",");
                 if (k != null) {
                     k.setText("@");
                     // k.setSubText("→");
                 }
                 break;
-            default:
-                k = findKeyByLabel(0, "@");
+            }
+            default: {
+                Key k = findKeyByLabel(0, "@");
                 if (k != null) {
                     k.setText(",");
                     // k.setSubText("→");
                 }
                 break;
+            }
         }
     }
 
@@ -1264,16 +1270,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return (KeyboardType) getKeyboard(selected).getTag();
     }
 
+    public int findFNKeyboardIndex() {
+        return findKeyboardIndex(KeyboardType.FN);
+    }
+
     public int findSymbolKeyboardIndex() {
         return findKeyboardIndex(KeyboardType.SYMBOL);
     }
 
-    public int findNormalKeyboardIndex() {
-        return findKeyboardIndex(KeyboardType.TEXT);
-    }
-
     public int findNumberKeyboardIndex() {
         return findKeyboardIndex(KeyboardType.NUMBER);
+    }
+
+    public int findNormalKeyboardIndex() {
+        return findKeyboardIndex(KeyboardType.TEXT);
     }
 
     public void playSound(int event) {
