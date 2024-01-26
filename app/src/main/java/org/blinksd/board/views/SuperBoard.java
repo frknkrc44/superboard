@@ -1069,6 +1069,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         setCtrlState(0);
         setAltState(0);
 
+        if (isCurrentFNKeyboard() || isCurrentSymbolKeyboard()) {
+            return;
+        }
+
         EditorInfo ei = s.getCurrentInputEditorInfo();
 
         action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
@@ -1222,6 +1226,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         throw new RuntimeException("You must set a normal keyboard for input");
     }
 
+    public boolean isFNKeyboard(int keyboardIndex) {
+        return getKeyboard(keyboardIndex).getTag() == KeyboardType.FN;
+    }
+
     public boolean isSymbolKeyboard(int keyboardIndex) {
         return getKeyboard(keyboardIndex).getTag() == KeyboardType.SYMBOL;
     }
@@ -1232,6 +1240,26 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public boolean isNormalKeyboard(int keyboardIndex) {
         return getKeyboard(keyboardIndex).getTag() == KeyboardType.TEXT;
+    }
+
+    public boolean isCurrentFNKeyboard() {
+        return getCurrentKeyboardType() == KeyboardType.FN;
+    }
+
+    public boolean isCurrentSymbolKeyboard() {
+        return getCurrentKeyboardType() == KeyboardType.SYMBOL;
+    }
+
+    public boolean isCurrentNumberKeyboard() {
+        return getCurrentKeyboardType() == KeyboardType.NUMBER;
+    }
+
+    public boolean isCurrentTextKeyboard() {
+        return getCurrentKeyboardType() == KeyboardType.TEXT;
+    }
+
+    public KeyboardType getCurrentKeyboardType() {
+        return (KeyboardType) getKeyboard(selected).getTag();
     }
 
     public int findSymbolKeyboardIndex() {
