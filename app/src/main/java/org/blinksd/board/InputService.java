@@ -25,6 +25,7 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -502,27 +503,27 @@ public class InputService extends InputMethodService implements
             }
             SuperBoardApplication.clearCustomFont();
             superBoardView.setCustomFont(SuperBoardApplication.getCustomFont());
-        }
 
-        if (SDK_INT >= 11) {
-            boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
-                    SettingMap.SET_ENABLE_CLIPBOARD);
+            if (SDK_INT >= 11) {
+                boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
+                        SettingMap.SET_ENABLE_CLIPBOARD);
 
-            if (enableClipboard && clipboardView == null) {
-                clipboardView = new ClipboardView(superBoardView);
-                clipboardView.setVisibility(View.GONE);
-                keyboardLayoutHolder.addView(clipboardView);
-            } else if (!enableClipboard && clipboardView != null) {
-                clipboardView.clearClipboard();
-                clipboardView.deInit();
-                keyboardLayoutHolder.removeView(clipboardView);
-                clipboardView = null;
-                System.gc();
-            }
+                if (enableClipboard && clipboardView == null) {
+                    clipboardView = new ClipboardView(superBoardView);
+                    clipboardView.setVisibility(View.GONE);
+                    keyboardLayoutHolder.addView(clipboardView);
+                } else if (!enableClipboard && clipboardView != null) {
+                    clipboardView.clearClipboard();
+                    clipboardView.deInit();
+                    keyboardLayoutHolder.removeView(clipboardView);
+                    clipboardView = null;
+                    System.gc();
+                }
 
-            if (clipboardView != null) {
-                clipboardView.onPrimaryClipChanged();
-                clipboardView.reTheme();
+                if (clipboardView != null) {
+                    clipboardView.onPrimaryClipChanged();
+                    clipboardView.reTheme();
+                }
             }
         }
 
@@ -631,6 +632,11 @@ public class InputService extends InputMethodService implements
         }
         if (clipboardView.isShown() != value) {
             showEmojiView(false);
+
+            if (value) {
+                clipboardView.reTheme();
+            }
+
             clipboardView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
         }
