@@ -30,3 +30,9 @@ You can use [Crowdin](https://crowdin.com/project/superboard) for translations.
 
 If you want to translate this app and your language isn't added to the translation page,
 feel free to open an issue on GitLab mirror.
+
+### TODO
+
+- Create a theme store (it'll be another app)
+- Add new keyboard layouts
+- And more...
