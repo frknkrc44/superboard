@@ -9,6 +9,7 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.AppSettingsV2.SettingCategory;
 import org.blinksd.board.activities.AppSettingsV2.SettingItem;
 import org.blinksd.board.activities.AppSettingsV2.SettingType;
+import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
@@ -61,9 +62,11 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character",
             SET_CLIPBOARD_HISTORY = "clipboard_history",
             SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons",
-            SET_ENABLE_CLIPBOARD = "enable_clipboard";
+            SET_ENABLE_CLIPBOARD = "enable_clipboard",
+            SET_BACKUP_RESTORE = "backup_menu_backup";
 
     public SettingMap() {
+        putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);
@@ -156,6 +159,8 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 
     public Intent getRedirect(Context context, final String key) {
         switch (key) {
+            case SET_BACKUP_RESTORE:
+                return new Intent(context, BackupRestoreActivity.class);
             case SET_IMPORT_DICT_PACK:
                 return new Intent(context, DictionaryImportActivity.class);
             case SET_KEYBOARD_LANG_SELECT:

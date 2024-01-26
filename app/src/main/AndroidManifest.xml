@@ -20,13 +20,14 @@
 		android:protectionLevel="dangerous" />
 
     <application
+		android:enableOnBackInvokedCallback="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".SuperBoardApplication"
         android:theme="@style/AppTheme"
 		android:resizeableActivity="true"
-		tools:targetApi="n">
+		tools:targetApi="tiramisu">
 
 		<activity
             android:exported="true"
@@ -58,6 +59,11 @@
 			android:launchMode="singleTask"
 			android:exported="false"
 			android:name=".activities.KeyboardLayoutSelector"/>
+
+		<activity
+			android:launchMode="singleTask"
+			android:exported="false"
+			android:name=".activities.BackupRestoreActivity"/>
 
 		<service
             android:exported="true"
