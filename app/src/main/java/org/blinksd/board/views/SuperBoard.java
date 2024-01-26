@@ -1084,12 +1084,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 break;
             default:
                 setEnabledLayout(findNormalKeyboardIndex());
-                if (shiftDetect) {
-                    int caps = ei.inputType != InputType.TYPE_NULL
-                            ? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
-                            : 0;
-                    setShiftState(caps == 0 ? 0 : 1);
-                } else setShiftState(0);
+                if (getShiftState() != SHIFT_LOCKED) {
+                    if (shiftDetect) {
+                        int caps = ei.inputType != InputType.TYPE_NULL
+                                ? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
+                                : 0;
+                        setShiftState(caps == SHIFT_OFF ? SHIFT_OFF : SHIFT_ON);
+                    } else setShiftState(0);
+                }
                 break;
         }
 

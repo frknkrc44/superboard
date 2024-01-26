@@ -3,6 +3,7 @@ package org.blinksd.board.activities;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -24,6 +25,16 @@ public class BackupRestoreActivity extends Activity {
             getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
         }
 
+        try {
+            createMainView();
+        } catch (Throwable e) {
+            Log.e("MainView", "Error:", e);
+        }
+
         setContentView(main);
+    }
+
+    private void createMainView() {
+        // stub
     }
 }
