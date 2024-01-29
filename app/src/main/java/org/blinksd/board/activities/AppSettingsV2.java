@@ -1,5 +1,8 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -28,7 +31,6 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SuperDBHelper;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -112,8 +114,8 @@ public class AppSettingsV2 extends Activity {
         } else {
             backgroundImageView.setImageBitmap(null);
         }
-        int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BGCLR);
-        int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
+        int keyClr = getIntOrDefault(SettingMap.SET_KEY_BGCLR);
+        int keyPressClr = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         kbdPreview.setKeysBackground(LayoutUtils.getKeyBg(keyClr, keyPressClr, true));
         Drawable key2Bg = LayoutUtils.getKeyBg(
                 getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
@@ -138,8 +140,7 @@ public class AppSettingsV2 extends Activity {
                 SuperBoardApplication.getCurrentKeyboardLanguage().name);
         kbdPreview.setKeyDrawable(0, 0, -1,
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
-        kbdPreview.setKeyVibrateDuration(
-                SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
+        kbdPreview.setKeyVibrateDuration(getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
         try {
             SuperBoardApplication.clearCustomFont();
             SuperBoardApplication.getCustomFont();
@@ -148,10 +149,6 @@ public class AppSettingsV2 extends Activity {
 
     public int getFloatPercentOrDefault(String key) {
         return DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(getIntOrDefault(key)));
-    }
-
-    public int getIntOrDefault(String key) {
-        return SuperDBHelper.getIntOrDefault(key);
     }
 
     public void restartKeyboard() {
@@ -241,7 +238,7 @@ public class AppSettingsV2 extends Activity {
 
         @Override
         public void playSound(int event) {
-            if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
+            if (!getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
             super.playSound(event);
         }
     }
