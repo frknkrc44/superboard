@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -32,12 +33,12 @@ public class BoardPopup extends SuperBoard {
         pos[0] = pos[1] = 0;
         updateKeyState((InputMethodService) root.getContext());
         popupFilter = new View(root.getContext());
-        popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, getKeyboardHeight()));
-        popupFilter.setVisibility(View.GONE);
+        popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, root.getMeasuredHeight()));
         mKey = new Key(getContext());
         mKey.setOnTouchListener(null);
         root.addView(popupFilter);
         root.addView(mKey);
+        popupFilter.setVisibility(View.GONE);
         mKey.setVisibility(GONE);
         setVisibility(GONE);
     }
@@ -48,9 +49,9 @@ public class BoardPopup extends SuperBoard {
 
     public void setKeyboardPrefs() {
         setKeyboardHeight(10);
-        popupFilter.getLayoutParams().height = getKeyboardHeight();
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
+        popupFilter.getLayoutParams().height = DensityUtils.hpInt(khp);
         int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
         int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         a = Color.argb(0xCC, Color.red(a), Color.green(a), Color.blue(a));
@@ -147,12 +148,15 @@ public class BoardPopup extends SuperBoard {
     private void createPopup(String[] a) {
         int h, c = 6;
         setKeyboardWidth(a.length < c ? 11 * a.length : 11 * c);
-        setX(DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)));
         h = a.length / c;
         h = h > 0 ? h : 1;
         h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 : 0;
         setKeyboardHeight(10 * h);
-        setY(DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f));
+        setXY(
+                DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)),
+                DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f)
+        );
+        fixHeight();
         String[] x;
         for (int i = 0, k = 0; i < h; i++) {
             x = new String[Math.min(a.length, c)];
@@ -171,6 +175,18 @@ public class BoardPopup extends SuperBoard {
         for (int i = 0; i < getKeyboard(0).getChildCount(); i++) {
             getRow(0, i).setKeyWidths();
         }
+    }
+
+    public void setXY(float x, float y) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setX(x);
+            setY(y);
+            return;
+        }
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
+        params.leftMargin = (int) x;
+        params.topMargin = (int) y;
     }
 
     @Override

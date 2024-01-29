@@ -214,12 +214,16 @@ public class InputService extends InputMethodService implements
         if (text != null && !sugDisabled) suggestionLayout.setCompletionText(text, currentLanguageCache.language);
     }
 
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
     private void setLayout() {
         if (superBoardView == null) {
-            registerReceiver(restartKeyboardReceiver,
-                    new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
             superBoardView = new SuperBoardImpl(this);
+            if (SDK_INT >= Build.VERSION_CODES.O) {
+                registerReceiver(restartKeyboardReceiver,
+                        new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
+            }
             superBoardView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             appName = getString(R.string.app_name);
             String abc = "ABC";
@@ -337,7 +341,7 @@ public class InputService extends InputMethodService implements
             }
         }
 
-        if (Build.VERSION.SDK_INT >= 16 && emojiView == null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView == null) {
             emojiView = new EmojiView(superBoardView, emojiClick);
             emojiView.setVisibility(View.GONE);
 
@@ -648,11 +652,11 @@ public class InputService extends InputMethodService implements
         public void onKeyboardEvent(View v) {
             if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
 
-            if (emojiView.isShown()) {
+            if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);
             }
 
-            if (clipboardView.isShown()) {
+            if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB && clipboardView != null && clipboardView.isShown()) {
                 showClipboardView(false);
             }
 
@@ -701,11 +705,11 @@ public class InputService extends InputMethodService implements
             Key key = (Key) v;
 
             if (key.hasNormalPressEvent()) {
-                if (clipboardView.isShown() && key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU) {
+                if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB && key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && clipboardView.isShown()) {
                     showClipboardView(false);
                 }
 
-                if (emojiView.isShown() && key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA) {
+                if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA && emojiView.isShown()) {
                     showEmojiView(false);
                 }
 

@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -144,7 +146,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
         addQMItem(KeyEvent.KEYCODE_HENKAN, R.drawable.more_control, false);
         addQMItem(KeyEvent.KEYCODE_NUM, R.drawable.number, false);
-        addQMItem(KeyEvent.KEYCODE_KANA, R.drawable.sym_board_emoji, false);
+        if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            addQMItem(KeyEvent.KEYCODE_KANA, R.drawable.sym_board_emoji, false);
+        }
         addQMItem(KeyEvent.KEYCODE_EISU, R.drawable.clipboard, false);
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
         addQMItem(KeyEvent.KEYCODE_DPAD_RIGHT, R.drawable.arrow_right, true);

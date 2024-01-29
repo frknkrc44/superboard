@@ -176,9 +176,8 @@ public class ClipboardView extends LinearLayout
     private void selectClipItem(View view) {
         String item = (String) ((View) view.getParent()).getTag();
 
-        CharSequence text = Objects.requireNonNull(clipboardManager.getPrimaryClip())
-                .getItemAt(0).getText();
-        if (text != null && text.toString().equals(item)) {
+        List<String> texts = getLastPrimaryClipTexts();
+        if (texts.isEmpty() || texts.contains(item)) {
             return;
         }
 
@@ -234,21 +233,34 @@ public class ClipboardView extends LinearLayout
         }
     }
 
-    @Override
-    public void onPrimaryClipChanged() {
+    private List<String> getLastPrimaryClipTexts() {
+        List<String> texts = new ArrayList<>();
+
         if (clipboardManager.hasPrimaryClip()) {
             ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
 
             for (int i = 0; i < data.getItemCount(); i++) {
                 CharSequence text = data.getItemAt(i).getText();
                 if (text == null) {
-                    return;
+                    continue;
                 }
 
-                String primaryText = text.toString();
-                if (listView.findViewWithTag(primaryText) == null) {
-                    addClipView(primaryText, true);
-                }
+                texts.add(text.toString());
+            }
+        }
+
+        return texts;
+    }
+
+    @Override
+    public void onPrimaryClipChanged() {
+        List<String> texts = getLastPrimaryClipTexts();
+
+        for (int i = 0; i < texts.size(); i++) {
+            String primaryText = texts.get(i);
+
+            if (listView.findViewWithTag(primaryText) == null) {
+                addClipView(primaryText, true);
             }
         }
     }
