@@ -33,9 +33,9 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.AppSettingsV2;
-import org.blinksd.board.activities.AppSettingsV2.SettingCategory;
-import org.blinksd.board.activities.AppSettingsV2.SettingItem;
-import org.blinksd.board.activities.AppSettingsV2.SettingType;
+import org.blinksd.utils.SettingCategory;
+import org.blinksd.utils.SettingItem;
+import org.blinksd.utils.SettingType;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
@@ -93,7 +93,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
             final String tag = p1.getTag().toString();
             build.setTitle(getTranslation(tag));
-            final int val = mContext.getIntOrDefault(tag);
+            final int val = SuperDBHelper.getIntOrDefault(tag);
             dialogView = new ColorSelectorLayout(mContext, p1.getTag().toString());
             dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
             build.setView(dialogView);
@@ -137,7 +137,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             AppSettingsV2 act = (AppSettingsV2) p1.getContext();
             final boolean isFloat = getSettings().get(tag).type == SettingType.FLOAT_NUMBER;
             int[] minMax = getSettings().getMinMaxNumbers(tag);
-            final int val = mContext.getIntOrDefault(tag);
+            final int val = SuperDBHelper.getIntOrDefault(tag);
             dialogView = NumberSelectorLayout.getNumberSelectorLayout(act, isFloat, minMax[0], minMax[1], val);
             build.setView(dialogView);
             build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
@@ -236,7 +236,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             } else if (themeSelector) {
                 val = -1;
             } else {
-                val = mContext.getIntOrDefault(tag);
+                val = SuperDBHelper.getIntOrDefault(tag);
             }
             build.setTitle(getTranslation(tag));
             ScrollView dialogScroller = new ScrollView(p1.getContext());
@@ -431,7 +431,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
     }
 
     private View createNumberSelector(String key, boolean isFloat) {
-        int num = mContext.getIntOrDefault(key);
+        int num = SuperDBHelper.getIntOrDefault(key);
         LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class, mContext);
         numSelector.getLayoutParams().height = -2;
         TextView img = LayoutCreator.createTextView(mContext);
@@ -459,7 +459,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
     }
 
     private View createColorSelector(String key) {
-        int color = mContext.getIntOrDefault(key);
+        int color = SuperDBHelper.getIntOrDefault(key);
         LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class, mContext);
         colSelector.getLayoutParams().height = -2;
         ImageView img = LayoutCreator.createImageView(mContext);

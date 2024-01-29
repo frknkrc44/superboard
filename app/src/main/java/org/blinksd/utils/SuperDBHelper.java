@@ -62,7 +62,7 @@ public class SuperDBHelper {
     }
 
     private static boolean isBooleanDependencyResolved(final String key) {
-        AppSettingsV2.SettingItem item = SuperBoardApplication.getSettings().get(key);
+        SettingItem item = SuperBoardApplication.getSettings().get(key);
         List<String> checkedKeys = new ArrayList<>();
         checkedKeys.add(key);
 

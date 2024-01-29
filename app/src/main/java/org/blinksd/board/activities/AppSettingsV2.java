@@ -30,7 +30,9 @@ import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
+import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SettingType;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -162,39 +164,6 @@ public class AppSettingsV2 extends Activity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri uri = data.getData();
             new ImageTask().execute(getContentResolver(), uri);
-        }
-    }
-
-    public enum SettingCategory {
-        GENERAL,
-        THEMING,
-        THEMING_ADVANCED,
-    }
-
-    public enum SettingType {
-        BOOL,
-        THEME_SELECTOR,
-        COLOR_SELECTOR,
-        STR_SELECTOR,
-        SELECTOR,
-        DECIMAL_NUMBER,
-        FLOAT_NUMBER,
-        MM_DECIMAL_NUMBER,
-        IMAGE,
-        REDIRECT,
-    }
-
-    public static class SettingItem {
-        public final SettingCategory category;
-        public final SettingType type;
-        public final String dependency;
-        public final Object dependencyEnabled;
-
-        public SettingItem(SettingCategory category, SettingType type, String dependency, Object dependencyEnabled) {
-            this.category = category;
-            this.type = type;
-            this.dependency = dependency;
-            this.dependencyEnabled = dependencyEnabled;
         }
     }
 
