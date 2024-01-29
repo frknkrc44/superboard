@@ -77,11 +77,13 @@
 	<string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Tuş resmi boyutu çarpanı</string>
 
 	<!-- Backup/Restore options -->
+	<string name="settings_backup_menu" tools:keep="@string/backup_menu">Yedekle ve geri yükle</string>
 	<string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Yedekle</string>
 	<string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Geri yükle</string>
 	<string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Bütün öğeler</string>
 	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, …)</string>
 	<string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Diğerleri</string>
+	<string name="settings_select_file" tools:keep="@string/settings_select_file">Dosya seç</string>
 	
 	<!-- Dictionary importer resources -->
 	<string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Sözlük paketini içe aktar (.fbd)</string>

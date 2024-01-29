@@ -62,6 +62,8 @@
 			android:name=".activities.KeyboardLayoutSelector"/>
 
 		<activity
+			android:theme="@style/AppTheme.Title"
+			android:label="@string/settings_backup_menu"
 			android:launchMode="singleTask"
 			android:exported="false"
 			android:name=".activities.BackupRestoreActivity"/>

@@ -63,10 +63,10 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_CLIPBOARD_HISTORY = "clipboard_history",
             SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons",
             SET_ENABLE_CLIPBOARD = "enable_clipboard",
-            SET_BACKUP_RESTORE = "backup_menu_backup";
+            SET_BACKUP_RESTORE = "backup_menu";
 
     public SettingMap() {
-        putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
+        // putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);

@@ -106,7 +106,7 @@ public class ColorSelectorLayout extends LinearLayout {
             TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
-            pr.weight = 0.33f;
+            pr.weight = tabTitles.length;
             tv.setLayoutParams(pr);
             tv.setText(tabTitles[i]);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
