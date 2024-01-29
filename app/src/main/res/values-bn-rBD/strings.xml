@@ -72,11 +72,13 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">বাটন ছায়া আকার</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">আইকন আইকন আকার গুণক</string>
     <!-- Backup/Restore options -->
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">ব্যাকআপ</string>
     <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">পুনরুদ্ধার করুন</string>
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">সকল প্রকার</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">অন্যান্য</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd) আমদানি করুন</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
