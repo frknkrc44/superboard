@@ -597,7 +597,7 @@ public class InputService extends InputMethodService implements
         }
 
         keyboardLayoutHolder.getLayoutParams().height = keyboardBackground.getLayoutParams().height;
-        boardPopup.setFilterHeight(keyboardBackground.getLayoutParams().height);
+        boardPopup.setFilterHeight(keyboardLayoutHolder.getLayoutParams().height);
     }
 
     @Override

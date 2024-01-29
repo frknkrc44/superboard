@@ -33,7 +33,7 @@ public class BoardPopup extends SuperBoard {
         pos[0] = pos[1] = 0;
         updateKeyState((InputMethodService) root.getContext());
         popupFilter = new View(root.getContext());
-        popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, root.getMeasuredHeight()));
+        popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, -2));
         mKey = new Key(getContext());
         mKey.setOnTouchListener(null);
         root.addView(popupFilter);
@@ -51,7 +51,6 @@ public class BoardPopup extends SuperBoard {
         setKeyboardHeight(10);
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
-        popupFilter.getLayoutParams().height = DensityUtils.hpInt(khp);
         int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
         int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         a = Color.argb(0xCC, Color.red(a), Color.green(a), Color.blue(a));
