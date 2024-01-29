@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.activities.AppSettingsV2;
 import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.util.ArrayList;

@@ -30,9 +30,7 @@ import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
-import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SettingType;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -194,7 +192,7 @@ public class AppSettingsV2 extends Activity {
     }
 
     /** @noinspection unused*/
-    private class PreviewBoard extends SuperBoard {
+    private static class PreviewBoard extends SuperBoard {
         public PreviewBoard(Context c) {
             super(c);
         }
@@ -202,7 +200,7 @@ public class AppSettingsV2 extends Activity {
         @Override
         protected void sendDefaultKeyboardEvent(View v) {
             fakeKeyboardEvent((Key) v);
-            kbdPreview.vibrate();
+            vibrate();
         }
 
         @Override

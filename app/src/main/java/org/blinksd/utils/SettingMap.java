@@ -6,9 +6,6 @@ import android.content.res.TypedArray;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.utils.SettingCategory;
-import org.blinksd.utils.SettingItem;
-import org.blinksd.utils.SettingType;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
