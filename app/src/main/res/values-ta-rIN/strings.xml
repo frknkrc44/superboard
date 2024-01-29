@@ -72,11 +72,13 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">விசை நிழல் அளவு</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">விசை ஐகான் அளவு பெருக்கி</string>
     <!-- Backup/Restore options -->
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">காப்புப்பிரதி உருவாக்கு</string>
     <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">காப்புப்பிரதி மீட்டமை</string>
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">அனைத்தையும்</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">தீம் மட்டும் (ஐகான், பின்னணி படம், நிரம், ...)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">மற்றவை</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">அகராதியை உள்ளிடு (.fbd)</string>
     <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
