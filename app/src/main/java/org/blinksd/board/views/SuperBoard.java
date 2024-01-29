@@ -1,5 +1,9 @@
 package org.blinksd.board.views;
 
+import static android.media.AudioManager.FX_KEYPRESS_DELETE;
+import static android.media.AudioManager.FX_KEYPRESS_RETURN;
+import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
+import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.view.Gravity.CENTER;
 import static android.view.View.OnTouchListener;
 
@@ -10,15 +14,16 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -80,7 +85,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean lng = false;
     private boolean dpopup = false;
     private boolean ppreview = false;
-    private Typeface cFont = Typeface.DEFAULT;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
     private final Map<String, String> specialCases = new HashMap<>();
@@ -103,79 +107,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         // setBackgroundColor(0xFF212121);
         createEmptyLayout();
         setKeyboardHeight(hp);
-    }
-
-    public static void setTypefaceFromTextType(TextView label, TextType style, Typeface customFont) {
-        if (style == null) {
-            style = TextType.regular;
-        }
-        switch (style) {
-            case regular:
-                label.setTypeface(Typeface.DEFAULT);
-                break;
-            case bold:
-                label.setTypeface(Typeface.DEFAULT_BOLD);
-                break;
-            case italic:
-                label.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
-                break;
-            case bold_italic:
-                label.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC));
-                break;
-            case condensed:
-                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
-                break;
-            case condensed_bold:
-                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
-                break;
-            case condensed_italic:
-                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.ITALIC));
-                break;
-            case condensed_bold_italic:
-                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD_ITALIC));
-                break;
-            case serif:
-                label.setTypeface(Typeface.SERIF);
-                break;
-            case serif_bold:
-                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
-                break;
-            case serif_italic:
-                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.ITALIC));
-                break;
-            case serif_bold_italic:
-                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC));
-                break;
-            case monospace:
-                label.setTypeface(Typeface.MONOSPACE);
-                break;
-            case monospace_bold:
-                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
-                break;
-            case monospace_italic:
-                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC));
-                break;
-            case monospace_bold_italic:
-                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD_ITALIC));
-                break;
-            case serif_monospace:
-                label.setTypeface(Typeface.create("serif-monospace", Typeface.NORMAL));
-                break;
-            case serif_monospace_bold:
-                label.setTypeface(Typeface.create("serif-monospace", Typeface.BOLD));
-                break;
-            case serif_monospace_italic:
-                label.setTypeface(Typeface.create("serif-monospace", Typeface.ITALIC));
-                break;
-            case serif_monospace_bold_italic:
-                label.setTypeface(Typeface.create("serif-monospace", Typeface.BOLD_ITALIC));
-                break;
-            case custom:
-                // Contains a system problem about custom font files,
-                // Custom fonts applying too slowly and I can't fix it!
-                label.setTypeface(customFont);
-                break;
-        }
     }
 
     /** @noinspection EmptyMethod*/
@@ -207,10 +138,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void setPadding(int p) {
         setPadding(p, p, p, p);
-    }
-
-    public void setCustomFont(Typeface type) {
-        cFont = type;
     }
 
     public void setSpecialCases(Map<String, String> items) {
@@ -1287,68 +1214,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void playSound(int event) {
-
-    }
-
-    public float getX() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            return super.getX();
-        }
-
-        return getTranslationX() + getLeft();
-    }
-
-    public void setX(float x) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.setX(x);
-            return;
-        }
-
-        setTranslationX(x - getLeft());
-    }
-
-    public float getY() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            return super.getY();
-        }
-
-        return getTranslationY() + getTop();
-    }
-
-    public void setY(float y) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.setY(y);
-            return;
-        }
-
-        setTranslationY(y - getTop());
-    }
-
-    public float getTranslationY() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.getTranslationY();
-        }
-
-        return 0;
-    }
-
-    public void setTranslationY(float y) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.setTranslationY(y);
-        }
-    }
-
-    public float getTranslationX() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.getTranslationX();
-        }
-
-        return 0;
-    }
-
-    public void setTranslationX(float x) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.setTranslationX(x);
+        AudioManager audMgr = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        switch (event) {
+            case Keyboard.KEYCODE_DONE:
+                audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
+                break;
+            case Keyboard.KEYCODE_DELETE:
+                audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
+                break;
+            case KeyEvent.KEYCODE_SPACE:
+                audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
+                break;
+            default:
+                audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
+                break;
         }
     }
 
@@ -1362,7 +1241,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_OUTSIDE:
                 v.setSelected(false);
-                mHandler.removeMessages(3);
+                mHandler.removeMessages(0);
                 break;
         }
 
@@ -1378,7 +1257,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                         mHandler.removeMessages(1);
                         sendDefaultKeyboardEvent(v);
                     }
-                    mHandler.removeAndSendEmptyMessage(3);
+                    mHandler.removeAndSendEmptyMessage(0);
                     break;
                 case MotionEvent.ACTION_DOWN:
                     act = MotionEvent.ACTION_DOWN;
@@ -1395,7 +1274,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private void normalPress(View v, MotionEvent m) {
         switch (m.getAction()) {
             case MotionEvent.ACTION_UP:
-                mHandler.removeAndSendEmptyMessage(3);
+                mHandler.removeAndSendEmptyMessage(0);
                 break;
             case MotionEvent.ACTION_DOWN:
                 sendDefaultKeyboardEvent(v);
@@ -1451,7 +1330,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void removeAndSendMessageDelayed(Message msg, long delay) {
             removeMessages(msg.what);
-            sendMessageDelayed(msg, delay);
+            sendMessageAtTime(msg, SystemClock.uptimeMillis() + delay);
         }
 
         public void obtainAndSendMessage(int msgId, Object obj) {
@@ -1470,19 +1349,21 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
 
             switch (msg.what) {
-                case 0:
-                    removeAndSendEmptyMessage(3);
+                case 0: // after
+                    lng = false;
+                    removeMessages(0);
+                    afterKeyboardEvent();
                     break;
-                case 1:
+                case 1: // long continue
                     removeMessages(1);
                     switch (act) {
                         case MotionEvent.ACTION_UP:
-                            removeAndSendEmptyMessage(3);
+                            removeAndSendEmptyMessage(0);
                             break;
                         case MotionEvent.ACTION_DOWN:
                             if (isHasPopup(v)) {
                                 onPopupEvent();
-                                removeAndSendEmptyMessage(3);
+                                removeAndSendEmptyMessage(0);
                             } else if (isHasLongPressEvent(v)) {
                                 Pair<Integer, Boolean> a = ((Key) v).getLongPressEvent();
                                 y = a.first;
@@ -1492,7 +1373,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                     commitText(String.valueOf((char) y));
                                 }
                                 playSound(y);
-                                removeAndSendEmptyMessage(3);
+                                removeAndSendEmptyMessage(0);
                             } else {
                                 if (!((InputMethodService) getContext()).isInputViewShown()) {
                                     act = MotionEvent.ACTION_UP;
@@ -1502,30 +1383,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             break;
                     }
                     break;
-                case 2:
+                case 2: // normal or long start
                     if (act == MotionEvent.ACTION_UP) {
-                        removeAndSendEmptyMessage(3);
+                        removeAndSendEmptyMessage(0);
                     } else {
                         sendDefaultKeyboardEvent(v);
                         if (isRepeat) {
-                            Message n = obtainMessage(1, msg.obj);
-                            sendMessageDelayed(n, ((long) (mult > 1 ? 15 : 20) * mult) * (lng ? 1 : 20));
+                            obtainAndSendMessageDelayed(1, v,
+                                    ((long) (mult > 1 ? 15 : 20) * mult) * (lng ? 1 : 20));
                             if (!lng) lng = true;
                         } else {
-                            removeAndSendEmptyMessage(3);
+                            removeAndSendEmptyMessage(0);
                         }
                     }
-                    break;
-                case 3:
-                    lng = false;
-                    removeMessages(3);
-                    afterKeyboardEvent();
-                    break;
-                case 5:
-                    setEnabled(false);
-                    break;
-                case 6:
-                    setEnabled(true);
                     break;
             }
         }
@@ -1760,7 +1630,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyTextStyle(TextType style) {
-            setTypefaceFromTextType(label, style, cFont);
+            TextUtilsCompat.setTypefaceFromTextType(label, style);
             subLabel.setTypeface(label.getTypeface());
         }
 
@@ -1811,68 +1681,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 k.setSubText(getSubText());
             }
             return k;
-        }
-
-        public float getX() {
-            if (Build.VERSION.SDK_INT >= 11) {
-                return super.getX();
-            }
-
-            return getTranslationX() + getLeft();
-        }
-
-        public void setX(float x) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.setX(x);
-                return;
-            }
-
-            setTranslationX(x - getLeft());
-        }
-
-        public float getY() {
-            if (Build.VERSION.SDK_INT >= 11) {
-                return super.getY();
-            }
-
-            return getTranslationY() + getTop();
-        }
-
-        public void setY(float y) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.setY(y);
-                return;
-            }
-
-            setTranslationY(y - getTop());
-        }
-
-        public float getTranslationY() {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.getTranslationY();
-            }
-
-            return 0;
-        }
-
-        public void setTranslationY(float y) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.setTranslationY(y);
-            }
-        }
-
-        public float getTranslationX() {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.getTranslationX();
-            }
-
-            return 0;
-        }
-
-        public void setTranslationX(float x) {
-            if (Build.VERSION.SDK_INT >= 11) {
-                super.setTranslationX(x);
-            }
         }
     }
 }

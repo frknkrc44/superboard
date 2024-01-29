@@ -1,10 +1,5 @@
 package org.blinksd.board.activities;
 
-import static android.media.AudioManager.FX_KEYPRESS_DELETE;
-import static android.media.AudioManager.FX_KEYPRESS_RETURN;
-import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
-import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -12,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -148,9 +142,8 @@ public class AppSettingsV2 extends Activity {
                 SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
         try {
             SuperBoardApplication.clearCustomFont();
-            kbdPreview.setCustomFont(SuperBoardApplication.getCustomFont());
-        } catch (Throwable ignored) {
-        }
+            SuperBoardApplication.getCustomFont();
+        } catch (Throwable ignored) {}
     }
 
     public int getFloatPercentOrDefault(String key) {
@@ -249,21 +242,7 @@ public class AppSettingsV2 extends Activity {
         @Override
         public void playSound(int event) {
             if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
-            AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
-            switch (event) {
-                case 3:
-                    audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
-                    break;
-                case 2:
-                    audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
-                    break;
-                case 1:
-                    audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
-                    break;
-                default:
-                    audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
-                    break;
-            }
+            super.playSound(event);
         }
     }
 }

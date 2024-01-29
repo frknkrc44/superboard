@@ -1,9 +1,5 @@
 package org.blinksd.board;
 
-import static android.media.AudioManager.FX_KEYPRESS_DELETE;
-import static android.media.AudioManager.FX_KEYPRESS_RETURN;
-import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
-import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.os.Build.VERSION.SDK_INT;
 import static org.blinksd.board.views.SuperBoard.KeyboardType;
 import static org.blinksd.utils.DensityUtils.mpInt;
@@ -23,7 +19,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
-import android.media.AudioManager;
 import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
@@ -501,7 +496,7 @@ public class InputService extends InputMethodService implements
                 emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
             }
             SuperBoardApplication.clearCustomFont();
-            superBoardView.setCustomFont(SuperBoardApplication.getCustomFont());
+            SuperBoardApplication.getCustomFont();
 
             if (SDK_INT >= 11) {
                 boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
@@ -762,21 +757,7 @@ public class InputService extends InputMethodService implements
         @Override
         public void playSound(int event) {
             if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
-            AudioManager audMgr = (AudioManager) getSystemService(AUDIO_SERVICE);
-            switch (event) {
-                case Keyboard.KEYCODE_DONE:
-                    audMgr.playSoundEffect(FX_KEYPRESS_RETURN);
-                    break;
-                case Keyboard.KEYCODE_DELETE:
-                    audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
-                    break;
-                case KeyEvent.KEYCODE_SPACE:
-                    audMgr.playSoundEffect(FX_KEYPRESS_SPACEBAR);
-                    break;
-                default:
-                    audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
-                    break;
-            }
+            super.playSound(event);
         }
     }
 

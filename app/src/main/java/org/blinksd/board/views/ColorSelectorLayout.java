@@ -1,14 +1,10 @@
 package org.blinksd.board.views;
 
-import static android.media.AudioManager.FX_KEYPRESS_DELETE;
-import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.inputmethodservice.Keyboard;
-import android.media.AudioManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -297,16 +293,7 @@ public class ColorSelectorLayout extends LinearLayout {
             @Override
             public void playSound(int event) {
                 if (!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PLAY_SND_PRESS)) return;
-                AudioManager audMgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-                switch (event) {
-                    case 1:
-                        audMgr.playSoundEffect(FX_KEYPRESS_DELETE);
-                        break;
-                    case 0:
-                        audMgr.playSoundEffect(FX_KEYPRESS_STANDARD);
-                        break;
-                }
-
+                super.playSound(event);
             }
         };
         sb.addRows(0,

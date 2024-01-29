@@ -20,6 +20,7 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.TextUtilsCompat;
 
 public class FontSelector extends Activity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
@@ -77,7 +78,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
         TextView textView = new TextView(this);
         textView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
         textView.setGravity(Gravity.CENTER);
-        SuperBoard.setTypefaceFromTextType(textView, value, SuperBoardApplication.getCustomFont());
+        TextUtilsCompat.setTypefaceFromTextType(textView, value);
         textView.setText("A1#");
         textView.setTextSize(DensityUtils.mp(4));
         btn.setGravity(Gravity.CENTER);

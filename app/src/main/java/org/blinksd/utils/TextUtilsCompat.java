@@ -2,8 +2,13 @@ package org.blinksd.utils;
 
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Pair;
+import android.widget.TextView;
+
+import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.board.views.SuperBoard;
 
 import java.nio.charset.Charset;
 
@@ -111,5 +116,78 @@ public class TextUtilsCompat {
 
     public static Charset getCharset(String name) {
         return Charset.forName(name);
+    }
+
+    public static void setTypefaceFromTextType(TextView label, SuperBoard.TextType style) {
+        if (style == null) {
+            style = SuperBoard.TextType.regular;
+        }
+        switch (style) {
+            case regular:
+                label.setTypeface(Typeface.DEFAULT);
+                break;
+            case bold:
+                label.setTypeface(Typeface.DEFAULT_BOLD);
+                break;
+            case italic:
+                label.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+                break;
+            case bold_italic:
+                label.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC));
+                break;
+            case condensed:
+                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
+                break;
+            case condensed_bold:
+                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
+                break;
+            case condensed_italic:
+                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.ITALIC));
+                break;
+            case condensed_bold_italic:
+                label.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD_ITALIC));
+                break;
+            case serif:
+                label.setTypeface(Typeface.SERIF);
+                break;
+            case serif_bold:
+                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
+                break;
+            case serif_italic:
+                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.ITALIC));
+                break;
+            case serif_bold_italic:
+                label.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD_ITALIC));
+                break;
+            case monospace:
+                label.setTypeface(Typeface.MONOSPACE);
+                break;
+            case monospace_bold:
+                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+                break;
+            case monospace_italic:
+                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC));
+                break;
+            case monospace_bold_italic:
+                label.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD_ITALIC));
+                break;
+            case serif_monospace:
+                label.setTypeface(Typeface.create("serif-monospace", Typeface.NORMAL));
+                break;
+            case serif_monospace_bold:
+                label.setTypeface(Typeface.create("serif-monospace", Typeface.BOLD));
+                break;
+            case serif_monospace_italic:
+                label.setTypeface(Typeface.create("serif-monospace", Typeface.ITALIC));
+                break;
+            case serif_monospace_bold_italic:
+                label.setTypeface(Typeface.create("serif-monospace", Typeface.BOLD_ITALIC));
+                break;
+            case custom:
+                // Contains a system problem about custom font files,
+                // Custom fonts applying too slowly and I can't fix it!
+                label.setTypeface(SuperBoardApplication.getCustomFont());
+                break;
+        }
     }
 }
