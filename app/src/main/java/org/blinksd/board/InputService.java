@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -76,6 +77,8 @@ public class InputService extends InputMethodService implements
             setPrefs();
         }
     };
+    private Configuration recentConfiguration;
+
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
         switch (num) {
@@ -154,6 +157,14 @@ public class InputService extends InputMethodService implements
     @Override
     public void setInputView(View view) {
         if (view.getParent() != null) {
+            if (recentConfiguration == null) {
+                recentConfiguration = getResources().getConfiguration();
+            }
+
+            if (recentConfiguration.orientation != getResources().getConfiguration().orientation) {
+                System.exit(0);
+            }
+
             ((ViewGroup) view.getParent()).removeView(view);
         }
 
