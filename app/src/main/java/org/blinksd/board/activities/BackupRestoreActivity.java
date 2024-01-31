@@ -1,18 +1,25 @@
 package org.blinksd.board.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -26,11 +33,33 @@ import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.ThemeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.attribute.FileTime;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class BackupRestoreActivity extends Activity {
     private LinearLayout main;
     private TabHost host;
     private Uri data;
+    private File dataFile;
+
+    private final int INCLUDE_OTHER = 0x01;
+    private final int INCLUDE_THEME = 0x02;
+    private final int INCLUDE_ALL = INCLUDE_OTHER | INCLUDE_THEME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +143,7 @@ public class BackupRestoreActivity extends Activity {
 
     private View getBackupView() {
         RadioGroup radioGroup = new RadioGroup(this);
+        radioGroup.setId(android.R.id.selectedIcon);
         radioGroup.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
         int padding = DensityUtils.dpInt(16);
         radioGroup.setPadding(padding, padding, padding, padding);
@@ -158,19 +188,139 @@ public class BackupRestoreActivity extends Activity {
         return linearLayout;
     }
 
+    private File createZipFile(int mode) throws Throwable {
+        long millis = System.currentTimeMillis();
+        File file = new File(getCacheDir(), String.format("export_%s.zip", millis));
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+
+        if ((mode & INCLUDE_THEME) != 0) {
+            ZipEntry zipEntry = new ZipEntry("theme.json");
+            zipOutputStream.putNextEntry(zipEntry);
+
+            JSONObject exportedTheme = ThemeUtils.getCurrentThemeJSON();
+            byte[] data = exportedTheme.toString().getBytes();
+            zipOutputStream.write(data, 0, data.length);
+            zipOutputStream.closeEntry();
+        }
+
+        zipOutputStream.close();
+        return file;
+    }
+
+    private void createAndShareZipFile(int mode) throws Throwable {
+        dataFile = createZipFile(mode);
+
+        if (isMaterial()) {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            startActivityForResult(intent, 2);
+        } else {
+            Uri fileUri = Uri.fromFile(dataFile);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setDataAndType(fileUri, "*/*");
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            startActivity(Intent.createChooser(intent, getString(R.string.app_name)));
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    private int getSelectedBackupMode() {
+        RadioGroup group = findViewById(android.R.id.selectedIcon);
+
+        if (R.string.settings_backup_type_theme == group.getCheckedRadioButtonId()) {
+            return INCLUDE_THEME;
+        } else if (R.string.settings_backup_type_other == group.getCheckedRadioButtonId()) {
+            return INCLUDE_OTHER;
+        }
+
+        return INCLUDE_ALL;
+    }
+
+    private void extractAndApplyZipFile() throws IOException, JSONException {
+        InputStream inputStream = getContentResolver().openInputStream(data);
+        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+        ZipEntry entry;
+        byte[] buf = new byte[4096];
+        int count;
+        while ((entry = zipInputStream.getNextEntry()) != null) {
+            switch (entry.getName()) {
+                case "theme.json": {
+                    while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {
+                        byteStream.write(buf, 0, count);
+                    }
+
+                    String byteString = byteStream.toString();
+                    byteStream.reset();
+
+                    new ThemeUtils.ThemeHolder(byteString).applyTheme();
+                    break;
+                }
+            }
+        }
+
+        zipInputStream.close();
+        byteStream.close();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1 && resultCode == RESULT_OK && intent.getData() != null) {
             data = intent.getData();
         }
 
+        if (requestCode == 2 && resultCode == RESULT_OK && intent.getData() != null && isMaterial()) {
+            Uri treeUri = intent.getData();
+            String documentId = DocumentsContract.getTreeDocumentId(treeUri);
+            if (DocumentsContract.isDocumentUri(this, treeUri)) {
+                documentId = DocumentsContract.getDocumentId(treeUri);
+            }
+
+            treeUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, documentId);
+            String[] dataFileNameSplit = dataFile.toString().split("/");
+            String dataBaseName = dataFileNameSplit[dataFileNameSplit.length - 1];
+            String dataBaseExt = dataBaseName.substring(dataBaseName.lastIndexOf('.'));
+            String dataMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(dataBaseExt);
+
+            if (dataMimeType == null) {
+                dataMimeType = "application/octet-stream";
+            }
+
+            try {
+                Uri documentFile = DocumentsContract.createDocument(
+                        getContentResolver(), treeUri, dataMimeType, dataBaseName);
+
+                FileInputStream fileInputStream = new FileInputStream(dataFile);
+                OutputStream saveStream = getContentResolver().openOutputStream(documentFile);
+                byte[] buf = new byte[4096];
+                int count;
+
+                while ((count = fileInputStream.read(buf, 0, buf.length)) > 0) {
+                    saveStream.write(buf, 0, count);
+                }
+
+                saveStream.flush();
+                saveStream.close();
+                fileInputStream.close();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    private boolean isMaterial() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem done = menu.add(0,0,0,android.R.string.ok)
-                .setIcon(R.drawable.sym_board_return);
+        Drawable doneIcon = getResources().getDrawable(R.drawable.sym_board_return);
+        doneIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        MenuItem done = menu.add(android.R.string.ok).setIcon(doneIcon);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             done.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -181,19 +331,23 @@ public class BackupRestoreActivity extends Activity {
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getItemId() == 0) {
-            switch (host.getCurrentTab()) {
-                case 0: // backup
-                    // TODO: Create ZIP file
-                    break;
-                case 1: // restore
-                    if (data != null) {
-                        // TODO: Open ZIP file and extract
-                    }
-                    break;
-            }
+        switch (host.getCurrentTab()) {
+            case 0: // backup
+                try {
+                    createAndShareZipFile(getSelectedBackupMode());
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case 1: // restore
+                if (data != null) {
+                    try {
+                        extractAndApplyZipFile();
+                    } catch (Throwable ignored) {}
+                }
+                break;
         }
 
-        return super.onMenuItemSelected(featureId, item);
+        return false;
     }
 }

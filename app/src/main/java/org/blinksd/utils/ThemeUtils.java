@@ -9,6 +9,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.board.views.SuperBoard;
 import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,6 +140,65 @@ public class ThemeUtils {
         return holders;
     }
 
+    public static JSONObject getCurrentThemeJSON() {
+        long millis = System.currentTimeMillis();
+        String name = String.format("Current %s", millis);
+        String codeName = String.format("current_%s", millis);
+
+        String iconTheme = getStringOrDefault(SettingMap.SET_ICON_THEME);
+        String backgroundColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
+        String primaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_BGCLR));
+        String secondaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
+        String enterColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
+        String textShadowColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
+        String textColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+        String primaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR));
+        String secondaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
+        String enterPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
+
+        double keyPadding = getFloatedIntOrDefault(SettingMap.SET_KEY_PADDING);
+        double keyRadius = getFloatedIntOrDefault(SettingMap.SET_KEY_RADIUS);
+        double textSize = getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
+        double textShadow = getFloatedIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE);
+
+        int fontType = getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
+        int keyBgType = getIntOrDefault(SettingMap.SET_KEY_BG_TYPE);
+        int keyBgGradientOrientation = getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION);
+
+        JSONObject export = new JSONObject();
+
+        try {
+            export.put("name", name);
+            export.put("code", codeName);
+
+            SuperBoard.TextType[] values = SuperBoard.TextType.values();
+
+            export.put("fnTyp", values[fontType < values.length ? fontType : 0].toString());
+            export.put("icnThm", iconTheme);
+            export.put("bgClr", backgroundColor);
+            export.put("priClr", primaryColor);
+            export.put("priPressClr", primaryPressColor);
+            export.put("secClr", secondaryColor);
+            export.put("secPressClr", secondaryPressColor);
+            export.put("enterClr", enterColor);
+            export.put("enterPressClr", enterPressColor);
+            export.put("tShdwClr", textShadowColor);
+            export.put("txtClr", textColor);
+            export.put("keyPad", keyPadding);
+            export.put("keyRad", keyRadius);
+            export.put("txtSize", textSize);
+            export.put("txtShadow", textShadow);
+            export.put("kBgType", keyBgType);
+            export.put("kBGOri", keyBgGradientOrientation);
+        } catch (JSONException ignored) {}
+
+        return export;
+    }
+
+    public static ThemeHolder fromCurrentTheme() {
+        return new ThemeHolder(getCurrentThemeJSON(), true);
+    }
+
     public static class ThemeHolder {
         public final String name, codeName, fontType, iconTheme,
                 backgroundColor, primaryColor, secondaryColor,
@@ -147,66 +207,6 @@ public class ThemeUtils {
         public final int keyPadding, keyRadius, textSize, textShadow,
                 keyBgType, keyBgGradientOrientation;
         public final boolean isUserTheme;
-
-        public static JSONObject getCurrentThemeJSON() {
-            long millis = System.currentTimeMillis();
-            String name = String.format("Current %s", millis);
-            String codeName = String.format("current_%s", millis);
-
-            String iconTheme = getStringOrDefault(SettingMap.SET_ICON_THEME);
-            String backgroundColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
-            String primaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_BGCLR));
-            String secondaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
-            String enterColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
-            String textShadowColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-            String textColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-            String primaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR));
-            String secondaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
-            String enterPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
-
-            double keyPadding = getFloatedIntOrDefault(SettingMap.SET_KEY_PADDING);
-            double keyRadius = getFloatedIntOrDefault(SettingMap.SET_KEY_RADIUS);
-            double textSize = getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
-            double textShadow = getFloatedIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE);
-
-            int fontType = getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
-            int keyBgType = getIntOrDefault(SettingMap.SET_KEY_BG_TYPE);
-            int keyBgGradientOrientation = getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION);
-
-            JSONObject export = new JSONObject();
-
-            try {
-                export.put("name", name);
-                export.put("code", codeName);
-
-                SettingMap sMap = SuperBoardApplication.getSettings();
-                List<String> textTypes = sMap.getSelector(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
-
-                export.put("fnTyp", textTypes.get(fontType));
-                export.put("icnThm", iconTheme);
-                export.put("bgClr", backgroundColor);
-                export.put("priClr", primaryColor);
-                export.put("priPressClr", primaryPressColor);
-                export.put("secClr", secondaryColor);
-                export.put("secPressClr", secondaryPressColor);
-                export.put("enterClr", enterColor);
-                export.put("enterPressClr", enterPressColor);
-                export.put("tShdwClr", textShadowColor);
-                export.put("txtClr", textColor);
-                export.put("keyPad", keyPadding);
-                export.put("keyRad", keyRadius);
-                export.put("txtSize", textSize);
-                export.put("txtShadow", textShadow);
-                export.put("kBgType", keyBgType);
-                export.put("kBGOri", keyBgGradientOrientation);
-            } catch (JSONException ignored) {}
-
-            return export;
-        }
-
-        public static ThemeHolder fromCurrentTheme() {
-            return new ThemeHolder(getCurrentThemeJSON(), true);
-        }
 
         public ThemeHolder() throws JSONException {
             this(true);

@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Build;
 
+import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
+import org.blinksd.board.views.SuperBoard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SettingMap extends BaseMap<String, SettingItem> {
 
@@ -63,7 +67,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
             SET_BACKUP_RESTORE = "backup_menu";
 
     public SettingMap() {
-        // putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
+        putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);
@@ -168,16 +172,16 @@ public class SettingMap extends BaseMap<String, SettingItem> {
         return null;
     }
 
-    public ArrayList<String> getSelector(final String key) {
+    public List<String> getSelector(final String key) {
         switch (key) {
             case SET_KEY_BG_TYPE:
-                return (ArrayList<String>) ThemeUtils.getKeyBgTypes();
+                return ThemeUtils.getKeyBgTypes();
             case SET_KEY_GRADIENT_ORIENTATION:
-                return (ArrayList<String>) ThemeUtils.getKeyBgOrientationTypes();
+                return ThemeUtils.getKeyBgOrientationTypes();
             case SET_KEYBOARD_SPACETYPE_SELECT:
-                return (ArrayList<String>) SuperBoardApplication.getSpaceBarStyles().keyList();
+                return SuperBoardApplication.getSpaceBarStyles().keyList();
             case SET_ICON_THEME:
-                return (ArrayList<String>) SuperBoardApplication.getIconThemes().keyList();
+                return SuperBoardApplication.getIconThemes().keyList();
         }
         return new ArrayList<>();
     }
