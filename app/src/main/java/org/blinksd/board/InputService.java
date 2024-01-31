@@ -229,6 +229,7 @@ public class InputService extends InputMethodService implements
     private void setLayout() {
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this);
+            superBoardView.setFocusable(false);
             if (SDK_INT >= Build.VERSION_CODES.O) {
                 registerReceiver(restartKeyboardReceiver,
                         new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
@@ -354,6 +355,7 @@ public class InputService extends InputMethodService implements
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView == null) {
             emojiView = new EmojiView(superBoardView, emojiClick);
+            emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
 
             if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
@@ -366,9 +368,11 @@ public class InputService extends InputMethodService implements
 
         if (keyboardLayoutHolder == null) {
             keyboardLayoutHolder = new LinearLayout(this);
+            keyboardLayoutHolder.setFocusable(false);
             keyboardLayoutHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
             keyboardLayoutHolder.setOrientation(LinearLayout.VERTICAL);
             suggestionLayout = new SuggestionLayout(superBoardView);
+            suggestionLayout.setFocusable(false);
             suggestionLayout.setLayoutParams(new FrameLayout.LayoutParams(-1, mpInt(12)));
             suggestionLayout.setId(android.R.attr.shape);
             keyboardLayoutHolder.addView(suggestionLayout);
@@ -380,8 +384,10 @@ public class InputService extends InputMethodService implements
 
         if (keyboardBackgroundHolder == null) {
             keyboardBackgroundHolder = new RelativeLayout(this);
+            keyboardBackgroundHolder.setFocusable(false);
             keyboardBackgroundHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
             keyboardBackground = new ImageView(this);
+            keyboardBackground.setFocusable(false);
             keyboardBackgroundHolder.addView(keyboardBackground);
             keyboardBackgroundHolder.addView(keyboardLayoutHolder);
             keyboardBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -389,6 +395,7 @@ public class InputService extends InputMethodService implements
         }
         if (boardPopup == null) {
             boardPopup = new BoardPopupImpl(keyboardBackgroundHolder);
+            boardPopup.setFocusable(false);
             keyboardBackgroundHolder.addView(boardPopup);
         }
         setPrefs();

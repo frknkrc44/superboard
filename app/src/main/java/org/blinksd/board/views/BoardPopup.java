@@ -34,6 +34,7 @@ public class BoardPopup extends SuperBoard {
         updateKeyState((InputMethodService) root.getContext());
         popupFilter = new View(root.getContext());
         popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, -2));
+        popupFilter.setFocusable(false);
         mKey = new Key(getContext());
         mKey.setOnTouchListener(null);
         root.addView(popupFilter);
