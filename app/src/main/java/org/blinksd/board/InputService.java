@@ -154,7 +154,7 @@ public class InputService extends InputMethodService implements
     @Override
     public void setInputView(View view) {
         if (view.getParent() != null) {
-            System.exit(0);
+            ((ViewGroup) view.getParent()).removeView(view);
         }
 
         super.setInputView(view);
