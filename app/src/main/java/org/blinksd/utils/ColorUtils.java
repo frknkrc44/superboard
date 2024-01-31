@@ -228,6 +228,18 @@ public class ColorUtils {
         return color;
     }
 
+    public static String colorIntToString(int r, int g, int b) {
+        return colorIntToString(0xFF, r, g, b);
+    }
+
+    public static String colorIntToString(int a, int r, int g, int b) {
+        return ColorUtils.colorIntToString(Color.argb(a, r, g, b));
+    }
+
+    public static String colorIntToString(int colorInt) {
+        return String.format("#%08X", colorInt);
+    }
+
     @Retention(SOURCE)
     @Target({PARAMETER, METHOD, LOCAL_VARIABLE, FIELD})
     public @interface ColorInt {

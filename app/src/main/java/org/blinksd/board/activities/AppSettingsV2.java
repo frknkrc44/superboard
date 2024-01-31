@@ -1,6 +1,7 @@
 package org.blinksd.board.activities;
 
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
 import android.app.Activity;
@@ -145,10 +146,6 @@ public class AppSettingsV2 extends Activity {
             SuperBoardApplication.clearCustomFont();
             SuperBoardApplication.getCustomFont();
         } catch (Throwable ignored) {}
-    }
-
-    public int getFloatPercentOrDefault(String key) {
-        return DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(getIntOrDefault(key)));
     }
 
     public void restartKeyboard() {

@@ -36,6 +36,10 @@ public class SuperDBHelper {
         return db.getString(key, ret);
     }
 
+    public static int getFloatPercentOrDefault(String key) {
+        return DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(getIntOrDefault(key)));
+    }
+
     public static float getFloatedIntOrDefault(String key) {
         return DensityUtils.getFloatNumberFromInt(getIntOrDefault(key));
     }

@@ -342,22 +342,11 @@ public class ColorSelectorLayout extends LinearLayout {
     }
 
     private String getColorString(int a, int r, int g, int b, boolean showColorInt) {
-        String aColorStr = getHexColorString(a);
-        String rColorStr = getHexColorString(r);
-        String gColorStr = getHexColorString(g);
-        String bColorStr = getHexColorString(b);
-
-        String hexColor = String.format("%s%s%s%s", aColorStr, rColorStr, gColorStr, bColorStr).toUpperCase();
+        String hexColor = ColorUtils.colorIntToString(a, r, g, b);
 
         return showColorInt
                 ? String.format("%s\n(%s, %s, %s, %s)", hexColor, a, r, g, b)
                 : hexColor;
-    }
-
-    private String getHexColorString(int x) {
-        if (x == 0) return "00";
-        String s = Integer.toHexString(x);
-        return x < 16 ? "0" + s : s;
     }
 
     private void changeSeekBarColor(CustomSeekBar s, int c) {

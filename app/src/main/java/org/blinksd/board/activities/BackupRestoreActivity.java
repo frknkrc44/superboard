@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
@@ -27,6 +29,8 @@ import org.blinksd.utils.LayoutCreator;
 
 public class BackupRestoreActivity extends Activity {
     private LinearLayout main;
+    private TabHost host;
+    private Uri data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,7 @@ public class BackupRestoreActivity extends Activity {
         TabWidget widget = new TabWidget(this);
         widget.setId(android.R.id.tabs);
 
-        final TabHost host = new TabHost(this);
+        host = new TabHost(this);
         host.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2));
         FrameLayout fl = new FrameLayout(this);
         fl.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -1));
@@ -115,15 +119,17 @@ public class BackupRestoreActivity extends Activity {
         radioGroup.setPadding(padding, padding, padding, padding);
 
         int[] choices = {
-                R.string.settings_backup_type_all,
                 /*
+                R.string.settings_backup_type_all,
+                */
                 R.string.settings_backup_type_theme,
+                /*
                 R.string.settings_backup_type_other,
                 */
         };
 
         for (int choice : choices) {
-            RadioButton radioButton = new CustomRadioButton(this);
+            CustomRadioButton radioButton = new CustomRadioButton(this);
             radioButton.setId(choice);
             radioButton.setText(choice);
             radioGroup.addView(radioButton);
@@ -152,23 +158,42 @@ public class BackupRestoreActivity extends Activity {
         return linearLayout;
     }
 
-    /*
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK && data.getData() != null) {
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(data.getData());
-                ZipInputStream zipInputStream = new ZipInputStream(inputStream);
-                ZipEntry entry;
-                while ((entry = zipInputStream.getNextEntry()) != null) {
-                    switch (entry.getName()) {
-
-                    }
-                }
-            } catch (Throwable ignored) {}
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 1 && resultCode == RESULT_OK && intent.getData() != null) {
+            data = intent.getData();
         }
 
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, intent);
     }
-    */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem done = menu.add(0,0,0,android.R.string.ok)
+                .setIcon(R.drawable.sym_board_return);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            done.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getItemId() == 0) {
+            switch (host.getCurrentTab()) {
+                case 0: // backup
+                    // TODO: Create ZIP file
+                    break;
+                case 1: // restore
+                    if (data != null) {
+                        // TODO: Open ZIP file and extract
+                    }
+                    break;
+            }
+        }
+
+        return super.onMenuItemSelected(featureId, item);
+    }
 }
