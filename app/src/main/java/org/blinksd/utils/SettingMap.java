@@ -5,16 +5,13 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Build;
 
-import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
 import org.blinksd.board.dictionary.DictionaryImportActivity;
-import org.blinksd.board.views.SuperBoard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SettingMap extends BaseMap<String, SettingItem> {

@@ -3,7 +3,6 @@ package org.blinksd.board.activities;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -12,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
+import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
@@ -42,14 +41,11 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.attribute.FileTime;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -63,7 +59,9 @@ public class BackupRestoreActivity extends Activity {
     private final int INCLUDE_THEME = 0x02;
     private final int INCLUDE_ALL = INCLUDE_OTHER | INCLUDE_THEME;
 
-    private final String THEME_FILE = "theme.json";
+    private final String
+            THEME_JSON = "theme.json",
+            BACKGROUND_IMAGE = "bg.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,15 +195,30 @@ public class BackupRestoreActivity extends Activity {
         File file = new File(getCacheDir(), String.format("export_%s.zip", millis));
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+        byte[] buf = new byte[4096];
+        int count;
 
         if ((getSelectedBackupMode() & INCLUDE_THEME) != 0) {
-            ZipEntry zipEntry = new ZipEntry(THEME_FILE);
-            zipOutputStream.putNextEntry(zipEntry);
+            ZipEntry themeJsonEntry = new ZipEntry(THEME_JSON);
+            zipOutputStream.putNextEntry(themeJsonEntry);
 
             JSONObject exportedTheme = ThemeUtils.getCurrentThemeJSON();
             byte[] data = exportedTheme.toString().getBytes();
             zipOutputStream.write(data, 0, data.length);
             zipOutputStream.closeEntry();
+
+            File bgImageFile = SuperBoardApplication.getBackgroundImageFile();
+            if (bgImageFile.exists()) {
+                ZipEntry bgImageEntry = new ZipEntry(BACKGROUND_IMAGE);
+                zipOutputStream.putNextEntry(bgImageEntry);
+
+                FileInputStream fileInputStream = new FileInputStream(bgImageFile);
+                while ((count = fileInputStream.read(buf, 0,  buf.length)) > 0) {
+                    zipOutputStream.write(buf, 0, count);
+                }
+
+                zipOutputStream.closeEntry();
+            }
         }
 
         zipOutputStream.close();
@@ -251,7 +264,9 @@ public class BackupRestoreActivity extends Activity {
         int count;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             switch (entry.getName()) {
-                case THEME_FILE: {
+                case THEME_JSON: {
+                    byteStream.reset();
+
                     while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {
                         byteStream.write(buf, 0, count);
                     }
@@ -260,6 +275,17 @@ public class BackupRestoreActivity extends Activity {
                     byteStream.reset();
 
                     new ThemeUtils.ThemeHolder(byteString).applyTheme();
+                    break;
+                }
+                case BACKGROUND_IMAGE: {
+                    File file = SuperBoardApplication.getBackgroundImageFile();
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+                    while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {
+                        fileOutputStream.write(buf, 0, count);
+                    }
+
+                    fileOutputStream.close();
                     break;
                 }
             }
