@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -206,9 +208,5 @@ public class BoardPopup extends SuperBoard {
     public void clear() {
         super.clear();
         mKey.setHint(null);
-    }
-
-    public int getIntOrDefault(String key) {
-        return SuperDBHelper.getIntOrDefault(key);
     }
 }
