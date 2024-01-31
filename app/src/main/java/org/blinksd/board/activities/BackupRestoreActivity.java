@@ -215,7 +215,7 @@ public class BackupRestoreActivity extends Activity {
     private void createAndShareZipFile() throws Throwable {
         dataFile = createZipFile();
 
-        if (isMaterial()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
             startActivityForResult(intent, 2);
         } else {
@@ -316,10 +316,6 @@ public class BackupRestoreActivity extends Activity {
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    private boolean isMaterial() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     @Override
