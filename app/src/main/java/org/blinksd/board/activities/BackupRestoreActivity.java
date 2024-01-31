@@ -59,6 +59,10 @@ public class BackupRestoreActivity extends Activity {
     private final int INCLUDE_THEME = 0x02;
     private final int INCLUDE_ALL = INCLUDE_OTHER | INCLUDE_THEME;
 
+    private final int
+            REQUEST_RESTORE_SELECT_FILE = 1,
+            REQUEST_BACKUP_SAVE_TO_DIRECTORY = 2;
+
     private final String
             THEME_JSON = "theme.json",
             BACKGROUND_IMAGE = "bg.png";
@@ -183,7 +187,7 @@ public class BackupRestoreActivity extends Activity {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/zip");
-            startActivityForResult(Intent.createChooser(intent, null), 1);
+            startActivityForResult(Intent.createChooser(intent, null), REQUEST_RESTORE_SELECT_FILE);
         });
         linearLayout.addView(button);
 
@@ -230,7 +234,7 @@ public class BackupRestoreActivity extends Activity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-            startActivityForResult(intent, 2);
+            startActivityForResult(intent, REQUEST_BACKUP_SAVE_TO_DIRECTORY);
         } else {
             Uri fileUri = Uri.fromFile(dataFile);
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -333,11 +337,11 @@ public class BackupRestoreActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 1 && resultCode == RESULT_OK && intent.getData() != null) {
+        if (requestCode == REQUEST_RESTORE_SELECT_FILE && resultCode == RESULT_OK && intent.getData() != null) {
             importedZipUri = intent.getData();
         }
 
-        if (requestCode == 2 && resultCode == RESULT_OK && intent.getData() != null) {
+        if (requestCode == REQUEST_BACKUP_SAVE_TO_DIRECTORY && resultCode == RESULT_OK && intent.getData() != null) {
             saveToDirectory(intent.getData());
         }
 
