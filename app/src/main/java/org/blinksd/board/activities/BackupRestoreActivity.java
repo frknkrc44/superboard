@@ -341,13 +341,19 @@ public class BackupRestoreActivity extends Activity {
             case 0: // backup
                 try {
                     createAndShareZipFile();
-                } catch (Throwable ignored) {}
+                } catch (Throwable ignored) {
+                    return false;
+                }
                 break;
             case 1: // restore
                 if (importedZipUri != null) {
                     try {
                         extractAndApplyZipFile();
-                    } catch (Throwable ignored) {}
+                    } catch (Throwable ignored) {
+                        return false;
+                    }
+                } else {
+                    return false;
                 }
                 break;
             default:
