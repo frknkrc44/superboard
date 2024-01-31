@@ -62,6 +62,8 @@ public class BackupRestoreActivity extends Activity {
     private final int INCLUDE_THEME = 0x02;
     private final int INCLUDE_ALL = INCLUDE_OTHER | INCLUDE_THEME;
 
+    private final String THEME_FILE = "theme.json";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +198,7 @@ public class BackupRestoreActivity extends Activity {
         ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
         if ((getSelectedBackupMode() & INCLUDE_THEME) != 0) {
-            ZipEntry zipEntry = new ZipEntry("theme.json");
+            ZipEntry zipEntry = new ZipEntry(THEME_FILE);
             zipOutputStream.putNextEntry(zipEntry);
 
             JSONObject exportedTheme = ThemeUtils.getCurrentThemeJSON();
@@ -248,7 +250,7 @@ public class BackupRestoreActivity extends Activity {
         int count;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             switch (entry.getName()) {
-                case "theme.json": {
+                case THEME_FILE: {
                     while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {
                         byteStream.write(buf, 0, count);
                     }
