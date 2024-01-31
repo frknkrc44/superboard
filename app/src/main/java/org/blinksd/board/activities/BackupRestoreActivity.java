@@ -28,6 +28,7 @@ import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.views.CustomRadioButton;
@@ -340,9 +341,7 @@ public class BackupRestoreActivity extends Activity {
             case 0: // backup
                 try {
                     createAndShareZipFile();
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
+                } catch (Throwable ignored) {}
                 break;
             case 1: // restore
                 if (importedZipUri != null) {
@@ -351,8 +350,11 @@ public class BackupRestoreActivity extends Activity {
                     } catch (Throwable ignored) {}
                 }
                 break;
+            default:
+                return false;
         }
 
-        return false;
+        Toast.makeText(this, android.R.string.ok, Toast.LENGTH_SHORT).show();
+        return true;
     }
 }
