@@ -1,6 +1,7 @@
 package org.blinksd.board.activities;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -54,7 +55,7 @@ import java.util.zip.ZipOutputStream;
 public class BackupRestoreActivity extends Activity {
     private LinearLayout main;
     private TabHost host;
-    private Uri data;
+    private Uri importedZipUri;
     private File dataFile;
 
     private final int INCLUDE_OTHER = 0x01;
@@ -238,7 +239,7 @@ public class BackupRestoreActivity extends Activity {
     }
 
     private void extractAndApplyZipFile() throws IOException, JSONException {
-        InputStream inputStream = getContentResolver().openInputStream(data);
+        InputStream inputStream = getContentResolver().openInputStream(importedZipUri);
         ZipInputStream zipInputStream = new ZipInputStream(inputStream);
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
@@ -265,48 +266,50 @@ public class BackupRestoreActivity extends Activity {
         byteStream.close();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void saveToDirectory(Uri treeUri) {
+        String documentId = DocumentsContract.getTreeDocumentId(treeUri);
+        if (DocumentsContract.isDocumentUri(this, treeUri)) {
+            documentId = DocumentsContract.getDocumentId(treeUri);
+        }
+
+        treeUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, documentId);
+        String[] dataFileNameSplit = dataFile.toString().split("/");
+        String dataBaseName = dataFileNameSplit[dataFileNameSplit.length - 1];
+        String dataBaseExt = dataBaseName.substring(dataBaseName.lastIndexOf('.'));
+        String dataMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(dataBaseExt);
+
+        if (dataMimeType == null) {
+            dataMimeType = "application/octet-stream";
+        }
+
+        try {
+            Uri documentFile = DocumentsContract.createDocument(
+                    getContentResolver(), treeUri, dataMimeType, dataBaseName);
+
+            FileInputStream fileInputStream = new FileInputStream(dataFile);
+            OutputStream saveStream = getContentResolver().openOutputStream(documentFile);
+            byte[] buf = new byte[4096];
+            int count;
+
+            while ((count = fileInputStream.read(buf, 0, buf.length)) > 0) {
+                saveStream.write(buf, 0, count);
+            }
+
+            saveStream.flush();
+            saveStream.close();
+            fileInputStream.close();
+        } catch (Throwable ignored) {}
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1 && resultCode == RESULT_OK && intent.getData() != null) {
-            data = intent.getData();
+            importedZipUri = intent.getData();
         }
 
-        if (requestCode == 2 && resultCode == RESULT_OK && intent.getData() != null && isMaterial()) {
-            Uri treeUri = intent.getData();
-            String documentId = DocumentsContract.getTreeDocumentId(treeUri);
-            if (DocumentsContract.isDocumentUri(this, treeUri)) {
-                documentId = DocumentsContract.getDocumentId(treeUri);
-            }
-
-            treeUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, documentId);
-            String[] dataFileNameSplit = dataFile.toString().split("/");
-            String dataBaseName = dataFileNameSplit[dataFileNameSplit.length - 1];
-            String dataBaseExt = dataBaseName.substring(dataBaseName.lastIndexOf('.'));
-            String dataMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(dataBaseExt);
-
-            if (dataMimeType == null) {
-                dataMimeType = "application/octet-stream";
-            }
-
-            try {
-                Uri documentFile = DocumentsContract.createDocument(
-                        getContentResolver(), treeUri, dataMimeType, dataBaseName);
-
-                FileInputStream fileInputStream = new FileInputStream(dataFile);
-                OutputStream saveStream = getContentResolver().openOutputStream(documentFile);
-                byte[] buf = new byte[4096];
-                int count;
-
-                while ((count = fileInputStream.read(buf, 0, buf.length)) > 0) {
-                    saveStream.write(buf, 0, count);
-                }
-
-                saveStream.flush();
-                saveStream.close();
-                fileInputStream.close();
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+        if (requestCode == 2 && resultCode == RESULT_OK && intent.getData() != null) {
+            saveToDirectory(intent.getData());
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
@@ -340,7 +343,7 @@ public class BackupRestoreActivity extends Activity {
                 }
                 break;
             case 1: // restore
-                if (data != null) {
+                if (importedZipUri != null) {
                     try {
                         extractAndApplyZipFile();
                     } catch (Throwable ignored) {}
