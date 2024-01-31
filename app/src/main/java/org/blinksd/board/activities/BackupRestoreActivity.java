@@ -188,13 +188,13 @@ public class BackupRestoreActivity extends Activity {
         return linearLayout;
     }
 
-    private File createZipFile(int mode) throws Throwable {
+    private File createZipFile() throws Throwable {
         long millis = System.currentTimeMillis();
         File file = new File(getCacheDir(), String.format("export_%s.zip", millis));
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
-        if ((mode & INCLUDE_THEME) != 0) {
+        if ((getSelectedBackupMode() & INCLUDE_THEME) != 0) {
             ZipEntry zipEntry = new ZipEntry("theme.json");
             zipOutputStream.putNextEntry(zipEntry);
 
@@ -208,8 +208,8 @@ public class BackupRestoreActivity extends Activity {
         return file;
     }
 
-    private void createAndShareZipFile(int mode) throws Throwable {
-        dataFile = createZipFile(mode);
+    private void createAndShareZipFile() throws Throwable {
+        dataFile = createZipFile();
 
         if (isMaterial()) {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -334,7 +334,7 @@ public class BackupRestoreActivity extends Activity {
         switch (host.getCurrentTab()) {
             case 0: // backup
                 try {
-                    createAndShareZipFile(getSelectedBackupMode());
+                    createAndShareZipFile();
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
                 }
