@@ -8,15 +8,41 @@ import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.frknkrc44.minidb.SuperMiniDB;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class SuperDBHelper {
+    private static final List<String> THEME_PROPS = Arrays.asList(
+            SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT,
+            SettingMap.SET_ICON_THEME,
+            SettingMap.SET_KEYBOARD_BGCLR,
+            SettingMap.SET_KEY_BGCLR,
+            SettingMap.SET_KEY_PRESS_BGCLR,
+            SettingMap.SET_KEY2_BGCLR,
+            SettingMap.SET_KEY2_PRESS_BGCLR,
+            SettingMap.SET_ENTER_BGCLR,
+            SettingMap.SET_ENTER_PRESS_BGCLR,
+            SettingMap.SET_KEY_SHADOWCLR,
+            SettingMap.SET_KEY_TEXTCLR,
+            SettingMap.SET_KEY_PADDING,
+            SettingMap.SET_KEY_RADIUS,
+            SettingMap.SET_KEY_TEXTSIZE,
+            SettingMap.SET_KEY_SHADOWSIZE,
+            SettingMap.SET_KEY_BG_TYPE,
 
-    private SuperDBHelper() {
-    }
+            // don't export the clipboard history for privacy
+            SettingMap.SET_CLIPBOARD_HISTORY
+    );
+
+    private SuperDBHelper() {}
 
     public static SuperMiniDB getDefault(Context c) {
         return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), false);
@@ -121,5 +147,43 @@ public class SuperDBHelper {
         }
 
         return Integer.parseInt(getStringOrDefault(key));
+    }
+
+    public static void importAllFromJSON(JSONObject json) throws JSONException {
+        Map<String, String> importMap = new HashMap<>();
+        Iterator<String> it = json.keys();
+
+        while(it.hasNext()) {
+            String key = it.next();
+            importMap.put(key, json.getString(key));
+        }
+
+        importAllFromMap(importMap);
+    }
+
+    public static void importAllFromMap(Map<String, String> map) {
+        SuperBoardApplication.getAppDB().putDatabaseDump(map);
+        SuperBoardApplication.getAppDB().writeAll();
+    }
+
+    public static Map<String, String> exportAllToMap(List<String> except) {
+        Map<String, String> exportMap = new HashMap<>();
+
+        for (String key : SuperBoardApplication.getAppDB().getKeys()) {
+            if (except.contains(key)) {
+                continue;
+            }
+
+            String value = SuperBoardApplication.getAppDB().getString(key, null);
+            if (value != null) {
+                exportMap.put(key, value);
+            }
+        }
+
+        return exportMap;
+    }
+
+    public static Map<String, String> exportAllExceptTheme() {
+        return exportAllToMap(THEME_PROPS);
     }
 }

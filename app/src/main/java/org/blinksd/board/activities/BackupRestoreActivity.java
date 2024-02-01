@@ -34,6 +34,8 @@ import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -65,6 +68,7 @@ public class BackupRestoreActivity extends Activity {
 
     private final String
             THEME_JSON = "theme.json",
+            SETTINGS_JSON = "settings.json",
             BACKGROUND_IMAGE = "bg.png";
 
     @Override
@@ -155,13 +159,9 @@ public class BackupRestoreActivity extends Activity {
         radioGroup.setPadding(padding, padding, padding, padding);
 
         int[] choices = {
-                /*
                 R.string.settings_backup_type_all,
-                */
                 R.string.settings_backup_type_theme,
-                /*
                 R.string.settings_backup_type_other,
-                */
         };
 
         for (int choice : choices) {
@@ -195,14 +195,16 @@ public class BackupRestoreActivity extends Activity {
     }
 
     private File createZipFile() throws Throwable {
+        int backupMode = getSelectedBackupMode();
         long millis = System.currentTimeMillis();
-        File file = new File(getCacheDir(), String.format("export_%s.zip", millis));
+        File file = new File(getExternalCacheDir(), String.format("export_%s.zip", millis));
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
         byte[] buf = new byte[4096];
         int count;
 
-        if ((getSelectedBackupMode() & INCLUDE_THEME) != 0) {
+        if ((backupMode & INCLUDE_THEME) != 0) {
+            // backup the current theme as json
             ZipEntry themeJsonEntry = new ZipEntry(THEME_JSON);
             zipOutputStream.putNextEntry(themeJsonEntry);
 
@@ -211,6 +213,7 @@ public class BackupRestoreActivity extends Activity {
             zipOutputStream.write(data, 0, data.length);
             zipOutputStream.closeEntry();
 
+            // backup the current background image as file
             File bgImageFile = SuperBoardApplication.getBackgroundImageFile();
             if (bgImageFile.exists()) {
                 ZipEntry bgImageEntry = new ZipEntry(BACKGROUND_IMAGE);
@@ -223,6 +226,18 @@ public class BackupRestoreActivity extends Activity {
 
                 zipOutputStream.closeEntry();
             }
+        }
+
+        if ((backupMode & INCLUDE_OTHER) != 0) {
+            // export all settings as json (except theme props)
+            ZipEntry settingsJsonEntry = new ZipEntry(SETTINGS_JSON);
+            zipOutputStream.putNextEntry(settingsJsonEntry);
+
+            Map<String, String> settingsMap = SuperDBHelper.exportAllExceptTheme();
+            JSONObject exportedSettings = new JSONObject(settingsMap);
+            byte[] data = exportedSettings.toString().getBytes();
+            zipOutputStream.write(data, 0, data.length);
+            zipOutputStream.closeEntry();
         }
 
         zipOutputStream.close();
@@ -275,10 +290,7 @@ public class BackupRestoreActivity extends Activity {
                         byteStream.write(buf, 0, count);
                     }
 
-                    String byteString = byteStream.toString();
-                    byteStream.reset();
-
-                    new ThemeUtils.ThemeHolder(byteString).applyTheme();
+                    new ThemeUtils.ThemeHolder(byteStream.toString()).applyTheme();
                     break;
                 }
                 case BACKGROUND_IMAGE: {
@@ -290,6 +302,16 @@ public class BackupRestoreActivity extends Activity {
                     }
 
                     fileOutputStream.close();
+                    break;
+                }
+                case SETTINGS_JSON: {
+                    byteStream.reset();
+
+                    while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {
+                        byteStream.write(buf, 0, count);
+                    }
+
+                    SuperDBHelper.importAllFromJSON(new JSONObject(byteStream.toString()));
                     break;
                 }
             }
