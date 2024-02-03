@@ -545,10 +545,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return (ViewGroup) getChildAt(keyboardIndex);
     }
 
-    public void replaceNormalKeyboard(String[][] newKeyboard) {
-        ViewGroup vg = getKeyboard(findNormalKeyboardIndex());
+    public void replaceTextKeyboard(String[][] newKeyboard) {
+        ViewGroup vg = getKeyboard(findTextKeyboardIndex());
         vg.removeAllViewsInLayout();
-        addRows(findNormalKeyboardIndex(), newKeyboard);
+        addRows(findTextKeyboardIndex(), newKeyboard);
     }
 
     public void replaceRowFromKeyboard(int keyboardIndex, int rowIndex, String[] chars) {
@@ -652,9 +652,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case Keyboard.KEYCODE_MODE_CHANGE:
                     setEnabledLayout(
-                            selected == findNormalKeyboardIndex()
+                            isCurrentTextKeyboard()
                                     ? findSymbolKeyboardIndex()
-                                    : findNormalKeyboardIndex()
+                                    : findTextKeyboardIndex()
                     );
                     setCtrlState(0);
                     setAltState(0);
@@ -928,11 +928,41 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return shift;
     }
 
-    public String getCase(String character, boolean upper) {
-        character = character.toLowerCase(loc);
+    private boolean isUpperCase(String str) {
+        for (char chr : str.toCharArray()) {
+            if (!Character.isUpperCase(chr)) {
+                return false;
+            }
+        }
 
-        if(specialCases.containsKey(character)) {
-            return upper ? specialCases.get(character) : character;
+        return true;
+    }
+
+    private boolean isLowerCase(String str) {
+        for (char chr : str.toCharArray()) {
+            if (!Character.isLowerCase(chr)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public String getCase(String character, boolean upper) {
+        if (upper && isUpperCase(character)) {
+            return character;
+        }
+
+        if (!upper && isLowerCase(character)) {
+            return character;
+        }
+
+        character = isUpperCase(character)
+                ? character.toLowerCase(loc)
+                : character;
+
+        if(upper && specialCases.containsKey(character)) {
+            return specialCases.get(character);
         }
 
         return upper ? character.toUpperCase(loc) : character;
@@ -950,19 +980,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             Row r = getRow(selected, i);
             for (int g = 0; g < r.getChildCount(); g++) {
                 Key t = (Key) r.getChildAt(g);
-                if (!isKeyHasEvent(t) && t.getText() != null) {
+                if (!isKeyHasEvent(t) && t.getText() != null && state != SHIFT_LOCKED) {
                     String tText = t.getText().toString();
                     String sText = t.getSubText().toString();
-                    t.setText(getCase(tText, state > 0));
-                    t.setSubText(getCase(sText, state > 0));
+                    t.setText(getCase(tText, state != SHIFT_OFF));
+                    t.setSubText(getCase(sText, state != SHIFT_OFF));
                     t.setSelected(false);
-                } else {
-                    if (t.getTag(TAG_NP) != null) {
-                        Pair<Integer, Boolean> values = t.getNormalPressEvent();
-                        int keyEvent = values.first;
-                        if (keyEvent == Keyboard.KEYCODE_SHIFT) {
-                            t.changeState(state);
-                        }
+                } else if (t.getTag(TAG_NP) != null) {
+                    Pair<Integer, Boolean> values = t.getNormalPressEvent();
+                    int keyEvent = values.first;
+                    if (keyEvent == Keyboard.KEYCODE_SHIFT) {
+                        t.changeState(state);
                     }
                 }
             }
@@ -1015,35 +1043,39 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 setEnabledLayout(findNumberKeyboardIndex());
                 break;
             default:
-                setEnabledLayout(findNormalKeyboardIndex());
-                if (getShiftState() != SHIFT_LOCKED) {
-                    if (shiftDetect) {
-                        int caps = ei.inputType != InputType.TYPE_NULL
-                                ? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
-                                : 0;
-                        setShiftState(caps == SHIFT_OFF ? SHIFT_OFF : SHIFT_ON);
-                    } else setShiftState(0);
+                if (!isCurrentTextKeyboard()) {
+                    setEnabledLayout(findTextKeyboardIndex());
+                    if (getShiftState() != SHIFT_LOCKED) {
+                        if (shiftDetect) {
+                            int caps = ei.inputType != InputType.TYPE_NULL
+                                    ? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
+                                    : 0;
+                            setShiftState(caps == SHIFT_OFF ? SHIFT_OFF : SHIFT_ON);
+                        } else setShiftState(0);
+                    }
                 }
                 break;
         }
 
-        switch (ei.inputType & InputType.TYPE_MASK_VARIATION) {
-            case InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
-            case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS: {
-                Key k = findKeyByLabel(0, ",");
-                if (k != null) {
-                    k.setText("@");
-                    // k.setSubText("→");
+        if (isCurrentTextKeyboard()) {
+            switch (ei.inputType & InputType.TYPE_MASK_VARIATION) {
+                case InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS:
+                case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS: {
+                    Key k = findKeyByLabel(0, ",");
+                    if (k != null) {
+                        k.setText("@");
+                        // k.setSubText("→");
+                    }
+                    break;
                 }
-                break;
-            }
-            default: {
-                Key k = findKeyByLabel(0, "@");
-                if (k != null) {
-                    k.setText(",");
-                    // k.setSubText("→");
+                default: {
+                    Key k = findKeyByLabel(0, "@");
+                    if (k != null) {
+                        k.setText(",");
+                        // k.setSubText("→");
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -1209,7 +1241,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return findKeyboardIndex(KeyboardType.NUMBER);
     }
 
-    public int findNormalKeyboardIndex() {
+    public int findTextKeyboardIndex() {
         return findKeyboardIndex(KeyboardType.TEXT);
     }
 

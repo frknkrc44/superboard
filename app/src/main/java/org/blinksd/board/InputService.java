@@ -548,13 +548,13 @@ public class InputService extends InputMethodService implements
 
     private void loadKeyboardLayout() {
         String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
-        int keyboardIndex = superBoardView.findNormalKeyboardIndex();
+        int keyboardIndex = superBoardView.findTextKeyboardIndex();
         Language language = SuperBoardApplication.getKeyboardLanguage(lang);
         if (!language.language.equals(lang)) {
             throw new RuntimeException("Where is the layout JSON file (in assets)?");
         }
         String[][] lkeys = LayoutUtils.getLayoutKeys(language.layout);
-        superBoardView.replaceNormalKeyboard(lkeys);
+        superBoardView.replaceTextKeyboard(lkeys);
         superBoardView.setLayoutPopup(keyboardIndex, LayoutUtils.getLayoutKeys(language.popup));
         for (int i = 0; i < language.layout.size(); i++) {
             RowOptions opts = language.layout.get(i);
@@ -737,7 +737,7 @@ public class InputService extends InputMethodService implements
                         setEnabledLayout(
                                 getEnabledLayoutIndex() != fnIndex
                                         ? fnIndex
-                                        : findNormalKeyboardIndex()
+                                        : findTextKeyboardIndex()
                         );
                         return;
                     case KeyEvent.KEYCODE_NUM:    // number menu
@@ -745,7 +745,7 @@ public class InputService extends InputMethodService implements
                         setEnabledLayout(
                                 getEnabledLayoutIndex() != numIndex
                                         ? numIndex
-                                        : findNormalKeyboardIndex()
+                                        : findTextKeyboardIndex()
                         );
                         return;
                     case KeyEvent.KEYCODE_EISU:   // clipboard menu
