@@ -79,7 +79,7 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void showCharacter() {
-        if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             hideCharacter();
             return;
         }
@@ -124,7 +124,7 @@ public class BoardPopup extends SuperBoard {
 
         List<String> uppercaseCharacters = new ArrayList<>();
         for (String c : chars) {
-            uppercaseCharacters.add(getCase(c, getShiftState() > SHIFT_OFF));
+            uppercaseCharacters.add(getCase(c, getShiftState() != SHIFT_OFF));
         }
 
         createPopup(uppercaseCharacters.toArray(chars));

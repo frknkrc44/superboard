@@ -43,9 +43,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.utils.BaseMap;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 
 import java.util.ArrayList;
@@ -84,14 +84,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private int vibrateDuration = 0;
     private int longPressMultiplier = 1;
     private int currentMotionEventAction = MotionEvent.ACTION_UP;
-    private int iconSizeMultiplier = 1;
+    protected int iconSizeMultiplier = 1;
     private int currentEditorAction = 0;
     private boolean longPressed = false;
     private boolean disablePopup = false;
     private boolean popupPreview = false;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
-    private final BaseMap<String, String> specialCases = new BaseMap<>();
+    private final ListedMap<String, String> specialCases = new ListedMap<>();
 
     // key states
     private int ctrl = 0;

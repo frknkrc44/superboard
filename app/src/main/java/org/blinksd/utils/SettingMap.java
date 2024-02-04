@@ -14,7 +14,7 @@ import org.blinksd.board.dictionary.DictionaryImportActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingMap extends BaseMap<String, SettingItem> {
+public class SettingMap extends ListedMap<String, SettingItem> {
 
     public static final String SET_KEYBOARD_LANG_SELECT = "keyboard_lang_select",
             SET_KEYBOARD_TEXTTYPE_SELECT = "keyboard_texttype_select",
@@ -137,7 +137,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 
     public int getChildrenCount(SettingCategory category) {
         int count = 0;
-        for (String str : keySet()) {
+        for (String str : keyList()) {
             if (get(str).category == category)
                 count++;
         }
@@ -146,7 +146,7 @@ public class SettingMap extends BaseMap<String, SettingItem> {
 
     public String getChildKey(SettingCategory category, int idx) {
         int i = 0;
-        for (String str : keySet()) {
+        for (String str : keyList()) {
             if (get(str).category == category) {
                 if (i == idx) return str;
                 i++;

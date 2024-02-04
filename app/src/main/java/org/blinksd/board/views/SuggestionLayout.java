@@ -182,15 +182,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
         tv.setLayoutParams(params);
-        tv.setPadding(pad, pad, pad, pad);
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setText(text);
         tv.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            tv.setBackground(getSuggestionItemBackground());
-        } else {
-            tv.setBackgroundDrawable(getSuggestionItemBackground());
-        }
         mCompletionsLayout.addView(tv);
     }
 
