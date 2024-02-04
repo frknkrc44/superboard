@@ -34,7 +34,6 @@ import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.json.JSONException;

@@ -11,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -44,12 +43,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.utils.BaseMap;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.TextUtilsCompat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,7 +56,6 @@ import java.util.Objects;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class SuperBoard extends FrameLayout implements OnTouchListener {
-
     public static final int KEYCODE_CLOSE_KEYBOARD = -100;
     public static final int KEYCODE_SWITCH_LANGUAGE = -101;
     public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
@@ -71,70 +69,66 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             TAG_NP = R.id.key_np,
             TAG_DISABLE_MODIFIER = R.id.disable_type_modifier,
             TAG_KEY_REPEAT = R.id.key_repeat;
-    private static Locale loc = new Locale("tr", "TR");
+    private static Locale caseLocale = new Locale("tr", "TR");
     private final MyHandler mHandler = new MyHandler();
-    private final Vibrator vb;
-    private float txtsze = -1;
-    protected Drawable keybg = null;
-    InputMethodService curr = null;
-    private int selected = 0, shift = 0, hp = 40, wp = 100, y, shrad = 0,
-            shclr = -1, txtclr = Color.WHITE, txts = 0, vib = 0, mult = 1,
-            act = MotionEvent.ACTION_UP, iconmulti = 1, ctrl = 0, alt = 0,
-            action = 0, keyclr = -1;
-    private boolean clear = false;
-    private boolean lng = false;
-    private boolean dpopup = false;
-    private boolean ppreview = false;
+    private final Vibrator vibrator;
+    private float textSize = DensityUtils.mp(1.25f);
+    protected Drawable keyBackground = null;
+    private int selected = 0;
+    private int heightPercent = 40;
+    private int widthPercent = 100;
+    protected int shadowRadius = 0;
+    private int keyTextColor = 0xFFDEDEDE;
+    protected int shadowColor = keyTextColor;
+    protected int textStyle = 0;
+    private int vibrateDuration = 0;
+    private int longPressMultiplier = 1;
+    private int currentMotionEventAction = MotionEvent.ACTION_UP;
+    private int iconSizeMultiplier = 1;
+    private int currentEditorAction = 0;
+    private boolean longPressed = false;
+    private boolean disablePopup = false;
+    private boolean popupPreview = false;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
-    private final Map<String, String> specialCases = new HashMap<>();
+    private final BaseMap<String, String> specialCases = new BaseMap<>();
 
-    public SuperBoard(Context c) {
-        super(c);
-        if (c instanceof InputMethodService) {
-            curr = (InputMethodService) c;
-        }
+    // key states
+    private int ctrl = 0;
+    private int alt = 0;
+    private int shift = 0;
+
+    public SuperBoard(Context context) {
+        super(context);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
-            vb = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         else {
-            VibratorManager vm = (VibratorManager) c.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-            vb = vm.getDefaultVibrator();
+            VibratorManager vm = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+            vibrator = vm.getDefaultVibrator();
         }
 
-        // trigSystemSuggestions();
         setLayoutParams(new LayoutParams(-1, -1));
-        // setBackgroundColor(0xFF212121);
         createEmptyLayout();
-        setKeyboardHeight(hp);
+        setKeyboardHeight(heightPercent);
     }
 
     /** @noinspection EmptyMethod*/
-    public void beforeKeyboardEvent(View v) {}
+    public void beforeKeyboardEvent(View view) {}
 
-    public void onKeyboardEvent(View v) {
+    public void onKeyboardEvent(View view) {}
 
-    }
+    public void afterKeyboardEvent() {}
 
-    public void afterKeyboardEvent() {
-
-    }
-
-    public void onPopupEvent() {
-
-    }
+    public void onPopupEvent() {}
 
     public void afterPopupEvent() {
         mHandler.removeAndSendEmptyMessage(0);
     }
 
-    public void switchLanguage() {
+    public void switchLanguage() {}
 
-    }
-
-    public void openEmojiLayout() {
-
-    }
+    public void openEmojiLayout() {}
 
     public void setPadding(int p) {
         setPadding(p, p, p, p);
@@ -150,8 +144,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeyboardHeight(int percent) {
-        //if(percent > 19 && percent < 81){
-        hp = percent;
+        heightPercent = percent;
         getLayoutParams().height = DensityUtils.hpInt(percent);
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
@@ -159,24 +152,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
         }
         int x = selected;
-
-        // this line added because after
-        // resizing layout, it needs recreation
         setEnabledLayout(findNumberKeyboardIndex());
         setEnabledLayout(x);
-        //} else throw new RuntimeException("Invalid keyboard height");
     }
 
     public int getKeyboardHeightPercent() {
-        return hp;
+        return heightPercent;
     }
 
     public int getKeyboardWidthPercent() {
-        return wp;
+        return widthPercent;
     }
 
     public void fixHeight() {
-        setKeyboardHeight(hp);
+        setKeyboardHeight(heightPercent);
         for (int i = 0; i < getChildCount(); i++) {
             for (int g = 0; g < getKeyboard(i).getChildCount(); g++) {
                 getRow(i, g).setKeyWidths();
@@ -193,27 +182,24 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeyVibrateDuration(int dur) {
-        vib = dur;
+        vibrateDuration = dur;
     }
 
     public void clear() {
-        if (clear) {
-            for (int i = 0; i < getChildCount(); i++) {
-                ViewGroup k = getKeyboard(i);
-                for (int g = 0; g < k.getChildCount(); g++)
-                    getRow(i, g).removeAllViewsInLayout();
-                k.removeAllViewsInLayout();
-            }
-            removeAllViewsInLayout();
-            createEmptyLayout();
-            clear = false;
+        for (int i = 0; i < getChildCount(); i++) {
+            ViewGroup k = getKeyboard(i);
+            for (int g = 0; g < k.getChildCount(); g++)
+                getRow(i, g).removeAllViewsInLayout();
+            k.removeAllViewsInLayout();
         }
+        removeAllViewsInLayout();
+        createEmptyLayout();
     }
 
     public void setKeyTintColor(Key k, int normalColor, int pressColor) {
         Drawable d = k.getBackground();
         try {
-            if (Build.VERSION.SDK_INT > 21) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 d.setTintList(getTintListWithStates(normalColor, pressColor));
             } else {
                 d.setColorFilter(normalColor, PorterDuff.Mode.SRC_ATOP);
@@ -262,7 +248,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public boolean isKeyHasEvent(Key k) {
-        return isKeyRepeat(k) || k.getTag(TAG_LP) != null || k.getTag(TAG_NP) != null;
+        return isKeyRepeat(k) || k.hasLongPressEvent() || k.hasNormalPressEvent();
     }
 
     private boolean isKeyRepeat(View v) {
@@ -278,11 +264,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setLongPressMultiplier(int multi) {
-        mult = multi;
+        longPressMultiplier = multi;
     }
 
     public final void setIconSizeMultiplier(int multi) {
-        iconmulti = multi;
+        iconSizeMultiplier = multi;
         applyIconMultiply();
     }
 
@@ -328,11 +314,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void setKeysPadding(final int padding) {
         if (getReferenceKeyMargin() != padding)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
-                    l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
-                }
+            applyToAllKeys(key -> {
+                Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
+                l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
             });
     }
 
@@ -341,35 +325,26 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             Key key = getKey(0, 0, 0);
             Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
             return l.bottomMargin;
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
         return -1;
     }
 
     public int getKeysTextColor() {
-        return keyclr;
+        return keyTextColor;
     }
 
     public void setKeysTextColor(final int color) {
-        if (keyclr != color)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    key.setKeyItemColor(color);
-                }
-            });
-        keyclr = color;
+        if (keyTextColor != color)
+            applyToAllKeys(key -> key.setKeyItemColor(color));
+        keyTextColor = color;
     }
 
     private void applyIconMultiply() {
-        applyToAllKeys(new ApplyToKeyRunnable() {
-            public void run(Key key) {
-                key.applyIconMultiply();
-            }
-        });
+        applyToAllKeys(Key::applyIconMultiply);
     }
 
     protected float getKeysTextSize() {
-        return txtsze;
+        return textSize;
     }
 
     public void setKeysTextSize(final int size) {
@@ -377,54 +352,36 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeysTextSize(final int size, boolean force) {
-        if (txtsze != size || force)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    key.setKeyTextSize(size);
-                }
-            });
-        txtsze = size;
+        if (textSize != size || force)
+            applyToAllKeys(key -> key.setKeyTextSize(size));
+        textSize = size;
     }
 
     public void setKeysBackground(final Drawable d) {
-        if (keybg != d)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    key.setBackground(d);
-                }
-            });
-        keybg = d;
+        if (keyBackground != d)
+            applyToAllKeys(key -> key.setBackground(d));
+        keyBackground = d;
     }
 
     public void setKeysShadow(final int radius, final int color) {
-        if (shrad != radius || shclr != color)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    key.setKeyShadow(radius, color);
-                }
-            });
-        shrad = radius;
-        shclr = color;
+        if (shadowRadius != radius || shadowColor != color)
+            applyToAllKeys(key -> key.setKeyShadow(radius, color));
+        shadowRadius = radius;
+        shadowColor = color;
     }
 
     public void setKeysPopupPreviewEnabled(final boolean enabled) {
-        if (enabled != ppreview)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    ppreview = enabled;
-                    key.setKeyImageVisible(key.isKeyIconSet());
-                }
+        if (enabled != popupPreview)
+            applyToAllKeys(key -> {
+                popupPreview = enabled;
+                key.setKeyImageVisible(key.isKeyIconSet());
             });
     }
 
     public void setKeysTextType(final int style) {
-        if (txts != style)
-            applyToAllKeys(new ApplyToKeyRunnable() {
-                public void run(Key key) {
-                    key.setKeyTextStyle(style);
-                }
-            });
-        txts = style;
+        if (textStyle != style)
+            applyToAllKeys(key -> key.setKeyTextStyle(style));
+        textStyle = style;
     }
 
     public void setKeysTextType(final TextType style) {
@@ -453,8 +410,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeyboardWidth(int percent) {
-        //if(percent > 11 && percent < 101){
-        wp = percent;
+        widthPercent = percent;
         getLayoutParams().width = DensityUtils.wpInt(percent);
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
@@ -464,7 +420,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         int x = selected;
         setEnabledLayout(findNumberKeyboardIndex());
         setEnabledLayout(x);
-        //} else throw new RuntimeException("Invalid keyboard width");
     }
 
     public void setKeyLongClickEvent(int keyboardIndex, int rowIndex, int keyIndex, OnLongClickListener event) {
@@ -476,7 +431,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, Drawable d) {
-        d.setColorFilter(keyclr, PorterDuff.Mode.SRC_ATOP);
+        d.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
         Key t = getKey(keyboardIndex, rowIndex, keyIndex);
         ((LinearLayout.LayoutParams) t.getLayoutParams()).gravity = CENTER;
         t.setKeyIcon(d);
@@ -523,6 +478,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void createEmptyLayout(KeyboardType type) {
         LinearLayout ll = new LinearLayout(getContext());
+        ll.setFocusable(false);
         ll.setLayoutParams(new LayoutParams(-1, getLayoutParams().height));
         ll.setOrientation(LinearLayout.VERTICAL);
         addView(ll);
@@ -612,7 +568,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void addRow(int keyboardIndex, Key template, String[] keys) {
-        clear = true;
         Row r = new Row(getContext());
         if (keys.length > 0) {
             for (String key : keys) {
@@ -635,9 +590,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private void defaultKeyboardEvent(Key v) {
         beforeKeyboardEvent(v);
 
-        if (v.getTag(TAG_NP) != null) {
+        if (v.hasNormalPressEvent()) {
             Pair<Integer, Boolean> currentKey = v.getNormalPressEvent();
-            switch (y = currentKey.first) {
+            switch (currentKey.first) {
                 case KEYCODE_TOGGLE_CTRL:
                     setCtrlState();
                     break;
@@ -645,7 +600,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     setAltState();
                     break;
                 case Keyboard.KEYCODE_SHIFT:
-                    setShiftState();
+                    toggleShiftState();
                     break;
                 case Keyboard.KEYCODE_CANCEL:
                     setEnabledLayout((selected - 1) >= 0 ? selected - 1 : findSymbolKeyboardIndex());
@@ -666,31 +621,21 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     sendKeyEvent(KeyEvent.KEYCODE_DEL);
                     break;
                 case Keyboard.KEYCODE_DONE:
-                    switch (action) {
-                        case EditorInfo.IME_ACTION_DONE:
-                        case EditorInfo.IME_ACTION_GO:
-                        case EditorInfo.IME_ACTION_SEARCH:
-                        case EditorInfo.IME_ACTION_SEND:
-                        case EditorInfo.IME_ACTION_NEXT:
-                        case EditorInfo.IME_ACTION_PREVIOUS:
-                            performEditorAction(action);
-                            break;
-                        default:
-                            sendKeyEvent(KeyEvent.KEYCODE_ENTER);
-                            break;
+                    if (!performEditorAction()) {
+                        sendKeyEvent(KeyEvent.KEYCODE_ENTER);
                     }
                     break;
                 default:
                     if (currentKey.second) {
-                        sendKeyEvent(y);
+                        sendKeyEvent(currentKey.first);
                     } else {
-                        commitText(String.valueOf((char) y));
+                        commitText(String.valueOf((char) currentKey.first.intValue()));
                     }
 
                     updateKeyState();
                     break;
             }
-            playSound(y);
+            playSound(currentKey.first);
         } else {
             commitText(v.getText().toString());
             updateKeyState();
@@ -703,15 +648,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void vibrate() {
-        vibrateInternal(vib);
+        vibrateInternal(vibrateDuration);
     }
 
     private void vibrateInternal(int duration) {
         if (duration > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vb.vibrate(VibrationEffect.createOneShot(duration, 255));
+                vibrator.vibrate(VibrationEffect.createOneShot(duration, 255));
             } else {
-                vb.vibrate(duration);
+                vibrator.vibrate(duration);
             }
         }
     }
@@ -722,29 +667,28 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
      * @param v - Input key for play sound
      */
     public void fakeKeyboardEvent(Key v) {
-        if (v.getTag(TAG_NP) != null) {
+        if (v.hasNormalPressEvent()) {
             Pair<Integer, Boolean> currentKey = v.getNormalPressEvent();
-            y = currentKey.first;
-            playSound(y);
+            playSound(v.getNormalPressEvent().first);
             return;
         }
         playSound(0);
         vibrate();
     }
 
-    public InputMethodService getServiceContext() {
-        return curr;
+    private InputMethodService getCurrentIMService() {
+        return ((InputMethodService) getContext());
     }
 
-    public InputConnection getCurrentIC() {
-        return getServiceContext().getCurrentInputConnection();
+    public InputConnection getCurrentInputConnection() {
+        return getCurrentIMService().getCurrentInputConnection();
     }
 
     @SuppressLint("InlinedApi")
     public void sendKeyEvent(int code) {
         switch (code) {
             case KEYCODE_CLOSE_KEYBOARD:
-                closeKeyboard();
+                getCurrentIMService().requestHideSelf(InputMethodService.BACK_DISPOSITION_DEFAULT);
                 break;
             case KEYCODE_SWITCH_LANGUAGE:
                 switchLanguage();
@@ -835,11 +779,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     private void sendKeyAction(int code, int action, int metaState) {
         KeyEvent event = new KeyEvent(0, 0, action, code, 0, metaState);
-        getCurrentIC().sendKeyEvent(event);
+        getCurrentInputConnection().sendKeyEvent(event);
     }
 
-    private void performEditorAction(int action) {
-        getCurrentIC().performEditorAction(action);
+    private boolean performEditorAction() {
+        boolean performedAction = false;
+
+        if (currentEditorAction > EditorInfo.IME_ACTION_NONE) {
+            performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
+        }
+
+        currentEditorAction = 0;
+        return performedAction;
     }
 
     public final void commitText(String text) {
@@ -888,8 +839,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     private void sendText(String text) {
-        getCurrentIC().commitText(text, text.length());
-        getCurrentIC().finishComposingText();
+        getCurrentInputConnection().commitText(text, text.length());
+        getCurrentInputConnection().finishComposingText();
     }
 
     public int getCtrlState() {
@@ -948,7 +899,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return true;
     }
 
-    public String getCase(String character, boolean upper) {
+    String getCase(String character, boolean upper) {
         if (upper && isUpperCase(character)) {
             return character;
         }
@@ -957,15 +908,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return character;
         }
 
-        character = isUpperCase(character)
-                ? character.toLowerCase(loc)
-                : character;
+        if (!upper && isUpperCase(character)) {
+            character = character.toLowerCase(caseLocale);
+        }
 
         if(upper && specialCases.containsKey(character)) {
             return specialCases.get(character);
         }
 
-        return upper ? character.toUpperCase(loc) : character;
+        if (!upper && specialCases.containsValue(character)) {
+            return specialCases.getKeyByValue(character);
+        }
+
+        return upper ? character.toUpperCase(caseLocale) : character;
     }
 
     public void setShiftState(int state) {
@@ -986,7 +941,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     t.setText(getCase(tText, state != SHIFT_OFF));
                     t.setSubText(getCase(sText, state != SHIFT_OFF));
                     t.setSelected(false);
-                } else if (t.getTag(TAG_NP) != null) {
+                } else if (t.hasNormalPressEvent()) {
                     Pair<Integer, Boolean> values = t.getNormalPressEvent();
                     int keyEvent = values.first;
                     if (keyEvent == Keyboard.KEYCODE_SHIFT) {
@@ -997,18 +952,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
-    private void setShiftState() {
+    private void toggleShiftState() {
         setShiftState((shift + 1) % 3);
     }
 
     public Locale getKeyboardLanguage() {
-        return loc;
+        return caseLocale;
     }
 
     public void setKeyboardLanguage(String lang) {
         if (lang != null) {
             String[] la = lang.split("_");
-            loc = la.length > 1 ? new Locale(la[0], la[1]) : new Locale(la[0].toLowerCase(), la[0].toUpperCase());
+            caseLocale = la.length > 1 ? new Locale(la[0], la[1]) : new Locale(la[0].toLowerCase(), la[0].toUpperCase());
             // trigSystemSuggestions();
         }
     }
@@ -1021,11 +976,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         shiftDetect = detect;
     }
 
-    private void updateKeyState() {
-        updateKeyState(curr);
-    }
-
-    public void updateKeyState(InputMethodService s) {
+    public void updateKeyState() {
         setCtrlState(0);
         setAltState(0);
 
@@ -1033,9 +984,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return;
         }
 
-        EditorInfo ei = s.getCurrentInputEditorInfo();
+        EditorInfo ei = getCurrentIMService().getCurrentInputEditorInfo();
 
-        action = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        currentEditorAction = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
 
         switch (ei.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:
@@ -1050,7 +1001,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 if (getShiftState() != SHIFT_LOCKED) {
                     if (shiftDetect) {
                         int caps = ei.inputType != InputType.TYPE_NULL
-                                ? s.getCurrentInputConnection().getCursorCapsMode(ei.inputType)
+                                ? getCurrentInputConnection().getCursorCapsMode(ei.inputType)
                                 : 0;
                         setShiftState(caps == SHIFT_OFF ? SHIFT_OFF : SHIFT_ON);
                     } else setShiftState(0);
@@ -1107,7 +1058,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             for (int g = 0; g < r.getChildCount(); g++) {
                 Key t = (Key) r.getChildAt(g);
                 if ((t.getText() != null && t.getText().charAt(0) == keyAction) ||
-                        (t.getTag(TAG_NP) != null && t.getNormalPressEvent().first == keyAction)) {
+                        (t.hasNormalPressEvent() && t.getNormalPressEvent().first == keyAction)) {
                     return t;
                 }
             }
@@ -1157,11 +1108,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public void setDisablePopup(boolean val) {
-        dpopup = val;
-    }
-
-    public void closeKeyboard() {
-        getServiceContext().requestHideSelf(0);
+        disablePopup = val;
     }
 
     public List<Integer> findKeyboardIndexes(KeyboardType type) {
@@ -1279,13 +1226,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         if (isKeyRepeat(v) || isHasPopup(v) || isHasLongPressEvent(v)) {
-            if (isHasPopup(v) && dpopup) {
+            if (isHasPopup(v) && disablePopup) {
                 normalPress(v, m);
                 return true;
             }
             switch (m.getAction()) {
                 case MotionEvent.ACTION_UP:
-                    act = MotionEvent.ACTION_UP;
+                    currentMotionEventAction = MotionEvent.ACTION_UP;
                     if (mHandler.hasMessages(1)) {
                         mHandler.removeMessages(1);
                         sendDefaultKeyboardEvent(v);
@@ -1293,8 +1240,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     mHandler.removeAndSendEmptyMessage(0);
                     break;
                 case MotionEvent.ACTION_DOWN:
-                    act = MotionEvent.ACTION_DOWN;
-                    mHandler.obtainAndSendMessageDelayed(1, v, 250L * mult);
+                    currentMotionEventAction = MotionEvent.ACTION_DOWN;
+                    mHandler.obtainAndSendMessageDelayed(1, v, 250L * longPressMultiplier);
                     onKeyboardEvent(v);
                     break;
             }
@@ -1341,8 +1288,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         custom
     }
 
-    public static abstract class ApplyToKeyRunnable {
-        public abstract void run(Key key);
+    public interface ApplyToKeyRunnable {
+        void run(Key key);
     }
 
     @SuppressLint("HandlerLeak")
@@ -1383,13 +1330,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
             switch (msg.what) {
                 case 0: // after
-                    lng = false;
+                    longPressed = false;
                     removeMessages(0);
                     afterKeyboardEvent();
                     break;
                 case 1: // long continue
                     removeMessages(1);
-                    switch (act) {
+                    switch (currentMotionEventAction) {
                         case MotionEvent.ACTION_UP:
                             removeAndSendEmptyMessage(0);
                             break;
@@ -1399,17 +1346,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                 removeAndSendEmptyMessage(0);
                             } else if (isHasLongPressEvent(v)) {
                                 Pair<Integer, Boolean> a = ((Key) v).getLongPressEvent();
-                                y = a.first;
                                 if (a.second) {
-                                    sendKeyEvent(y);
+                                    sendKeyEvent(a.first);
                                 } else {
-                                    commitText(String.valueOf((char) y));
+                                    commitText(String.valueOf((char) a.first.intValue()));
                                 }
-                                playSound(y);
+                                playSound(a.first);
                                 removeAndSendEmptyMessage(0);
                             } else {
                                 if (!((InputMethodService) getContext()).isInputViewShown()) {
-                                    act = MotionEvent.ACTION_UP;
+                                    currentMotionEventAction = MotionEvent.ACTION_UP;
                                 }
                                 obtainAndSendMessage(2, msg.obj);
                             }
@@ -1417,14 +1363,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case 2: // normal or long start
-                    if (act == MotionEvent.ACTION_UP) {
+                    if (currentMotionEventAction == MotionEvent.ACTION_UP) {
                         removeAndSendEmptyMessage(0);
                     } else {
                         sendDefaultKeyboardEvent(v);
                         if (isRepeat) {
                             obtainAndSendMessageDelayed(1, v,
-                                    ((long) (mult > 1 ? 15 : 20) * mult) * (lng ? 1 : 20));
-                            if (!lng) lng = true;
+                                    ((long) (longPressMultiplier > 1 ? 15 : 20) * longPressMultiplier) * (longPressed ? 1 : 20));
+                            if (!longPressed) longPressed = true;
                         } else {
                             removeAndSendEmptyMessage(0);
                         }
@@ -1438,6 +1384,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public Row(Context c) {
             super(c);
+            setFocusable(false);
             setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
         }
 
@@ -1461,8 +1408,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public class Key extends RelativeLayout {
-
-        protected int shr = 0, shc = 0, txtst = 0;
         private final TextView label, subLabel;
         private final ImageView icon;
         private View state;
@@ -1470,6 +1415,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         protected Key(Context context) {
             super(context);
+            setFocusable(false);
             setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             label = new TextView(context);
             label.setLayoutParams(new LayoutParams(-1, -1));
@@ -1489,15 +1435,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             addView(icon);
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             setKeyImageVisible(false);
-            label.setTextColor(keyclr != -1 ? keyclr : (keyclr = 0xFFDEDEDE));
+            label.setTextColor(keyTextColor);
             label.setSingleLine();
             label.setGravity(CENTER);
             label.setHintTextColor(0);
-            setKeyShadow(shrad, shclr != -1 ? shclr : (shclr = keyclr));
-            setKeyTextSize(txtsze != 1 ? txtsze : (txtsze = DensityUtils.mp(1.25f)));
-            setBackground(keybg);
-            setKeyTextStyle(txts);
-            setKeyItemColor(txtclr);
+            setKeyShadow(shadowRadius, shadowColor);
+            setKeyTextSize(textSize);
+            setBackground(keyBackground);
+            setKeyTextStyle(textStyle);
+            setKeyItemColor(keyTextColor);
             setOnTouchListener(SuperBoard.this);
         }
 
@@ -1506,7 +1452,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         protected int getTextColor() {
-            return keyclr;
+            return keyTextColor;
         }
 
         protected float getTextSize() {
@@ -1546,7 +1492,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 state = new View(getContext());
                 state.setLayoutParams(stateParams);
                 GradientDrawable stateDrawable = new GradientDrawable();
-                stateDrawable.setColor(txtclr);
+                stateDrawable.setColor(keyTextColor);
                 stateDrawable.setAlpha(0);
                 stateDrawable.setCornerRadius(DensityUtils.dpInt(16));
                 state.setBackgroundDrawable(stateDrawable);
@@ -1573,7 +1519,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
             GradientDrawable gradientDrawable = (GradientDrawable) state.getBackground();
             gradientDrawable.setAlpha((int) (255 * (float) currentState / Math.max(1, stateCount - 1)));
-            gradientDrawable.setColor(txtclr);
+            gradientDrawable.setColor(keyTextColor);
         }
 
         public void setBackground(Drawable b) {
@@ -1586,7 +1532,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyItemColor(int color) {
-            label.setTextColor(txtclr = color);
+            label.setTextColor(color);
             subLabel.setTextColor(ColorUtils.convertARGBtoRGB(color) - 0x66000000);
             if (isKeyIconSet()) {
                 getKeyIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -1619,7 +1565,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyIcon(Drawable dr) {
             setKeyImageVisible(true);
             icon.setImageDrawable(dr);
-            setKeyItemColor(txtclr);
+            setKeyItemColor(keyTextColor);
         }
 
         public void setKeyIcon(int iconRes) {
@@ -1637,29 +1583,28 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyImageVisible(boolean visible) {
             icon.setVisibility(visible ? VISIBLE : GONE);
             label.setVisibility(visible ? GONE : VISIBLE);
-            subLabel.setVisibility(ppreview && !visible ? VISIBLE : GONE);
+            subLabel.setVisibility(popupPreview && !visible ? VISIBLE : GONE);
         }
 
         public void setKeyTextSize(float size) {
-            label.setTextSize(txtsze = size);
-            subLabel.setTextSize(label.getTextSize() / 3);
+            label.setTextSize(size);
+            subLabel.setTextSize(size / 3);
             applyIconMultiply();
         }
 
         public void applyIconMultiply() {
             ViewGroup.LayoutParams vp = icon.getLayoutParams();
             vp.width = -1;
-            vp.height = (int) (txtsze * iconmulti);
+            vp.height = (int) (textSize * iconSizeMultiplier);
         }
 
         public void setKeyShadow(int radius, int color) {
-            label.setShadowLayer(shr = radius, 0, 0, shc = color);
+            label.setShadowLayer(radius, 0, 0, color);
         }
 
         public void setKeyTextStyle(int style) {
             TextType[] arr = TextType.values();
             setKeyTextStyle(arr[(arr.length - 1) < style ? 0 : style]);
-            txtst = style;
         }
 
         public void setKeyTextStyle(TextType style) {
@@ -1699,20 +1644,24 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             k.getLayoutParams().width = r.right;
             k.getLayoutParams().height = r.bottom;
             k.setHint(getHint());
-            k.setKeyShadow(shr, shc);
-            k.setKeyItemColor(keyclr);
+            k.setKeyShadow(shadowRadius, shadowColor);
+            k.setKeyItemColor(keyTextColor);
             k.getTextView().setSingleLine();
             k.getSubTextView().setSingleLine();
             k.setId(getId());
             k.setKeyTextSize(label.getTextSize() / 2.5f);
-            k.setKeyTextStyle(txts);
-            if (disableTouchEvent) k.setOnTouchListener(null);
+            k.setKeyTextStyle(textStyle);
+            k.setText(getText());
+            k.setSubText(getSubText());
+
             if (isKeyIconSet()) {
                 k.setKeyIcon(getKeyIcon());
-            } else {
-                k.setText(getText());
-                k.setSubText(getSubText());
             }
+
+            if (disableTouchEvent) {
+                k.setOnTouchListener(null);
+            }
+
             return k;
         }
     }

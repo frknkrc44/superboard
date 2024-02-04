@@ -99,7 +99,7 @@ public class EmojiView extends LinearLayout {
     public void applyTheme(SuperBoard sb) {
         textSize = sb.getKeysTextSize();
         keyTextColor = sb.getKeysTextColor();
-        drw = sb.keybg;
+        drw = sb.keyBackground;
         if (drw == null) {
             drw = new ColorDrawable(0);
         }

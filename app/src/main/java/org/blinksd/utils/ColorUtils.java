@@ -216,15 +216,20 @@ public class ColorUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getAccentColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return SuperBoardApplication.getApplication()
+                    .getColor(android.R.color.system_accent1_700);
+        }
+
         TypedArray arr = SuperBoardApplication.getApplication()
                 .obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
         int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
         arr.recycle();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            try {
-                arr.close();
-            } catch (Throwable ignored) {}
-        }
+
+        try {
+            arr.close();
+        } catch (Throwable ignored) {}
+
         return color;
     }
 

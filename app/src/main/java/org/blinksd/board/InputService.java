@@ -100,8 +100,7 @@ public class InputService extends InputMethodService implements
     @Override
     public void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion) {
         if (superBoardView == null) return;
-        InputConnection ic = superBoardView.getCurrentIC();
-        if (ic == null) ic = getCurrentInputConnection();
+        InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
         int state = superBoardView.getShiftState();
@@ -186,7 +185,7 @@ public class InputService extends InputMethodService implements
 
         if (superBoardView != null) {
             setPrefs();
-            superBoardView.updateKeyState(this);
+            superBoardView.updateKeyState();
         }
     }
 
@@ -194,7 +193,7 @@ public class InputService extends InputMethodService implements
     public void onFinishInput() {
         super.onFinishInput();
         if (superBoardView != null) {
-            superBoardView.updateKeyState(this);
+            superBoardView.updateKeyState();
             superBoardView.resetToNormalLayout();
         }
 
@@ -217,8 +216,7 @@ public class InputService extends InputMethodService implements
                 !SuperBoardApplication.isDictDBReady() ||
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
         if (superBoardView == null) return;
-        InputConnection ic = superBoardView.getCurrentIC();
-        if (ic == null) ic = getCurrentInputConnection();
+        InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
         if (sugDisabled) suggestionLayout.toggleQuickMenu(true);
@@ -418,7 +416,7 @@ public class InputService extends InputMethodService implements
             }
             superBoardView.setShiftDetection(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
             superBoardView.setRepeating(!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_REPEAT));
-            superBoardView.updateKeyState(this);
+            superBoardView.updateKeyState();
             superBoardView.setKeyboardHeight(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
             File img;
             int c = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);

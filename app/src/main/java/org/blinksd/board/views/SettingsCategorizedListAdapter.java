@@ -230,9 +230,9 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
                 if (langSelector)
                     val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
                 else if (iconSelector)
-                    val = SuperBoardApplication.getIconThemes().indexOf(value);
+                    val = SuperBoardApplication.getIconThemes().indexOfKey(value);
                 else
-                    val = SuperBoardApplication.getSpaceBarStyles().indexOf(value);
+                    val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
             } else if (themeSelector) {
                 val = -1;
             } else {
@@ -260,10 +260,10 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
                         String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
                         getAppDB().putString(tag, index, true);
                     } else if (iconSelector) {
-                        String index = SuperBoardApplication.getIconThemes().getFromIndex(tagVal);
+                        String index = SuperBoardApplication.getIconThemes().getKeyByIndex(tagVal);
                         getAppDB().putString(tag, index, true);
                     } else if (spaceSelector) {
-                        String index = SuperBoardApplication.getSpaceBarStyles().getFromIndex(tagVal);
+                        String index = SuperBoardApplication.getSpaceBarStyles().getKeyByIndex(tagVal);
                         getAppDB().putString(tag, index, true);
                     } else if (themeSelector) {
                         List<ThemeHolder> themes = SuperBoardApplication.getThemes();
