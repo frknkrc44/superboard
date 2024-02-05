@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -180,6 +181,11 @@ public class BackupRestoreActivity extends Activity {
         int padding = DensityUtils.dpInt(16);
         linearLayout.setPadding(padding, padding, padding, padding);
 
+        TextView selectedFile = new TextView(this);
+        selectedFile.setId(android.R.id.input);
+        selectedFile.setLayoutParams(new ViewGroup.LayoutParams(-1, -2));
+        selectedFile.setGravity(Gravity.CENTER);
+
         Button button = LayoutCreator.createButton(this);
         button.setText(R.string.settings_select_file);
         button.setOnClickListener(v -> {
@@ -189,6 +195,7 @@ public class BackupRestoreActivity extends Activity {
             startActivityForResult(Intent.createChooser(intent, null), REQUEST_RESTORE_SELECT_FILE);
         });
         linearLayout.addView(button);
+        linearLayout.addView(selectedFile);
 
         return linearLayout;
     }
@@ -360,6 +367,8 @@ public class BackupRestoreActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST_RESTORE_SELECT_FILE && resultCode == RESULT_OK && intent.getData() != null) {
             importedZipUri = intent.getData();
+            TextView selectedFile = findViewById(android.R.id.input);
+            selectedFile.setText(importedZipUri.toString());
         }
 
         if (requestCode == REQUEST_BACKUP_SAVE_TO_DIRECTORY && resultCode == RESULT_OK && intent.getData() != null) {
