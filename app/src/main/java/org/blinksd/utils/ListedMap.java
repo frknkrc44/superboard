@@ -9,23 +9,11 @@ public class ListedMap<K, V> {
     private final List<ListEntry<K, V>> entries = new ArrayList<>();
 
     public boolean containsKey(K key) {
-        for (ListEntry<K, V> entry : entries) {
-            if (entry.key.equals(key)) {
-                return true;
-            }
-        }
-
-        return false;
+        return indexOfKey(key) >= 0;
     }
 
     public boolean containsValue(V value) {
-        for (ListEntry<K, V> entry : entries) {
-            if (entry.value.equals(value)) {
-                return true;
-            }
-        }
-
-        return false;
+        return indexOfValue(value) >= 0;
     }
 
     public void clear() {
@@ -77,6 +65,17 @@ public class ListedMap<K, V> {
         for (int i = 0; i < entries.size(); i++) {
             ListEntry<K, V> entry = entries.get(i);
             if (entry.key.equals(key)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public int indexOfValue(V value) {
+        for (int i = 0; i < entries.size(); i++) {
+            ListEntry<K, V> entry = entries.get(i);
+            if (entry.value.equals(value)) {
                 return i;
             }
         }
