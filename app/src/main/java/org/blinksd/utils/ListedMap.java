@@ -37,7 +37,7 @@ public class ListedMap<K, V> {
 
     public void put(K key, V value) {
         int index = indexOfKey(key);
-        
+
         if (index >= 0) {
             entries.set(index, new ListEntry<>(key, value));
         } else {
@@ -90,8 +90,7 @@ public class ListedMap<K, V> {
     }
 
     public K getKeyByValue(V value) {
-        for (int i = 0; i < entries.size(); i++) {
-            ListEntry<K, V> entry = entries.get(i);
+        for (ListEntry<K, V> entry : entries) {
             if (entry.value.equals(value)) {
                 return entry.key;
             }
