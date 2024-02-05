@@ -27,27 +27,21 @@ public class ListedMap<K, V> {
     }
 
     public V get(K key) {
-        for (ListEntry<K, V> entry : entries) {
-            if (entry.key.equals(key)) {
-                return entry.value;
-            }
+        int index = indexOfKey(key);
+        if (index >= 0) {
+            return entries.get(index).value;
         }
 
         return null;
     }
 
     public void put(K key, V value) {
-        if (!containsKey(key)) {
+        int index = indexOfKey(key);
+        
+        if (index >= 0) {
+            entries.set(index, new ListEntry<>(key, value));
+        } else {
             entries.add(new ListEntry<>(key, value));
-            return;
-        }
-
-        for (int i = 0; i < entries.size(); i++) {
-            ListEntry<K, V> entry = entries.get(i);
-            if (entry.key.equals(key)) {
-                entries.remove(entry);
-                entries.add(i, new ListEntry<>(key, value));
-            }
         }
     }
 
