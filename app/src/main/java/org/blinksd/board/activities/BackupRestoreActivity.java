@@ -166,6 +166,8 @@ public class BackupRestoreActivity extends Activity {
 
         for (int choice : choices) {
             CustomRadioButton radioButton = new CustomRadioButton(this);
+            radioButton.setLayoutParams(new RadioGroup.LayoutParams(-1, -2));
+            radioButton.setPadding(padding, padding, padding, padding);
             radioButton.setId(choice);
             radioButton.setText(choice);
             radioGroup.addView(radioButton);
