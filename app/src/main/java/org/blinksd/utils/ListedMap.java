@@ -82,7 +82,7 @@ public class ListedMap<K, V> {
     }
 
     public K getKeyByIndex(int index) {
-        if (entries.size() > index) {
+        if (index >= 0 && entries.size() > index) {
             return entries.get(index).key;
         }
 
@@ -90,10 +90,9 @@ public class ListedMap<K, V> {
     }
 
     public K getKeyByValue(V value) {
-        for (ListEntry<K, V> entry : entries) {
-            if (entry.value.equals(value)) {
-                return entry.key;
-            }
+        int index = indexOfValue(value);
+        if (index >= 0) {
+            return entries.get(index).key;
         }
 
         return null;
