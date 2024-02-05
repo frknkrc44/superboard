@@ -46,7 +46,7 @@ public class ListedMap<K, V> {
     }
 
     public List<K> keyList() {
-        List<K> keys = new ArrayList<>(entries.size());
+        List<K> keys = new ArrayList<>(size());
 
         for (ListEntry<K, V> entry : entries) {
             keys.add(entry.key);
@@ -56,7 +56,7 @@ public class ListedMap<K, V> {
     }
 
     public int indexOfKey(K key) {
-        for (int i = 0; i < entries.size(); i++) {
+        for (int i = 0; i < size(); i++) {
             ListEntry<K, V> entry = entries.get(i);
             if (entry.key.equals(key)) {
                 return i;
@@ -67,7 +67,7 @@ public class ListedMap<K, V> {
     }
 
     public int indexOfValue(V value) {
-        for (int i = 0; i < entries.size(); i++) {
+        for (int i = 0; i < size(); i++) {
             ListEntry<K, V> entry = entries.get(i);
             if (entry.value.equals(value)) {
                 return i;
@@ -82,7 +82,7 @@ public class ListedMap<K, V> {
     }
 
     public K getKeyByIndex(int index) {
-        if (index >= 0 && entries.size() > index) {
+        if (index >= 0 && size() > index) {
             return entries.get(index).key;
         }
 
