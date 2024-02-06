@@ -785,7 +785,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean performEditorAction() {
         boolean performedAction = false;
 
-        if (currentEditorAction > EditorInfo.IME_ACTION_NONE) {
+        if (currentEditorAction > EditorInfo.IME_ACTION_NONE &&
+                currentEditorAction <= EditorInfo.IME_ACTION_PREVIOUS) {
             performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
         }
 
