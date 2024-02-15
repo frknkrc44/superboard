@@ -72,11 +72,13 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Tamanho da sombra da chave</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Tamanho do ícone chave</string>
     <!-- Backup/Restore options -->
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Cópia de segurança</string>
     <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restaurar</string>
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Todos os itens</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (tema de ícone, imagem de fundo, cores, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Outros</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Importar pacote de dicionário (.fbd)</string>
     <string name="settings_dict_importing">Importando, por favor, não feche este aplicativo</string>
