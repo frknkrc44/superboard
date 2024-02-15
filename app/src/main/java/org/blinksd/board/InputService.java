@@ -716,16 +716,24 @@ public class InputService extends InputMethodService implements
             // sendCompletionRequest();
         }
 
+        private boolean isClipboardViewShown() {
+            return SDK_INT >= Build.VERSION_CODES.HONEYCOMB && clipboardView != null && clipboardView.isShown();
+        }
+
+        private boolean isEmojiViewShown() {
+            return SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown();
+        }
+
         @Override
         public void sendDefaultKeyboardEvent(View v) {
             Key key = (Key) v;
 
             if (key.hasNormalPressEvent()) {
-                if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB && key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && clipboardView.isShown()) {
+                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {
                     showClipboardView(false);
                 }
 
-                if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA && emojiView.isShown()) {
+                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA && isEmojiViewShown()) {
                     showEmojiView(false);
                 }
 

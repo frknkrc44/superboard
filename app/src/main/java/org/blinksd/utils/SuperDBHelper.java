@@ -155,14 +155,9 @@ public class SuperDBHelper {
 
         while(it.hasNext()) {
             String key = it.next();
-            importMap.put(key, json.getString(key));
+            SuperBoardApplication.getAppDB().putString(key, json.getString(key));
         }
 
-        importAllFromMap(importMap);
-    }
-
-    public static void importAllFromMap(Map<String, String> map) {
-        SuperBoardApplication.getAppDB().putDatabaseDump(map);
         SuperBoardApplication.getAppDB().writeAll();
     }
 

@@ -4,6 +4,7 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -71,6 +72,12 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
 
     private final View.OnClickListener redirectListener = p1 -> {
         Intent intent = getSettings().getRedirect(p1.getContext(), (String) p1.getTag());
+        if (intent.getData() != null) {
+            intent.setData(null);
+            ((Activity) p1.getContext()).startActivityForResult(intent, 2);
+            return;
+        }
+
         p1.getContext().startActivity(intent);
     };
     private final Switch.OnCheckedChangeListener switchListener = new Switch.OnCheckedChangeListener() {

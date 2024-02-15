@@ -320,6 +320,7 @@ public class BackupRestoreActivity extends Activity {
                     }
 
                     SuperDBHelper.importAllFromJSON(new JSONObject(byteStream.toString()));
+                    setResult(RESULT_OK);
                     break;
                 }
             }
@@ -419,6 +420,7 @@ public class BackupRestoreActivity extends Activity {
         }
 
         Toast.makeText(this, android.R.string.ok, Toast.LENGTH_SHORT).show();
+        finish();
         return true;
     }
 }

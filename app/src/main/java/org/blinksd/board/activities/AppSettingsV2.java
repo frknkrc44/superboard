@@ -159,6 +159,8 @@ public class AppSettingsV2 extends Activity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri uri = data.getData();
             new ImageTask().execute(getContentResolver(), uri);
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            recreate();
         }
     }
 

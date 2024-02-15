@@ -3,6 +3,7 @@ package org.blinksd.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
@@ -158,7 +159,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     public Intent getRedirect(Context context, final String key) {
         switch (key) {
             case SET_BACKUP_RESTORE:
-                return new Intent(context, BackupRestoreActivity.class);
+                return new Intent(context, BackupRestoreActivity.class).setData(Uri.EMPTY);
             case SET_IMPORT_DICT_PACK:
                 return new Intent(context, DictionaryImportActivity.class);
             case SET_KEYBOARD_LANG_SELECT:
