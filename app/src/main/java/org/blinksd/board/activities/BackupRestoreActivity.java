@@ -376,6 +376,7 @@ public class BackupRestoreActivity extends Activity {
 
         if (requestCode == REQUEST_BACKUP_SAVE_TO_DIRECTORY && resultCode == RESULT_OK && intent.getData() != null) {
             saveToDirectory(intent.getData());
+            showCompletedAndClose();
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
@@ -408,6 +409,7 @@ public class BackupRestoreActivity extends Activity {
                 if (importedZipUri != null) {
                     try {
                         extractAndApplyZipFile();
+                        showCompletedAndClose();
                     } catch (Throwable ignored) {
                         return false;
                     }
@@ -418,9 +420,11 @@ public class BackupRestoreActivity extends Activity {
             default:
                 return false;
         }
+        return true;
+    }
 
+    private void showCompletedAndClose() {
         Toast.makeText(this, android.R.string.ok, Toast.LENGTH_SHORT).show();
         finish();
-        return true;
     }
 }
