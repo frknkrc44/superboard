@@ -580,7 +580,7 @@ public final class InputService extends InputMethodService implements
                 if (navbarView != null)
                     keyboardLayoutHolder.removeView(navbarView);
 
-                if (SDK_INT >= 28 && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT)) {
+                if (SDK_INT >= 28 && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT) && !isColorized()) {
                     w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));

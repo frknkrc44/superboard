@@ -60,7 +60,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
 
     private boolean getSwitchEnabledFromDependency(String settingName) {
         SettingItem item = getSettings().get(settingName);
-        boolean enabled = item.dependency == null;
+        boolean enabled = item == null || item.dependency == null;
 
         if (!enabled) {
             boolean value = SuperDBHelper.getBooleanOrDefault(item.dependency);
