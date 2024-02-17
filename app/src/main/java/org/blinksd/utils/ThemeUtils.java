@@ -9,7 +9,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.views.SuperBoard;
+import org.blinksd.utils.superboard.TextType;
 import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 @SuppressWarnings("unused")
-public class ThemeUtils {
+public final class ThemeUtils {
     public static final int KEY_BG_TYPE_FLAT     = 0,
                             KEY_BG_TYPE_GRADIENT = 1;
 
@@ -171,7 +171,7 @@ public class ThemeUtils {
             export.put("name", name);
             export.put("code", codeName);
 
-            SuperBoard.TextType[] values = SuperBoard.TextType.values();
+            TextType[] values = TextType.values();
 
             export.put("fnTyp", values[fontType < values.length ? fontType : 0].toString());
             export.put("icnThm", iconTheme);

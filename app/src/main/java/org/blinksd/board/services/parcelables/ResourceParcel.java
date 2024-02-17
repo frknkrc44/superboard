@@ -5,7 +5,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ResourceParcel implements Parcelable {
+public final class ResourceParcel implements Parcelable {
     public static final Parcelable.Creator<ResourceParcel> CREATOR
             = new Parcelable.Creator<ResourceParcel>() {
         public ResourceParcel createFromParcel(Parcel in) {

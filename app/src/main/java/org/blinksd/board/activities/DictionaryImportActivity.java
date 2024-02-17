@@ -1,4 +1,4 @@
-package org.blinksd.board.dictionary;
+package org.blinksd.board.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,12 +17,13 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DictionaryDB;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executors;
 
-public class DictionaryImportActivity extends Activity {
+public final class DictionaryImportActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

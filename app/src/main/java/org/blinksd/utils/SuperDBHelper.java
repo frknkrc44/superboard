@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class SuperDBHelper {
+public final class SuperDBHelper {
     private static final List<String> THEME_PROPS = Arrays.asList(
             SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT,
             SettingMap.SET_ICON_THEME,

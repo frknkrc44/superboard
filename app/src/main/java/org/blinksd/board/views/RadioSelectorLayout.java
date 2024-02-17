@@ -1,32 +1,30 @@
 package org.blinksd.board.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.View;
 import android.widget.RadioGroup;
 
 import org.blinksd.utils.DensityUtils;
 
 import java.util.List;
 
-public class RadioSelectorLayout {
-    private RadioSelectorLayout() {
-    }
-
-    public static View getRadioSelectorLayout(Context ctx, int selection, List<String> items) {
-        final RadioGroup rg = new RadioGroup(ctx);
+@SuppressLint("ViewConstructor")
+final class RadioSelectorLayout extends RadioGroup {
+    RadioSelectorLayout(Context context, int selection, List<String> items) {
+        super(context);
         int i = DensityUtils.dpInt(8);
-        rg.setPadding(i, i, i, i);
-        rg.setTag(selection);
-        rg.setOnCheckedChangeListener((group, checkedId) -> rg.setTag(checkedId));
+        setPadding(i, i, i, i);
+        setTag(selection);
+        setOnCheckedChangeListener((group, checkedId) -> setTag(checkedId));
         i = 0;
         for (String key : items) {
-            CustomRadioButton rb = new CustomRadioButton(ctx);
+            CustomRadioButton rb = new CustomRadioButton(context);
             rb.setId(i);
             rb.setChecked(i == selection);
             rb.setText(key);
-            rg.addView(rb);
+            addView(rb);
             i++;
         }
-        return rg;
     }
+    
 }

@@ -155,7 +155,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     }
 
     private void addQMItemStateful(int tag, String text) {
-        SuperBoard.Key key = superBoard.createKey(text, null);
+        SuperBoard.Key key = superBoard.createKey(text);
         superBoard.setPressEventForKey(key, tag, true);
         key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
         key.setStateCount(2);
@@ -163,7 +163,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     }
 
     private void addQMItem(int tag, int drawableRes, boolean repeat) {
-        SuperBoard.Key key = superBoard.createKey("", null);
+        SuperBoard.Key key = superBoard.createKey("");
         key.setKeyIcon(drawableRes);
         superBoard.setKeyRepeat(key, repeat);
         superBoard.setPressEventForKey(key, tag, true);

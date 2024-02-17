@@ -14,15 +14,15 @@ import android.widget.TextView;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
+import org.blinksd.utils.superboard.TextType;
 
-public class FontSelector extends Activity implements View.OnClickListener {
+public final class FontSelector extends Activity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
     private String[] fontTypeTranslations;
     private int currentFont;
@@ -48,7 +48,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
     private View createMainLayout() {
         ScrollView scroller = new ScrollView(this);
         scroller.setLayoutParams(LayoutCreator.createLayoutParams(FrameLayout.class, -1, -1));
-        SuperBoard.TextType[] values = SuperBoard.TextType.values();
+        TextType[] values = TextType.values();
         int rowCount = 3;
         int columnCount = values.length / rowCount;
         LinearLayout main = LayoutCreator.createVerticalLayout(this);
@@ -65,7 +65,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private View createFontItemLayout(SuperBoard.TextType value, int i, int j, int rowCount, int columnCount) {
+    private View createFontItemLayout(TextType value, int i, int j, int rowCount, int columnCount) {
         int currentIndex = (i * rowCount) + j;
         LinearLayout btn = new LinearLayout(this);
         btn.setOrientation(LinearLayout.VERTICAL);

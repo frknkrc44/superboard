@@ -32,7 +32,7 @@ import org.blinksd.utils.superboard.RowOptions;
 import java.util.Map;
 import java.util.Objects;
 
-public class KeyboardLayoutSelector extends Activity implements View.OnClickListener {
+public final class KeyboardLayoutSelector extends Activity implements View.OnClickListener {
     public static final int KEYBOARD_LAYOUT_SELECTOR_RESULT = 0xFF;
     private String currentLayout;
 
@@ -186,7 +186,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         }
 
         @Override
-        public void addRows(int keyboardIndex, String[][] keys) {
+        public void addRows(int keyboardIndex, CharSequence[][] keys) {
             super.addRows(keyboardIndex, keys);
             setShiftState(SHIFT_ON);
         }

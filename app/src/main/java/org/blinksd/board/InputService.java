@@ -1,7 +1,6 @@
 package org.blinksd.board;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static org.blinksd.board.views.SuperBoard.KeyboardType;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
@@ -49,6 +48,7 @@ import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.KeyOptions;
+import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.Language;
 import org.blinksd.utils.superboard.RowOptions;
 
@@ -56,7 +56,7 @@ import java.io.File;
 import java.util.List;
 
 @SuppressWarnings({"deprecation", "InlinedApi"})
-public class InputService extends InputMethodService implements
+public final class InputService extends InputMethodService implements
         SuggestionLayout.OnSuggestionSelectedListener {
 
     public static final String RESTART_KEYBOARD = "org.blinksd.board.KILL";

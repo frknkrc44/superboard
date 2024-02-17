@@ -13,7 +13,7 @@ import org.blinksd.utils.DensityUtils;
 
 import java.lang.reflect.Field;
 
-public class CustomRadioButton extends RadioButton {
+public final class CustomRadioButton extends RadioButton {
 
     public CustomRadioButton(Context c) {
         super(c);

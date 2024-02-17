@@ -48,7 +48,7 @@ public class EmojiView extends LinearLayout {
 
     public EmojiView(SuperBoard sb, View.OnClickListener ocl) {
         this(sb.getContext());
-        getEmojis(sb);
+        getEmojis(sb.getContext());
         onclick = ocl;
         applyTheme(sb);
     }
@@ -57,9 +57,9 @@ public class EmojiView extends LinearLayout {
         super(c);
     }
 
-    private void getEmojis(SuperBoard sb) {
+    private void getEmojis(Context context) {
         try {
-            InputStream stream = sb.getContext().getAssets().open("emoji_list.json");
+            InputStream stream = context.getAssets().open("emoji_list.json");
             Scanner sc = new Scanner(stream);
             StringBuilder s = new StringBuilder();
             while (sc.hasNext()) s.append(sc.nextLine());

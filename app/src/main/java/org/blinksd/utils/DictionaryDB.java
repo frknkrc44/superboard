@@ -1,4 +1,4 @@
-package org.blinksd.board.dictionary;
+package org.blinksd.utils;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class DictionaryDB extends SQLiteOpenHelper {
+public final class DictionaryDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dicts.db";
     private static final int DATABASE_VERSION = 2;
     public boolean isReady = true;

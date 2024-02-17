@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 // https://stackoverflow.com/a/44170359/16290110
 @SuppressLint("PrivateApi")
-public class WindowManagerServiceUtils {
+public final class WindowManagerServiceUtils {
     private WindowManagerServiceUtils() {}
 
     public static int getDisplayId(Context context) {

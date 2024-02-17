@@ -4,7 +4,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class IconThemeParcel implements Parcelable {
+public final class IconThemeParcel implements Parcelable {
     public static final Parcelable.Creator<IconThemeParcel> CREATOR
             = new Parcelable.Creator<IconThemeParcel>() {
         public IconThemeParcel createFromParcel(Parcel in) {

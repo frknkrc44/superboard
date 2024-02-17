@@ -1,6 +1,6 @@
 package org.blinksd.utils;
 
-public class SpaceBarThemeUtils extends ListedMap<String, Integer> {
+public final class SpaceBarThemeUtils extends ListedMap<String, Integer> {
     public static final int SPACEBAR_DEFAULT = 0, SPACEBAR_TEXT = 1, SPACEBAR_HIDE = 2;
 
     public SpaceBarThemeUtils() {

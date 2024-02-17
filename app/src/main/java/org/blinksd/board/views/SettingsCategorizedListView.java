@@ -7,7 +7,7 @@ import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import org.blinksd.board.activities.AppSettingsV2;
 
-public class SettingsCategorizedListView extends ExpandableListView implements OnGroupCollapseListener, OnGroupExpandListener {
+public final class SettingsCategorizedListView extends ExpandableListView implements OnGroupCollapseListener, OnGroupExpandListener {
     public final SettingsCategorizedListAdapter mAdapter;
     private int expandIndex = -1;
 

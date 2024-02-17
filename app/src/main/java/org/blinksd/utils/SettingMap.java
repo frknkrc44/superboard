@@ -8,9 +8,9 @@ import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BackupRestoreActivity;
+import org.blinksd.board.activities.DictionaryImportActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
-import org.blinksd.board.dictionary.DictionaryImportActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +94,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         if (Build.VERSION.SDK_INT >= 31)
             putTheming(SET_USE_MONET, SettingType.BOOL);
-        putTheming(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
+        putGeneral(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
         putGeneral(SET_KILL_BACKGROUND, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGBLUR, SettingType.DECIMAL_NUMBER);

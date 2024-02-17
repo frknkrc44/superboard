@@ -52,7 +52,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class BackupRestoreActivity extends Activity {
+public final class BackupRestoreActivity extends Activity {
     private LinearLayout main;
     private TabHost host;
     private Uri importedZipUri;

@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
+public final class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
 
     private static final int TAG1 = R.id.key_np, TAG2 = R.id.key_lp;
     private final AppSettingsV2 mContext;
@@ -247,7 +247,7 @@ public class SettingsCategorizedListAdapter extends BaseExpandableListAdapter {
             }
             build.setTitle(getTranslation(tag));
             ScrollView dialogScroller = new ScrollView(p1.getContext());
-            dialogView = RadioSelectorLayout.getRadioSelectorLayout(mContext, val, (List<String>) p1.getTag(TAG2));
+            dialogView = new RadioSelectorLayout(mContext, val, (List<String>) p1.getTag(TAG2));
             dialogScroller.addView(dialogView);
             build.setView(dialogScroller);
             build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());

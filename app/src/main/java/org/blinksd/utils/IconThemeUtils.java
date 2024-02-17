@@ -17,7 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
+public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
     public IconThemeUtils() {
         put("theme_default", new LocalIconTheme(new int[]{
                 R.drawable.sym_keyboard_shift,

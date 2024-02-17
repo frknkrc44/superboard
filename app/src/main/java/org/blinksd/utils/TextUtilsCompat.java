@@ -8,11 +8,11 @@ import android.util.Pair;
 import android.widget.TextView;
 
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.views.SuperBoard;
+import org.blinksd.utils.superboard.TextType;
 
 import java.nio.charset.Charset;
 
-public class TextUtilsCompat {
+public final class TextUtilsCompat {
     // U+DFFFD which is very end of unassigned plane.
     private static final String TOFU_STRING = "\uDB3F\uDFFD";
     private static final String EM_STRING = "m";
@@ -118,9 +118,9 @@ public class TextUtilsCompat {
         return Charset.forName(name);
     }
 
-    public static void setTypefaceFromTextType(TextView label, SuperBoard.TextType style) {
+    public static void setTypefaceFromTextType(TextView label, TextType style) {
         if (style == null) {
-            style = SuperBoard.TextType.regular;
+            style = TextType.regular;
         }
         switch (style) {
             case regular:

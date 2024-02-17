@@ -5,7 +5,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.blinksd.board.dictionary.DictionaryDB;
+import org.blinksd.utils.DictionaryDB;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class SuperBoardApplication extends Application {
+public final class SuperBoardApplication extends Application {
 
     public static final Handler mainHandler = new Handler(Looper.getMainLooper());
     private static HashMap<String, Language> languageCache = null;

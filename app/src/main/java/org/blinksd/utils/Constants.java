@@ -1,6 +1,6 @@
 package org.blinksd.utils;
 
-public class Constants {
+public final class Constants {
 
     public static final int MIN_LPRESS_DUR = 1;
     public static final int MAX_LPRESS_DUR = 3;

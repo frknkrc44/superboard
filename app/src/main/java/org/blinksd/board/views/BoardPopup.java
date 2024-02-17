@@ -14,6 +14,7 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.superboard.KeyboardType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class BoardPopup extends SuperBoard {
     @SuppressLint("ClickableViewAccessibility")
     public BoardPopup(ViewGroup root) {
         super(root.getContext());
+        createEmptyLayout(KeyboardType.NUMBER);
         updateKeyState();
         mPopupFilter = new View(root.getContext());
         mPopupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, -2));
@@ -72,7 +74,7 @@ public class BoardPopup extends SuperBoard {
         key.getLocationInWindow(pos);
         setKeysTextType(board.textStyle);
         setKeysShadow(board.shadowRadius, board.shadowColor);
-        setKeysTextColor(key.getTextColor());
+        setKeysTextColor(board.getKeysTextColor());
         setKeysTextSize((int) board.getKeysTextSize());
         mKey.setKeyTextSize(board.getKeysTextSize());
         setKeyboardPrefs();
@@ -93,16 +95,15 @@ public class BoardPopup extends SuperBoard {
 
     public void showPopup(boolean visible) {
         hideCharacter();
-        CharSequence hint = mKey.getHint();
-        String str = hint != null ? hint.toString().trim() : "";
+        CharSequence[] popupCharacters = mKey.getPopupCharacters();
         boolean useFC = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
-        visible = visible && !str.isEmpty();
+        visible = visible && popupCharacters != null;
         setVisibility(visible && !useFC ? VISIBLE : GONE);
         mPopupFilter.setVisibility(getVisibility());
 
         if (visible) {
             if (useFC) {
-                String ret = Character.toString(str.charAt(0));
+                CharSequence ret = popupCharacters[0];
                 ret = getCase(ret, getShiftState() > SHIFT_OFF);
 
                 commitText(ret);
@@ -113,24 +114,23 @@ public class BoardPopup extends SuperBoard {
 
                 afterKeyboardEvent();
             } else {
-                setCharacters(str);
+                setCharacters(popupCharacters);
             }
         }
     }
 
-    private void setCharacters(String chr) {
+    private void setCharacters(CharSequence[] chars) {
         clear();
-        String[] chars = chr.split("");
 
-        List<String> uppercaseCharacters = new ArrayList<>();
-        for (String c : chars) {
+        List<CharSequence> uppercaseCharacters = new ArrayList<>();
+        for (CharSequence c : chars) {
             uppercaseCharacters.add(getCase(c, getShiftState() != SHIFT_OFF));
         }
 
         createPopup(uppercaseCharacters.toArray(chars));
     }
 
-    private void createPopup(String[] a) {
+    private void createPopup(CharSequence[] a) {
         int h, c = 6;
         setKeyboardWidth(a.length < c ? 11 * a.length : 11 * c);
         h = a.length / c;
@@ -141,9 +141,9 @@ public class BoardPopup extends SuperBoard {
                 DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)),
                 DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f)
         );
-        String[] x;
+        CharSequence[] x;
         for (int i = 0, k = 0; i < h; i++) {
-            x = new String[Math.min(a.length, c)];
+            x = new CharSequence[Math.min(a.length, c)];
             x[0] = "";
             for (int g = 0; g < c; g++) {
                 k++;
@@ -154,7 +154,7 @@ public class BoardPopup extends SuperBoard {
                 }
                 break;
             }
-            if (!x[0].isEmpty() && k > 1) addRow(0, x);
+            if (x[0].length() > 0 && k > 1) addRow(0, x);
         }
 
         fixHeight();
@@ -181,13 +181,8 @@ public class BoardPopup extends SuperBoard {
     }
 
     @Override
-    public int findKeyboardIndex(KeyboardType type) {
-        return super.findKeyboardIndex(KeyboardType.TEXT);
-    }
-
-    @Override
     public void clear() {
         super.clear();
-        mKey.setHint(null);
+        mKey.setPopupCharactersArray(null);
     }
 }

@@ -21,7 +21,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
+public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public static final int THEME_IMPORT_SUCCESS = 0,
             THEME_IMPORT_FAILED_MISSING_KEYS = 1,
             THEME_IMPORT_FAILED_EXISTS = 2,
@@ -204,6 +204,5 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
         return SuperBoardApplication.getKeyboardLanguage(name, true).name.equals(name);
     }
 
-    private static class MissingKeysException extends RuntimeException {
-    }
+    private static final class MissingKeysException extends RuntimeException {}
 }

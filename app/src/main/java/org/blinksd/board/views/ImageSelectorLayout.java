@@ -47,7 +47,7 @@ import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
 @SuppressWarnings("deprecation")
-public class ImageSelectorLayout extends LinearLayout {
+public final class ImageSelectorLayout extends LinearLayout {
 
     private final ImageView prev;
     private Bitmap temp;

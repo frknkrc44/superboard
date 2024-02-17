@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 // Android Open Source Project
 
 @SuppressWarnings("unused")
-public class ColorUtils {
+public final class ColorUtils {
     private static final double XYZ_WHITE_REFERENCE_X = 95.047;
     private static final double XYZ_WHITE_REFERENCE_Y = 100;
     private static final double XYZ_WHITE_REFERENCE_Z = 108.883;

@@ -29,7 +29,7 @@ import org.blinksd.utils.LayoutUtils;
 import java.util.ArrayList;
 
 /** @noinspection NullableProblems*/
-public class SetupActivityV2 extends Activity {
+public final class SetupActivityV2 extends Activity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();
     int currentPage = 0;

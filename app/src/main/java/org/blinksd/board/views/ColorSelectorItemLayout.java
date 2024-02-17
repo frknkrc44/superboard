@@ -17,7 +17,7 @@ import org.blinksd.utils.LayoutCreator;
 import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
-public class ColorSelectorItemLayout extends LinearLayout {
+public final class ColorSelectorItemLayout extends LinearLayout {
 
     private final ImageView img;
     private TreeMap<Integer, Integer> colorList;

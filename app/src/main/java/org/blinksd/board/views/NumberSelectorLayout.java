@@ -12,7 +12,7 @@ import org.blinksd.board.activities.AppSettingsV2;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 
-public class NumberSelectorLayout {
+public final class NumberSelectorLayout {
     private NumberSelectorLayout() {}
 
     public static View getNumberSelectorLayout(final AppSettingsV2 ctx, final boolean isFloat, final int min, int max, int val) {

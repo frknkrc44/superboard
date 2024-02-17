@@ -36,7 +36,7 @@ import org.blinksd.utils.SettingMap;
 import java.io.File;
 import java.util.concurrent.Executors;
 
-public class AppSettingsV2 extends Activity {
+public final class AppSettingsV2 extends Activity {
     private LinearLayout main;
     public SuperBoard kbdPreview;
     private ImageView backgroundImageView;

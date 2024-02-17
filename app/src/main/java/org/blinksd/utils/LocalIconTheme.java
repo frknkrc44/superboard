@@ -10,7 +10,7 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
 
 @SuppressWarnings("deprecation")
-public class LocalIconTheme {
+public final class LocalIconTheme {
     public static final int SYM_TYPE_SHIFT = 0, SYM_TYPE_EMOJI = 1,
             SYM_TYPE_SPACE = 2, SYM_TYPE_ENTER = 3,
             SYM_TYPE_DELETE = 4;

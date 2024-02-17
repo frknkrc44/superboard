@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
-public class LayoutCreator {
+public final class LayoutCreator {
 
     public static View getView(Class<?> clazz, Context ctx) {
         try {

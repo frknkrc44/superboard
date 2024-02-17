@@ -21,7 +21,7 @@ import org.blinksd.board.SuperBoardApplication;
 
 import java.lang.reflect.Method;
 
-public class SystemUtils {
+public final class SystemUtils {
 
     public static boolean isNotColorizeNavbar() {
         return getSystemProp("ro.build.version.emui").length() > 1;

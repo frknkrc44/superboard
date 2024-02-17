@@ -37,7 +37,7 @@ import java.util.Objects;
 
 @SuppressLint("ViewConstructor")
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class ClipboardView extends LinearLayout
+public final class ClipboardView extends LinearLayout
         implements ClipboardManager.OnPrimaryClipChangedListener {
     private LinearLayout listView;
     private ClipboardManager clipboardManager;
