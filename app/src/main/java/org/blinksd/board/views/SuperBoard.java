@@ -240,15 +240,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     private boolean isHasPopup(View v) {
-        CharSequence[] cs = ((Key) v).getPopupCharacters();
-        if (cs == null) return false;
-        return (!isKeyRepeat(v)) && (cs.length > 0);
+        CharSequence cs = ((Key) v).getSubText();
+        return (cs != null && cs.length() > 0) && !isKeyRepeat(v);
     }
 
     public final void setPopupForKey(int keyboardIndex, int rowIndex, int keyIndex, String chars) {
         Key key = getKey(keyboardIndex, rowIndex, keyIndex);
         Set<String> newSet = new LinkedHashSet<>(Arrays.asList(chars.split("")));
-        key.setPopupCharactersArray(newSet.toArray(new String[0]));
+        key.setPopupCharacters(newSet.toArray(new String[0]));
     }
 
     public final void setLayoutPopup(int keyboardIndex, String[][] chars) {
@@ -1419,7 +1418,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return popupCharacters;
         }
 
-        void setPopupCharactersArray(CharSequence[] cs) {
+        void setPopupCharacters(CharSequence[] cs) {
             if (cs == null || cs.length < 1) {
                 popupCharacters = null;
                 setSubText("");
@@ -1493,7 +1492,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             Rect r = getBackground().getBounds();
             k.getLayoutParams().width = r.right;
             k.getLayoutParams().height = r.bottom;
-            k.setPopupCharactersArray(getPopupCharacters());
+            k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);
             k.setId(getId());

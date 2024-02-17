@@ -183,6 +183,6 @@ public class BoardPopup extends SuperBoard {
     @Override
     public void clear() {
         super.clear();
-        mKey.setPopupCharactersArray(null);
+        mKey.setPopupCharacters(null);
     }
 }
