@@ -598,7 +598,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
         getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
         getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
         boolean isLight = ColorUtils.satisfiesTextContrast(c);
-        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, isLight ? keyPressClr : 0xFFFFFFFF);
+        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, ColorUtils.getDarkerColor(keyPress2Clr));
         keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
         getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, keyClr);
         getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, keyClr ^ 0x00FFFFFF);
