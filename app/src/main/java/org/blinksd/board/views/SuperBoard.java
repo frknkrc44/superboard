@@ -1191,7 +1191,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                 playSound(a.first);
                                 removeAndSendEmptyMessage(0);
                             } else {
-                                if (!((InputMethodService) getContext()).isInputViewShown()) {
+                                if (getContext() instanceof InputMethodService &&
+                                        !((InputMethodService) getContext()).isInputViewShown()) {
                                     currentMotionEventAction = MotionEvent.ACTION_UP;
                                 }
                                 removeAndSendMessage(2, v);
