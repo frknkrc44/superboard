@@ -1178,10 +1178,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             removeAndSendEmptyMessage(0);
                             break;
                         case MotionEvent.ACTION_DOWN:
-                            if (isHasPopup(v)) {
-                                onPopupEvent();
-                                removeAndSendEmptyMessage(0);
-                            } else if (isHasLongPressEvent(v)) {
+                            if (isHasLongPressEvent(v)) {
                                 Pair<Integer, Boolean> a = ((Key) v).getLongPressEvent();
                                 if (a.second) {
                                     sendKeyEvent(a.first);
@@ -1189,6 +1186,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                     commitText(String.valueOf((char) a.first.intValue()));
                                 }
                                 playSound(a.first);
+                                removeAndSendEmptyMessage(0);
+                            } else if (isHasPopup(v)) {
+                                onPopupEvent();
                                 removeAndSendEmptyMessage(0);
                             } else {
                                 if (getContext() instanceof InputMethodService &&
