@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Gambar latar belakang papan ketik</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Tampilkan karakter saat mengetik</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Gunakan latar belakang transparan di navbar</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Menerapkan warna ke bilah navigasi (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Nonaktifkan menu pop-up</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Nonaktifkan pengulangan karakter saat ditekan lama</string>
