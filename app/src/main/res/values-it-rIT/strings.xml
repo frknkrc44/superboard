@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Immagine di sfondo tastiera</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Mostra carattere durante la digitazione</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Usa sfondo trasparente nella barra di navigazione</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Applica il colore alla barra di navigazione (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disabilita il menu a comparsa</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disabilita la ripetizione di caratteri alla pressione prolungata</string>
