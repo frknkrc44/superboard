@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Imagen de fondo del teclado</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Mostrar caracter mientras escribe</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Usar un fondo transparente para la barra de navegación</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Aplicar color a la barra de navegación (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Deshabilitar menú emergente</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Deshabilitar repetición de caracteres al presionar contínuamente</string>
