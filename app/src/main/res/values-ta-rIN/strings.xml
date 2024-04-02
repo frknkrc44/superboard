@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">விசைப்பலகை பின்னணி புகைப்படம்</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">தட்டச்சு செய்யும்போது எழுத்தைக் காண்பி</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Navbarல் வெளிப்படையான பின்னணியைப் பயன்படுத்து</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Navbarக்கு நிறமூட்டு (அண்ட்ராய்டு 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">பாப்பப் திறையை முடக்கு</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">அழுத்திப் பிடித்தால் எழுத்தைப் பலமுறை உள்ளிட வேண்டாம்</string>
