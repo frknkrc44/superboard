@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Klaviatura arxa fon şəkli</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Yazarkən xarakterləri göstərin</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Navbarda şəffaf fondan istifadə edin</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Navbara rəng tətbiq edin (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Açılan menyunu söndürün</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Uzun basdıqda simvolların təkrarlanmasını söndürün</string>
