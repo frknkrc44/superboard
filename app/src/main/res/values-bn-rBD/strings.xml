@@ -17,6 +17,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">কীবোর্ড ব্যাকগ্রাউন্ড ছবি</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">টাইপ করার সময় অক্ষর দেখান</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">নেভবারে স্বচ্ছ ব্যাকগ্রাউন্ড ব্যবহার করুন</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">নববারে রঙ প্রয়োগ করুন (অ্যান্ড্রয়েড ৯+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">পপআপ মেনু নিষ্ক্রিয় করুন</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">দীর্ঘ প্রেসে অক্ষর পুনরাবৃত্তি অক্ষম করুন</string>
