@@ -1,9 +1,10 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.HONEYCOMB;
+import static android.os.Build.VERSION_CODES.P;
 
 public final class Defaults {
-
     public static final int KEYBOARD_HEIGHT = 36;
     public static final int KEYBOARD_BACKGROUND_BLUR = 0;
 
@@ -36,10 +37,10 @@ public final class Defaults {
     public static final boolean KEYBOARD_SHOW_POPUP = true;
     public static final boolean KEYBOARD_LC_ON_EMOJI = false;
     public static final boolean KEYBOARD_TOUCH_SOUND = true;
-    public static final boolean COLORIZE_NAVBAR = true;
+    public static final boolean COLORIZE_NAVBAR = SDK_INT < P;
+    public static final boolean COLORIZE_NAVBAR_ALT = !COLORIZE_NAVBAR;
     public static final boolean COLORIZE_NAVBAR_ALWAYS_TRANS = false;
     public static final boolean DETECT_CAPSLOCK = true;
-    public static final boolean COLORIZE_NAVBAR_ALT = false;
     public static final boolean DISABLE_POPUP = false;
     public static final boolean DISABLE_REPEAT = false;
     public static final boolean DISABLE_SUGGESTIONS = true;
@@ -48,7 +49,7 @@ public final class Defaults {
     public static final boolean KILL_BACKGROUND = false;
     public static final boolean DISABLE_TOP_BAR = false;
     public static final boolean HIDE_TOP_BAR_FN_BUTTONS = true;
-    public static final boolean ENABLE_CLIPBOARD = SDK_INT >= 11;
+    public static final boolean ENABLE_CLIPBOARD = SDK_INT >= HONEYCOMB;
     public static final boolean DISABLE_NUMBER_ROW = false;
     public static final boolean USE_FIRST_POPUP_CHARACTER = false;
 }
