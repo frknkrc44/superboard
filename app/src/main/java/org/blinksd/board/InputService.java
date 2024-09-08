@@ -416,6 +416,7 @@ public final class InputService extends InputMethodService implements
                 LayoutUtils.setSpaceBarViewPrefs(icons, superBoardView.getKey(i, 4, 2), appName);
             }
             superBoardView.setShiftDetection(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
+            superBoardView.setEnforcedShiftDetection(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENFORCE_DETECT_CAPSLOCK));
             superBoardView.setRepeating(!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_REPEAT));
             superBoardView.updateKeyState();
             superBoardView.setKeyboardHeight(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));

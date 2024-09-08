@@ -106,7 +106,7 @@ public class BoardPopup extends SuperBoard {
                 CharSequence ret = popupCharacters[0];
                 ret = getCase(ret, getShiftState() > SHIFT_OFF);
 
-                commitText(ret);
+                commitText(ret.toString());
 
                 if (getShiftState() == SHIFT_ON) {
                     setShiftState(SHIFT_OFF);

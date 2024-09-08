@@ -92,6 +92,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean popupPreview = false;
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
+    private boolean enforcedShiftDetect = true;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
 
     // key states
@@ -528,10 +529,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                         commitText(String.valueOf((char) currentKey.first.intValue()));
                     }
 
-                    updateKeyState();
+                    if (!enforcedShiftDetect) {
+                        updateKeyState();
+                    }
                     break;
             }
             playSound(currentKey.first);
+
+            if (enforcedShiftDetect &&
+                    currentKey.first != KEYCODE_TOGGLE_CTRL &&
+                    currentKey.first != KEYCODE_TOGGLE_ALT) {
+                updateKeyState();
+            }
         } else {
             commitText(v.getText().toString());
             updateKeyState();
@@ -609,7 +618,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     }
                 }
 
-                sendKeyUpDown(code, metaState);
+                sendKeyDownUp(code, metaState);
 
                 if (!isDisabledModifierForKeyboard(selected)) {
                     if (getCtrlState() > 0) {
@@ -643,7 +652,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     @SuppressLint("InlinedApi")
-    private void sendKeyUpDown(int code) {
+    private void sendKeyDownUp(int code) {
         int metaState = 0;
 
         if (!isDisabledModifierForKeyboard(selected)) {
@@ -656,12 +665,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
         }
 
-        sendKeyUpDown(code, metaState);
+        sendKeyDownUp(code, metaState);
     }
 
-    private void sendKeyUpDown(int code, int metaState) {
-        sendKeyUp(code, metaState);
+    private void sendKeyDownUp(int code, int metaState) {
         sendKeyDown(code, metaState);
+        sendKeyUp(code, metaState);
     }
 
     private void sendKeyUp(int code, int metaState) {
@@ -678,18 +687,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     private boolean performEditorAction() {
-        boolean performedAction = false;
-
-        if (currentEditorAction > EditorInfo.IME_ACTION_NONE &&
-                currentEditorAction <= EditorInfo.IME_ACTION_PREVIOUS) {
-            performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
-        }
-
+        boolean performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
         currentEditorAction = 0;
         return performedAction;
     }
 
-    public final void commitText(CharSequence text) {
+    public final void commitText(String text) {
         if (text == null) return;
         boolean modifierDisabledForKeyboard = isDisabledModifierForKeyboard(selected);
         boolean modifiersEnabled = false;
@@ -706,18 +709,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
         }
 
-        if (modifiersEnabled) {
-            if (text.length() < 2 && TextUtilsCompat.getCharset("US-ASCII").newEncoder().canEncode(text)) {
-                // Copied from https://stackoverflow.com/a/31625638
-                KeyCharacterMap charMap;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
-                else
-                    charMap = KeyCharacterMap.load(KeyCharacterMap.ALPHA);
+        if (modifiersEnabled && TextUtilsCompat.getCharset("US-ASCII").newEncoder().canEncode(text)) {
+            // Copied from https://stackoverflow.com/a/31625638
+            KeyCharacterMap charMap;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
+            else
+                charMap = KeyCharacterMap.load(KeyCharacterMap.ALPHA);
 
-                sendKeyUpDown(charMap.getEvents(new char[]{text.charAt(0)})[0].getKeyCode());
-            } else {
-                sendText(text);
+            for (KeyEvent event : charMap.getEvents(text.toCharArray())) {
+                sendKeyDownUp(event.getKeyCode());
             }
         } else {
             sendText(text);
@@ -736,7 +737,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     private void sendText(CharSequence text) {
         getCurrentInputConnection().commitText(text, text.length());
-        getCurrentInputConnection().finishComposingText();
+        // getCurrentInputConnection().finishComposingText();
     }
 
     public int getCtrlState() {
@@ -867,6 +868,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setShiftDetection(boolean detect) {
         shiftDetect = detect;
+    }
+
+    public final void setEnforcedShiftDetection(boolean enabled) {
+        enforcedShiftDetect = enabled;
     }
 
     public final void updateKeyState() {
@@ -1223,7 +1228,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final class Row extends LinearLayout {
-
         public Row(Context c) {
             super(c);
             setFocusable(false);

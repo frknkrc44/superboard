@@ -41,6 +41,7 @@ public final class Defaults {
     public static final boolean COLORIZE_NAVBAR_ALT = !COLORIZE_NAVBAR;
     public static final boolean COLORIZE_NAVBAR_ALWAYS_TRANS = false;
     public static final boolean DETECT_CAPSLOCK = true;
+    public static final boolean ENFORCE_DETECT_CAPSLOCK = true;
     public static final boolean DISABLE_POPUP = false;
     public static final boolean DISABLE_REPEAT = false;
     public static final boolean DISABLE_SUGGESTIONS = true;
