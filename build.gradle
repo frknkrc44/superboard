@@ -12,3 +12,11 @@ tasks.register('pre', Exec) {
     workingDir(rootProject.projectDir)
     commandLine('make', 'langpacks', 'optimize', 'keystore')
 }
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs.add("-Xlint:deprecation")
+        }
+    }
+}
