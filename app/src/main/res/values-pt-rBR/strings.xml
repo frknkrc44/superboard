@@ -29,6 +29,7 @@
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar um toque longo na ação ou primeiro caractere na tecla</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar cores do monet (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar status de capslock automaticamente</string>
+    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Alternar o idioma do teclado pressionado para o botão emoji</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Digite a cor de fundo</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Digite a cor de fundo</string>
