@@ -94,6 +94,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean isRepeat = true;
     private boolean shiftDetect = true;
     private boolean enforcedShiftDetect = true;
+    private boolean enforcedEditorAction = true;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
     private final List<Integer> enforcedShiftRestrictedEvents = Arrays.asList(
             KEYCODE_TOGGLE_CTRL,
@@ -692,7 +693,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     private boolean performEditorAction() {
-        boolean performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
+        boolean performedAction = false;
+
+        if ((currentEditorAction > EditorInfo.IME_ACTION_NONE &&
+                currentEditorAction <= EditorInfo.IME_ACTION_PREVIOUS) || enforcedEditorAction) {
+            performedAction = getCurrentInputConnection().performEditorAction(currentEditorAction);
+        }
+
         currentEditorAction = 0;
         return performedAction;
     }
@@ -881,6 +888,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setEnforcedShiftDetection(boolean enabled) {
         enforcedShiftDetect = enabled;
+    }
+
+    public final void setEnforcedEditorAction(boolean enabled) {
+        enforcedEditorAction = enabled;
     }
 
     public final void updateKeyState() {
