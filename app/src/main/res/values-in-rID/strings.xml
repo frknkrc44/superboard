@@ -31,6 +31,7 @@
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Deteksi status capslock secara otomatis</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Ganti bahasa keyboard dengan menekan lama ke tombol emoji</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Masukkan warna latar belakang kunci</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Masukkan warna latar belakang penekanan tombol</string>
