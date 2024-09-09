@@ -30,6 +30,7 @@
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">মোনেট রং ব্যবহার করুন (বিটা)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">ক্যাপসলক স্থিতি স্বয়ংক্রিয়ভাবে সনাক্ত করুন</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">ইমোজি বোতামে দীর্ঘক্ষণ চাপলে কীবোর্ডের ভাষা পরিবর্তন করুন</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">কী পটভূমির রঙ লিখুন</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">কী প্রেস ব্যাকগ্রাউন্ড রঙ লিখুন</string>
