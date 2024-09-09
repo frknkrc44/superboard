@@ -530,16 +530,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                         commitText(String.valueOf((char) currentKey.first.intValue()));
                     }
 
-                    if (!enforcedShiftDetect) {
+                    if (!getEnforcedShiftDetection()) {
                         updateKeyState();
                     }
                     break;
             }
             playSound(currentKey.first);
 
-            if (enforcedShiftDetect &&
+            if (getEnforcedShiftDetection() &&
                     currentKey.first != KEYCODE_TOGGLE_CTRL &&
-                    currentKey.first != KEYCODE_TOGGLE_ALT) {
+                    currentKey.first != KEYCODE_TOGGLE_ALT &&
+                    currentKey.first != Keyboard.KEYCODE_SHIFT) {
                 updateKeyState();
             }
         } else {
@@ -869,6 +870,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setShiftDetection(boolean detect) {
         shiftDetect = detect;
+    }
+
+    public final boolean getEnforcedShiftDetection() {
+        return shiftDetect && enforcedShiftDetect;
     }
 
     public final void setEnforcedShiftDetection(boolean enabled) {

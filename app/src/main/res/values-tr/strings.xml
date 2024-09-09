@@ -31,6 +31,7 @@
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Sistem renklerini kullan (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
+	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Büyük karakter durumunu otomatik algılamaya zorla</string>
 	<string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Gülücük tuşuna basılı tutunca klavye dilini değiştir</string>
 	<string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter tuşu arkaplan rengi</string>
 	<string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter tuşu dokunma arkaplan rengi</string>

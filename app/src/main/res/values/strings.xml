@@ -34,6 +34,7 @@
 	<string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
+	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
 	<string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
 	<string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
 	<string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
