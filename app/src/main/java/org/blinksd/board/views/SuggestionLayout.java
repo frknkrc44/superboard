@@ -4,7 +4,6 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -24,9 +23,11 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,25 +197,17 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         return gd;
     }
 
-    private void setBackground(View view, Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
-        } else {
-            view.setBackgroundDrawable(drawable);
-        }
-    }
-
     public void reTheme() {
         int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
-        setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
-        mReturnToQuickMenu.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
+        DrawableUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(textSize);
-            setBackground(tv, getSuggestionItemBackground());
+            ViewUtils.setBackground(tv, getSuggestionItemBackground());
         }
 
         for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
@@ -227,7 +220,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 SuperBoard.Key key = (SuperBoard.Key) view;
                 key.setKeyItemColor(color);
 
-                setBackground(key, keyPressBg);
+                ViewUtils.setBackground(key, keyPressBg);
 
                 int textSize = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
                 key.setKeyTextSize(textSize);
@@ -273,12 +266,12 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                     btn.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                 }
 
-                setBackground(btn, keyPressBg);
+                ViewUtils.setBackground(btn, keyPressBg);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     btn.setImageTintList(ColorStateList.valueOf(color));
                 } else {
-                    btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    DrawableUtils.setColorFilter(btn.getDrawable(), color);
                 }
             }
         }

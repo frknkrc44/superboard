@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -141,7 +140,7 @@ public class EmojiView extends LinearLayout {
         th.addView(ll);
         th.setup();
         for (int i = 0; i < emojis.length; i++) {
-            TabSpec ts = th.newTabSpec(emojis[i][0]);
+            TabHost.TabSpec ts = th.newTabSpec(emojis[i][0]);
             TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, tw, false);
             tv.setLayoutParams(new LayoutParams(-1, l, 1));
             tv.setText(emojis[i][0].trim());

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("deprecation")
 public final class DictionaryImportActivity extends Activity {
 
     @Override

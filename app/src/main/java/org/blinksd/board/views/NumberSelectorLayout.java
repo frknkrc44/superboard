@@ -12,6 +12,7 @@ import org.blinksd.board.activities.AppSettingsV2;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 
+@SuppressWarnings("deprecation")
 public final class NumberSelectorLayout {
     private NumberSelectorLayout() {}
 
@@ -25,7 +26,11 @@ public final class NumberSelectorLayout {
         lp.bottomMargin = DensityUtils.dpInt(8);
         text.setLayoutParams(lp);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                text.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
+            } else {
+                text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
+            }
         }
         text.setText(getProgressString(val, isFloat));
         main.addView(text);

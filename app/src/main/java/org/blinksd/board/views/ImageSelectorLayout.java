@@ -30,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -173,7 +172,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         host.setup();
 
         for (int i = 0; i < tabTitles.length; i++) {
-            TabSpec ts = host.newTabSpec(tabTitles[i]);
+            TabHost.TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(win.getContext())
                     .inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) 

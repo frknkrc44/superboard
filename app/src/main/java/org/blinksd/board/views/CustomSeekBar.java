@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,6 +16,8 @@ import android.widget.SeekBar;
 
 import org.blinksd.board.R;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
+import org.blinksd.utils.ResourcesUtils;
 
 import java.lang.reflect.Field;
 
@@ -42,9 +43,9 @@ final class CustomSeekBar extends SeekBar {
             p.setColor(color);
             RectF r = new RectF(0, 0, b.getWidth(), b.getHeight());
             c.drawOval(r, p);
-            setThumb(new BitmapDrawable(b));
-            Drawable ld = getResources().getDrawable(R.drawable.pbar);
-            ld.setColorFilter(p.getColor(), PorterDuff.Mode.SRC_ATOP);
+            setThumb(new BitmapDrawable(getResources(), b));
+            Drawable ld = ResourcesUtils.getDrawable(R.drawable.pbar);
+            DrawableUtils.setColorFilter(ld, p.getColor());
             setProgressDrawable(ld);
         } else {
             int color = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

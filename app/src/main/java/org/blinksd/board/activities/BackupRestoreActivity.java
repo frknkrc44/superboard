@@ -34,7 +34,9 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.json.JSONException;
@@ -52,6 +54,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+@SuppressWarnings("deprecation")
 public final class BackupRestoreActivity extends Activity {
     private LinearLayout main;
     private TabHost host;
@@ -384,8 +387,8 @@ public final class BackupRestoreActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Drawable doneIcon = getResources().getDrawable(R.drawable.sym_board_return);
-        doneIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        Drawable doneIcon = ResourcesUtils.getDrawable(R.drawable.sym_board_return);
+        DrawableUtils.setColorFilter(doneIcon, Color.WHITE);
         MenuItem done = menu.add(android.R.string.ok).setIcon(doneIcon);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

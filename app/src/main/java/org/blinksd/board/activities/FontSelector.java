@@ -20,8 +20,10 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
+import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.TextType;
 
+@SuppressWarnings("deprecation")
 public final class FontSelector extends Activity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
     private String[] fontTypeTranslations;
@@ -91,7 +93,7 @@ public final class FontSelector extends Activity implements View.OnClickListener
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
-        btn.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, LayoutUtils.getSelectableItemBg(
                 this,
                 textView.getCurrentTextColor(),
                 currentFont == currentIndex

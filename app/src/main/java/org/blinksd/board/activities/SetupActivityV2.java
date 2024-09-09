@@ -24,11 +24,14 @@ import android.widget.TextView;
 
 import org.blinksd.board.R;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 
 /** @noinspection NullableProblems*/
+@SuppressWarnings("deprecation")
 public final class SetupActivityV2 extends Activity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();
@@ -63,8 +66,8 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                DrawableUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_enable,
                 R.string.wizard_enablebtn,
                 v -> {
@@ -76,8 +79,8 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                DrawableUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_select,
                 R.string.wizard_selectbtn,
                 v -> {
@@ -93,8 +96,8 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                DrawableUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_settings,
                 R.string.wizard_settingsbtn,
                 v -> startActivity(new Intent(v.getContext(), AppSettingsV2.class)),
@@ -103,8 +106,8 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_board_return, Color.WHITE),
+                DrawableUtils.getTintedDrawable(
+                        R.drawable.sym_board_return, Color.WHITE),
                 R.string.wizard_finish,
                 R.string.wizard_finishbtn,
                 v -> finish(),
@@ -294,7 +297,7 @@ public final class SetupActivityV2 extends Activity {
             }
             textView.setGravity(Gravity.CENTER);
 
-            buttonView.setBackgroundDrawable(
+            ViewUtils.setBackground(buttonView,
                     LayoutUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
@@ -308,7 +311,7 @@ public final class SetupActivityV2 extends Activity {
                 buttonParams = new LayoutParams(buttonParams.width, buttonParams.height);
                 buttonParams.topMargin = padding;
                 nextButton.setLayoutParams(buttonParams);
-                nextButton.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+                ViewUtils.setBackground(nextButton, LayoutUtils.getSelectableItemBg(
                         context, buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);

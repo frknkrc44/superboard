@@ -3,7 +3,6 @@ package org.blinksd.utils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
@@ -190,8 +189,8 @@ public final class LayoutCreator {
             sw.getThumbDrawable().setTint(tint);
             sw.getTrackDrawable().setTint(tint);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            sw.getThumbDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
-            sw.getTrackDrawable().setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            DrawableUtils.setColorFilter(sw.getThumbDrawable(), tint);
+            DrawableUtils.setColorFilter(sw.getTrackDrawable(), tint);
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -203,17 +202,18 @@ public final class LayoutCreator {
 
     /** @noinspection JavaReflectionMemberAccess*/
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @SuppressWarnings("deprecation")
     @SuppressLint("DiscouragedPrivateApi")
     private static void setSwitchThumbAPI14(Switch switchWidget, int tint) {
         try {
             Field thumbField = Switch.class.getDeclaredField("mThumbDrawable");
             Drawable thumbDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_thumb);
-            thumbDrawable.setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            DrawableUtils.setColorFilter(thumbDrawable, tint);
             thumbField.set(switchWidget, thumbDrawable);
 
             Field trackField = Switch.class.getDeclaredField("mTrackDrawable");
             Drawable trackDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_track);
-            trackDrawable.setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+            DrawableUtils.setColorFilter(trackDrawable, tint);
             trackField.set(switchWidget, trackDrawable);
         } catch (Throwable ignored) {}
     }

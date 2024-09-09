@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
 
 import java.lang.reflect.Field;
 
@@ -26,7 +27,7 @@ public final class CustomRadioButton extends RadioButton {
                 return;
             }
 
-            drw.setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_IN);
+            DrawableUtils.setColorFilter(drw, 0xFFDEDEDE);
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setPadding(i + drw.getIntrinsicWidth(), 0, i, 0);

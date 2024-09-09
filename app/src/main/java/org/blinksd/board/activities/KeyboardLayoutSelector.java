@@ -5,7 +5,6 @@ import static org.blinksd.utils.DensityUtils.mpInt;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,16 +21,19 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.Language;
 import org.blinksd.utils.superboard.RowOptions;
 
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("deprecation")
 public final class KeyboardLayoutSelector extends Activity implements View.OnClickListener {
     public static final int KEYBOARD_LAYOUT_SELECTOR_RESULT = 0xFF;
     private String currentLayout;
@@ -122,7 +124,7 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
         View view = new View(this);
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
-        view.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(view, LayoutUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 false,
@@ -130,7 +132,7 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
         ));
 
         boolean isSelected = currentLayout.equals(language.language);
-        btn.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, LayoutUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 isSelected
@@ -146,10 +148,10 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
             tick.setLayoutParams(params);
             int p = tickSize / 8;
             tick.setPadding(p, p, p, p);
-            tick.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(false));
+            ViewUtils.setBackground(tick, LayoutUtils.getCircleButtonBackground(false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
             tick.setImageResource(R.drawable.sym_board_return);
-            tick.getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            DrawableUtils.setColorFilter(tick.getDrawable(), Color.WHITE);
             layers.addView(tick);
         }
 

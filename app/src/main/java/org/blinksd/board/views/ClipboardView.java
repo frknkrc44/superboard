@@ -25,6 +25,7 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.text.SimpleDateFormat;
@@ -75,7 +76,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
-        clearAllButton.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(clearAllButton, LayoutUtils.getTransSelectableItemBg(
                 getContext(), textColor, false));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
@@ -144,7 +145,7 @@ public final class ClipboardView extends LinearLayout
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
         ImageButton button = new ImageButton(getContext());
-        button.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(button, LayoutUtils.getTransSelectableItemBg(
                 getContext(), textColor, false));
         button.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         button.setScaleType(ImageView.ScaleType.FIT_CENTER);

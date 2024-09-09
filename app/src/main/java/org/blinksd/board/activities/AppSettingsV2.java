@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -36,6 +37,7 @@ import org.blinksd.utils.SettingMap;
 import java.io.File;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("deprecation")
 public final class AppSettingsV2 extends Activity {
     private LinearLayout main;
     public SuperBoard kbdPreview;
@@ -172,9 +174,15 @@ public final class AppSettingsV2 extends Activity {
             });
         }
 
+        @SuppressWarnings("deprecation")
         protected Bitmap doInBackground(Object[] p1) {
             try {
-                return MediaStore.Images.Media.getBitmap((ContentResolver) p1[0], (Uri) p1[1]);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ImageDecoder.Source decoder = ImageDecoder.createSource((ContentResolver) p1[0], (Uri) p1[1]);
+                    return ImageDecoder.decodeBitmap(decoder);
+                } else {
+                    return MediaStore.Images.Media.getBitmap((ContentResolver) p1[0], (Uri) p1[1]);
+                }
             } catch (Throwable ignored) {
             }
             return null;

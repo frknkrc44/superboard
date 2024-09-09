@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -37,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
+@SuppressWarnings("deprecation")
 public class LayoutUtils {
     public static final Language emptyLanguage;
 
@@ -395,9 +395,9 @@ public class LayoutUtils {
                 new int[]{android.R.attr.selectableItemBackground}
         );
         int resId = array.getResourceId(0, 0);
-        Drawable d = getDrawableCompat(context, resId, transparent ? 0 : null);
+        Drawable d = DrawableUtils.getTintedDrawable(resId, transparent ? 0 : null);
         int color = textColor - 0x88000000;
-        d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        DrawableUtils.setColorFilter(d, color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             array.close();
         }
@@ -427,25 +427,5 @@ public class LayoutUtils {
                 content,
                 transparent ? new ColorDrawable(textColor - 0x88000000) : null
         );
-    }
-
-    public static Drawable getDrawableCompat(Context context, int resId, Integer tintColor) {
-        Drawable drawable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                ? context.getResources().getDrawable(resId, context.getTheme())
-                : context.getResources().getDrawable(resId);
-        if (tintColor != null) {
-            if (tintColor == 0) {
-                GradientDrawable gradientDrawable = (GradientDrawable) drawable;
-                gradientDrawable.setColor(0);
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                drawable.setTint(tintColor);
-            }
-        }
-
-        return drawable;
     }
 }

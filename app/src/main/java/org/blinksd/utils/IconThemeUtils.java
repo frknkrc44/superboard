@@ -107,7 +107,10 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
         }
 
         try (FileInputStream stream = new FileInputStream(file)) {
-            return new BitmapDrawable(BitmapFactory.decodeStream(stream));
+            return new BitmapDrawable(
+                    SuperBoardApplication.getApplication().getResources(),
+                    BitmapFactory.decodeStream(stream)
+            );
         } catch (IOException ignored) {
             return null;
         }
@@ -127,6 +130,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
         }
 
         LocalIconTheme theme = get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME);
+        assert theme != null;
         return theme.getIconByType(type);
     }
 
@@ -140,7 +144,6 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
                 return null;
         }
 
-        return LayoutUtils.getDrawableCompat(
-                SuperBoardApplication.getApplication(), res, null);
+        return DrawableUtils.getTintedDrawable(res, null);
     }
 }

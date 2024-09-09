@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -103,7 +102,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         host.setup();
 
         for (int i = 0; i < tabTitles.length; i++) {
-            TabSpec ts = host.newTabSpec(tabTitles[i]);
+            TabHost.TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = tabTitles.length;

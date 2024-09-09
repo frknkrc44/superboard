@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -592,7 +593,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void sendKeyEvent(int code) {
         switch (code) {
             case KEYCODE_CLOSE_KEYBOARD:
-                getCurrentIMService().requestHideSelf(InputMethodService.BACK_DISPOSITION_DEFAULT);
+                getCurrentIMService().requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS);
                 break;
             case KEYCODE_SWITCH_LANGUAGE:
                 switchLanguage();
