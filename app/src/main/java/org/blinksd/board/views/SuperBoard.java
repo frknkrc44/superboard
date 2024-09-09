@@ -95,6 +95,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean shiftDetect = true;
     private boolean enforcedShiftDetect = true;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
+    private final List<Integer> enforcedShiftRestrictedEvents = Arrays.asList(
+            KEYCODE_TOGGLE_CTRL,
+            KEYCODE_TOGGLE_ALT,
+            Keyboard.KEYCODE_SHIFT
+    );
 
     // key states
     private int ctrl = 0;
@@ -538,9 +543,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             playSound(currentKey.first);
 
             if (getEnforcedShiftDetection() &&
-                    currentKey.first != KEYCODE_TOGGLE_CTRL &&
-                    currentKey.first != KEYCODE_TOGGLE_ALT &&
-                    currentKey.first != Keyboard.KEYCODE_SHIFT) {
+                    !enforcedShiftRestrictedEvents.contains(currentKey.first)) {
                 updateKeyState();
             }
         } else {
