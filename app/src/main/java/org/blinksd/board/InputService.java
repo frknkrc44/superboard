@@ -29,6 +29,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ public final class InputService extends InputMethodService implements
         }
     };
     private Configuration recentConfiguration;
+    private boolean hiddenBySelf = false;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -177,6 +179,21 @@ public final class InputService extends InputMethodService implements
         }
         onFinishInput();
         super.onWindowHidden();
+
+        if (hiddenBySelf) {
+            hiddenBySelf = false;
+            return;
+        }
+
+        if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_PREVENT_KBD_CLOSE)) {
+            requestShowSelf(InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    @Override
+    public void requestHideSelf(int flags) {
+        hiddenBySelf = true;
+        super.requestHideSelf(flags);
     }
 
     @Override
@@ -373,7 +390,6 @@ public final class InputService extends InputMethodService implements
             suggestionLayout = new SuggestionLayout(superBoardView);
             suggestionLayout.setFocusable(false);
             suggestionLayout.setLayoutParams(new FrameLayout.LayoutParams(-1, mpInt(12)));
-            suggestionLayout.setId(android.R.attr.shape);
             keyboardLayoutHolder.addView(suggestionLayout);
             keyboardLayoutHolder.addView(superBoardView);
             if (emojiView != null) {

@@ -43,6 +43,7 @@ public final class Defaults {
     public static final boolean DETECT_CAPSLOCK = true;
     public static final boolean ENFORCE_DETECT_CAPSLOCK = true;
     public static final boolean ENFORCE_EDITOR_ACTION = false;
+    public static final boolean PREVENT_KBD_CLOSE = false;
     public static final boolean DISABLE_POPUP = false;
     public static final boolean DISABLE_REPEAT = false;
     public static final boolean DISABLE_SUGGESTIONS = true;

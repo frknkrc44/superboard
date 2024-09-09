@@ -49,6 +49,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_DETECT_CAPSLOCK = "detect_capslock",
             SET_ENFORCE_DETECT_CAPSLOCK = "enforce_detect_capslock",
             SET_ENFORCE_EDITOR_ACTION = "enforce_editor_action",
+            SET_PREVENT_KBD_CLOSE = "prevent_keyboard_close",
             SET_DISABLE_POPUP = "disable_popup",
             SET_DISABLE_REPEAT = "disable_repeat",
             SET_DISABLE_SUGGESTIONS = "disable_suggestions",
@@ -103,6 +104,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
         putGeneral(SET_ENFORCE_DETECT_CAPSLOCK, SettingType.BOOL, SET_DETECT_CAPSLOCK, true);
         putGeneral(SET_ENFORCE_EDITOR_ACTION, SettingType.BOOL);
+        putGeneral(SET_PREVENT_KBD_CLOSE, SettingType.BOOL);
         putGeneral(SET_KILL_BACKGROUND, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGBLUR, SettingType.DECIMAL_NUMBER);
         putGeneral(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
@@ -263,6 +265,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.ENFORCE_DETECT_CAPSLOCK;
                 case SET_ENFORCE_EDITOR_ACTION:
                     return Defaults.ENFORCE_EDITOR_ACTION;
+                case SET_PREVENT_KBD_CLOSE:
+                    return Defaults.PREVENT_KBD_CLOSE;
                 case SET_COLORIZE_NAVBAR_ALT:
                     return Defaults.COLORIZE_NAVBAR_ALT;
                 case SET_DISABLE_POPUP:
