@@ -54,32 +54,32 @@
     <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
     <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
     <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Change orientation</string>
-    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Select image</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">اختيار صورة</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Get wallpaper</string>
-    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Rotate</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">تدوير</string>
     <!-- Radio selector resources -->
-    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Keyboard language</string>
-    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Keyboard font</string>
-    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Keyboard theme</string>
-    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Icon theme</string>
-    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Space bar style</string>
-    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Key background type</string>
-    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Key background gradient orientation</string>
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">اللغة</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">خط لوحة المفاتيح</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">سمة لوحة المفاتيح</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">سمة الأيقونات</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">شكل زر المسافة</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">نوع الخلفية</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">اتجاه تدرج الخلفية</string>
     <!-- Number selector resources -->
-    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
-    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
-    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
-    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
-    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
-    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
-    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Key text size</string>
-    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Key shadow size</string>
-    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Key icon size multiplier</string>
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">ضبابية الخلفية</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">مدة الاهتزاز عند الضغط على الزر</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">ارتفاع لوحة المفاتيح</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">مدة الضغط المطول</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">حشو الزر</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">دوران الحواف</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">حجم نص الزر</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">حجم ظل الزر</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">حجم أيقونة الزر</string>
     <!-- Backup/Restore options -->
-    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
-    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
-    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restore</string>
-    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">All items</string>
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">نسخ احتياطي واستعادة</string>
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">نسخ احتياطي</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">استعادة</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">جميع العناصر</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
