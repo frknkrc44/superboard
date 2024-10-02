@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Setup wizard resources -->
-    <string name="wizard_welcome">Welcome to %s setup wizard!</string>
-    <string name="wizard_nextbtn">Next</string>
-    <string name="wizard_enable">Enable keyboard from settings</string>
-    <string name="wizard_enablebtn">Open system settings</string>
-    <string name="wizard_select">Select %s as your default keyboard</string>
-    <string name="wizard_selectbtn">Open keyboard selection popup</string>
-    <string name="wizard_settings">Customize your keyboard</string>
-    <string name="wizard_settingsbtn">Open keyboard settings</string>
-    <string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
-    <string name="wizard_finishbtn">Finish</string>
+    <string name="wizard_welcome">آهلا بك في إعداد %s!</string>
+    <string name="wizard_nextbtn">التالي</string>
+    <string name="wizard_enable">قم بتفعيل لوحة المفاتيح</string>
+    <string name="wizard_enablebtn">افتح الإعدادات</string>
+    <string name="wizard_select">اختر %s كلوحة مفاتيح افتراضية</string>
+    <string name="wizard_selectbtn">افتح الإعدادات</string>
+    <string name="wizard_settings">خصص لوحة المفاتيح الخاصة بك</string>
+    <string name="wizard_settingsbtn">فتح إعدادات لوحة المفاتيح</string>
+    <string name="wizard_finish">هنيئاً، لقد انتهيت من الإعداد</string>
+    <string name="wizard_finishbtn">إنهاء</string>
     <string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
     <!-- Settings resources -->
-    <string name="settings_activity">Settings</string>
-    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Keyboard background image</string>
-    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Show character while typing</string>
-    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Use transparent background at navbar</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
-    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
-    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
-    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
-    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
-    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
-    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
-    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
-    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
+    <string name="settings_activity">الإعدادات</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">صورة خلفية لوحة المفاتيح</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">إظهار الحروف أثناء الكتابة</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">استخدام خلفية شفافة في شريط التنقل</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">جعل شريط التنقل شفاف بالكامل</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">تطبيق اللون على شريط المهام (يتطلب Android 9 فما فوق)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">إلغاء تفعيل القائمة المنبثقة</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">إلغاء تفعيل تكرار الحرف عند الضغط المطول</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">إلغاء تفعيل الصف العلوي</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">إخفاء ازرار الوظائف في الصف العلوي</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">تفعيل الحافظة</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">إلغاء تفعيل اقتراح الكلمات</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">إلغاء تفعيل صف الأرقام (تجريبي)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
