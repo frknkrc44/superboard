@@ -3,19 +3,19 @@
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">آهلا بك في إعداد %s!</string>
     <string name="wizard_nextbtn">التالي</string>
-    <string name="wizard_enable">قم بتفعيل لوحة المفاتيح</string>
+    <string name="wizard_enable">تفعيل لوحة المفاتيح</string>
     <string name="wizard_enablebtn">افتح الإعدادات</string>
     <string name="wizard_select">اختر %s كلوحة مفاتيح افتراضية</string>
     <string name="wizard_selectbtn">افتح الإعدادات</string>
     <string name="wizard_settings">خصص لوحة المفاتيح الخاصة بك</string>
     <string name="wizard_settingsbtn">فتح إعدادات لوحة المفاتيح</string>
-    <string name="wizard_finish">هنيئاً، لقد انتهيت من الإعداد</string>
+    <string name="wizard_finish">هنيئاً، لقد انتهيت من الإعداد!</string>
     <string name="wizard_finishbtn">إنهاء</string>
-    <string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
+    <string name="keyboard_theme_api_perm_label">رمز API لثيمات المستخدم لFbard</string>
     <!-- Settings resources -->
     <string name="settings_activity">الإعدادات</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">صورة خلفية لوحة المفاتيح</string>
-    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">إظهار الحروف أثناء الكتابة</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">إظهار الحروف في أثناء الكتابة</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">استخدام خلفية شفافة في شريط التنقل</string>
     <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">جعل شريط التنقل شفاف بالكامل</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">تطبيق اللون على شريط المهام (يتطلب Android 9 فما فوق)</string>
@@ -62,7 +62,7 @@
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">خط لوحة المفاتيح</string>
     <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">سمة لوحة المفاتيح</string>
     <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">سمة الأيقونات</string>
-    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">شكل زر المسافة</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">نص زر المسافة</string>
     <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">نوع الخلفية</string>
     <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">اتجاه تدرج الخلفية</string>
     <!-- Number selector resources -->
@@ -82,7 +82,7 @@
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">جميع العناصر</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
-    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">اختيار ملف</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd)</string>
     <string name="settings_dict_importing">Importing, please don\'t close this app</string>
@@ -113,19 +113,19 @@
         <item>Custom (in app data folder)</item>
     </string-array>
     <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
-        <item>Default</item>
+        <item>افتراضي</item>
         <item>Material</item>
         <item>Apricot</item>
     </string-array>
     <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
         <item>Theme default</item>
-        <item>Selected language</item>
+        <item>اللغة المحددة</item>
         <item>Daisy</item>
-        <item>Space bar</item>
-        <item>Empty</item>
+        <item>زر المسافة</item>
+        <item>فارغ</item>
     </string-array>
     <string-array name="settings_categories">
-        <item>General</item>
+        <item>عام</item>
         <item>Theming</item>
         <item>Advanced Theming</item>
     </string-array>
