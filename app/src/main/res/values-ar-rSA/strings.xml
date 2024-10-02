@@ -90,21 +90,21 @@
     <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
-        <item>Regular</item>
-        <item>Bold</item>
-        <item>Italic</item>
-        <item>Bold Italic</item>
+        <item>عادي</item>
+        <item>عريض</item>
+        <item>مائل</item>
+        <item>عريض مائل</item>
         <item>Condensed</item>
-        <item>Condensed Bold</item>
-        <item>Condensed Italic</item>
-        <item>Condensed Bold Italic</item>
+        <item>Condensed عريض</item>
+        <item>Condensed مائل</item>
+        <item>Condensed عريض مائل</item>
         <item>Serif</item>
-        <item>Serif Bold</item>
-        <item>Serif Italic</item>
-        <item>Serif Bold Italic</item>
+        <item>Serif عريض</item>
+        <item>Serif مائل</item>
+        <item>Serif عرض مائل</item>
         <item>Monospace</item>
-        <item>Monospace Bold</item>
-        <item>Monospace Italic</item>
+        <item>Monospace عريض</item>
+        <item>Monospace مائل</item>
         <item>Monospace Bold Italic</item>
         <item>Serif Monospace</item>
         <item>Serif Monospace Bold</item>
