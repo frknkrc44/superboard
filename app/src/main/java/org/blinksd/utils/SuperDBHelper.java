@@ -151,6 +151,13 @@ public final class SuperDBHelper {
         return Integer.parseInt(getStringOrDefault(key));
     }
 
+    public static void removeKey(String key) {
+        SuperMiniDB db = SuperBoardApplication.getAppDB();
+        if (db.isDBContainsKey(key)) {
+            db.removeKeyFromDB(key);
+        }
+    }
+
     public static void importAllFromJSON(JSONObject json) throws JSONException {
         Map<String, String> importMap = new HashMap<>();
         Iterator<String> it = json.keys();

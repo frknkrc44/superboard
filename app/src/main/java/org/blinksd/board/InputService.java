@@ -545,12 +545,16 @@ public final class InputService extends InputMethodService implements
                     clipboardView = new ClipboardView(superBoardView);
                     clipboardView.setVisibility(View.GONE);
                     keyboardLayoutHolder.addView(clipboardView);
-                } else if (!enableClipboard && clipboardView != null) {
-                    clipboardView.clearClipboard();
-                    clipboardView.deInit();
-                    keyboardLayoutHolder.removeView(clipboardView);
-                    clipboardView = null;
-                    System.gc();
+                } else if (!enableClipboard) {
+                    if (clipboardView != null) {
+                        clipboardView.clearClipboard();
+                        clipboardView.deInit();
+                        keyboardLayoutHolder.removeView(clipboardView);
+                        clipboardView = null;
+                        System.gc();
+                    }
+
+                    SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
                 }
 
                 if (clipboardView != null) {
