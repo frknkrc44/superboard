@@ -70,8 +70,16 @@ public class SettingMap extends ListedMap<String, SettingItem> {
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
-        putGeneral(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
+        putKbdLayout(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
+        putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
+        putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
+        putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
+        putKbdLayout(SET_KEY_PADDING, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_RADIUS, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_TEXTSIZE, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_SHADOWSIZE, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_ICON_SIZE_MULTIPLIER, SettingType.MM_DECIMAL_NUMBER);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
         putThemingAdvanced(SET_THEME_PRESET, SettingType.THEME_SELECTOR);
@@ -81,35 +89,32 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
         }
         putThemingAdvanced(SET_KEYBOARD_BGIMG, SettingType.IMAGE);
-        putGeneral(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
-        putGeneral(SET_PLAY_SND_PRESS, SettingType.BOOL);
-        putGeneral(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
+        putPopup(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
+        putKbdLayout(SET_PLAY_SND_PRESS, SettingType.BOOL);
+        putKbdLayout(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
         if (!SystemUtils.isNotColorizeNavbar()) {
             putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
             putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
         }
         if (Build.VERSION.SDK_INT >= 28)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
-        putGeneral(SET_DISABLE_POPUP, SettingType.BOOL);
-        putGeneral(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
-        putGeneral(SET_DISABLE_REPEAT, SettingType.BOOL);
-        putGeneral(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
-        putGeneral(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putGeneral(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
-        putGeneral(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putPopup(SET_DISABLE_POPUP, SettingType.BOOL);
+        putPopup(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
+        putKbdLayout(SET_DISABLE_REPEAT, SettingType.BOOL);
+        putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
+        putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putTopBar(SET_ENABLE_CLIPBOARD, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
+        putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         if (Build.VERSION.SDK_INT >= 31)
             putTheming(SET_USE_MONET, SettingType.BOOL);
-        putGeneral(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
+        putKbdLayout(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
         putGeneral(SET_ENFORCE_DETECT_CAPSLOCK, SettingType.BOOL, SET_DETECT_CAPSLOCK, true);
         putGeneral(SET_ENFORCE_EDITOR_ACTION, SettingType.BOOL);
         putGeneral(SET_PREVENT_KBD_CLOSE, SettingType.BOOL);
         putGeneral(SET_KILL_BACKGROUND, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGBLUR, SettingType.DECIMAL_NUMBER);
-        putGeneral(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
-        putGeneral(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
-        putGeneral(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
         putThemingAdvanced(SET_KEYBOARD_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY2_BGCLR, SettingType.COLOR_SELECTOR);
@@ -119,11 +124,6 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putThemingAdvanced(SET_ENTER_PRESS_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_SHADOWCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_TEXTCLR, SettingType.COLOR_SELECTOR);
-        putTheming(SET_KEY_PADDING, SettingType.FLOAT_NUMBER);
-        putTheming(SET_KEY_RADIUS, SettingType.FLOAT_NUMBER);
-        putTheming(SET_KEY_TEXTSIZE, SettingType.FLOAT_NUMBER);
-        putTheming(SET_KEY_SHADOWSIZE, SettingType.FLOAT_NUMBER);
-        putTheming(SET_KEY_ICON_SIZE_MULTIPLIER, SettingType.MM_DECIMAL_NUMBER);
     }
 
     private void putGeneral(String name, SettingType type) {
@@ -131,6 +131,27 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
     private void putGeneral(String name, SettingType type, String dependency, Object dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.GENERAL, type, dependency, dependencyEnabled));
+    }
+
+    private void putKbdLayout(String name, SettingType type) {
+        putKbdLayout(name, type, null, null);
+    }
+    private void putKbdLayout(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.KBD_LAYOUT, type, dependency, dependencyEnabled));
+    }
+
+    private void putPopup(String name, SettingType type) {
+        putPopup(name, type, null, null);
+    }
+    private void putPopup(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.POPUP, type, dependency, dependencyEnabled));
+    }
+
+    private void putTopBar(String name, SettingType type) {
+        putTopBar(name, type, null, null);
+    }
+    private void putTopBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.TOP_BAR, type, dependency, dependencyEnabled));
     }
 
     private void putTheming(String name, SettingType type) {
