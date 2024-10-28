@@ -126,8 +126,11 @@
     </string-array>
     <string-array name="settings_categories">
         <item>General</item>
-        <item>Mövzular</item>
-        <item>Təkmil Mövzu</item>
+        <item>Keyboard Layout</item>
+        <item>Popup</item>
+        <item>Top Bar</item>
+        <item>Theming</item>
+        <item>Advanced Theming</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Düz</item>
