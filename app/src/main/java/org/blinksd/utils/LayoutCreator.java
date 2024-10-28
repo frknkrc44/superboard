@@ -180,21 +180,8 @@ public final class LayoutCreator {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             sw.setThumbResource(R.drawable.switch_thumb);
             sw.setTrackResource(R.drawable.switch_track);
-        }
-
-        int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                ? ctx.getResources().getColor(android.R.color.system_accent1_200, ctx.getTheme())
-                : ColorUtils.getAccentColor();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sw.getThumbDrawable().setTint(tint);
-            sw.getTrackDrawable().setTint(tint);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            DrawableUtils.setColorFilter(sw.getThumbDrawable(), tint);
-            DrawableUtils.setColorFilter(sw.getTrackDrawable(), tint);
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            setSwitchThumbAPI14(sw, tint);
+        } else {
+            setSwitchThumbAPI14(sw);
         }
 
         return sw;
@@ -204,16 +191,14 @@ public final class LayoutCreator {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @SuppressWarnings("deprecation")
     @SuppressLint("DiscouragedPrivateApi")
-    private static void setSwitchThumbAPI14(Switch switchWidget, int tint) {
+    private static void setSwitchThumbAPI14(Switch switchWidget) {
         try {
             Field thumbField = Switch.class.getDeclaredField("mThumbDrawable");
             Drawable thumbDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_thumb);
-            DrawableUtils.setColorFilter(thumbDrawable, tint);
             thumbField.set(switchWidget, thumbDrawable);
 
             Field trackField = Switch.class.getDeclaredField("mTrackDrawable");
             Drawable trackDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_track);
-            DrawableUtils.setColorFilter(trackDrawable, tint);
             trackField.set(switchWidget, trackDrawable);
         } catch (Throwable ignored) {}
     }
