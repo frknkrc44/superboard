@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Setup wizard resources -->
-    <string name="wizard_welcome">Welcome to %s setup wizard!</string>
-    <string name="wizard_nextbtn">Next</string>
-    <string name="wizard_enable">Enable keyboard from settings</string>
-    <string name="wizard_enablebtn">Open system settings</string>
-    <string name="wizard_select">Select %s as your default keyboard</string>
-    <string name="wizard_selectbtn">Open keyboard selection popup</string>
-    <string name="wizard_settings">Customize your keyboard</string>
-    <string name="wizard_settingsbtn">Open keyboard settings</string>
+    <string name="wizard_welcome">Willkommen beim %s Einrichtungsassistenten!</string>
+    <string name="wizard_nextbtn">Weiter</string>
+    <string name="wizard_enable">Tastatur in den Einstellungen aktivieren</string>
+    <string name="wizard_enablebtn">Systemeinstellungen öffnen</string>
+    <string name="wizard_select">Wählen Sie %s als Standard-Tastatur aus</string>
+    <string name="wizard_selectbtn">Tastaturauswahl öffnen</string>
+    <string name="wizard_settings">Passen Sie Ihre Tastatur an</string>
+    <string name="wizard_settingsbtn">Tastatur-Einstellungen öffnen</string>
     <string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
-    <string name="wizard_finishbtn">Finish</string>
-    <string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
+    <string name="wizard_finishbtn">Fertig</string>
+    <string name="keyboard_theme_api_perm_label">API-Zugriff für FBoard-Benutzer</string>
     <!-- Settings resources -->
-    <string name="settings_activity">Settings</string>
-    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Keyboard background image</string>
-    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Show character while typing</string>
-    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Use transparent background at navbar</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
-    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
-    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
-    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
-    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
-    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
+    <string name="settings_activity">Einstellungen</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Hintergrundbild der Tastatur</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Beim Tippen Zeichen anzeigen</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Verwende transparenten Hintergrund in der Navigationsleiste</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Navigationsleiste vollständig transparent machen</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Farbe auf die Navigationsleiste anwenden (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Pop-up-Menü deaktivieren</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Zeichenwiederholung bei langem Drücken deaktivieren</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Obere Leiste deaktivieren</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Blende obere Funktionstasten aus</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
