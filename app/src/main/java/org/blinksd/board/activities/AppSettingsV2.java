@@ -33,6 +33,7 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SystemUtils;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -64,12 +65,16 @@ public final class AppSettingsV2 extends Activity {
         super.onCreate(b);
         main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
 
-        if (Build.VERSION.SDK_INT >= 31) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getWindow().getDecorView().setFitsSystemWindows(true);
             main.setFitsSystemWindows(false);
             getWindow().setNavigationBarColor(0);
             getWindow().setStatusBarColor(0);
             getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
+
+            if (Build.VERSION.SDK_INT >= 36 || "Baklava".equals(Build.VERSION.RELEASE_OR_CODENAME)) {
+                main.setPadding(0, SystemUtils.statusBarH(this), 0, 0);
+            }
         }
 
         try {

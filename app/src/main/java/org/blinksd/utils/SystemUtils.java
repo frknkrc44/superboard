@@ -3,10 +3,12 @@ package org.blinksd.utils;
 import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.KeyCharacterMap;
@@ -98,6 +100,24 @@ public final class SystemUtils {
     }
 
     /** @noinspection JavaReflectionMemberAccess*/
+    @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
+    public static int statusBarH(Activity ctx) {
+        Resources res = ctx.getResources();
+        int resourceId = 0;
+
+        try {
+            resourceId = android.R.dimen.class
+                    .getDeclaredField("status_bar_height").getInt(null);
+        } catch (Throwable ignored) {
+            resourceId = ctx.getResources().getIdentifier(
+                    "status_bar_height", "dimen", "android");
+        }
+
+        return resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0;
+    }
+
+    /** @noinspection JavaReflectionMemberAccess*/
+    @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
     public static int navbarH(Context ctx) {
         if (isColorized()) {
             if (!isGesturesEnabled() && isLand(ctx) && !isTablet(ctx)) return 0;
@@ -109,7 +129,10 @@ public final class SystemUtils {
             try {
                 resourceId = android.R.dimen.class
                         .getDeclaredField("navigation_bar_height").getInt(null);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+                resourceId = ctx.getResources().getIdentifier(
+                        "navigation_bar_height", "dimen", "android");
+            }
 
             return resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0;
         }
