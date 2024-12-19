@@ -2,17 +2,10 @@ package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.widget.AbsSeekBar;
 import android.widget.LinearLayout;
@@ -20,8 +13,6 @@ import android.widget.SeekBar;
 
 import org.blinksd.board.R;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.DrawableUtils;
-import org.blinksd.utils.ResourcesUtils;
 
 import java.lang.reflect.Field;
 
@@ -71,8 +62,12 @@ final class CustomSeekBar extends SeekBar {
             progress = (GradientDrawable) progressClip.getDrawable();
         } else {
             try {
-                Object clipState = ClipDrawable.class.getDeclaredField("mClipState").get(progressClip);
-                progress = (GradientDrawable) clipState.getClass().getDeclaredField("mDrawable").get(clipState);
+                Field clipStateField = ClipDrawable.class.getDeclaredField("mClipState");
+                clipStateField.setAccessible(true);
+                Object clipState = clipStateField.get(progressClip);
+                Field clipMDrawableField = clipState.getClass().getDeclaredField("mDrawable");
+                clipMDrawableField.setAccessible(true);
+                progress = (GradientDrawable) clipMDrawableField.get(clipState);
             } catch (Throwable ignore) {}
         }
 
