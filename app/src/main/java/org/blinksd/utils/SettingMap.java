@@ -94,7 +94,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
         if (!SystemUtils.isNotColorizeNavbar()) {
             putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
-            putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
+            putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR, true);
         }
         if (Build.VERSION.SDK_INT >= 28)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
