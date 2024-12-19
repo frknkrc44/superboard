@@ -82,6 +82,10 @@
     <string name="settings_dict_importing">Mengimpor, mohon jangan tutup aplikasi ini</string>
     <string name="settings_dict_import_count">%s kata diimpor</string>
     <string name="settings_dict_import_delete_duplicates">Menghapus duplikat</string>
+    <!-- Settings category resources -->
+    <string name="settings_category_general">Umum</string>
+    <string name="settings_category_theming">Tema</string>
+    <string name="settings_category_theming_adv">Tema Tingkat Lanjut</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Reguler</item>
@@ -117,11 +121,6 @@
         <item>Bunga aster</item>
         <item>Bilah spasi</item>
         <item>Kosong</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>Umum</item>
-        <item>Tema</item>
-        <item>Tema Tingkat Lanjut</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Datar</item>

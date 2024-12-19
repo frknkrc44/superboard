@@ -94,6 +94,14 @@
 	<string name="settings_dict_importing">İçe aktarılıyor, lütfen bu uygulamayı kapatmayın</string>
 	<string name="settings_dict_import_count">%s kelime içe aktarıldı</string>
 	<string name="settings_dict_import_delete_duplicates">Fazlalıklar siliniyor</string>
+
+	<!-- Settings category resources -->
+	<string name="settings_category_general">Genel</string>
+	<string name="settings_category_theming">Temalama</string>
+	<string name="settings_category_theming_adv">Gelişmiş Temalama</string>
+	<string name="settings_category_layout">Klavye Düzeni</string>
+	<string name="settings_category_popup">Açılır Pencere</string>
+	<string name="settings_category_top_bar">Üst Çubuk</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_icon_theme"
@@ -110,12 +118,6 @@
 		<item>Papatya</item>
 		<item>Boşluk tuşu</item>
 		<item>Boş</item>
-	</string-array>
-	
-	<string-array name="settings_categories">
-		<item>Genel</item>
-		<item>Temalama</item>
-		<item>Gelişmiş Temalama</item>
 	</string-array>
 
 	<string-array name="settings_key_bg_type"

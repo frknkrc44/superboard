@@ -118,11 +118,6 @@
         <item>Space bar</item>
         <item>Empty</item>
     </string-array>
-    <string-array name="settings_categories">
-        <item>General</item>
-        <item>Theming</item>
-        <item>Advanced Theming</item>
-    </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Flat</item>
         <item>Gradient</item>

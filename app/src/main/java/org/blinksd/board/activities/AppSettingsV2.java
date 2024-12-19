@@ -39,7 +39,7 @@ import java.io.File;
 import java.util.concurrent.Executors;
 
 @SuppressWarnings("deprecation")
-public final class AppSettingsV2 extends Activity {
+public final class AppSettingsV2 extends BaseActivity {
     private LinearLayout main;
     public SuperBoard kbdPreview;
     private ImageView backgroundImageView;
@@ -64,18 +64,6 @@ public final class AppSettingsV2 extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
-            main.setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
-
-            if (Build.VERSION.SDK_INT >= 36 || "Baklava".equals(Build.VERSION.RELEASE_OR_CODENAME)) {
-                main.setPadding(0, SystemUtils.statusBarH(this), 0, 0);
-            }
-        }
 
         try {
             createMainView();

@@ -19,12 +19,13 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.SystemUtils;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.TextType;
 
 @SuppressWarnings("deprecation")
-public final class FontSelector extends Activity implements View.OnClickListener {
+public final class FontSelector extends BaseActivity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
     private String[] fontTypeTranslations;
     private int currentFont;
@@ -34,17 +35,7 @@ public final class FontSelector extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         fontTypeTranslations = getResources().getStringArray(R.array.settings_keyboard_texttype_select);
         currentFont = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
-        View main = createMainLayout();
-
-        if (Build.VERSION.SDK_INT >= 31) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
-            main.setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
-        }
-
-        setContentView(main);
+        setContentView(createMainLayout());
     }
 
     private View createMainLayout() {

@@ -82,6 +82,10 @@
     <string name="settings_dict_importing">Import edilir, lütfən, bu proqramı bağlamayın</string>
     <string name="settings_dict_import_count">%s söz idxal edildi</string>
     <string name="settings_dict_import_delete_duplicates">Dublikatların silinməsi</string>
+    <!-- Settings category resources -->
+    <string name="settings_category_general">General</string>
+    <string name="settings_category_theming">Mövzular</string>
+    <string name="settings_category_theming_adv">Təkmil Mövzu</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Daimi</item>
@@ -117,11 +121,6 @@
         <item>Papatya</item>
         <item>Boşluq çubuğu</item>
         <item>Boş</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>General</item>
-        <item>Mövzular</item>
-        <item>Təkmil Mövzu</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Düz</item>

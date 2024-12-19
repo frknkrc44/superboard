@@ -82,6 +82,10 @@
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
     <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
     <string name="settings_dict_import_delete_duplicates">ডুপ্লিকেট মুছে ফেলা হচ্ছে</string>
+    <!-- Settings category resources -->
+    <string name="settings_category_general">সাধারণ</string>
+    <string name="settings_category_theming">থিমিং</string>
+    <string name="settings_category_theming_adv">উন্নত থিমিং</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>নিয়মিত</item>
@@ -117,11 +121,6 @@
         <item>ফ্ুলপাছ</item>
         <item>স্পেস বার</item>
         <item>খালি</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>সাধারণ</item>
-        <item>থিমিং</item>
-        <item>উন্নত থিমিং</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>ফ্ল্যাট</item>
