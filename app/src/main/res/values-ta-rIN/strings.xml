@@ -88,6 +88,13 @@
     <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
     <string name="settings_dict_import_count">%s சொல் அகராதியில் சேர்க்கப்பட்டது</string>
     <string name="settings_dict_import_delete_duplicates">நகல்கள் நீக்கப்படுகின்றன</string>
+    <!-- Settings category resources -->
+    <string name="settings_category_general">General</string>
+    <string name="settings_category_theming">Theming</string>
+    <string name="settings_category_theming_adv">Advanced Theming</string>
+    <string name="settings_category_layout">Keyboard Layout</string>
+    <string name="settings_category_popup">Popup</string>
+    <string name="settings_category_top_bar">Top Bar</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>வழக்கமான</item>
@@ -125,12 +132,12 @@
         <item>வெறுமை</item>
     </string-array>
     <string-array name="settings_categories">
-        <item>பொது அமைப்புகள்</item>
-        <item>Keyboard Layout</item>
-        <item>Popup</item>
-        <item>Top Bar</item>
-        <item>Theming</item>
-        <item>Advanced Theming</item>
+        <item>@string/settings_category_general</item>
+        <item>@string/settings_category_layout</item>
+        <item>@string/settings_category_popup</item>
+        <item>@string/settings_category_top_bar</item>
+        <item>@string/settings_category_theming</item>
+        <item>@string/settings_category_theming_adv</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>தட்டையான</item>
