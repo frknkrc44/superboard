@@ -1,8 +1,6 @@
 package org.blinksd.board.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -19,7 +17,6 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.SystemUtils;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.TextType;

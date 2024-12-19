@@ -4,7 +4,6 @@ import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SystemUtils;
 
 import java.io.File;
 import java.util.concurrent.Executors;
