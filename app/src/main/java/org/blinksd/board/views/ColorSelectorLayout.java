@@ -146,9 +146,9 @@ public final class ColorSelectorLayout extends LinearLayout {
         g = new CustomSeekBar(ctx);
         b = new CustomSeekBar(ctx);
 
-        changeSeekBarColor(r, Color.rgb(0xDE, 0, 0));
-        changeSeekBarColor(g, Color.rgb(0, 0xDE, 0));
-        changeSeekBarColor(b, Color.rgb(0, 0, 0xDE));
+        r.setProgressColor(Color.rgb(0xDE, 0, 0));
+        g.setProgressColor(Color.rgb(0, 0xDE, 0));
+        b.setProgressColor(Color.rgb(0, 0, 0xDE));
 
         setPreview(prev);
 
@@ -347,10 +347,4 @@ public final class ColorSelectorLayout extends LinearLayout {
                 ? String.format("%s\n(%s, %s, %s, %s)", hexColor, a, r, g, b)
                 : hexColor;
     }
-
-    private void changeSeekBarColor(CustomSeekBar s, int c) {
-        s.getThumb().setColorFilter(c, PorterDuff.Mode.SRC_ATOP);
-        s.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_ATOP);
-    }
-
 }
