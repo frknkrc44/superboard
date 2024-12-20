@@ -57,7 +57,8 @@
     <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">படத்தைத் தேர்ந்தெடு</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">வால்பேப்பரை எடுத்துக்கொள்</string>
     <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">சுழற்று</string>
-    <string name="settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">You\'re using a live wallpaper, loading thumbnail…</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">விசைப்பலகை மொழி</string>
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">விசைப்பலகை எழுத்துரு</string>
