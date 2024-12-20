@@ -2,6 +2,7 @@ package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -36,7 +37,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         btn.setLayoutParams(lp);
         btn.setId(android.R.id.text1);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(0xFFFFFFFF);
+        btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
         addView(img);
         addView(btn);
@@ -45,13 +46,13 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         switch (index) {
             case -1:
                 img.setImageResource(android.R.drawable.ic_input_add);
-                img.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_add_item"));
                 setOnClickListener(gradientAddColorListener);
                 return;
             case -2:
                 img.setImageResource(android.R.drawable.ic_media_next);
-                img.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_change_orientation"));
                 setOnClickListener(gradientAddColorListener);
                 return;
@@ -65,7 +66,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
         del.setImageResource(R.drawable.sym_keyboard_close);
-        del.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+        del.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
         del.setOnClickListener(gradientDelColorListener);

@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -441,7 +442,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
         img.setId(android.R.id.text1);
         int size = (int) getListPreferredItemHeight();
         img.setGravity(Gravity.CENTER);
-        img.setTextColor(0xFFFFFFFF);
+        img.setTextColor(Color.WHITE);
         img.setText(isFloat
                 ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
                 : String.valueOf(num));
@@ -450,7 +451,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
         img.setPadding(pad, pad, pad, pad);
         TextView btn = LayoutCreator.createTextView(mContext);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(0xFFFFFFFF);
+        btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
         btn.setText(getTranslation(key));
         numSelector.setTag(key);
@@ -478,7 +479,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
         img.setImageDrawable(gd);
         TextView btn = LayoutCreator.createTextView(mContext);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(0xFFFFFFFF);
+        btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
         btn.setText(getTranslation(key));
         colSelector.setTag(key);
@@ -492,7 +493,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
     private View createImageSelector(String key) {
         TextView btn = LayoutCreator.createTextView(mContext);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(0xFFFFFFFF);
+        btn.setTextColor(Color.WHITE);
         btn.setMinHeight((int) getListPreferredItemHeight());
         btn.setText(getTranslation(key));
         btn.setTag(key);

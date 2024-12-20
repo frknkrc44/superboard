@@ -13,6 +13,7 @@ import org.blinksd.board.SuperBoardApplication;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 @SuppressWarnings({"unused", "deprecation"})
 public final class ImageUtils {
@@ -83,31 +84,27 @@ public final class ImageUtils {
             return bmp;
         } catch (Throwable t) {
             // switch to old method on exception
-            return fastBlur(bmp, 1, radius);
+            return fastBlur(bmp, radius);
         }
     }
 
     @SuppressLint("PrivateApi")
-    private static void setupDiskCache(Context ctx) {
+    private static void setupDiskCache(Context ctx) throws Throwable {
         // Reflection is lifesaver ^-^
-        try {
-            Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
-            Method mt = clazz.getMethod("setupDiskCache", File.class);
-            mt.setAccessible(true);
-            mt.invoke(null, ctx.getCacheDir());
-        } catch (Throwable ignored) {}
+        Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
+        Method mt = clazz.getMethod("setupDiskCache", File.class);
+        mt.setAccessible(true);
+        mt.invoke(null, ctx.getCacheDir());
     }
 
-    private static Bitmap fastBlur(Bitmap sentBitmap, float scale, int radius) {
+    private static Bitmap fastBlur(Bitmap sentBitmap, int radius) {
         if (sentBitmap == null) return null;
         try {
             int rsum, gsum, bsum, x, y, i, p, yp, yi, yw, stackpointer,
                     stackstart, rbs, routsum, goutsum, boutsum, rinsum, ginsum, binsum;
-            int width = Math.round(sentBitmap.getWidth() * scale);
-            int height = Math.round(sentBitmap.getHeight() * scale);
-            if (scale != 1)
-                sentBitmap = Bitmap.createScaledBitmap(sentBitmap, width, height, false);
-            Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            int width = sentBitmap.getWidth();
+            int height = sentBitmap.getHeight();
+            Bitmap bitmap = sentBitmap.copy(Objects.requireNonNull(sentBitmap.getConfig()), true);
             if (radius < 1) return null;
             int w = bitmap.getWidth();
             int h = bitmap.getHeight();
