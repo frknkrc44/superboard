@@ -176,12 +176,13 @@ public final class ColorSelectorLayout extends LinearLayout {
             }
         };
 
-        for (CustomSeekBar v : new CustomSeekBar[]{r, g, b}) {
+        for (CustomSeekBar v : new CustomSeekBar[]{a, r, g, b}) {
             v.setOnSeekBarChangeListener(opc);
-            ll.addView(v);
+            int pad = DensityUtils.dpInt(8);
+            v.setPadding(pad * 2, pad, pad * 2, pad);
+            if (v.getParent() == null) ll.addView(v);
         }
 
-        a.setOnSeekBarChangeListener(opc);
         return ll;
     }
 
@@ -226,6 +227,8 @@ public final class ColorSelectorLayout extends LinearLayout {
         };
         for (CustomSeekBar y : new CustomSeekBar[]{h, s, v}) {
             y.setOnSeekBarChangeListener(opc);
+            int pad = DensityUtils.dpInt(8);
+            y.setPadding(pad * 2, pad, pad * 2, pad);
             ll.addView(y);
         }
         return ll;
