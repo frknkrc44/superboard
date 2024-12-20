@@ -3,7 +3,6 @@ package org.blinksd.utils;
 import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -67,7 +66,7 @@ public final class SystemUtils {
         return v;
     }
 
-    public static int findGestureHeight(Context ctx) {
+    private static int findGestureHeight(Context ctx) {
         try {
             if (SDK_INT >= 29) {
                 if (SDK_INT > 30) {
@@ -96,23 +95,6 @@ public final class SystemUtils {
         } catch (Throwable t) {
             return false;
         }
-    }
-
-    /** @noinspection JavaReflectionMemberAccess*/
-    @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
-    public static int statusBarH(Activity ctx) {
-        Resources res = ctx.getResources();
-        int resourceId;
-
-        try {
-            resourceId = android.R.dimen.class
-                    .getDeclaredField("status_bar_height").getInt(null);
-        } catch (Throwable ignored) {
-            resourceId = ctx.getResources().getIdentifier(
-                    "status_bar_height", "dimen", "android");
-        }
-
-        return resourceId > 0 ? res.getDimensionPixelSize(resourceId) : 0;
     }
 
     /** @noinspection JavaReflectionMemberAccess*/

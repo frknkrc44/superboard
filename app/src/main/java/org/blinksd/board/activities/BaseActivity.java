@@ -5,8 +5,6 @@ import android.os.Build;
 import android.view.View;
 import android.view.WindowManager;
 
-import org.blinksd.utils.SystemUtils;
-
 @SuppressWarnings("deprecation")
 class BaseActivity extends Activity {
     public void recreate() {
@@ -30,7 +28,10 @@ class BaseActivity extends Activity {
                 getWindow().getAttributes().layoutInDisplayCutoutMode =
                         WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
-                main.setPadding(0, SystemUtils.statusBarH(this), 0, SystemUtils.navbarH(this));
+                main.setOnApplyWindowInsetsListener((v, insets) -> {
+                    main.setPadding(0, insets.getSystemWindowInsetTop(), 0, insets.getSystemWindowInsetBottom());
+                    return insets;
+                });
             } else {
                 getWindow().setNavigationBarColor(0);
                 getWindow().setStatusBarColor(0);

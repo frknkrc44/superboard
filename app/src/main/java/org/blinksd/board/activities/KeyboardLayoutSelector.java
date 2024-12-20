@@ -2,7 +2,6 @@ package org.blinksd.board.activities;
 
 import static org.blinksd.utils.DensityUtils.mpInt;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
