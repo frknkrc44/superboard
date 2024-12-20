@@ -189,7 +189,6 @@ public final class AppSettingsV2 extends BaseActivity {
 
     }
 
-    /** @noinspection unused*/
     private static class PreviewBoard extends SuperBoard {
         public PreviewBoard(Context c) {
             super(c);

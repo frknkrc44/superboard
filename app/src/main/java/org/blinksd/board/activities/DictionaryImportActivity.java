@@ -80,7 +80,6 @@ public final class DictionaryImportActivity extends Activity {
     public void onBackPressed() {
     }
 
-    /** @noinspection unused*/
     private class DictLoadTask implements DictionaryDB.OnSaveProgressListener {
 
         @Override
@@ -160,7 +159,6 @@ public final class DictionaryImportActivity extends Activity {
             return 2;
         }
 
-        @SuppressWarnings("unused")
         protected void onPostExecute(Void result) {
             finish();
         }

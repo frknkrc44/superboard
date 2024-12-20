@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
 public final class ThemeUtils {
     public static final int KEY_BG_TYPE_FLAT     = 0,
                             KEY_BG_TYPE_GRADIENT = 1;
@@ -65,28 +64,6 @@ public final class ThemeUtils {
             }
         }
         return null;
-    }
-
-    public static ThemeHolder getThemeFromCodeName(List<ThemeHolder> themes, String name) {
-        for (ThemeHolder holder : themes) {
-            if (holder.codeName.equals(name)) {
-                return holder;
-            }
-        }
-        return null;
-    }
-
-    public static int getThemeIndexFromCodeName(List<ThemeHolder> themes, String name) {
-        for (int i = 0; i < themes.size(); i++) {
-            if (themes.get(i).codeName.equals(name)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static List<String> getThemeNames() throws IOException, JSONException {
-        return getThemeNames(getThemes());
     }
 
     public static List<String> getThemeNames(List<ThemeHolder> themes) {
@@ -195,10 +172,6 @@ public final class ThemeUtils {
         return export;
     }
 
-    public static ThemeHolder fromCurrentTheme() {
-        return new ThemeHolder(getCurrentThemeJSON(), true);
-    }
-
     public static class ThemeHolder {
         public final String name, codeName, fontType, iconTheme,
                 backgroundColor, primaryColor, secondaryColor,
@@ -208,20 +181,8 @@ public final class ThemeUtils {
                 keyBgType, keyBgGradientOrientation;
         public final boolean isUserTheme;
 
-        public ThemeHolder() throws JSONException {
-            this(true);
-        }
-
         public ThemeHolder(String str) throws JSONException {
             this(new JSONObject(str), true);
-        }
-
-        public ThemeHolder(JSONObject json) {
-            this(json, true);
-        }
-
-        private ThemeHolder(boolean userTheme) throws JSONException {
-            this("{}", userTheme);
         }
 
         private ThemeHolder(String str, boolean userTheme) throws JSONException {

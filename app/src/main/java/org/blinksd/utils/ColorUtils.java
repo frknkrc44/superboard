@@ -1,12 +1,5 @@
 package org.blinksd.utils;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -16,25 +9,15 @@ import android.util.Log;
 
 import org.blinksd.board.SuperBoardApplication;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 // Copied from support library
 // Android Open Source Project
 
-@SuppressWarnings("unused")
 public final class ColorUtils {
-    private static final double XYZ_WHITE_REFERENCE_X = 95.047;
-    private static final double XYZ_WHITE_REFERENCE_Y = 100;
-    private static final double XYZ_WHITE_REFERENCE_Z = 108.883;
-    private static final double XYZ_EPSILON = 0.008856;
-    private static final double XYZ_KAPPA = 903.3;
-
     private static final ThreadLocal<double[]> TEMP_ARRAY = new ThreadLocal<>();
 
     private ColorUtils() {}
 
-    public static int compositeColors(@ColorInt int foreground, @ColorInt int background) {
+    public static int compositeColors(int foreground, int background) {
         int bgAlpha = Color.alpha(background);
         int fgAlpha = Color.alpha(foreground);
         int a = compositeAlpha(fgAlpha, bgAlpha);
@@ -56,8 +39,7 @@ public final class ColorUtils {
         return ((0xFF * fgC * fgA) + (bgC * bgA * (0xFF - fgA))) / (a * 0xFF);
     }
 
-    @FloatRange(from = 0.0, to = 1.0)
-    public static double calculateLuminance(@ColorInt int color) {
+    public static double calculateLuminance(int color) {
         if (Build.VERSION.SDK_INT >= 24)
             return Color.luminance(color);
 
@@ -76,7 +58,7 @@ public final class ColorUtils {
         return result;
     }
 
-    public static double calculateContrast(@ColorInt int foreground, @ColorInt int background) {
+    public static double calculateContrast(int foreground, int background) {
         if (Color.alpha(background) != 255) {
             Log.wtf("ColorUtils", "background can not be translucent: #"
                     + Integer.toHexString(background));
@@ -93,28 +75,11 @@ public final class ColorUtils {
         return Math.max(luminance1, luminance2) / Math.min(luminance1, luminance2);
     }
 
-    public static void colorToLAB(@ColorInt int color, @NonNull double[] outLab) {
-        RGBToLAB(Color.red(color), Color.green(color), Color.blue(color), outLab);
-    }
-
-    public static void RGBToLAB(@IntRange(from = 0x0, to = 0xFF) int r,
-                                @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
-                                @NonNull double[] outLab) {
-        // First we convert RGB to XYZ
-        RGBToXYZ(r, g, b, outLab);
-        // outLab now contains XYZ
-        XYZToLAB(outLab[0], outLab[1], outLab[2], outLab);
-        // outLab now contains LAB representation
-    }
-
-    public static void colorToXYZ(@ColorInt int color, @NonNull double[] outXyz) {
+    public static void colorToXYZ(int color, double[] outXyz) {
         RGBToXYZ(Color.red(color), Color.green(color), Color.blue(color), outXyz);
     }
 
-    public static void RGBToXYZ(@IntRange(from = 0x0, to = 0xFF) int r,
-                                @IntRange(from = 0x0, to = 0xFF) int g,
-                                @IntRange(from = 0x0, to = 0xFF) int b,
-                                @NonNull double[] outXyz) {
+    public static void RGBToXYZ(int r, int g, int b, double[] outXyz) {
         if (outXyz.length != 3) {
             throw new IllegalArgumentException("outXyz must have a length of 3.");
         }
@@ -131,27 +96,6 @@ public final class ColorUtils {
         outXyz[2] = 100 * (sr * 0.0193 + sg * 0.1192 + sb * 0.9505);
     }
 
-    public static void XYZToLAB(@FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_X) double x,
-                                @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Y) double y,
-                                @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Z) double z,
-                                @NonNull double[] outLab) {
-        if (outLab.length != 3) {
-            throw new IllegalArgumentException("outLab must have a length of 3.");
-        }
-        x = pivotXyzComponent(x / XYZ_WHITE_REFERENCE_X);
-        y = pivotXyzComponent(y / XYZ_WHITE_REFERENCE_Y);
-        z = pivotXyzComponent(z / XYZ_WHITE_REFERENCE_Z);
-        outLab[0] = Math.max(0, 116 * y - 16);
-        outLab[1] = 500 * (x - y);
-        outLab[2] = 200 * (y - z);
-    }
-
-    private static double pivotXyzComponent(double component) {
-        return component > XYZ_EPSILON
-                ? Math.pow(component, 1 / 3.0)
-                : (XYZ_KAPPA * component + 16) / 116;
-    }
-
     public static boolean satisfiesTextContrast(int color) {
         return satisfiesTextContrast(color, 0xFF000000);
     }
@@ -162,7 +106,7 @@ public final class ColorUtils {
         return false;
     }
 
-    public static int getBitmapColor(@NonNull Bitmap bitmap) {
+    public static int getBitmapColor(Bitmap bitmap) {
         if (bitmap == null) return 0xFF000000;
         bitmap = Bitmap.createScaledBitmap(bitmap, 64, 64, false);
         int width = bitmap.getWidth(), height = bitmap.getHeight();
@@ -241,37 +185,5 @@ public final class ColorUtils {
 
     public static String colorIntToString(int colorInt) {
         return String.format("#%08X", colorInt);
-    }
-
-    @Retention(SOURCE)
-    @Target({PARAMETER, METHOD, LOCAL_VARIABLE, FIELD})
-    public @interface ColorInt {
-    }
-
-    @Retention(SOURCE)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE})
-    @SuppressWarnings("unused")
-    public @interface FloatRange {
-        double from() default Double.MIN_VALUE;
-
-        double to() default Double.MAX_VALUE;
-
-        boolean fromInclusive() default true;
-
-        boolean toInclusive() default true;
-    }
-
-    @Retention(SOURCE)
-    @Target({METHOD, PARAMETER, FIELD})
-    @SuppressWarnings("unused")
-    public @interface NonNull {}
-
-    @Retention(SOURCE)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE})
-    @SuppressWarnings("unused")
-    public @interface IntRange {
-        long from() default Long.MIN_VALUE;
-
-        long to() default Long.MAX_VALUE;
     }
 }

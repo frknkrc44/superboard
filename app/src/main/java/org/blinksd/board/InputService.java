@@ -679,7 +679,6 @@ public final class InputService extends InputMethodService implements
         }
     }
 
-    /** @noinspection unused*/
     private class SuperBoardImpl extends SuperBoard {
         private boolean shown = false;
         private SuperBoardImpl(Context context) {
@@ -812,7 +811,6 @@ public final class InputService extends InputMethodService implements
         }
     }
 
-    /** @noinspection unused*/
     private class BoardPopupImpl extends BoardPopup {
         public BoardPopupImpl(ViewGroup root) {
             super(root);

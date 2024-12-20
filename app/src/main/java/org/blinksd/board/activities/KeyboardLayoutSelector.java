@@ -168,7 +168,6 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
         finish();
     }
 
-    /** @noinspection unused*/
     private static class SuperBoardPreview extends SuperBoard {
         public SuperBoardPreview(Context c) {
             super(c);

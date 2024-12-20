@@ -30,7 +30,6 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
-/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 @SuppressWarnings("deprecation")
 public final class ColorSelectorLayout extends LinearLayout {
@@ -261,8 +260,6 @@ public final class ColorSelectorLayout extends LinearLayout {
         });
 
         SuperBoard sb = new SuperBoard(ctx) {
-
-            /** @noinspection unused*/
             @SuppressLint("SetTextI18n")
             @Override
             protected void sendDefaultKeyboardEvent(View v) {

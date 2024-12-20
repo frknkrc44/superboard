@@ -238,7 +238,6 @@ public final class SetupActivityV2 extends Activity {
         }
     }
 
-    @SuppressWarnings("unused")
     private class PageContent {
         private final Drawable image;
         private final String text;
@@ -246,11 +245,6 @@ public final class SetupActivityV2 extends Activity {
         private final View.OnClickListener onButtonClick;
         private final boolean extraNextButton;
         private final boolean smallImage;
-
-        private PageContent(int textRes, int buttonTextRes, View.OnClickListener onButtonClick,
-                            boolean extraNextButton, boolean smallImage) {
-            this(null, textRes, buttonTextRes, onButtonClick, extraNextButton, smallImage);
-        }
 
         private PageContent(Drawable image, int textRes, int buttonTextRes,
                             View.OnClickListener onButtonClick, boolean extraNextButton,

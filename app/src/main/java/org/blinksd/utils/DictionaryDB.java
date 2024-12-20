@@ -8,15 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.blinksd.board.SuperBoardApplication;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public final class DictionaryDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dicts.db";
     private static final int DATABASE_VERSION = 2;
@@ -79,15 +76,6 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         }
 
         isReady = true;
-    }
-
-    public void saveToDB(String lang, File file, OnSaveProgressListener listener) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            saveToDB(lang, reader, listener);
-        } catch (Throwable ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     public void saveToDB(String lang, InputStream fd, OnSaveProgressListener listener) {

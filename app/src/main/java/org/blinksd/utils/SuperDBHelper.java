@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public final class SuperDBHelper {
     private static final List<String> THEME_PROPS = Arrays.asList(
             SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT,
@@ -47,10 +46,6 @@ public final class SuperDBHelper {
 
     public static SuperMiniDB getDefault(Context c) {
         return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), false);
-    }
-
-    public static SuperMiniDB getDefaultAsync(Context c, Runnable onLoadFinished) {
-        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), onLoadFinished);
     }
 
     public static String getStringOrDefault(String key) {
@@ -105,22 +100,6 @@ public final class SuperDBHelper {
         }
 
         return true;
-    }
-
-    public static long getLongOrDefault(String key) {
-        return Long.parseLong(getStringOrDefault(key));
-    }
-
-    public static float getFloatOrDefault(String key) {
-        return Float.parseFloat(getStringOrDefault(key));
-    }
-
-    public static double getDoubleOrDefault(String key) {
-        return Double.parseDouble(getStringOrDefault(key));
-    }
-
-    public static byte getByteOrDefault(String key) {
-        return Byte.parseByte(getStringOrDefault(key));
     }
 
     @TargetApi(Build.VERSION_CODES.S)

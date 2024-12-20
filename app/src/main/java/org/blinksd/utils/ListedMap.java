@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public class ListedMap<K, V> {
     private final List<Pair<K, V>> entries = new ArrayList<>();
 

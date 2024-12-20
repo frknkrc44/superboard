@@ -19,7 +19,6 @@ import org.blinksd.utils.superboard.KeyboardType;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {
     private static final int[] pos = new int[]{0, 0};

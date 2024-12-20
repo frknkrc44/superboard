@@ -101,7 +101,6 @@ public final class ImageSelectorLayout extends LinearLayout {
     };
     private static int indexNum = 0, gradientType = 0;
 
-    /** @noinspection unused*/
     public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard, String key) {
         super(win.getContext());
         setOrientation(VERTICAL);
