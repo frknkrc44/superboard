@@ -49,15 +49,6 @@ public final class AppSettingsV2 extends BaseActivity {
         setKeyPrefs();
     }
 
-    public void recreate() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.recreate();
-            return;
-        }
-
-        onCreate(getIntent().getExtras());
-    }
-
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
@@ -195,8 +186,12 @@ public final class AppSettingsV2 extends BaseActivity {
         }
 
         @Override
-        protected void sendDefaultKeyboardEvent(View v) {
-            fakeKeyboardEvent((Key) v);
+        protected void sendDefaultKeyboardEvent(Key v) {
+            if (v.hasNormalPressEvent()) {
+                playSound(v.getNormalPressEvent().first);
+                return;
+            }
+            playSound(0);
             vibrate();
         }
 

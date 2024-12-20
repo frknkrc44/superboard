@@ -487,8 +487,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         getKeyboard(keyboardIndex).addView(r);
     }
 
-    protected void sendDefaultKeyboardEvent(View v) {
-        defaultKeyboardEvent((Key) v);
+    protected void sendDefaultKeyboardEvent(Key v) {
+        defaultKeyboardEvent(v);
     }
 
     private void defaultKeyboardEvent(Key v) {
@@ -570,20 +570,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 vibrator.vibrate(duration);
             }
         }
-    }
-
-    /**
-     * Use fake keyboard event instead of real one
-     *
-     * @param v - Input key for play sound
-     */
-    public final void fakeKeyboardEvent(Key v) {
-        if (v.hasNormalPressEvent()) {
-            playSound(v.getNormalPressEvent().first);
-            return;
-        }
-        playSound(0);
-        vibrate();
     }
 
     private InputMethodService getCurrentIMService() {
@@ -1089,7 +1075,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     currentMotionEventAction = MotionEvent.ACTION_UP;
                     if (mHandler.hasMessages(1)) {
                         mHandler.removeMessages(1);
-                        sendDefaultKeyboardEvent(v);
+                        sendDefaultKeyboardEvent((Key) v);
                     }
                     mHandler.removeAndSendEmptyMessage(0);
                     break;
@@ -1111,7 +1097,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 mHandler.removeAndSendEmptyMessage(0);
                 break;
             case MotionEvent.ACTION_DOWN:
-                sendDefaultKeyboardEvent(v);
+                sendDefaultKeyboardEvent((Key) v);
                 break;
         }
     }
@@ -1233,7 +1219,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     if (currentMotionEventAction == MotionEvent.ACTION_UP) {
                         removeAndSendEmptyMessage(0);
                     } else {
-                        sendDefaultKeyboardEvent(v);
+                        sendDefaultKeyboardEvent((Key) v);
                         if (isRepeat) {
                             long delay = (20L * longPressMultiplier) * (longPressed ? 1 : 20);
                             removeAndSendMessageDelayed(1, v, delay);
