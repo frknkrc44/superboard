@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("deprecation")
-public final class KeyboardLayoutSelector extends Activity implements View.OnClickListener {
+public final class KeyboardLayoutSelector extends BaseActivity implements View.OnClickListener {
     public static final int KEYBOARD_LAYOUT_SELECTOR_RESULT = 0xFF;
     private String currentLayout;
 
