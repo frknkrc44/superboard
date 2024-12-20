@@ -42,10 +42,10 @@ public final class ImageUtils {
     public static Bitmap getBlur(Bitmap bmp, int radius) {
         try {
             // try blur processing with built-in renderscript
-            Context ctx = SuperBoardApplication.getApplication();
-            setupDiskCache(ctx);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Context ctx = SuperBoardApplication.getApplication();
+                setupDiskCache(ctx);
+
                 RenderScript rs = RenderScript.create(ctx);
                 ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
                 blur.setInput(Allocation.createFromBitmap(rs, bmp));
