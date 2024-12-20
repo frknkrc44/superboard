@@ -23,7 +23,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
@@ -201,7 +200,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
         ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
-        DrawableUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
+        ColorUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
@@ -271,7 +270,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     btn.setImageTintList(ColorStateList.valueOf(color));
                 } else {
-                    DrawableUtils.setColorFilter(btn.getDrawable(), color);
+                    ColorUtils.setColorFilter(btn.getDrawable(), color);
                 }
             }
         }

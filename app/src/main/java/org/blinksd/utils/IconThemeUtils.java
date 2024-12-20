@@ -144,6 +144,6 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
                 return null;
         }
 
-        return DrawableUtils.getTintedDrawable(res, null);
+        return ResourcesUtils.getTintedDrawable(res, null);
     }
 }

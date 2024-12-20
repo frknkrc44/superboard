@@ -3,7 +3,11 @@ package org.blinksd.utils;
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,6 +20,15 @@ public final class ColorUtils {
     private static final ThreadLocal<double[]> TEMP_ARRAY = new ThreadLocal<>();
 
     private ColorUtils() {}
+
+    @SuppressWarnings("deprecation")
+    public static void setColorFilter(Drawable drawable, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
+        } else {
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
 
     public static int compositeColors(int foreground, int background) {
         int bgAlpha = Color.alpha(background);

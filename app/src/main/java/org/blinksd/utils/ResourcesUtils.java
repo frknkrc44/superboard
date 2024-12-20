@@ -20,6 +20,19 @@ public class ResourcesUtils {
         return res.getDrawable(resId);
     }
 
+    public static Drawable getTintedDrawable(int resId, Integer tintColor) {
+        Drawable drawable = ResourcesUtils.getDrawable(resId);
+        if (tintColor != null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                ColorUtils.setColorFilter(drawable, tintColor);
+            } else {
+                drawable.setTint(tintColor);
+            }
+        }
+
+        return drawable;
+    }
+
     public static int getColor(int resId) {
         Resources res = SuperBoardApplication.getApplication().getResources();
 

@@ -395,9 +395,8 @@ public class LayoutUtils {
                 new int[]{android.R.attr.selectableItemBackground}
         );
         int resId = array.getResourceId(0, 0);
-        Drawable d = DrawableUtils.getTintedDrawable(resId, transparent ? 0 : null);
         int color = textColor - 0x88000000;
-        DrawableUtils.setColorFilter(d, color);
+        Drawable d = ResourcesUtils.getTintedDrawable(resId, color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             array.close();
         }

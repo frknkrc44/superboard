@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import org.blinksd.board.R;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                DrawableUtils.getTintedDrawable(
+                ResourcesUtils.getTintedDrawable(
                         R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_enable,
                 R.string.wizard_enablebtn,
@@ -79,7 +79,7 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                DrawableUtils.getTintedDrawable(
+                ResourcesUtils.getTintedDrawable(
                         R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_select,
                 R.string.wizard_selectbtn,
@@ -96,7 +96,7 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                DrawableUtils.getTintedDrawable(
+                ResourcesUtils.getTintedDrawable(
                         R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_settings,
                 R.string.wizard_settingsbtn,
@@ -106,7 +106,7 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                DrawableUtils.getTintedDrawable(
+                ResourcesUtils.getTintedDrawable(
                         R.drawable.sym_board_return, Color.WHITE),
                 R.string.wizard_finish,
                 R.string.wizard_finishbtn,

@@ -5,6 +5,7 @@ import static org.blinksd.utils.DensityUtils.mpInt;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,9 +22,9 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.DrawableUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
@@ -150,8 +151,8 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
             tick.setPadding(p, p, p, p);
             ViewUtils.setBackground(tick, LayoutUtils.getCircleButtonBackground(false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            tick.setImageResource(R.drawable.sym_board_return);
-            DrawableUtils.setColorFilter(tick.getDrawable(), Color.WHITE);
+            Drawable returnSymbol = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
+            tick.setImageDrawable(returnSymbol);
             layers.addView(tick);
         }
 
