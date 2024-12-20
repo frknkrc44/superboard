@@ -59,7 +59,8 @@
 	<string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Resim seç</string>
 	<string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Duvar kağıdını getir</string>
 	<string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Döndür</string>
-	<string name="settings_image_selector_warning_storage_access">Sistem duvar kağıdını getirmek için depolama izni sağlayın</string>
+	<string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Sistem duvar kağıdını getirmek için depolama izni sağlayın</string>
+	<string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">Bir canlı duvar kağıdı kullanıyorsunuz, önizleme yükleniyor…</string>
 	
 	<!-- Radio selector resources -->
 	<string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Klavye dili</string>

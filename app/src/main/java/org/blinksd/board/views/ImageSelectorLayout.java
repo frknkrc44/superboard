@@ -84,7 +84,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         public void onClick(View p1) {
             if (colorList.size() < 2) {
                 Context ctx = p1.getContext();
-                String out = String.format(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_remove_item_error"), colorList.size());
+                String out = String.format(getImageSelectorTranslation("gradient_remove_item_error"), colorList.size());
                 Toast.makeText(ctx, out, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -161,13 +161,9 @@ public final class ImageSelectorLayout extends LinearLayout {
         });
         addView(host);
 
-        final String[] tabTitles = {
-                "image_selector_photo",
-                "image_selector_gradient"
-        };
-
+        final String[] tabTitles = {"photo", "gradient"};
         for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(win.getContext(), tabTitles[i]);
+            tabTitles[i] = getImageSelectorTranslation(tabTitles[i]);
         }
 
         host.setup();
@@ -229,7 +225,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         s.setLayoutParams(params);
-        s.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_select"));
+        s.setText(getImageSelectorTranslation("select"));
         s.setOnClickListener(p1 -> onImageSelectPressed.run());
         l.addView(s);
 
@@ -238,14 +234,14 @@ public final class ImageSelectorLayout extends LinearLayout {
         params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         w.setLayoutParams(params);
-        w.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_wp"));
+        w.setText(getImageSelectorTranslation("wp"));
         l.addView(w);
         w.setOnClickListener(p1 -> {
             if (isPermGranted(ctx)) {
                 WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
                 Drawable d;
                 if (wm.getWallpaperInfo() != null) {
-                    Toast.makeText(p1.getContext(), "You're using live wallpaper, loading thumbnail ...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(p1.getContext(), getImageSelectorTranslation("warning_live_wallpaper"), Toast.LENGTH_SHORT).show();
                     d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
                 } else {
                     d = wm.getDrawable();
@@ -258,7 +254,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                 }
             } else {
                 Toast.makeText(p1.getContext(),
-                        SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_warning_storage_access"),
+                        getImageSelectorTranslation("warning_storage_access"),
                         Toast.LENGTH_LONG).show();
                 ctx.startActivity(new Intent(
                         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
@@ -272,7 +268,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         rb.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
         rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         l.addView(rb);
-        rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));
+        rb.setText(getImageSelectorTranslation("rotate"));
         rb.setOnClickListener(p1 -> {
             if (temp == null) {
                 return;
@@ -392,5 +388,8 @@ public final class ImageSelectorLayout extends LinearLayout {
 
     };
 
-
+    private String getImageSelectorTranslation(String key) {
+        return SettingsCategorizedListAdapter.getTranslation(
+                SuperBoardApplication.getApplication(), "image_selector_" + key);
+    }
 }
