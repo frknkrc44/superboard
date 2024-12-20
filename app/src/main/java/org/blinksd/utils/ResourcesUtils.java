@@ -19,4 +19,14 @@ public class ResourcesUtils {
 
         return res.getDrawable(resId);
     }
+
+    public static int getColor(int resId) {
+        Resources res = SuperBoardApplication.getApplication().getResources();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return res.getColor(resId, SuperBoardApplication.getApplication().getTheme());
+        }
+
+        return res.getColor(resId);
+    }
 }

@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.DrawableUtils;
+import org.blinksd.utils.ResourcesUtils;
 
 import java.lang.reflect.Field;
 
@@ -36,7 +37,7 @@ public final class CustomRadioButton extends RadioButton {
             setPadding(i, 0, i, 0);
             int color = 0xFFDEDEDE;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                color = getResources().getColor(android.R.color.system_accent1_200, c.getTheme());
+                color = ResourcesUtils.getColor(android.R.color.system_accent1_200);
             }
             setButtonTintList(ColorStateList.valueOf(color));
             setButtonTintMode(PorterDuff.Mode.SRC_IN);

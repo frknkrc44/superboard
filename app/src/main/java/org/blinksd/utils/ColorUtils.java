@@ -8,7 +8,6 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.annotation.TargetApi;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -34,15 +33,6 @@ public final class ColorUtils {
     private static final ThreadLocal<double[]> TEMP_ARRAY = new ThreadLocal<>();
 
     private ColorUtils() {}
-
-    @SuppressWarnings("deprecation")
-    public static int getColor(Resources res, int resId) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return res.getColor(resId);
-        }
-
-        return res.getColor(resId, SuperBoardApplication.getApplication().getTheme());
-    }
 
     public static int compositeColors(@ColorInt int foreground, @ColorInt int background) {
         int bgAlpha = Color.alpha(background);
@@ -226,8 +216,7 @@ public final class ColorUtils {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getAccentColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            return SuperBoardApplication.getApplication()
-                    .getColor(android.R.color.system_accent1_700);
+            return ResourcesUtils.getColor(android.R.color.system_accent1_700);
         }
 
         TypedArray arr = SuperBoardApplication.getApplication()

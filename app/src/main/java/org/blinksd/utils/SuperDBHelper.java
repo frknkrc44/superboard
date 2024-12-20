@@ -1,6 +1,6 @@
 package org.blinksd.utils;
 
-import static org.blinksd.utils.ColorUtils.getColor;
+import static org.blinksd.utils.ResourcesUtils.getColor;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -124,28 +124,28 @@ public final class SuperDBHelper {
         return Byte.parseByte(getStringOrDefault(key));
     }
 
-    @TargetApi(31)
+    @TargetApi(Build.VERSION_CODES.S)
     private static int getMonetColorValue(String key) {
         Resources res = SuperBoardApplication.getApplication().getResources();
         Configuration conf = res.getConfiguration();
         boolean dark = (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
         switch (key) {
             case SettingMap.SET_ENTER_BGCLR:
-                return getColor(res, dark ? android.R.color.system_accent1_500 : android.R.color.system_accent1_300);
+                return getColor(dark ? android.R.color.system_accent1_500 : android.R.color.system_accent1_300);
             case SettingMap.SET_ENTER_PRESS_BGCLR:
-                return getColor(res, dark ? android.R.color.system_accent1_600 : android.R.color.system_accent1_400);
+                return getColor(dark ? android.R.color.system_accent1_600 : android.R.color.system_accent1_400);
             case SettingMap.SET_KEY_BGCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_100);
+                return getColor(dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_100);
             case SettingMap.SET_KEY_PRESS_BGCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_500 : android.R.color.system_neutral1_200);
+                return getColor(dark ? android.R.color.system_neutral1_500 : android.R.color.system_neutral1_200);
             case SettingMap.SET_KEY2_BGCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_700 : android.R.color.system_neutral1_200);
+                return getColor(dark ? android.R.color.system_neutral1_700 : android.R.color.system_neutral1_200);
             case SettingMap.SET_KEY2_PRESS_BGCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_300);
+                return getColor(dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_300);
             case SettingMap.SET_KEYBOARD_BGCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
+                return getColor(dark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
             case SettingMap.SET_KEY_TEXTCLR:
-                return getColor(res, dark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_900);
+                return getColor(dark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_900);
         }
 
         return Integer.parseInt(getStringOrDefault(key));

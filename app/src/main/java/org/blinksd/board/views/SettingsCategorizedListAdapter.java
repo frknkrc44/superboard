@@ -38,6 +38,7 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingItem;
 import org.blinksd.utils.SettingMap;
@@ -308,10 +309,7 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
     public static void doHacksAndShow(AlertDialog dialog) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             GradientDrawable gradientDrawable = new GradientDrawable();
-            int color = dialog.getContext().getResources().getColor(
-                    android.R.color.system_neutral1_900,
-                    SuperBoardApplication.getApplication().getTheme()
-            );
+            int color = ResourcesUtils.getColor(android.R.color.system_neutral1_900);
             gradientDrawable.setColor(color);
             gradientDrawable.setCornerRadius(DensityUtils.dpInt(16));
             gradientDrawable.setTint(color);
@@ -325,10 +323,8 @@ public final class SettingsCategorizedListAdapter extends BaseExpandableListAdap
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                    ? dialog.getContext().getResources().getColor(
-                    android.R.color.system_accent1_200,
-                    SuperBoardApplication.getApplication().getTheme()
-            ) : ColorUtils.getAccentColor();
+                    ? ResourcesUtils.getColor(android.R.color.system_accent1_200)
+                    : ColorUtils.getAccentColor();
 
             Button btn1 = dialog.findViewById(android.R.id.button1);
             Button btn2 = dialog.findViewById(android.R.id.button2);
