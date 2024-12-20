@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 final class CustomSeekBar extends SeekBar {
     CustomSeekBar(Context c) {
         super(c);
-        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50), -2, 0));
+        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(75), -2, 0));
         setThumb(c.getResources().getDrawable(R.drawable.seekbar_thumb));
         setProgressDrawable(c.getResources().getDrawable(R.drawable.seekbar));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
