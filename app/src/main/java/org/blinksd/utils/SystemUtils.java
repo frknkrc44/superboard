@@ -102,7 +102,7 @@ public final class SystemUtils {
     @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
     public static int statusBarH(Activity ctx) {
         Resources res = ctx.getResources();
-        int resourceId = 0;
+        int resourceId;
 
         try {
             resourceId = android.R.dimen.class
@@ -119,11 +119,11 @@ public final class SystemUtils {
     @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
     public static int navbarH(Context ctx) {
         if (isColorized()) {
-            if (!isGesturesEnabled() && isLand(ctx) && !isTablet(ctx)) return 0;
+            if (!isGesturesEnabled() && isLand() && !isTablet()) return 0;
             int gestureHeight = findGestureHeight(ctx);
             if (gestureHeight > 0) return gestureHeight;
             Resources res = ctx.getResources();
-            int resourceId = 0;
+            int resourceId;
 
             try {
                 resourceId = android.R.dimen.class
@@ -142,16 +142,15 @@ public final class SystemUtils {
         return !(isNotColorizeNavbar() || !SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR));
     }
 
-    private static boolean isTablet(Context ctx) {
+    private static boolean isTablet() {
         if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            return ctx.getResources().getConfiguration().smallestScreenWidthDp >= 600;
+            return SuperBoardApplication.getResConfiguration().smallestScreenWidthDp >= 600;
         }
 
         return false;
     }
 
-    private static boolean isLand(Context ctx) {
-        return ctx.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    private static boolean isLand() {
+        return SuperBoardApplication.getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
-
 }

@@ -4,9 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
 
 @SuppressWarnings("deprecation")
@@ -71,11 +69,7 @@ public final class LocalIconTheme {
                 break;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return SuperBoardApplication.getApplication().getDrawable(res);
-        }
-
-        return SuperBoardApplication.getApplication().getResources().getDrawable(res);
+        return ResourcesUtils.getDrawable(res);
     }
 
     public Drawable getIconByType(int type) {

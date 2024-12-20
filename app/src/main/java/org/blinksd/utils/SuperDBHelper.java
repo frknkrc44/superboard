@@ -5,7 +5,6 @@ import static org.blinksd.utils.ResourcesUtils.getColor;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
@@ -126,8 +125,7 @@ public final class SuperDBHelper {
 
     @TargetApi(Build.VERSION_CODES.S)
     private static int getMonetColorValue(String key) {
-        Resources res = SuperBoardApplication.getApplication().getResources();
-        Configuration conf = res.getConfiguration();
+        Configuration conf = SuperBoardApplication.getResConfiguration();
         boolean dark = (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
         switch (key) {
             case SettingMap.SET_ENTER_BGCLR:

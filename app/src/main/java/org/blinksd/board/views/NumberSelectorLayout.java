@@ -36,7 +36,6 @@ public final class NumberSelectorLayout {
         main.addView(text);
 
         CustomSeekBar seek = new CustomSeekBar(ctx);
-        seek.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.wpInt(50), -2));
         seek.setMax(max - min);
         seek.setProgress(val - min);
         seek.setOnSeekBarChangeListener(new CustomSeekBar.OnSeekBarChangeListener() {

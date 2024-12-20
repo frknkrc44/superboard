@@ -1,6 +1,8 @@
 package org.blinksd.board;
 
 import android.app.Application;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,6 +51,14 @@ public final class SuperBoardApplication extends Application {
 
     public static SuperBoardApplication getApplication() {
         return appContext;
+    }
+
+    public static Resources getAppResources() {
+        return getApplication().getResources();
+    }
+
+    public static Configuration getResConfiguration() {
+        return getAppResources().getConfiguration();
     }
 
     public static SuperMiniDB getAppDB() {
