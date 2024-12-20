@@ -258,11 +258,11 @@ public final class ImageSelectorLayout extends LinearLayout {
                 }
             } else {
                 Toast.makeText(p1.getContext(), "Enable storage access for get system wallpaper", Toast.LENGTH_LONG).show();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                    ctx.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + ctx.getPackageName())));
-                } else {
-                    ctx.startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + ctx.getPackageName())));
-                }
+                ctx.startActivity(new Intent(
+                        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                                ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                : Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                        Uri.parse("package:" + ctx.getPackageName())));
             }
         });
 
