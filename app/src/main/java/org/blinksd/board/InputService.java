@@ -747,9 +747,7 @@ public final class InputService extends InputMethodService implements
         }
 
         @Override
-        public void sendDefaultKeyboardEvent(View v) {
-            Key key = (Key) v;
-
+        public void sendDefaultKeyboardEvent(Key key) {
             if (key.hasNormalPressEvent()) {
                 if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {
                     showClipboardView(false);
@@ -785,7 +783,7 @@ public final class InputService extends InputMethodService implements
                 }
             }
 
-            if (!shown) super.sendDefaultKeyboardEvent(v);
+            if (!shown) super.sendDefaultKeyboardEvent(key);
             else shown = false;
         }
 

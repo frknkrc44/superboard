@@ -183,11 +183,6 @@ public final class KeyboardLayoutSelector extends Activity implements View.OnCli
         }
 
         @Override
-        public void sendDefaultKeyboardEvent(View v) {
-            fakeKeyboardEvent((Key) v);
-        }
-
-        @Override
         public void addRows(int keyboardIndex, CharSequence[][] keys) {
             super.addRows(keyboardIndex, keys);
             setShiftState(SHIFT_ON);

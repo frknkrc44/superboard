@@ -172,7 +172,7 @@ public class BoardPopup extends SuperBoard {
     }
 
     @Override
-    protected void sendDefaultKeyboardEvent(View v) {
+    protected void sendDefaultKeyboardEvent(Key v) {
         super.sendDefaultKeyboardEvent(v);
         showPopup(false);
         clear();
