@@ -57,6 +57,7 @@
     <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Şəkil seçin</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Divar kağızı alın</string>
     <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Döndürün</string>
+    <string name="settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Klaviatura dili</string>
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Klaviatura şrifti</string>
