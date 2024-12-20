@@ -57,7 +57,8 @@
     <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Pilih gambar</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Dapatkan kertas dinding</string>
     <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Memutar</string>
-    <string name="settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">You\'re using a live wallpaper, loading thumbnail…</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Bahasa papan ketik</string>
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Font papan ketik</string>
