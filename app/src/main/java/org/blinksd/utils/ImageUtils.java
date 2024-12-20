@@ -19,45 +19,24 @@ import java.util.Objects;
 public final class ImageUtils {
     public static final float minSize = 720.0f;
 
-    private ImageUtils() {
-    }
-
-    public static int getShortDimensionOfPicture(Bitmap b) {
-        if (b != null) {
-            int x = b.getWidth(), y = b.getHeight();
-            return Math.min(x, y);
-        }
-        return 0;
-    }
-
-    public static int getLongDimensionOfPicture(Bitmap b) {
-        if (b != null) {
-            int x = b.getWidth(), y = b.getHeight();
-            return Math.max(x, y);
-        }
-        return 0;
-    }
-
-    public static Bitmap getScaledBitmap(Bitmap b, float scale) {
-        if (b != null) {
-            Bitmap x = b.copy(Bitmap.Config.ARGB_8888, true);
-            int a = x.getWidth(), c = x.getHeight();
-            x = Bitmap.createScaledBitmap(x, (int) (a * scale), (int) (c * scale), true);
-            return x;
-        }
-        return null;
-    }
+    private ImageUtils() {}
 
     public static Bitmap getMinimizedBitmap(Bitmap b) {
-        if (b != null) {
-            int a = getLongDimensionOfPicture(b);
-            if (a > minSize) {
-                float f = minSize / a;
-                return getScaledBitmap(b, f);
-            }
-            return b;
+        if (b == null) return b;
+
+        int width = b.getWidth(), height = b.getHeight();
+        int longDim = Math.max(width, height);
+        if (longDim > minSize) {
+            float scale = minSize / longDim;
+            return Bitmap.createScaledBitmap(
+                    b.copy(Bitmap.Config.ARGB_8888, true),
+                    (int) (width * scale),
+                    (int) (height * scale),
+                    true
+            );
         }
-        return null;
+
+        return b;
     }
 
     public static Bitmap getBlur(Bitmap bmp, int radius) {
@@ -102,8 +81,6 @@ public final class ImageUtils {
         try {
             int rsum, gsum, bsum, x, y, i, p, yp, yi, yw, stackpointer,
                     stackstart, rbs, routsum, goutsum, boutsum, rinsum, ginsum, binsum;
-            int width = sentBitmap.getWidth();
-            int height = sentBitmap.getHeight();
             Bitmap bitmap = sentBitmap.copy(Objects.requireNonNull(sentBitmap.getConfig()), true);
             if (radius < 1) return null;
             int w = bitmap.getWidth();
