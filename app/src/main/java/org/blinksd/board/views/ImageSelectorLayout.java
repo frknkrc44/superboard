@@ -257,7 +257,9 @@ public final class ImageSelectorLayout extends LinearLayout {
                     prev.setImageBitmap(b);
                 }
             } else {
-                Toast.makeText(p1.getContext(), "Enable storage access for get system wallpaper", Toast.LENGTH_LONG).show();
+                Toast.makeText(p1.getContext(),
+                        SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_warning_storage_access"),
+                        Toast.LENGTH_LONG).show();
                 ctx.startActivity(new Intent(
                         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                                 ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
