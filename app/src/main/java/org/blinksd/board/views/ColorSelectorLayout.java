@@ -152,14 +152,6 @@ public final class ColorSelectorLayout extends LinearLayout {
 
         setPreview(prev);
 
-        for (CustomSeekBar v : new CustomSeekBar[]{r, g, b}) {
-            v.setMax(255);
-        }
-
-        r.setProgress(Color.red(colorValue));
-        g.setProgress(Color.green(colorValue));
-        b.setProgress(Color.blue(colorValue));
-
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar s, int i, boolean c) {
@@ -180,8 +172,15 @@ public final class ColorSelectorLayout extends LinearLayout {
             v.setOnSeekBarChangeListener(opc);
             int pad = DensityUtils.dpInt(8);
             v.setPadding(pad * 2, pad, pad * 2, pad);
-            if (v.getParent() == null) ll.addView(v);
+            if (a != v) {
+                v.setMax(255);
+                ll.addView(v);
+            }
         }
+
+        r.setProgress(Color.red(colorValue));
+        g.setProgress(Color.green(colorValue));
+        b.setProgress(Color.blue(colorValue));
 
         return ll;
     }
