@@ -18,7 +18,7 @@ import org.blinksd.utils.DensityUtils;
 public class SuperTab extends LinearLayout {
     public static final int DEFVALUE = 0x98, DEF_BG_COLOR = 0, DEF_ICON_COLOR = 0xFFDEDEDE;
     private Context mContext;
-    private int oldSelected = 0;
+    private int currentSelection = 0;
     private final float disabled = 0.6f;
     private ViewGroup root;
     private OnTabChangedListener mOnTabChangedListener;
@@ -36,36 +36,30 @@ public class SuperTab extends LinearLayout {
     }
 
     public SuperTab(Context context, ViewGroup rootView, int width, int height, int bgColor) {
-        this(context, rootView, width, height, bgColor, DEFVALUE);
-    }
-
-    public SuperTab(Context context, ViewGroup rootView, int width, int height, int bgColor, int selection) {
         super(context);
-        if (width == DEFVALUE) width = getBarInfo(context, WIDTH);
-        if (height == DEFVALUE) height = getBarInfo(context, HEIGHT);
-        if (bgColor == DEFVALUE) bgColor = getBarInfo(context, BAR_BG_COLOR);
-        if (selection == DEFVALUE) selection = getBarInfo(context, BAR_SELECTION);
-        createNewBar(context, rootView, width, height, bgColor, selection);
+        if (width == DEFVALUE) width = getBarInfo(WIDTH);
+        if (height == DEFVALUE) height = getBarInfo(HEIGHT);
+        if (bgColor == DEFVALUE) bgColor = getBarInfo(BAR_BG_COLOR);
+        createNewBar(context, rootView, width, height, bgColor);
     }
 
-    private void createNewBar(Context context, ViewGroup rootView, int width, int height, int bgColor, int selection) {
+    private void createNewBar(Context context, ViewGroup rootView, int width, int height, int bgColor) {
         mContext = context;
         setLayoutParams(new LinearLayout.LayoutParams(width, height, 0));
         setBackgroundColor(bgColor);
         root = rootView;
-        oldSelected = selection;
     }
 
     public int getSelected() {
-        return oldSelected;
+        return currentSelection;
     }
 
     public void setSelected(int selection) {
         if (root != null) {
-            if (getChildCount() - 1 < oldSelected)
-                oldSelected = selection = getChildCount() - 1;
-            if (oldSelected != selection)
-                getChildAt(oldSelected).animate().scaleX(disabled).scaleY(disabled).setInterpolator(new OvershootInterpolator());
+            if (getChildCount() - 1 < currentSelection)
+                currentSelection = selection = getChildCount() - 1;
+            if (currentSelection != selection)
+                getChildAt(currentSelection).animate().scaleX(disabled).scaleY(disabled).setInterpolator(new OvershootInterpolator());
             getChildAt(selection).animate().scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator());
             for (int i = 0; i != root.getChildCount(); i++)
                 root.getChildAt(i).setVisibility(i == selection ? View.VISIBLE : View.GONE);
@@ -73,7 +67,7 @@ public class SuperTab extends LinearLayout {
             if (mOnTabChangedListener != null)
                 mOnTabChangedListener.onTabChanged(selection);
         }
-        oldSelected = selection;
+        currentSelection = selection;
     }
 
     public void setSelected(boolean next) {
@@ -128,46 +122,27 @@ public class SuperTab extends LinearLayout {
         iv.setOnClickListener(v -> setSelected((int) v.getTag()));
         ColorUtils.setColorFilter(iv, DEF_ICON_COLOR);
         addView(iv);
-        if (iv.getTag().equals(oldSelected)) setSelected(oldSelected);
+        if (iv.getTag().equals(currentSelection)) setSelected(currentSelection);
         return iv;
     }
 
     public static final int WIDTH = 0,
             HEIGHT = 1,
             BAR_SELECTION = 2,
-            BAR_BG_COLOR = 3,
-            DISPLAY_DENSITY = 4,
-            DISPLAY_MIN = 5;
+            BAR_BG_COLOR = 3;
 
-    public int getBarInfo(Context context, int req) {
+    public int getBarInfo(int req) {
         switch (req) {
             case WIDTH:
                 return ViewGroup.LayoutParams.MATCH_PARENT;
             case HEIGHT:
-                return (int) (getDisplayInfo(context, req) * 0.09);
+                return ViewGroup.LayoutParams.WRAP_CONTENT;
             case BAR_SELECTION:
                 return 0;
             case BAR_BG_COLOR:
                 return DEF_BG_COLOR;
             default:
                 return -1;
-        }
-    }
-
-    public int getDisplayInfo(Context context, int req) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-
-        switch (req) {
-            case WIDTH:
-                return dm.widthPixels;
-            case HEIGHT:
-                return dm.heightPixels;
-            case DISPLAY_DENSITY:
-                return dm.densityDpi;
-            case DISPLAY_MIN:
-                return Math.min(dm.widthPixels, dm.heightPixels);
-            default:
-                return getBarInfo(context, WIDTH);
         }
     }
 
