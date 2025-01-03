@@ -42,9 +42,7 @@ public class SuperTab extends LinearLayout {
             }
 
             @Override
-            public void onChildViewRemoved(View parent, View child) {
-
-            }
+            public void onChildViewRemoved(View parent, View child) {}
         });
     }
 
@@ -53,21 +51,21 @@ public class SuperTab extends LinearLayout {
     }
 
     public void setSelected(int selection) {
-        if (currentSelection == selection) {
+        if (getSelected() == selection) {
             return;
         }
 
         if (root != null) {
-            if (getChildCount() - 1 < currentSelection) {
+            if (getChildCount() - 1 < getSelected()) {
                 currentSelection = selection = getChildCount() - 1;
             }
 
-            if (currentSelection >= 0) {
-                getChildAt(currentSelection).animate()
+            if (getSelected() >= 0) {
+                getChildAt(getSelected()).animate()
                         .scaleX(disabledScale)
                         .scaleY(disabledScale)
                         .setInterpolator(new OvershootInterpolator());
-                root.getChildAt(currentSelection).setVisibility(GONE);
+                root.getChildAt(getSelected()).setVisibility(GONE);
             }
 
             getChildAt(selection).animate()
@@ -85,18 +83,6 @@ public class SuperTab extends LinearLayout {
 
         if (mOnTabChangedListener != null) {
             mOnTabChangedListener.onTabChanged(selection);
-        }
-    }
-
-    public void setSelected(boolean next) {
-        if (next) {
-            if (getSelected() == (getChildCount() - 1))
-                return;
-            setSelected(getSelected() + 1);
-        } else {
-            if (getSelected() == 0)
-                return;
-            setSelected(getSelected() - 1);
         }
     }
 
@@ -129,8 +115,8 @@ public class SuperTab extends LinearLayout {
         ColorUtils.setColorFilter(buttonView, DEF_ICON_COLOR);
         addView(buttonView);
 
-        if (buttonView.getTag().equals(currentSelection)) {
-            setSelected(currentSelection);
+        if (getSelected() < 0) {
+            setSelected(0);
         }
 
         return buttonView;

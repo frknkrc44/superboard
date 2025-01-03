@@ -178,8 +178,6 @@ public class AppSettingsV3 extends BaseActivity {
             addCategoryChildren(i);
             superTab.addButton(getCategoryIconResource(i));
         }
-
-        superTab.setSelected(0);
     }
 
     private int getCategoryIconResource(int categoryIndex) {
