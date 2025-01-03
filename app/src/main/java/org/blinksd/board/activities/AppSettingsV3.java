@@ -111,7 +111,6 @@ public class AppSettingsV3 extends BaseActivity {
         kbdPreview.setKeyBackground(0, 0, 2, key2Bg);
         kbdPreview.setKeyBackground(0, 0, -1, enterBg);
         kbdPreview.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
-        kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
         kbdPreview.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
         kbdPreview.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         kbdPreview.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
@@ -124,6 +123,7 @@ public class AppSettingsV3 extends BaseActivity {
         kbdPreview.setKeyDrawable(0, 0, -1,
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
         kbdPreview.setKeyVibrateDuration(getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
+        kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
         try {
             SuperBoardApplication.clearCustomFont();
             SuperBoardApplication.getCustomFont();
@@ -384,7 +384,7 @@ public class AppSettingsV3 extends BaseActivity {
         this.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
         return TypedValue.complexToDimension(value.data, this.getResources().getDisplayMetrics());
     }
-    
+
     private String getTranslation(String key) {
         return getTranslation(this, key);
     }
