@@ -45,7 +45,7 @@ public final class ClipboardView extends LinearLayout
     private final SimpleDateFormat dateFormat =
             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
 
-    private List<String> clipboardHistory;
+    private List<CharSequence> clipboardHistory;
 
     private final SuperBoard superBoard;
     private ImageButton clearAllButton;
@@ -104,7 +104,7 @@ public final class ClipboardView extends LinearLayout
         clipboardHistory = new ArrayList<>();
         clipboardHistory.addAll(Arrays.asList(clipboardHistoryArray));
 
-        for (String text: clipboardHistory) {
+        for (CharSequence text: clipboardHistory) {
             addClipView(text, false);
         }
 
@@ -114,7 +114,7 @@ public final class ClipboardView extends LinearLayout
         clipboardManager.addPrimaryClipChangedListener(this);
     }
 
-    private void addClipView(String text, boolean addToHistory) {
+    private void addClipView(CharSequence text, boolean addToHistory) {
         int buttonSize = DensityUtils.dpInt(48);
         int buttonPadding = buttonSize / 4;
 
@@ -129,8 +129,8 @@ public final class ClipboardView extends LinearLayout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
         textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
-        textHolder.setOnClickListener(this::selectClipItem);
-        textHolder.setOnLongClickListener(this::selectAndUseClipItem);
+        textHolder.setOnClickListener(v -> selectAndUseClipItem(v, true));
+        textHolder.setOnLongClickListener(v -> selectAndUseClipItem(v, false));
         clipLayout.addView(textHolder);
 
         TextView textView1 = textHolder.findViewById(android.R.id.text1);
@@ -163,9 +163,9 @@ public final class ClipboardView extends LinearLayout
     }
 
     /** @noinspection SameReturnValue*/
-    private boolean selectAndUseClipItem(View view) {
+    private boolean selectAndUseClipItem(View view, boolean useCtrlToPaste) {
         selectClipItem(view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !useCtrlToPaste) {
             superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
         } else {
             superBoard.setCtrlState(1);
@@ -177,7 +177,7 @@ public final class ClipboardView extends LinearLayout
     private void selectClipItem(View view) {
         String item = (String) ((View) view.getParent()).getTag();
 
-        List<String> texts = getLastPrimaryClipTexts();
+        List<CharSequence> texts = getLastPrimaryClipTexts();
         if (texts.isEmpty() || texts.contains(item)) {
             return;
         }
@@ -204,9 +204,14 @@ public final class ClipboardView extends LinearLayout
         if (clipboardHistory.isEmpty()) {
             db.removeKeyFromDB(SettingMap.SET_CLIPBOARD_HISTORY);
         } else {
+            String[] outArray = new String[clipboardHistory.size()];
+            for (int i = 0; i < clipboardHistory.size(); i++) {
+                outArray[i] = clipboardHistory.get(i).toString();
+            }
+
             db.putStringArray(
                     SettingMap.SET_CLIPBOARD_HISTORY,
-                    clipboardHistory.toArray(new String[0]),
+                    outArray,
                     true
             );
         }
@@ -234,19 +239,17 @@ public final class ClipboardView extends LinearLayout
         }
     }
 
-    private List<String> getLastPrimaryClipTexts() {
-        List<String> texts = new ArrayList<>();
+    private List<CharSequence> getLastPrimaryClipTexts() {
+        List<CharSequence> texts = new ArrayList<>();
 
         if (clipboardManager.hasPrimaryClip()) {
             ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
 
             for (int i = 0; i < data.getItemCount(); i++) {
                 CharSequence text = data.getItemAt(i).getText();
-                if (text == null) {
-                    continue;
+                if (text != null) {
+                    texts.add(text);
                 }
-
-                texts.add(text.toString());
             }
         }
 
@@ -255,10 +258,10 @@ public final class ClipboardView extends LinearLayout
 
     @Override
     public void onPrimaryClipChanged() {
-        List<String> texts = getLastPrimaryClipTexts();
+        List<CharSequence> texts = getLastPrimaryClipTexts();
 
         for (int i = 0; i < texts.size(); i++) {
-            String primaryText = texts.get(i);
+            CharSequence primaryText = texts.get(i);
 
             if (listView.findViewWithTag(primaryText) == null) {
                 addClipView(primaryText, true);

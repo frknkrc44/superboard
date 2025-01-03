@@ -79,8 +79,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
 
     /** @noinspection ResultOfMethodCallIgnored*/
     public void importIconTheme(String themeName, LocalIconTheme iconTheme) {
-        File mainFolder = getIconFolder();
-        File themeFolder = new File(mainFolder, String.format("%s_(I)", themeName));
+        File themeFolder = new File(getIconFolder(), String.format("%s_(I)", themeName));
         themeFolder.mkdirs();
         writeIconToFile(new File(themeFolder, "shift"), iconTheme.shiftIcon);
         writeIconToFile(new File(themeFolder, "emoji"), iconTheme.emojiIcon);
@@ -93,12 +92,10 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
     private void writeIconToFile(File file, Drawable drawable) {
         try (FileOutputStream stream = new FileOutputStream(file)) {
             if (drawable instanceof BitmapDrawable) {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bmp = bitmapDrawable.getBitmap();
+                Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             }
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
     }
 
     private Drawable loadFromFile(File file) {
@@ -129,9 +126,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
             }
         }
 
-        LocalIconTheme theme = get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME);
-        assert theme != null;
-        return theme.getIconByType(type);
+        return Objects.requireNonNull(get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME)).getIconByType(type);
     }
 
     private Drawable getDrawable(int res) {
