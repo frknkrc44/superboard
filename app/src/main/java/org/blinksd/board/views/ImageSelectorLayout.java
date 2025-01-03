@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.activities.AppSettingsV3;
+import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;

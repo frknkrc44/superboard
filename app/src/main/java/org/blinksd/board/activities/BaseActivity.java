@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 @SuppressWarnings("deprecation")
-class BaseActivity extends Activity {
+public class BaseActivity extends Activity {
     @Override
     public void setContentView(View main) {
         super.setContentView(main);

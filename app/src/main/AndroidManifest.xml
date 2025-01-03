@@ -47,7 +47,7 @@
 
 	<activity
 		android:launchMode="singleTask"
-		android:name=".activities.AppSettingsV3"
+		android:name=".activities.settings.AppSettingsV3"
 		android:exported="false"
 		android:label="@string/settings_activity"/>
 

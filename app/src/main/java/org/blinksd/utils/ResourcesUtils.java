@@ -1,8 +1,10 @@
 package org.blinksd.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.TypedValue;
 
 import org.blinksd.board.SuperBoardApplication;
 
@@ -41,5 +43,11 @@ public class ResourcesUtils {
         }
 
         return res.getColor(resId);
+    }
+
+    public static float getListPreferredItemHeight(Context context) {
+        TypedValue value = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
+        return TypedValue.complexToDimension(value.data, context.getResources().getDisplayMetrics());
     }
 }

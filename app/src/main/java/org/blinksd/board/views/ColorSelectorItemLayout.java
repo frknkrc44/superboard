@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.activities.AppSettingsV3;
+import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.LayoutCreator;
 
 import java.util.TreeMap;
