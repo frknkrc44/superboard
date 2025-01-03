@@ -13,35 +13,27 @@ import org.blinksd.utils.DensityUtils;
 
 @SuppressLint("ViewConstructor")
 public class SuperTab extends LinearLayout {
-    public static final int DEF_VALUE = -3, DEF_BG_COLOR = 0, DEF_ICON_COLOR = 0xFFDEDEDE;
+    public static final int DEF_ICON_COLOR = 0xFFDEDEDE;
     private int currentSelection = 0;
-    private final float disabled = 0.6f;
+    private final float disabledScale = 0.6f;
     private ViewGroup root;
     private OnTabChangedListener mOnTabChangedListener;
 
     public SuperTab(Context context, ViewGroup rootView) {
-        this(context, rootView, DEF_VALUE);
+        this(context, rootView, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public SuperTab(Context context, ViewGroup rootView, int height) {
-        this(context, rootView, DEF_VALUE, height);
+        this(context, rootView, ViewGroup.LayoutParams.MATCH_PARENT, height);
     }
 
     public SuperTab(Context context, ViewGroup rootView, int width, int height) {
-        this(context, rootView, width, height, DEF_VALUE);
-    }
-
-    public SuperTab(Context context, ViewGroup rootView, int width, int height, int bgColor) {
         super(context);
-        createNewBar(rootView, width, height, bgColor);
+        createNewBar(rootView, width, height);
     }
 
-    private void createNewBar(ViewGroup rootView, int width, int height, int bgColor) {
-        if (width == DEF_VALUE) width = getBarInfo(WIDTH);
-        if (height == DEF_VALUE) height = getBarInfo(HEIGHT);
-        if (bgColor == DEF_VALUE) bgColor = getBarInfo(BAR_BG_COLOR);
+    private void createNewBar(ViewGroup rootView, int width, int height) {
         setLayoutParams(new LinearLayout.LayoutParams(width, height, 0));
-        setBackgroundColor(bgColor);
         root = rootView;
     }
 
@@ -54,7 +46,7 @@ public class SuperTab extends LinearLayout {
             if (getChildCount() - 1 < currentSelection)
                 currentSelection = selection = getChildCount() - 1;
             if (currentSelection != selection)
-                getChildAt(currentSelection).animate().scaleX(disabled).scaleY(disabled).setInterpolator(new OvershootInterpolator());
+                getChildAt(currentSelection).animate().scaleX(disabledScale).scaleY(disabledScale).setInterpolator(new OvershootInterpolator());
             getChildAt(selection).animate().scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator());
             for (int i = 0; i != root.getChildCount(); i++)
                 root.getChildAt(i).setVisibility(i == selection ? View.VISIBLE : View.GONE);
@@ -85,60 +77,31 @@ public class SuperTab extends LinearLayout {
         addButtonView().setImageResource(resId);
     }
 
-    public void hideButton(int index) {
-        getChildAt(index).setVisibility(GONE);
-    }
-
-    public void toggleButton(boolean show, int index) {
-        if (show) {
-            showButton(index);
-        } else {
-            hideButton(index);
-        }
-    }
-
-    public void showButton(int index) {
-        getChildAt(index).setVisibility(VISIBLE);
+    public void toggleButton(int index, boolean show) {
+        getChildAt(index).setVisibility(show ? VISIBLE : GONE);
     }
 
     private ImageView addButtonView() {
-        ImageView iv = new ImageView(getContext());
+        ImageView buttonView = new ImageView(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        lp.weight = 1;
-        iv.setLayoutParams(lp);
-        iv.setTag(getChildCount());
-        iv.setScaleX(disabled);
-        iv.setScaleY(iv.getScaleX());
-        int p = DensityUtils.mpInt(4);
-        iv.setPadding(p, p, p, p);
-        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        iv.setOnClickListener(v -> setSelected((int) v.getTag()));
-        ColorUtils.setColorFilter(iv, DEF_ICON_COLOR);
-        addView(iv);
-        if (iv.getTag().equals(currentSelection)) setSelected(currentSelection);
-        return iv;
-    }
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1);
+        buttonView.setLayoutParams(lp);
+        buttonView.setTag(getChildCount());
+        buttonView.setScaleX(disabledScale);
+        buttonView.setScaleY(buttonView.getScaleX());
+        int padding = DensityUtils.mpInt(4);
+        buttonView.setPadding(padding, padding, padding, padding);
+        buttonView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        buttonView.setOnClickListener(v -> setSelected((int) v.getTag()));
+        ColorUtils.setColorFilter(buttonView, DEF_ICON_COLOR);
+        addView(buttonView);
 
-    public static final int WIDTH = 0,
-            HEIGHT = 1,
-            BAR_SELECTION = 2,
-            BAR_BG_COLOR = 3;
+        if (buttonView.getTag().equals(currentSelection))
+            setSelected(currentSelection);
 
-    public int getBarInfo(int req) {
-        switch (req) {
-            case WIDTH:
-                return ViewGroup.LayoutParams.MATCH_PARENT;
-            case HEIGHT:
-                return ViewGroup.LayoutParams.WRAP_CONTENT;
-            case BAR_SELECTION:
-                return 0;
-            case BAR_BG_COLOR:
-                return DEF_BG_COLOR;
-            default:
-                return -1;
-        }
+        return buttonView;
     }
 
     public interface OnTabChangedListener {

@@ -477,7 +477,7 @@ public class AppSettingsV3 extends BaseActivity {
         String str = (String) buttonView.getTag();
         getAppDB().putBoolean(str, isChecked, true);
         if (SettingMap.SET_USE_MONET.equals(str)) {
-            superTab.toggleButton(!isChecked, superTab.getChildCount() - 1);
+            superTab.toggleButton(superTab.getChildCount() - 1, !isChecked);
         }
         restartKeyboard();
     };
