@@ -33,6 +33,8 @@ public class SuperTab extends LinearLayout {
     }
 
     private void createNewBar(ViewGroup rootView, int width, int height) {
+        assert rootView != null : "rootView cannot be null";
+
         setLayoutParams(new LinearLayout.LayoutParams(width, height, 0));
         root = rootView;
         root.setOnHierarchyChangeListener(new OnHierarchyChangeListener() {
