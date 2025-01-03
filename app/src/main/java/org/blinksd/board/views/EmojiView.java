@@ -228,7 +228,7 @@ public class EmojiView extends LinearLayout {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView v = new TextView(EmojiView.this.getContext());
+            TextView v = new TextView(parent.getContext());
             v.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             v.setTextColor(keyTextColor);
             v.setGravity(Gravity.CENTER);

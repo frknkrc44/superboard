@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.GradientDrawable;
@@ -59,16 +60,18 @@ public abstract class SettingsBaseActivity extends BaseActivity {
 
     @SuppressLint("DiscouragedApi")
     List<String> getArrayAsList(String key) {
+        Resources res = getResources();
+
         int id;
         try {
-            id = this.getResources().getIdentifier("settings_" + key, "array", this.getPackageName());
+            id = res.getIdentifier("settings_" + key, "array", this.getPackageName());
         } catch (Throwable t) {
             id = 0;
         }
 
         if (id > 0) {
             try {
-                String[] arr = this.getResources().getStringArray(id);
+                String[] arr = res.getStringArray(id);
                 return new ArrayList<>(Arrays.asList(arr));
             } catch (Throwable ignored) {}
         }

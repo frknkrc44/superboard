@@ -105,7 +105,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
             text = "";
 
         if (lang == null)
-            lang = this.superBoard.getKeyboardLanguage().getLanguage();
+            lang = superBoard.getKeyboardLanguage().getLanguage();
 
         String str = text.toString();
         mCompleteText = str;
