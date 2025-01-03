@@ -14,7 +14,7 @@ import org.blinksd.utils.DensityUtils;
 @SuppressLint("ViewConstructor")
 public class SuperTab extends LinearLayout {
     public static final int DEF_ICON_COLOR = 0xFFDEDEDE;
-    private int currentSelection = 0;
+    private int currentSelection = -1;
     private final float disabledScale = 0.6f;
     private ViewGroup root;
     private OnTabChangedListener mOnTabChangedListener;
@@ -35,6 +35,17 @@ public class SuperTab extends LinearLayout {
     private void createNewBar(ViewGroup rootView, int width, int height) {
         setLayoutParams(new LinearLayout.LayoutParams(width, height, 0));
         root = rootView;
+        root.setOnHierarchyChangeListener(new OnHierarchyChangeListener() {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                child.setVisibility(getChildCount() == currentSelection ? VISIBLE : GONE);
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
+
+            }
+        });
     }
 
     public int getSelected() {
@@ -42,19 +53,39 @@ public class SuperTab extends LinearLayout {
     }
 
     public void setSelected(int selection) {
-        if (root != null) {
-            if (getChildCount() - 1 < currentSelection)
-                currentSelection = selection = getChildCount() - 1;
-            if (currentSelection != selection)
-                getChildAt(currentSelection).animate().scaleX(disabledScale).scaleY(disabledScale).setInterpolator(new OvershootInterpolator());
-            getChildAt(selection).animate().scaleX(1).scaleY(1).setInterpolator(new OvershootInterpolator());
-            for (int i = 0; i != root.getChildCount(); i++)
-                root.getChildAt(i).setVisibility(i == selection ? View.VISIBLE : View.GONE);
-
-            if (mOnTabChangedListener != null)
-                mOnTabChangedListener.onTabChanged(selection);
+        if (currentSelection == selection) {
+            return;
         }
+
+        if (root != null) {
+            if (getChildCount() - 1 < currentSelection) {
+                currentSelection = selection = getChildCount() - 1;
+            }
+
+            if (currentSelection >= 0) {
+                getChildAt(currentSelection).animate()
+                        .scaleX(disabledScale)
+                        .scaleY(disabledScale)
+                        .setInterpolator(new OvershootInterpolator());
+                root.getChildAt(currentSelection).setVisibility(GONE);
+            }
+
+            getChildAt(selection).animate()
+                    .scaleX(1)
+                    .scaleY(1)
+                    .setInterpolator(new OvershootInterpolator());
+            root.getChildAt(selection).setVisibility(VISIBLE);
+
+            if (mOnTabChangedListener != null) {
+                mOnTabChangedListener.onTabChanged(selection);
+            }
+        }
+
         currentSelection = selection;
+
+        if (mOnTabChangedListener != null) {
+            mOnTabChangedListener.onTabChanged(selection);
+        }
     }
 
     public void setSelected(boolean next) {
@@ -98,8 +129,9 @@ public class SuperTab extends LinearLayout {
         ColorUtils.setColorFilter(buttonView, DEF_ICON_COLOR);
         addView(buttonView);
 
-        if (buttonView.getTag().equals(currentSelection))
+        if (buttonView.getTag().equals(currentSelection)) {
             setSelected(currentSelection);
+        }
 
         return buttonView;
     }
