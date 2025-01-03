@@ -32,7 +32,6 @@ import android.widget.Toast;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomRadioButton;
-import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
@@ -119,7 +118,7 @@ public final class BackupRestoreActivity extends Activity {
         };
 
         for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(this, tabTitles[i]);
+            tabTitles[i] = AppSettingsV3.getTranslation(this, tabTitles[i]);
         }
 
         host.setup();
@@ -388,10 +387,7 @@ public final class BackupRestoreActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         Drawable doneIcon = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
         MenuItem done = menu.add(android.R.string.ok).setIcon(doneIcon);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            done.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
+        done.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return super.onCreateOptionsMenu(menu);
     }

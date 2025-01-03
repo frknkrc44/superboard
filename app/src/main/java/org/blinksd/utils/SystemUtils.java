@@ -9,8 +9,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -39,12 +37,7 @@ public final class SystemUtils {
 
     @SuppressLint("PrivateApi")
     public static boolean detectNavbar(InputService inputService) {
-        if (SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return WindowManagerServiceUtils.hasNavigationBar(inputService);
-        }
-
-        return (!(KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK) &&
-                KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME)));
+        return WindowManagerServiceUtils.hasNavigationBar(inputService);
     }
 
     @SuppressLint("ResourceType")
@@ -125,11 +118,7 @@ public final class SystemUtils {
     }
 
     private static boolean isTablet() {
-        if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            return SuperBoardApplication.getResConfiguration().smallestScreenWidthDp >= 600;
-        }
-
-        return false;
+        return SuperBoardApplication.getResConfiguration().smallestScreenWidthDp >= 600;
     }
 
     private static boolean isLand() {

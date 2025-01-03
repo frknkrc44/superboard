@@ -537,30 +537,28 @@ public final class InputService extends InputMethodService implements
             SuperBoardApplication.clearCustomFont();
             SuperBoardApplication.getCustomFont();
 
-            if (SDK_INT >= 11) {
-                boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
-                        SettingMap.SET_ENABLE_CLIPBOARD);
+            boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
+                    SettingMap.SET_ENABLE_CLIPBOARD);
 
-                if (enableClipboard && clipboardView == null) {
-                    clipboardView = new ClipboardView(superBoardView);
-                    clipboardView.setVisibility(View.GONE);
-                    keyboardLayoutHolder.addView(clipboardView);
-                } else if (!enableClipboard) {
-                    if (clipboardView != null) {
-                        clipboardView.clearClipboard();
-                        clipboardView.deInit();
-                        keyboardLayoutHolder.removeView(clipboardView);
-                        clipboardView = null;
-                        System.gc();
-                    }
-
-                    SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
-                }
-
+            if (enableClipboard && clipboardView == null) {
+                clipboardView = new ClipboardView(superBoardView);
+                clipboardView.setVisibility(View.GONE);
+                keyboardLayoutHolder.addView(clipboardView);
+            } else if (!enableClipboard) {
                 if (clipboardView != null) {
-                    clipboardView.onPrimaryClipChanged();
-                    clipboardView.reTheme();
+                    clipboardView.clearClipboard();
+                    clipboardView.deInit();
+                    keyboardLayoutHolder.removeView(clipboardView);
+                    clipboardView = null;
+                    System.gc();
                 }
+
+                SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
+            }
+
+            if (clipboardView != null) {
+                clipboardView.onPrimaryClipChanged();
+                clipboardView.reTheme();
             }
         }
 
@@ -664,7 +662,7 @@ public final class InputService extends InputMethodService implements
     }
 
     private void showClipboardView(boolean value) {
-        if (SDK_INT < 11 || clipboardView == null) {
+        if (clipboardView == null) {
             return;
         }
         if (clipboardView.isShown() != value) {
@@ -694,7 +692,7 @@ public final class InputService extends InputMethodService implements
                 showEmojiView(false);
             }
 
-            if (SDK_INT >= Build.VERSION_CODES.HONEYCOMB && clipboardView != null && clipboardView.isShown()) {
+            if (clipboardView != null && clipboardView.isShown()) {
                 showClipboardView(false);
             }
 
@@ -739,7 +737,7 @@ public final class InputService extends InputMethodService implements
         }
 
         private boolean isClipboardViewShown() {
-            return SDK_INT >= Build.VERSION_CODES.HONEYCOMB && clipboardView != null && clipboardView.isShown();
+            return clipboardView != null && clipboardView.isShown();
         }
 
         private boolean isEmojiViewShown() {

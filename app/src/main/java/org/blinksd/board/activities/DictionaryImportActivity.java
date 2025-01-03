@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.Gravity;
@@ -18,6 +17,7 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.DictionaryDB;
+import org.blinksd.utils.ViewUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,21 +57,13 @@ public final class DictionaryImportActivity extends Activity {
         tv.setLayoutParams(new FrameLayout.LayoutParams(-1, -2));
         tv.setGravity(Gravity.CENTER);
         tv.setText(R.string.settings_dict_importing);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tv.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)  {
-            tv.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Medium);
-        }
+        ViewUtils.setTextAppearance(tv, android.R.style.TextAppearance_Medium);
         ll.addView(tv);
         TextView tv2 = new TextView(this);
         tv2.setId(android.R.id.text1);
         tv2.setLayoutParams(new FrameLayout.LayoutParams(-1, -2));
         tv2.setGravity(Gravity.CENTER);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            tv2.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)  {
-            tv2.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Medium);
-        }
+        ViewUtils.setTextAppearance(tv2, android.R.style.TextAppearance_Medium);
         ll.addView(tv2);
         setContentView(ll);
     }
@@ -159,7 +151,7 @@ public final class DictionaryImportActivity extends Activity {
             return 2;
         }
 
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Void ignoredResult) {
             finish();
         }
     }

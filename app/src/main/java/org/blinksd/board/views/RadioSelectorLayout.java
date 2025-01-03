@@ -9,8 +9,8 @@ import org.blinksd.utils.DensityUtils;
 import java.util.List;
 
 @SuppressLint("ViewConstructor")
-final class RadioSelectorLayout extends RadioGroup {
-    RadioSelectorLayout(Context context, int selection, List<String> items) {
+public final class RadioSelectorLayout extends RadioGroup {
+    public RadioSelectorLayout(Context context, int selection, List<String> items) {
         super(context);
         int i = DensityUtils.dpInt(8);
         setPadding(i, i, i, i);

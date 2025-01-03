@@ -1,7 +1,6 @@
 package org.blinksd.utils;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -84,7 +83,6 @@ public final class LayoutCreator {
         return new ViewGroup.LayoutParams(-1, -1);
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static Switch createSwitch(Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {
         Switch sw = (Switch) getView(Switch.class, ctx);
         sw.setText(text);
@@ -104,7 +102,6 @@ public final class LayoutCreator {
     }
 
     /** @noinspection JavaReflectionMemberAccess*/
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @SuppressWarnings("deprecation")
     @SuppressLint("DiscouragedPrivateApi")
     private static void setSwitchThumbAPI14(Switch switchWidget) {

@@ -389,8 +389,7 @@ public class LayoutUtils {
         return getSelectableItemBg(context, textColor, darker, false);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static Drawable getTransSelectableItemBg(Context context, int textColor, boolean transparent) {
+    public static Drawable getTransSelectableItemBg(Context context, int textColor) {
         TypedArray array = context.getTheme().obtainStyledAttributes(
                 new int[]{android.R.attr.selectableItemBackground}
         );
@@ -405,11 +404,8 @@ public class LayoutUtils {
 
     public static Drawable getSelectableItemBg(
             Context context, int textColor, boolean darker, boolean transparent) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return getCircleButtonBackground(true);
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return getTransSelectableItemBg(context, textColor, transparent);
+            return getTransSelectableItemBg(context, textColor);
         }
 
         GradientDrawable content = new GradientDrawable();

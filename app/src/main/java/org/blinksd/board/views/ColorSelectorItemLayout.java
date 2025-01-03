@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.AppSettingsV3;
 import org.blinksd.utils.LayoutCreator;
 
 import java.util.TreeMap;
@@ -47,20 +48,20 @@ public final class ColorSelectorItemLayout extends LinearLayout {
             case -1:
                 img.setImageResource(android.R.drawable.ic_input_add);
                 img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_add_item"));
+                btn.setText(AppSettingsV3.getTranslation(ctx, "image_selector_gradient_add_item"));
                 setOnClickListener(gradientAddColorListener);
                 return;
             case -2:
                 img.setImageResource(android.R.drawable.ic_media_next);
                 img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_change_orientation"));
+                btn.setText(AppSettingsV3.getTranslation(ctx, "image_selector_gradient_change_orientation"));
                 setOnClickListener(gradientAddColorListener);
                 return;
         }
         colorList = colors;
         int color = 0xFF000000;
         updateColorView(color);
-        btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_item"));
+        btn.setText(AppSettingsV3.getTranslation(ctx, "image_selector_gradient_item"));
         ImageView del = LayoutCreator.createImageView(ctx);
         lp = new LayoutParams(size, size, 0);
         del.setLayoutParams(lp);

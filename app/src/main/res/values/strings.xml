@@ -15,7 +15,7 @@
 	<string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
 	<string name="wizard_finishbtn">Finish</string>
 
-	<string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
+	<string name="keyboard_theme_api_perm_label" translatable="false" tools:keep="@string/keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
 	
 	<!-- Settings resources -->
 	<string name="settings_activity">Settings</string>
@@ -156,7 +156,8 @@
 		<item>Empty</item>
 	</string-array>
 
-	<string-array name="settings_categories" translatable="false">
+	<string-array name="settings_categories" translatable="false"
+		tools:keep="@array/settings_categories">
 		<item>@string/settings_category_general</item>
 		<item>@string/settings_category_layout</item>
 		<item>@string/settings_category_popup</item>

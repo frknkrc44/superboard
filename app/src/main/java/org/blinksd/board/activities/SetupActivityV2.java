@@ -43,7 +43,7 @@ public final class SetupActivityV2 extends Activity {
         super.onCreate(savedInstanceState);
 
         if (!isInputMethodDisabled() && !isInputMethodNotSelected()) {
-            startActivity(new Intent(this, AppSettingsV2.class));
+            startActivity(new Intent(this, AppSettingsV3.class));
             finish();
             return;
         }
@@ -100,7 +100,7 @@ public final class SetupActivityV2 extends Activity {
                         R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_settings,
                 R.string.wizard_settingsbtn,
-                v -> startActivity(new Intent(v.getContext(), AppSettingsV2.class)),
+                v -> startActivity(new Intent(v.getContext(), AppSettingsV3.class)),
                 true,
                 true
         ));
@@ -154,8 +154,7 @@ public final class SetupActivityV2 extends Activity {
         PageContent content = pageContents.get(page);
         final int duration = 200;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-                && contentView.getChildCount() > 0) {
+        if (contentView.getChildCount() > 0) {
             contentView.getChildAt(0)
                     .animate()
                     .alpha(0)
@@ -284,11 +283,7 @@ public final class SetupActivityV2 extends Activity {
             params.topMargin = padding;
             params.bottomMargin = padding;
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                textView.setTextAppearance(context, android.R.style.TextAppearance_Medium);
-            } else {
-                textView.setTextAppearance(android.R.style.TextAppearance_Medium);
-            }
+            ViewUtils.setTextAppearance(textView, android.R.style.TextAppearance_Medium);
             textView.setGravity(Gravity.CENTER);
 
             ViewUtils.setBackground(buttonView,

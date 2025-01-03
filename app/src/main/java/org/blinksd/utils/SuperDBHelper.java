@@ -1,11 +1,15 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.ResourcesUtils.getColor;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Build;
+import android.util.Log;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.frknkrc44.minidb.SuperMiniDB;
@@ -49,11 +53,13 @@ public final class SuperDBHelper {
     }
 
     public static String getStringOrDefault(String key) {
+        Log.d(SuperDBHelper.class.getSimpleName(), "Key: " + key);
+
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
             db.putString(key, String.valueOf(
-                    SuperBoardApplication.getSettings().getDefaults(key)), true);
+                    getSettings().getDefaults(key)), true);
         }
         return db.getString(key, ret);
     }
@@ -87,7 +93,7 @@ public final class SuperDBHelper {
     }
 
     private static boolean isBooleanDependencyResolved(final String key) {
-        SettingItem item = SuperBoardApplication.getSettings().get(key);
+        SettingItem item = getSettings().get(key);
         List<String> checkedKeys = new ArrayList<>();
         checkedKeys.add(key);
 
@@ -96,7 +102,7 @@ public final class SuperDBHelper {
             if ((boolean) item.dependencyEnabled != depValue) return false;
 
             checkedKeys.add(item.dependency);
-            item = SuperBoardApplication.getSettings().get(item.dependency);
+            item = getSettings().get(item.dependency);
         }
 
         return true;
@@ -136,15 +142,33 @@ public final class SuperDBHelper {
     }
 
     public static void importAllFromJSON(JSONObject json) throws JSONException {
-        Map<String, String> importMap = new HashMap<>();
         Iterator<String> it = json.keys();
 
         while(it.hasNext()) {
             String key = it.next();
-            SuperBoardApplication.getAppDB().putString(key, json.getString(key));
+            getAppDB().putString(key, json.getString(key));
         }
 
-        SuperBoardApplication.getAppDB().writeAll();
+        getAppDB().writeAll();
+    }
+
+    public static void setColorsFromBitmap(Bitmap b) {
+        if (b == null) return;
+        int c = ColorUtils.getBitmapColor(b);
+        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, c - 0xAA000000);
+        int keyClr = c - 0xAA000000;
+        int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+        int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_BGCLR, keyClr);
+        getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR, keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
+        boolean isLight = ColorUtils.satisfiesTextContrast(c);
+        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, ColorUtils.getDarkerColor(keyPress2Clr));
+        keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
+        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, keyClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, keyClr ^ 0x00FFFFFF);
+        getAppDB().writeAll();
     }
 
     public static Map<String, String> exportAllToMap(List<String> except) {

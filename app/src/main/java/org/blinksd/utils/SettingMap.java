@@ -166,24 +166,13 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type, null, null));
     }
 
-    public int getChildrenCount(SettingCategory category) {
-        int count = 0;
+    public void iterChild(SettingCategory category, ChildIterator iterator) {
         for (String str : keyList()) {
-            if (get(str).category == category)
-                count++;
-        }
-        return count;
-    }
-
-    public String getChildKey(SettingCategory category, int idx) {
-        int i = 0;
-        for (String str : keyList()) {
-            if (get(str).category == category) {
-                if (i == idx) return str;
-                i++;
+            SettingItem item = get(str);
+            if (item.category == category) {
+                iterator.onIterate(str, item);
             }
         }
-        return null;
     }
 
     public Intent getRedirect(Context context, final String key) {
@@ -372,5 +361,21 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             }
         }
         return nums;
+    }
+
+    public boolean getSwitchEnabledFromDependency(String settingName) {
+        SettingItem item = get(settingName);
+        boolean enabled = item == null || item.dependency == null;
+
+        if (!enabled) {
+            boolean value = SuperDBHelper.getBooleanOrDefault(item.dependency);
+            enabled = (boolean) item.dependencyEnabled == value;
+        }
+
+        return enabled;
+    }
+
+    public interface ChildIterator {
+        void onIterate(String key, SettingItem item);
     }
 }

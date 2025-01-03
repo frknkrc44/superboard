@@ -7,10 +7,10 @@ import android.os.Build;
 import org.blinksd.board.InputService;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
-import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.superboard.Language;
 import org.json.JSONException;
@@ -111,7 +111,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             File file = SuperBoardApplication.getBackgroundImageFile();
             outputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            SettingsCategorizedListAdapter.setColorsFromBitmap(bmp);
+            SuperDBHelper.setColorsFromBitmap(bmp);
 
             // disable monet because we're imported a background image
             // and pulled colors from it
@@ -134,7 +134,8 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public static void restartKeyboard() {
         try {
             SuperBoardApplication.getApplication()
-                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD));
+                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD)
+                            .setPackage(SuperBoardApplication.getApplication().getPackageName()));
         } catch (Throwable e) {
             // do nothing
         }

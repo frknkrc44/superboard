@@ -7,14 +7,6 @@ import android.view.WindowManager;
 
 @SuppressWarnings("deprecation")
 class BaseActivity extends Activity {
-    public void recreate() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            super.recreate();
-        } else {
-            onCreate(getIntent().getExtras());
-        }
-    }
-
     @Override
     public void setContentView(View main) {
         super.setContentView(main);

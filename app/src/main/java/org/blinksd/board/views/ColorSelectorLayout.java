@@ -21,6 +21,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.AppSettingsV3;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
@@ -75,7 +76,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         };
 
         for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(ctx, tabTitles[i]);
+            tabTitles[i] = AppSettingsV3.getTranslation(ctx, tabTitles[i]);
         }
 
         host.setOnTabChangedListener(p1 -> {

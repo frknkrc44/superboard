@@ -3,6 +3,7 @@ package org.blinksd.utils;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
+import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
 public class ViewUtils {
@@ -13,6 +14,14 @@ public class ViewUtils {
             view.setBackground(drawable);
         } else {
             view.setBackgroundDrawable(drawable);
+        }
+    }
+
+    public static void setTextAppearance(TextView textView, int resId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextAppearance(resId);
+        } else {
+            textView.setTextAppearance(textView.getContext(), resId);
         }
     }
 }

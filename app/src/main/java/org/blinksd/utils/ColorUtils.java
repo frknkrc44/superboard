@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.blinksd.board.SuperBoardApplication;
 
@@ -27,6 +28,15 @@ public final class ColorUtils {
             drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
         } else {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void setColorFilter(ImageView view, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            view.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
+        } else {
+            view.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
     }
 
@@ -186,10 +196,6 @@ public final class ColorUtils {
         } catch (Throwable ignored) {}
 
         return color;
-    }
-
-    public static String colorIntToString(int r, int g, int b) {
-        return colorIntToString(0xFF, r, g, b);
     }
 
     public static String colorIntToString(int a, int r, int g, int b) {

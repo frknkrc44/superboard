@@ -1,7 +1,6 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static android.os.Build.VERSION_CODES.P;
 
 public final class Defaults {
@@ -52,7 +51,7 @@ public final class Defaults {
     public static final boolean KILL_BACKGROUND = false;
     public static final boolean DISABLE_TOP_BAR = false;
     public static final boolean HIDE_TOP_BAR_FN_BUTTONS = true;
-    public static final boolean ENABLE_CLIPBOARD = SDK_INT >= HONEYCOMB;
+    public static final boolean ENABLE_CLIPBOARD = true;
     public static final boolean DISABLE_NUMBER_ROW = false;
     public static final boolean USE_FIRST_POPUP_CHARACTER = false;
 }

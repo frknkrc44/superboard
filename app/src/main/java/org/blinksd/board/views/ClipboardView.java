@@ -1,7 +1,6 @@
 package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -37,7 +36,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 @SuppressLint("ViewConstructor")
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public final class ClipboardView extends LinearLayout
         implements ClipboardManager.OnPrimaryClipChangedListener {
     private LinearLayout listView;
@@ -77,7 +75,7 @@ public final class ClipboardView extends LinearLayout
 
         clearAllButton = new ImageButton(getContext());
         ViewUtils.setBackground(clearAllButton, LayoutUtils.getTransSelectableItemBg(
-                getContext(), textColor, false));
+                getContext(), textColor));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
@@ -146,7 +144,7 @@ public final class ClipboardView extends LinearLayout
 
         ImageButton button = new ImageButton(getContext());
         ViewUtils.setBackground(button, LayoutUtils.getTransSelectableItemBg(
-                getContext(), textColor, false));
+                getContext(), textColor));
         button.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         button.setScaleType(ImageView.ScaleType.FIT_CENTER);
         button.setOnClickListener(v -> removeClipView(v, true));

@@ -710,10 +710,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         if (modifiersEnabled && TextUtilsCompat.getCharset("US-ASCII").newEncoder().canEncode(text)) {
             // Copied from https://stackoverflow.com/a/31625638
             KeyCharacterMap charMap;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
-            else
-                charMap = KeyCharacterMap.load(KeyCharacterMap.ALPHA);
+            charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
 
             for (KeyEvent event : charMap.getEvents(text.toCharArray())) {
                 sendKeyDownUp(event.getKeyCode());

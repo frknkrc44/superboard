@@ -4,7 +4,6 @@ import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -160,15 +159,8 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void setXY(float x, float y) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            setX(x);
-            setY(y);
-            return;
-        }
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
-        params.leftMargin = (int) x;
-        params.topMargin = (int) y;
+        setX(x);
+        setY(y);
     }
 
     @Override

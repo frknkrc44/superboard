@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.board.activities.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
@@ -74,7 +75,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                 System.gc();
                 p0.dismiss();
             });
-            SettingsCategorizedListAdapter.doHacksAndShow(build.create());
+            AppSettingsV3.doHacksAndShow(build.create());
         }
 
     };
@@ -101,7 +102,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     };
     private static int indexNum = 0, gradientType = 0;
 
-    public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard, String key) {
+    public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard) {
         super(win.getContext());
         setOrientation(VERTICAL);
 
@@ -388,7 +389,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     };
 
     private String getImageSelectorTranslation(String key) {
-        return SettingsCategorizedListAdapter.getTranslation(
+        return AppSettingsV3.getTranslation(
                 SuperBoardApplication.getApplication(), "image_selector_" + key);
     }
 }
