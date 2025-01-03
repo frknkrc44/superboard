@@ -13,35 +13,33 @@ import org.blinksd.utils.DensityUtils;
 
 @SuppressLint("ViewConstructor")
 public class SuperTab extends LinearLayout {
-    public static final int DEFVALUE = 0x98, DEF_BG_COLOR = 0, DEF_ICON_COLOR = 0xFFDEDEDE;
-    private Context mContext;
+    public static final int DEF_VALUE = -3, DEF_BG_COLOR = 0, DEF_ICON_COLOR = 0xFFDEDEDE;
     private int currentSelection = 0;
     private final float disabled = 0.6f;
     private ViewGroup root;
     private OnTabChangedListener mOnTabChangedListener;
 
     public SuperTab(Context context, ViewGroup rootView) {
-        this(context, rootView, DEFVALUE);
+        this(context, rootView, DEF_VALUE);
     }
 
     public SuperTab(Context context, ViewGroup rootView, int height) {
-        this(context, rootView, DEFVALUE, height);
+        this(context, rootView, DEF_VALUE, height);
     }
 
     public SuperTab(Context context, ViewGroup rootView, int width, int height) {
-        this(context, rootView, width, height, DEFVALUE);
+        this(context, rootView, width, height, DEF_VALUE);
     }
 
     public SuperTab(Context context, ViewGroup rootView, int width, int height, int bgColor) {
         super(context);
-        if (width == DEFVALUE) width = getBarInfo(WIDTH);
-        if (height == DEFVALUE) height = getBarInfo(HEIGHT);
-        if (bgColor == DEFVALUE) bgColor = getBarInfo(BAR_BG_COLOR);
-        createNewBar(context, rootView, width, height, bgColor);
+        createNewBar(rootView, width, height, bgColor);
     }
 
-    private void createNewBar(Context context, ViewGroup rootView, int width, int height, int bgColor) {
-        mContext = context;
+    private void createNewBar(ViewGroup rootView, int width, int height, int bgColor) {
+        if (width == DEF_VALUE) width = getBarInfo(WIDTH);
+        if (height == DEF_VALUE) height = getBarInfo(HEIGHT);
+        if (bgColor == DEF_VALUE) bgColor = getBarInfo(BAR_BG_COLOR);
         setLayoutParams(new LinearLayout.LayoutParams(width, height, 0));
         setBackgroundColor(bgColor);
         root = rootView;
@@ -104,7 +102,7 @@ public class SuperTab extends LinearLayout {
     }
 
     private ImageView addButtonView() {
-        ImageView iv = new ImageView(mContext);
+        ImageView iv = new ImageView(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
