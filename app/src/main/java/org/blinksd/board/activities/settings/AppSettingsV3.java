@@ -3,7 +3,6 @@ package org.blinksd.board.activities.settings;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;

@@ -13,7 +13,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.TypedValue;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
