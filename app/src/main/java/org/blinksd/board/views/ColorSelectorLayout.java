@@ -306,7 +306,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         sb.setKeysPadding(DensityUtils.dpInt(4));
         sb.setKeyDrawable(0, 1, -1, R.drawable.sym_keyboard_delete);
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
-        sb.setKeyDrawable(0, 0, -1, R.drawable.sym_keyboard_close);
+        sb.setKeyDrawable(0, 0, -1, R.drawable.delete);
         sb.setPressEventForKey(0, 0, -1, Keyboard.KEYCODE_CANCEL);
         sb.setKeysBackground(LayoutUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
         ll.addView(hexIn);

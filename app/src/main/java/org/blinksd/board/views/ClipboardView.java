@@ -82,7 +82,7 @@ public final class ClipboardView extends LinearLayout
         clearAllButton.setLayoutParams(buttonParams);
         clearAllButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         clearAllButton.setOnClickListener(V -> clearClipboard());
-        clearAllButton.setImageResource(R.drawable.sym_keyboard_close);
+        clearAllButton.setImageResource(R.drawable.delete);
         clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         addView(clearAllButton);
@@ -127,8 +127,6 @@ public final class ClipboardView extends LinearLayout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
         textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
-        textHolder.setOnClickListener(v -> selectAndUseClipItem(v, true));
-        textHolder.setOnLongClickListener(v -> selectAndUseClipItem(v, false));
         clipLayout.addView(textHolder);
 
         TextView textView1 = textHolder.findViewById(android.R.id.text1);
@@ -142,17 +140,30 @@ public final class ClipboardView extends LinearLayout
         textView2.setText(dateFormat.format(Calendar.getInstance().getTime()));
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
-        ImageButton button = new ImageButton(getContext());
-        ViewUtils.setBackground(button, LayoutUtils.getTransSelectableItemBg(
+        ImageButton pasteButton = new ImageButton(getContext());
+        ViewUtils.setBackground(pasteButton, LayoutUtils.getTransSelectableItemBg(
                 getContext(), textColor));
-        button.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
-        button.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        button.setOnClickListener(v -> removeClipView(v, true));
-        button.setImageResource(R.drawable.sym_keyboard_close);
-        button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        button.setId(R.id.gradient_selector);
-        button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
-        clipLayout.addView(button);
+        pasteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
+        pasteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        pasteButton.setOnClickListener(v -> selectAndUseClipItem(v, false));
+        pasteButton.setOnLongClickListener(v -> selectAndUseClipItem(v, true));
+        pasteButton.setImageResource(R.drawable.clipboard);
+        pasteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        pasteButton.setId(R.id.gradient_selector);
+        pasteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        clipLayout.addView(pasteButton);
+
+        ImageButton deleteButton = new ImageButton(getContext());
+        ViewUtils.setBackground(deleteButton, LayoutUtils.getTransSelectableItemBg(
+                getContext(), textColor));
+        deleteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
+        deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        deleteButton.setOnClickListener(v -> removeClipView(v, true));
+        deleteButton.setImageResource(R.drawable.delete);
+        deleteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        deleteButton.setId(R.id.gradient_selector);
+        deleteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        clipLayout.addView(deleteButton);
 
         if (addToHistory) {
             clipboardHistory.add(text);

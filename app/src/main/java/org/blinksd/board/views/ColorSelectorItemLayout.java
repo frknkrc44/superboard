@@ -66,7 +66,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         lp = new LayoutParams(size, size, 0);
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
-        del.setImageResource(R.drawable.sym_keyboard_close);
+        del.setImageResource(R.drawable.delete);
         del.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
