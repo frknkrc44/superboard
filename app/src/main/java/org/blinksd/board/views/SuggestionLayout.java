@@ -160,6 +160,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
         key.setStateCount(2);
         mQuickMenuLayout.addView(key);
+        superBoard.addExtraKey(key);
     }
 
     private void addQMItem(int tag, int drawableRes, boolean repeat) {
@@ -169,6 +170,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         superBoard.setPressEventForKey(key, tag, true);
         key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
         mQuickMenuLayout.addView(key);
+        superBoard.addExtraKey(key);
     }
 
     private void addCompletionView(final CharSequence text) {
@@ -211,24 +213,10 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
         for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
             View view = mQuickMenuLayout.getChildAt(i);
-            int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-            int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
-            Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
 
             if (view instanceof SuperBoard.Key) {
                 SuperBoard.Key key = (SuperBoard.Key) view;
-                key.setKeyItemColor(color);
-
-                ViewUtils.setBackground(key, keyPressBg);
-
-                int textSize = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
-                key.setKeyTextSize(textSize);
-
-                int shr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
-                        shc = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR);
-                key.setKeyShadow(shr, shc);
-
-                key.setKeyImageVisible(key.isKeyIconSet());
+                key.toggleVisibility();
 
                 switch(key.getNormalPressEvent().first) {
                     case KeyEvent.KEYCODE_EISU: {
@@ -241,6 +229,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                         key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                         break;
                     }
+                    case KeyEvent.KEYCODE_HENKAN:
                     case KeyEvent.KEYCODE_DPAD_LEFT:
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
                     case SuperBoard.KEYCODE_TOGGLE_CTRL:
@@ -259,6 +248,9 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 setKeyLockStatus(key);
             } else if (view instanceof ImageButton) {
                 ImageButton btn = (ImageButton) view;
+                int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+                int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
+                Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
 
                 if ((int) btn.getTag() == 4) {
                     boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);

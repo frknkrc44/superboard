@@ -1,6 +1,7 @@
 package org.blinksd.board;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
@@ -30,7 +31,6 @@ import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -389,7 +389,7 @@ public final class InputService extends InputMethodService implements
             keyboardLayoutHolder.setOrientation(LinearLayout.VERTICAL);
             suggestionLayout = new SuggestionLayout(superBoardView);
             suggestionLayout.setFocusable(false);
-            suggestionLayout.setLayoutParams(new FrameLayout.LayoutParams(-1, mpInt(12)));
+            suggestionLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, mpInt(12), 0));
             keyboardLayoutHolder.addView(suggestionLayout);
             keyboardLayoutHolder.addView(superBoardView);
             if (emojiView != null) {
@@ -436,7 +436,8 @@ public final class InputService extends InputMethodService implements
             superBoardView.setEnforcedEditorAction(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENFORCE_EDITOR_ACTION));
             superBoardView.setRepeating(!SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_REPEAT));
             superBoardView.updateKeyState();
-            superBoardView.setKeyboardHeight(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT));
+            int kbdHeight = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
+            superBoardView.setKeyboardHeight(kbdHeight);
             File img;
             int c = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
             if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
@@ -459,10 +460,6 @@ public final class InputService extends InputMethodService implements
 
             keyboardLayoutHolder.setBackgroundColor(c);
             superBoardView.setBackgroundColor(Color.TRANSPARENT);
-
-            if (suggestionLayout != null) {
-                suggestionLayout.reTheme();
-            }
 
             int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BGCLR);
             int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
@@ -500,10 +497,11 @@ public final class InputService extends InputMethodService implements
                     .getTableLength(currentLanguageCache.language.split("_")[0]) < 1;
             boolean sugDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
             boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
+            boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
             boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
             superBoardView.setPressEventForKey(2, 3, 0,
-                    topBarDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
-            superBoardView.getKey(2, 3, 0).setText(topBarDisabled ? "S3" : "S1");
+                    topBarDisabled || fnDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
+            superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
             suggestionLayout.toggleQuickMenu(topBarDisabled);
@@ -529,7 +527,6 @@ public final class InputService extends InputMethodService implements
             superBoardView.getRow(0, 0).setVisibility(numDisabled ? View.GONE : View.VISIBLE);
 
             superBoardView.setKeyboardLanguage(currentLanguageCache.language);
-            adjustNavbar(c);
             if (emojiView != null) {
                 emojiView.applyTheme(superBoardView);
                 emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
@@ -556,9 +553,18 @@ public final class InputService extends InputMethodService implements
                 SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
             }
 
+            adjustNavbar(c);
+
             if (clipboardView != null) {
                 clipboardView.onPrimaryClipChanged();
                 clipboardView.reTheme();
+                clipboardView.getLayoutParams().height = hpInt(kbdHeight);
+            }
+
+            if (suggestionLayout != null) {
+                int textKbdRowCount = superBoardView.getLayoutRowCount(superBoardView.findTextKeyboardIndex());
+                suggestionLayout.getLayoutParams().height = hpInt(kbdHeight) / textKbdRowCount;
+                suggestionLayout.reTheme();
             }
         }
 

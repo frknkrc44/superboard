@@ -101,6 +101,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             KEYCODE_TOGGLE_ALT,
             Keyboard.KEYCODE_SHIFT
     );
+    private List<Key> extraKeyViews = new ArrayList<>();
 
     // key states
     private int ctrl = 0;
@@ -310,6 +311,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         applyToAllKeys(Key::applyIconMultiply);
     }
 
+    public void addExtraKey(Key key) {
+        extraKeyViews.add(key);
+    }
+
+    public void removeExtraKey(Key key) {
+        extraKeyViews.remove(key);
+    }
+
     protected final float getKeysTextSize() {
         return textSize;
     }
@@ -359,6 +368,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 }
             }
         }
+
+        for (int i = 0; i < extraKeyViews.size(); i++) {
+            runnable.run(extraKeyViews.get(i));
+        }
     }
 
     public final void setKeyboardWidth(int percent) {
@@ -383,6 +396,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         Key t = getKey(keyboardIndex, rowIndex, keyIndex);
         ((LinearLayout.LayoutParams) t.getLayoutParams()).gravity = CENTER;
         t.setKeyIcon(d);
+    }
+
+    public int getLayoutRowCount(int layoutIndex) {
+        return ((ViewGroup) getChildAt(layoutIndex)).getChildCount();
     }
 
     public int getEnabledLayoutIndex() {
@@ -1464,7 +1481,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             applyIconMultiply();
         }
 
-        public void applyIconMultiply() {
+        private void applyIconMultiply() {
             ViewGroup.LayoutParams vp = icon.getLayoutParams();
             vp.width = -1;
             vp.height = (int) (textSize * iconSizeMultiplier);
@@ -1483,6 +1500,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyTextStyle(TextType style) {
             TextUtilsCompat.setTypefaceFromTextType(label, style);
             subLabel.setTypeface(label.getTypeface());
+        }
+
+        // it fixes the icon multiplier on top bar
+        public void toggleVisibility() {
+            boolean shown = isShown();
+            setVisibility(shown ? GONE : VISIBLE);
+            setVisibility(shown ? VISIBLE : GONE);
         }
 
         public void clone(Key k) {
@@ -1510,7 +1534,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             if (disableTouchEvent) {
                 k.setOnTouchListener(null);
             }
-
         }
     }
 }
