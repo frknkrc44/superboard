@@ -173,7 +173,7 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void selectClipItem(View view) {
-        String item = (String) ((View) view.getParent()).getTag();
+        CharSequence item = (CharSequence) ((View) view.getParent()).getTag();
 
         List<CharSequence> texts = getLastPrimaryClipTexts();
         if (texts.isEmpty() || texts.contains(item)) {
