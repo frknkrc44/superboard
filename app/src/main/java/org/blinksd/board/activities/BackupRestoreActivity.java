@@ -2,21 +2,14 @@ package org.blinksd.board.activities;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -32,10 +25,11 @@ import android.widget.Toast;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.settings.AppSettingsV3;
+import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.json.JSONException;
@@ -54,8 +48,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @SuppressWarnings("deprecation")
-public final class BackupRestoreActivity extends Activity {
-    private LinearLayout main;
+public final class BackupRestoreActivity extends BaseActivity {
     private TabHost host;
     private Uri importedZipUri;
     private File dataFile;
@@ -76,28 +69,10 @@ public final class BackupRestoreActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
 
-        if (Build.VERSION.SDK_INT >= 31) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
-            main.setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            ColorDrawable colorDrawable = new ColorDrawable(getColor(android.R.color.system_neutral1_900));
-            getWindow().setBackgroundDrawable(colorDrawable);
-            getActionBar().setBackgroundDrawable(colorDrawable.getConstantState().newDrawable());
-        }
+        LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
+        main.addView(getCustomActionBar());
 
-        try {
-            createMainView();
-        } catch (Throwable e) {
-            Log.e("MainView", "Error:", e);
-        }
-
-        setContentView(main);
-    }
-
-    private void createMainView() {
         TabWidget widget = new TabWidget(this);
         widget.setId(android.R.id.tabs);
 
@@ -141,6 +116,31 @@ public final class BackupRestoreActivity extends Activity {
             ts.setContent(p1 -> v);
             host.addTab(ts);
         }
+
+        setContentView(main);
+    }
+
+    private CustomActionBar getCustomActionBar() {
+        CustomActionBar actionBar = new CustomActionBar(this);
+        actionBar.setTitle(getTitle());
+        actionBar.addAction(R.drawable.sym_board_return, v -> {
+            switch (host.getCurrentTab()) {
+                case 0: // backup
+                    try {
+                        createAndShareZipFile();
+                    } catch (Throwable ignored) {}
+                    break;
+                case 1: // restore
+                    if (importedZipUri != null) {
+                        try {
+                            extractAndApplyZipFile();
+                            showCompletedAndClose();
+                        } catch (Throwable ignored) {}
+                    }
+                    break;
+            }
+        });
+        return actionBar;
     }
 
     private View getView(int i) {
@@ -223,9 +223,9 @@ public final class BackupRestoreActivity extends Activity {
             zipOutputStream.write(data, 0, data.length);
             zipOutputStream.closeEntry();
 
-            // backup the current background image as file
+            // backup the current background image as file if monet mode is disabled
             File bgImageFile = SuperBoardApplication.getBackgroundImageFile();
-            if (bgImageFile.exists()) {
+            if (bgImageFile.exists() && !SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
                 ZipEntry bgImageEntry = new ZipEntry(BACKGROUND_IMAGE);
                 zipOutputStream.putNextEntry(bgImageEntry);
 
@@ -382,43 +382,6 @@ public final class BackupRestoreActivity extends Activity {
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Drawable doneIcon = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
-        MenuItem done = menu.add(android.R.string.ok).setIcon(doneIcon);
-        done.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch (host.getCurrentTab()) {
-            case 0: // backup
-                try {
-                    createAndShareZipFile();
-                } catch (Throwable ignored) {
-                    return false;
-                }
-                break;
-            case 1: // restore
-                if (importedZipUri != null) {
-                    try {
-                        extractAndApplyZipFile();
-                        showCompletedAndClose();
-                    } catch (Throwable ignored) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-        }
-        return true;
     }
 
     private void showCompletedAndClose() {
