@@ -81,7 +81,7 @@ public final class ClipboardView extends LinearLayout
         buttonParams.rightMargin = buttonPadding;
         clearAllButton.setLayoutParams(buttonParams);
         clearAllButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        clearAllButton.setOnClickListener(V -> clearClipboard());
+        clearAllButton.setOnClickListener(v -> clearClipboard());
         clearAllButton.setImageResource(R.drawable.delete);
         clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
@@ -204,7 +204,7 @@ public final class ClipboardView extends LinearLayout
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView((View) view.getParent());
-        clipboardHistory.remove((String) ((View) view.getParent()).getTag());
+        clipboardHistory.remove((CharSequence) ((View) view.getParent()).getTag());
         if (sync) syncClipboardCache();
     }
 
