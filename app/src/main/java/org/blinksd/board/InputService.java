@@ -543,7 +543,7 @@ public final class InputService extends InputMethodService implements
                 keyboardLayoutHolder.addView(clipboardView);
             } else if (!enableClipboard) {
                 if (clipboardView != null) {
-                    clipboardView.clearClipboard();
+                    clipboardView.clearClipboard(false);
                     clipboardView.deInit();
                     keyboardLayoutHolder.removeView(clipboardView);
                     clipboardView = null;
