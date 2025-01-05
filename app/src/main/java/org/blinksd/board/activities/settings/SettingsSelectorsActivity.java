@@ -183,9 +183,6 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     private final Switch.OnCheckedChangeListener switchListener = (buttonView, isChecked) -> {
         String str = (String) buttonView.getTag();
         getAppDB().putBoolean(str, isChecked, true);
-        if (SettingMap.SET_USE_MONET.equals(str)) {
-            superTab.toggleButton(superTab.getChildCount() - 1, !isChecked);
-        }
         restartKeyboard();
     };
 

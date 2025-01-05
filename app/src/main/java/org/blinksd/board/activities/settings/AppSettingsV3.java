@@ -72,15 +72,15 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         main.addView(mTabsHolder);
         main.addView(superTab);
         addCategories();
-
-        boolean useMonet = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
-        superTab.toggleButton(superTab.getChildCount() - 1, !useMonet);
     }
 
     @Override
     public void setKeyPrefs() {
+        boolean useMonet = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+        superTab.toggleButton(superTab.getChildCount() - 1, !useMonet);
+
         File img = SuperBoardApplication.getBackgroundImageFile();
-        if (img.exists()) {
+        if (img.exists() && !useMonet) {
             int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
             Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
             backgroundImageView.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b, blur) : b);
