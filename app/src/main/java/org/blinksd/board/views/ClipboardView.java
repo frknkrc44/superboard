@@ -197,6 +197,7 @@ public final class ClipboardView extends LinearLayout
         addClipView(item, true);
     }
 
+    /** @noinspection SameReturnValue*/
     public boolean clearClipboard(boolean clearSystem) {
         listView.removeAllViews();
         clipboardHistory.clear();

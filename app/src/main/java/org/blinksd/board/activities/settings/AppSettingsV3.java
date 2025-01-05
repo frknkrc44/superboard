@@ -21,6 +21,7 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 
 import java.io.File;
 
@@ -71,6 +72,9 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         main.addView(mTabsHolder);
         main.addView(superTab);
         addCategories();
+
+        boolean useMonet = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+        superTab.toggleButton(superTab.getChildCount() - 1, !useMonet);
     }
 
     @Override
