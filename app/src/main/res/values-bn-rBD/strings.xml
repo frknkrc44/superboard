@@ -11,7 +11,6 @@
     <string name="wizard_settingsbtn">কিবোর্ড সেটিংস খুলুন</string>
     <string name="wizard_finish">অভিনন্দন, আপনি সেটআপ উইজার্ড সম্পূর্ণ করেছেন!</string>
     <string name="wizard_finishbtn">সমাপ্ত</string>
-    <string name="keyboard_theme_api_perm_label">FBoard ব্যবহারকারী থিম API অ্যাক্সেস</string>
     <!-- Settings resources -->
     <string name="settings_activity">সেটিংস</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">কীবোর্ড ব্যাকগ্রাউন্ড ছবি</string>
@@ -132,14 +131,6 @@
         <item>ফ্ুলপাছ</item>
         <item>স্পেস বার</item>
         <item>খালি</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>@string/settings_category_general</item>
-        <item>@string/settings_category_layout</item>
-        <item>@string/settings_category_popup</item>
-        <item>@string/settings_category_top_bar</item>
-        <item>@string/settings_category_theming</item>
-        <item>@string/settings_category_theming_adv</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>ফ্ল্যাট</item>
