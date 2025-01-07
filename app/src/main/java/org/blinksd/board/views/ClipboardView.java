@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +43,7 @@ public final class ClipboardView extends LinearLayout
     private final SimpleDateFormat dateFormat =
             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
 
-    private List<CharSequence> clipboardHistory;
+    private final List<SpannableString> clipboardHistory = new ArrayList<>();
 
     private final SuperBoard superBoard;
     private ImageButton clearAllButton;
@@ -100,11 +100,10 @@ public final class ClipboardView extends LinearLayout
 
         String[] clipboardHistoryArray = SuperBoardApplication.getAppDB()
                 .getStringArray(SettingMap.SET_CLIPBOARD_HISTORY, new String[]{});
-        clipboardHistory = new ArrayList<>();
-        clipboardHistory.addAll(Arrays.asList(clipboardHistoryArray));
-
-        for (CharSequence text: clipboardHistory) {
-            addClipView(text, false);
+        for (String str : clipboardHistoryArray) {
+            SpannableString spannableString = new SpannableString(str);
+            clipboardHistory.add(spannableString);
+            addClipView(spannableString, false);
         }
 
         clipboardManager = (ClipboardManager) getContext()
@@ -113,7 +112,7 @@ public final class ClipboardView extends LinearLayout
         clipboardManager.addPrimaryClipChangedListener(this);
     }
 
-    private void addClipView(CharSequence text, boolean addToHistory) {
+    private void addClipView(SpannableString text, boolean addToHistory) {
         int buttonSize = DensityUtils.dpInt(48);
         int buttonPadding = buttonSize / 4;
 
@@ -185,9 +184,9 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void selectClipItem(View view) {
-        CharSequence item = (CharSequence) ((View) view.getParent()).getTag();
+        SpannableString item = (SpannableString) ((View) view.getParent()).getTag();
 
-        List<CharSequence> texts = getLastPrimaryClipTexts();
+        List<SpannableString> texts = getLastPrimaryClipTexts();
         if (texts.isEmpty() || texts.contains(item)) {
             return;
         }
@@ -216,7 +215,7 @@ public final class ClipboardView extends LinearLayout
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView((View) view.getParent());
-        clipboardHistory.remove((CharSequence) ((View) view.getParent()).getTag());
+        clipboardHistory.remove((SpannableString) ((View) view.getParent()).getTag());
         if (sync) syncClipboardCache();
     }
 
@@ -260,16 +259,18 @@ public final class ClipboardView extends LinearLayout
         }
     }
 
-    private List<CharSequence> getLastPrimaryClipTexts() {
-        List<CharSequence> texts = new ArrayList<>();
+    private List<SpannableString> getLastPrimaryClipTexts() {
+        List<SpannableString> texts = new ArrayList<>();
 
         if (clipboardManager.hasPrimaryClip()) {
             ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
 
             for (int i = 0; i < data.getItemCount(); i++) {
                 CharSequence text = data.getItemAt(i).getText();
-                if (text != null) {
-                    texts.add(text);
+                if (text instanceof SpannableString) {
+                    texts.add((SpannableString) text);
+                } else if (text instanceof String) {
+                    texts.add(new SpannableString(text));
                 }
             }
         }
@@ -279,10 +280,10 @@ public final class ClipboardView extends LinearLayout
 
     @Override
     public void onPrimaryClipChanged() {
-        List<CharSequence> texts = getLastPrimaryClipTexts();
+        List<SpannableString> texts = getLastPrimaryClipTexts();
 
         for (int i = 0; i < texts.size(); i++) {
-            CharSequence primaryText = texts.get(i);
+            SpannableString primaryText = texts.get(i);
 
             if (listView.findViewWithTag(primaryText) == null) {
                 addClipView(primaryText, true);
