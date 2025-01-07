@@ -11,7 +11,6 @@
     <string name="wizard_settingsbtn">விசைப்பலகை அமைப்பு திரையைத் திற</string>
     <string name="wizard_finish">அமைப்பு முறை முடிந்தது!</string>
     <string name="wizard_finishbtn">பூர்த்தி செய்</string>
-    <string name="keyboard_theme_api_perm_label">FBoard பயனாளர் தீம் API அணுகல்</string>
     <!-- Settings resources -->
     <string name="settings_activity">அமைப்புகள்</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">விசைப்பலகை பின்னணி புகைப்படம்</string>
@@ -132,14 +131,6 @@
         <item>டெய்சி</item>
         <item>ஸ்பேஸ் பார்</item>
         <item>வெறுமை</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>@string/settings_category_general</item>
-        <item>@string/settings_category_layout</item>
-        <item>@string/settings_category_popup</item>
-        <item>@string/settings_category_top_bar</item>
-        <item>@string/settings_category_theming</item>
-        <item>@string/settings_category_theming_adv</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>தட்டையான</item>
