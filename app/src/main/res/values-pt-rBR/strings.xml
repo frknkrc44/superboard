@@ -11,7 +11,6 @@
     <string name="wizard_settingsbtn">Abrir configurações do teclado</string>
     <string name="wizard_finish">Parabéns, o assistente de configuração foi concluído!</string>
     <string name="wizard_finishbtn">Finalizar</string>
-    <string name="keyboard_theme_api_perm_label">Acesso ao tema API do usuário FBoard</string>
     <!-- Settings resources -->
     <string name="settings_activity">Configurações:</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Imagem de fundo no teclado</string>
@@ -132,14 +131,6 @@
         <item>Margarida</item>
         <item>Barra de espaço</item>
         <item>Vazio</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>@string/settings_category_general</item>
-        <item>@string/settings_category_layout</item>
-        <item>@string/settings_category_popup</item>
-        <item>@string/settings_category_top_bar</item>
-        <item>@string/settings_category_theming</item>
-        <item>@string/settings_category_theming_adv</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Plano</item>
