@@ -25,24 +25,24 @@
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">تفعيل الحافظة</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">إلغاء تفعيل اقتراح الكلمات</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">إلغاء تفعيل صف الأرقام (تجريبي)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
-    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
-    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">إظهار إجراء الضغط المطول أو الحرف الأول المنبثق</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">استخدم ألوان مونيت (تجريبية)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">اكتشف حالة capslock تِلْقائيًا</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
-    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
-    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
-    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
-    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
-    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
-    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Key text shadow color</string>
-    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">First key background color</string>
-    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Second key background color</string>
-    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">First key press background color</string>
-    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
-    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
-    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
-    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
-    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">فعّل إجراءات المحرر (يصلح مشكلات زر الإدخال عند بعض التطبيقات لكنه يسبب مشكلات أخرى)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">منع إغلاق لوحة المفاتيح بواسطة النظام (يمكنك الإيقاف بالضغط لفترة طويلة على زر !?#)</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">تغيير اللغة بالضغط المطول على زر الإيموجي</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">لون خلفية مفتاح الإدخال</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">لون الخلفية المضغوطة لمفتاح الإدخال</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">لون ظل نص المفتاح</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">لون الخلفية الأولي للمفتاح</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">لون الخلفية الثانوي للمفتاح</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">لون الخلفية الأولي للمفتاح المضغوط</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">لون الخلفية الثانوي للمفتاح المضغوط</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">لون خلفية اللوحة</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">لون النص</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">أصدر صوت عند الضغط</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">قلل من استهلاك الذاكرة العشوائية (يزيد من مدة البَدْء)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
