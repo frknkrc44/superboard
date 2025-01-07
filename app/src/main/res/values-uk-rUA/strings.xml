@@ -11,7 +11,6 @@
     <string name="wizard_settingsbtn">Відкрити налаштування клавіатури</string>
     <string name="wizard_finish">Вітаємо, майстер встановлення завершено!</string>
     <string name="wizard_finishbtn">Готово</string>
-    <string name="keyboard_theme_api_perm_label">FBoard User Theme API Access</string>
     <!-- Settings resources -->
     <string name="settings_activity">Settings</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Keyboard background image</string>
@@ -132,14 +131,6 @@
         <item>Daisy</item>
         <item>Space bar</item>
         <item>Empty</item>
-    </string-array>
-    <string-array name="settings_categories">
-        <item>@string/settings_category_general</item>
-        <item>@string/settings_category_layout</item>
-        <item>@string/settings_category_popup</item>
-        <item>@string/settings_category_top_bar</item>
-        <item>@string/settings_category_theming</item>
-        <item>@string/settings_category_theming_adv</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Flat</item>
