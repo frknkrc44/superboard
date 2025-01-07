@@ -729,8 +729,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             KeyCharacterMap charMap;
             charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
 
-            for (KeyEvent event : charMap.getEvents(text.toCharArray())) {
-                sendKeyDownUp(event.getKeyCode());
+            KeyEvent[] events = charMap.getEvents(text.toCharArray());
+            List<Integer> sentCodes = new ArrayList<>();
+            for (KeyEvent event : events) {
+                int code = event.getKeyCode();
+                if (!sentCodes.contains(code)) {
+                    sentCodes.add(code);
+                    sendKeyDownUp(code);
+                }
             }
         } else {
             sendText(text);
