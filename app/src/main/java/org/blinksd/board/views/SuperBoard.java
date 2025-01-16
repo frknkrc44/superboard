@@ -101,7 +101,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             KEYCODE_TOGGLE_ALT,
             Keyboard.KEYCODE_SHIFT
     );
-    private List<Key> extraKeyViews = new ArrayList<>();
+    private final List<Key> extraKeyViews = new ArrayList<>();
 
     // key states
     private int ctrl = 0;

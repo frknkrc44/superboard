@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Pair;
 
 import org.blinksd.board.SuperBoardApplication;
 
@@ -12,7 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 public final class DictionaryDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dicts.db";
@@ -78,16 +83,73 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         isReady = true;
     }
 
-    public void saveToDB(String lang, InputStream fd, OnSaveProgressListener listener) {
+    public void saveToDB(String file, String lang, InputStream fd, OnSaveProgressListener listener) {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fd));
-            saveToDB(lang, reader, listener);
+            if (file.endsWith(".gz")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(fd)));
+                saveToDBGZ(reader, listener);
+            } else {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fd));
+                saveToDBFBD(lang, reader, listener);
+            }
         } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private void saveToDB(String lang, BufferedReader reader, OnSaveProgressListener listener) throws IOException {
+    private void saveToDBGZ(BufferedReader reader, OnSaveProgressListener listener) throws IOException {
+        isReady = false;
+
+        SQLiteDatabase db = getWritableDatabase();
+        StringBuilder sb = new StringBuilder();
+        String table = "";
+        Map<String, String> pairs = new LinkedHashMap<>();
+
+        int count = 0;
+        for (String line; (line = reader.readLine()) != null; ) {
+            pairs.clear();
+            String[] commaSplit = line.split(",");
+
+            for (String item : commaSplit) {
+                String[] equalSplit = item.split("=");
+                if (equalSplit.length != 2) continue;
+                pairs.put(equalSplit[0].trim(), equalSplit[1].trim());
+            }
+
+            if (pairs.containsKey("locale")) {
+                table = "LANG_" + escapeString(pairs.get("locale"));
+
+                sb.append("INSERT OR IGNORE INTO ")
+                        .append(table)
+                        .append("(word,usage_count)")
+                        .append(" VALUES ");
+            } else {
+                sb.append("('").append(pairs.get("word")).append("',").append(pairs.get("f")).append("),");
+                count++;
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        db.execSQL(sb.toString());
+        sb.setLength(0);
+
+        if (listener != null)
+            listener.onProgress(count, OnSaveProgressListener.STATE_DELETE_DUPLICATES);
+
+        sb.setLength(0);
+        sb.append("DELETE FROM ")
+                .append(table)
+                .append(" WHERE id NOT IN (SELECT min(id) FROM ")
+                .append(table)
+                .append(" GROUP BY word)");
+        db.execSQL(sb.toString());
+
+        reader.close();
+        db.close();
+
+        isReady = true;
+    }
+
+    private void saveToDBFBD(String lang, BufferedReader reader, OnSaveProgressListener listener) throws IOException {
         isReady = false;
 
         String table = "LANG_" + escapeString(lang);

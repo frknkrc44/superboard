@@ -30,7 +30,7 @@ public final class DictionaryImportActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent i = new Intent();
-        i.setType("application/octet-stream");
+        i.setType("*/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(i, ""), 1);
     }
@@ -122,14 +122,14 @@ public final class DictionaryImportActivity extends Activity {
                 returnCursor.moveToFirst();
 
                 String name = returnCursor.getString(nameIndex);
-                assert name.endsWith(".fbd") : "Name is " + name;
+                assert name.endsWith(".fbd") || name.endsWith(".gz") : "Name is " + name;
 
                 int idx = findDotIndex(name);
-                name = name.substring(0, idx);
+                String langName = name.substring(0, idx);
 
                 InputStream pfd = getContentResolver().openInputStream(uri);
 
-                SuperBoardApplication.getDictDB().saveToDB(name, pfd, this);
+                SuperBoardApplication.getDictDB().saveToDB(name, langName, pfd, this);
             } catch (IOException ignored) {
             } finally {
                 if (returnCursor != null) {

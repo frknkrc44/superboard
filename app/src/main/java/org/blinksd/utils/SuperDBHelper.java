@@ -53,8 +53,6 @@ public final class SuperDBHelper {
     }
 
     public static String getStringOrDefault(String key) {
-        Log.d(SuperDBHelper.class.getSimpleName(), "Key: " + key);
-
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
