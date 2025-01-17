@@ -44,6 +44,8 @@
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
+    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
+    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Photo</string>
@@ -145,5 +147,11 @@
         <item>Top right → bottom left</item>
         <item>Bottom left → top right</item>
         <item>Bottom right → top left</item>
+    </string-array>
+    <string-array name="settings_dictionary_algorithms" tools:keep="@array/settings_dictionary_algorithms">
+        <item>First check for word length, then usage count</item>
+        <item>First check for usage count, then word length</item>
+        <item>Only check for word length</item>
+        <item>Only check for usage count</item>
     </string-array>
 </resources>
