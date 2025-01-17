@@ -85,7 +85,7 @@
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Digərləri</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Lüğət paketini idxal edin (.fbd)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Import edilir, lütfən, bu proqramı bağlamayın</string>
     <string name="settings_dict_import_count">%s söz idxal edildi</string>
     <string name="settings_dict_import_delete_duplicates">Dublikatların silinməsi</string>
