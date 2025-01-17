@@ -100,6 +100,14 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         }
     }
 
+    private String getLanguageCode(String rawCode) {
+        if (rawCode.contains("_")) {
+            return rawCode.substring(0, rawCode.indexOf("_"));
+        }
+
+        return rawCode;
+    }
+
     private void saveToDBGZ(BufferedReader reader, OnSaveProgressListener listener) throws IOException {
         isReady = false;
 
@@ -120,14 +128,14 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             }
 
             if (pairs.containsKey("locale")) {
-                table = "LANG_" + escapeString(pairs.get("locale"));
+                table = "LANG_" + escapeString(getLanguageCode(pairs.get("locale")));
 
                 sb.append("INSERT OR IGNORE INTO ")
                         .append(table)
                         .append("(word,usage_count)")
                         .append(" VALUES ");
-            } else {
-                sb.append("('").append(pairs.get("word")).append("',").append(pairs.get("f")).append("),");
+            } else if(pairs.containsKey("word")) {
+                sb.append("('").append(escapeString(pairs.get("word"))).append("',").append(pairs.get("f")).append("),");
                 count++;
             }
         }
