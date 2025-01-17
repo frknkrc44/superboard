@@ -78,7 +78,7 @@
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">தீம் மட்டும் (ஐகான், பின்னணி படம், நிரம், ...)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">மற்றவை</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">அகராதியை உள்ளிடு (.fbd)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">அகராதியை உள்ளிடு (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
     <string name="settings_dict_import_count">%s சொல் அகராதியில் சேர்க்கப்பட்டது</string>
     <string name="settings_dict_import_delete_duplicates">நகல்கள் நீக்கப்படுகின்றன</string>

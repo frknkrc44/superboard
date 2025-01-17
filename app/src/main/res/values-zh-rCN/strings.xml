@@ -78,7 +78,7 @@
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Importing, please don\'t close this app</string>
     <string name="settings_dict_import_count">%s word imported</string>
     <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>

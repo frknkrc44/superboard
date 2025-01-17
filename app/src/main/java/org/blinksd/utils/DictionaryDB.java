@@ -227,7 +227,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
                         .append("'")
                         .append(escapeString(prefix))
                         .append("%'")
-                        .append(" ORDER BY LENGTH(word), usage_count DESC");
+                        .append(" ORDER BY LENGTH(word) ASC, usage_count DESC");
             }
 
             sb.append(" LIMIT 20");

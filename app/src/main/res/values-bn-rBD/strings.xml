@@ -78,7 +78,7 @@
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">অন্যান্য</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd) আমদানি করুন</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd/combined.gz) আমদানি করুন</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
     <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
     <string name="settings_dict_import_delete_duplicates">ডুপ্লিকেট মুছে ফেলা হচ্ছে</string>
