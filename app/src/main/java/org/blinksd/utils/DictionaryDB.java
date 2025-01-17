@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Pair;
 
 import org.blinksd.board.SuperBoardApplication;
 
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,7 +242,8 @@ public final class DictionaryDB extends SQLiteOpenHelper {
                     break;
             }
 
-            sb.append(" LIMIT 20");
+            sb.append(" LIMIT ");
+            sb.append(SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_LIMIT));
             Cursor cursor = db.rawQuery(sb.toString(), null);
 
             if (cursor.moveToFirst()) {

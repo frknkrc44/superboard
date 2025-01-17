@@ -80,7 +80,21 @@ public final class LayoutCreator {
             return (ViewGroup.LayoutParams) cs.newInstance(width, height);
         } catch (Throwable ignored) {}
 
-        return new ViewGroup.LayoutParams(-1, -1);
+        return new ViewGroup.LayoutParams(width, height);
+    }
+
+    public static ViewGroup.LayoutParams createLayoutParams(Class<?> rootViewClass, int width, int height, float weight) {
+        try {
+            if (rootViewClass == null) {
+                rootViewClass = ViewGroup.class;
+            }
+            Class<?> c = Class.forName(rootViewClass.getName() + "$LayoutParams");
+            Constructor<?> cs = c.getConstructor(int.class, int.class, float.class);
+            cs.setAccessible(true);
+            return (ViewGroup.LayoutParams) cs.newInstance(width, height, weight);
+        } catch (Throwable ignored) {}
+
+        return createLayoutParams(rootViewClass, width, height);
     }
 
     public static Switch createSwitch(Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {

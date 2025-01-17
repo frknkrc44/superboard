@@ -11,6 +11,7 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperTab;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
@@ -84,6 +85,10 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     categoryView.addView(createNumberSelector(key, item.type == SettingType.FLOAT_NUMBER));
                     break;
             }
+
+            categoryView.getChildAt(categoryView.getChildCount() - 1)
+                    .setBackground(LayoutUtils.getTransSelectableItemBg(
+                            categoryView.getContext(), 0xFFDEDEDE));
         };
 
         getSettings().iterChild(category, categoryItemIterator);

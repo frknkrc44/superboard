@@ -58,13 +58,16 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         final int size = (int) getListPreferredItemHeight(this);
         img.setGravity(Gravity.CENTER);
         img.setTextColor(Color.WHITE);
+        img.setTextSize(DensityUtils.dpInt(12));
         img.setText(isFloat
                 ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
                 : String.valueOf(num));
-        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size));
+        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size, 0));
         int pad = size / 4;
         img.setPadding(pad, pad, pad, pad);
         TextView btn = LayoutCreator.createTextView(this);
+        btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2, 1));
+        btn.setPadding(pad, 0, 0, 0);
         btn.setGravity(Gravity.CENTER_VERTICAL);
         btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
@@ -72,8 +75,8 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         numSelector.setTag(key);
         numSelector.setMinimumHeight(size);
         numSelector.setOnClickListener(numberSelectorListener);
-        numSelector.addView(img);
         numSelector.addView(btn);
+        numSelector.addView(img);
         return numSelector;
     }
 
@@ -84,7 +87,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         ImageView img = LayoutCreator.createImageView(this);
         img.setId(android.R.id.icon);
         final int size = (int) getListPreferredItemHeight(this);
-        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size));
+        img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size, 0));
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
         final int pad = size / 4;
         img.setPadding(pad, pad, pad, pad);
@@ -93,6 +96,8 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         gd.setCornerRadius(1000);
         img.setImageDrawable(gd);
         TextView btn = LayoutCreator.createTextView(this);
+        btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2, 1));
+        btn.setPadding(pad, 0, 0, 0);
         btn.setGravity(Gravity.CENTER_VERTICAL);
         btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
@@ -100,8 +105,8 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         colSelector.setTag(key);
         colSelector.setMinimumHeight(size);
         colSelector.setOnClickListener(colorSelectorListener);
-        colSelector.addView(img);
         colSelector.addView(btn);
+        colSelector.addView(img);
         return colSelector;
     }
 

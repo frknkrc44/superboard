@@ -69,13 +69,15 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons",
             SET_ENABLE_CLIPBOARD = "enable_clipboard",
             SET_BACKUP_RESTORE = "backup_menu",
-            SET_DICTIONARY_ALGORITHM = "dictionary_algorithm";
+            SET_DICTIONARY_ALGORITHM = "dictionary_algorithm",
+            SET_DICTIONARY_LIMIT = "dictionary_limit";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putKbdLayout(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
         putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
+        putGeneral(SET_DICTIONARY_LIMIT, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
@@ -318,6 +320,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.ICON_SIZE_MULTIPLIER;
                 case SET_DICTIONARY_ALGORITHM:
                     return Defaults.DICTIONARY_ALGORITHM;
+                case SET_DICTIONARY_LIMIT:
+                    return Defaults.DICTIONARY_LIMIT;
             }
         }
         return null;
@@ -334,6 +338,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                             break;
                         case SET_KEY_VIBRATE_DURATION:
                             nums[1] = Constants.MAX_VIBR_DUR;
+                            break;
+                        case SET_DICTIONARY_LIMIT:
+                            nums[0] = Constants.MIN_DICT_LIMIT;
+                            nums[1] = Constants.MAX_DICT_LIMIT;
                             break;
                     }
                     break;

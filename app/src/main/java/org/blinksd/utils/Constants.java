@@ -13,5 +13,7 @@ public final class Constants {
     public static final int MAX_OTHER_VAL = 40;
     public static final int MIN_ICON_MULTI = 1;
     public static final int MAX_ICON_MULTI = 10;
+    public static final int MIN_DICT_LIMIT = 3;
+    public static final int MAX_DICT_LIMIT = 50;
 
 }
