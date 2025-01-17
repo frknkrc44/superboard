@@ -25,6 +25,11 @@ public final class DictionaryDB extends SQLiteOpenHelper {
     public boolean isReady = true;
     private SQLiteDatabase mReadDatabase;
 
+    public static final int QUERY_ALGORITHM_LEN_WORD_THEN_USAGE = 0,
+                            QUERY_ALGORITHM_USAGE_THEN_LEN_WORD = 1,
+                            QUERY_ALGORITHM_ONLY_LEN_WORD = 2,
+                            QUERY_ALGORITHM_ONLY_USAGE = 3;
+
     public DictionaryDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -199,13 +204,9 @@ public final class DictionaryDB extends SQLiteOpenHelper {
     }
 
     public List<String> getQuery(String lang, String prefix) {
-        return getQuery(lang, prefix, false);
-    }
-
-    private List<String> getQuery(String lang, String prefix, boolean internalCheck) {
         List<String> out = new ArrayList<>();
 
-        if (!isReady && !internalCheck) return out;
+        if (!isReady) return out;
 
         try {
             SQLiteDatabase db = getReadableDatabase();
@@ -218,16 +219,29 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             sb.append("SELECT * FROM LANG_")
                     .append(escapeString(lang.trim().toLowerCase()));
 
-            if (!internalCheck) {
-                if (prefix == null || prefix.isEmpty())
-                    return out;
+            if (prefix == null || prefix.isEmpty())
+                return out;
 
-                sb.append(" WHERE word")
-                        .append(" LIKE ")
-                        .append("'")
-                        .append(escapeString(prefix))
-                        .append("%'")
-                        .append(" ORDER BY LENGTH(word) ASC, usage_count DESC");
+            sb.append(" WHERE word")
+                    .append(" LIKE ")
+                    .append("'")
+                    .append(escapeString(prefix))
+                    .append("%'");
+
+            switch (SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_ALGORITHM)) {
+                case QUERY_ALGORITHM_ONLY_LEN_WORD:
+                    sb.append(" ORDER BY LENGTH(word) ASC");
+                    break;
+                case QUERY_ALGORITHM_ONLY_USAGE:
+                    sb.append(" ORDER BY usage_count DESC");
+                    break;
+                case QUERY_ALGORITHM_USAGE_THEN_LEN_WORD:
+                    sb.append(" ORDER BY usage_count DESC, LENGTH(word) ASC");
+                    break;
+                case QUERY_ALGORITHM_LEN_WORD_THEN_USAGE:
+                default:
+                    sb.append(" ORDER BY LENGTH(word) ASC, usage_count DESC");
+                    break;
             }
 
             sb.append(" LIMIT 20");

@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
 
+import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.DictionaryImportActivity;
@@ -13,6 +14,7 @@ import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SettingMap extends ListedMap<String, SettingItem> {
@@ -66,12 +68,14 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_CLIPBOARD_HISTORY = "clipboard_history",
             SET_HIDE_TOP_BAR_FN_BUTTONS = "hide_top_bar_fn_buttons",
             SET_ENABLE_CLIPBOARD = "enable_clipboard",
-            SET_BACKUP_RESTORE = "backup_menu";
+            SET_BACKUP_RESTORE = "backup_menu",
+            SET_DICTIONARY_ALGORITHM = "dictionary_algorithm";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putKbdLayout(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
+        putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
@@ -191,6 +195,9 @@ public class SettingMap extends ListedMap<String, SettingItem> {
 
     public List<String> getSelector(final String key) {
         switch (key) {
+            case SET_DICTIONARY_ALGORITHM:
+                return Arrays.asList(SuperBoardApplication.getAppResources()
+                        .getStringArray(R.array.settings_dictionary_algorithms));
             case SET_KEY_BG_TYPE:
                 return ThemeUtils.getKeyBgTypes();
             case SET_KEY_GRADIENT_ORIENTATION:
@@ -309,6 +316,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.THEME_PRESET;
                 case SET_KEY_ICON_SIZE_MULTIPLIER:
                     return Defaults.ICON_SIZE_MULTIPLIER;
+                case SET_DICTIONARY_ALGORITHM:
+                    return Defaults.DICTIONARY_ALGORITHM;
             }
         }
         return null;
