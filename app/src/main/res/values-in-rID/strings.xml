@@ -85,7 +85,7 @@
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Yang lain</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Impor paket kamus (.fbd)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Mengimpor, mohon jangan tutup aplikasi ini</string>
     <string name="settings_dict_import_count">%s kata diimpor</string>
     <string name="settings_dict_import_delete_duplicates">Menghapus duplikat</string>
