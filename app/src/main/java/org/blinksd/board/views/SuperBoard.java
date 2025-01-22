@@ -1490,15 +1490,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void clone(Key k, boolean disableTouchEvent) {
             k.setBackgroundDrawable(getBackground());
             Rect r = getBackground().getBounds();
+            k.setKeyWidthPercent(getKeyWidthPercent());
             k.getLayoutParams().width = r.right;
             k.getLayoutParams().height = r.bottom;
             k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);
-            k.setId(getId());
             k.setKeyTextSize(label.getTextSize() / 2.5f);
             k.setKeyTextStyle(textStyle);
-            k.setText(label.getText());
+            k.setText(getText());
+            k.setSubText(getSubText());
             k.setPopupCharacters(popupCharacters);
 
             k.setKeyIcon(getKeyIcon());
