@@ -5,4 +5,5 @@
     <item name="key_repeat" type="id" />
     <item name="key_np" type="id" />
     <item name="key_lp" type="id" />
+    <item name="key_width" type="id" />
 </resources>

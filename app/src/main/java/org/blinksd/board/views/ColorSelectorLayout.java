@@ -263,7 +263,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         SuperBoard sb = new SuperBoard(ctx) {
             @SuppressLint("SetTextI18n")
             @Override
-            protected void sendDefaultKeyboardEvent(Key v) {
+            protected void sendKeyboardEvent(Key v) {
                 Pair<Integer, Boolean> pair = v.getNormalPressEvent();
 
                 if (pair != null) {

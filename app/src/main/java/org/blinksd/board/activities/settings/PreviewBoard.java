@@ -13,7 +13,7 @@ class PreviewBoard extends SuperBoard {
     }
 
     @Override
-    protected void sendDefaultKeyboardEvent(Key v) {
+    protected void sendKeyboardEvent(Key v) {
         if (v.hasNormalPressEvent()) {
             playSound(v.getNormalPressEvent().first);
             return;
