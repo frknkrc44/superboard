@@ -56,7 +56,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@SuppressWarnings({"deprecation", "unused"})
+@SuppressWarnings({"deprecation"})
 public class SuperBoard extends FrameLayout implements OnTouchListener {
     public static final int KEYCODE_CLOSE_KEYBOARD = -100;
     public static final int KEYCODE_SWITCH_LANGUAGE = -101;
@@ -611,11 +611,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private void sendKeyDownUp(int code) {
         sendKeyAction(code, KeyEvent.ACTION_DOWN);
         sendKeyAction(code, KeyEvent.ACTION_UP);
-    }
-
-    private void sendKeyDownUp(int code, int metaState) {
-        sendKeyAction(code, KeyEvent.ACTION_DOWN, metaState);
-        sendKeyAction(code, KeyEvent.ACTION_UP, metaState);
     }
 
     private void sendKeyAction(int code, int action) {
