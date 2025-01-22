@@ -54,6 +54,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     private final ImageView prev;
     private Bitmap temp;
     private TreeMap<Integer, Integer> colorList;
+    GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
 
         @Override
@@ -312,8 +313,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     }
 
     private GradientDrawable.Orientation getGradientOrientation() {
-        GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
-        return values[gradientType % values.length];
+        return gradientOrientations[gradientType];
     }
 
     private int[] getGradientColors() {
@@ -346,7 +346,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         @Override
         public void onClick(View p1) {
             if (p1.getId() == -2) {
-                gradientType++;
+                gradientType = (byte) ((gradientType + 1) % gradientOrientations.length);
             } else {
                 ViewGroup gradientSel;
                 if (p1 instanceof ColorSelectorItemLayout) {
