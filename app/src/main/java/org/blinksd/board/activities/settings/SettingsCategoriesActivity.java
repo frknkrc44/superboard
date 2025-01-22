@@ -16,6 +16,7 @@ import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
 import org.blinksd.utils.ThemeUtils;
+import org.blinksd.utils.ViewUtils;
 
 import java.util.List;
 
@@ -86,9 +87,11 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     break;
             }
 
-            categoryView.getChildAt(categoryView.getChildCount() - 1)
-                    .setBackground(LayoutUtils.getTransSelectableItemBg(
-                            categoryView.getContext(), 0xFFDEDEDE));
+            ViewUtils.setBackground(
+                    categoryView.getChildAt(categoryView.getChildCount() - 1),
+                    LayoutUtils.getTransSelectableItemBg(
+                            categoryView.getContext(), 0xFFDEDEDE)
+            );
         };
 
         getSettings().iterChild(category, categoryItemIterator);

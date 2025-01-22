@@ -6,4 +6,5 @@
     <item name="key_normal_press" type="id" />
     <item name="key_long_press" type="id" />
     <item name="key_width" type="id" />
+    <item name="dialog_image_preview" type="id" />
 </resources>

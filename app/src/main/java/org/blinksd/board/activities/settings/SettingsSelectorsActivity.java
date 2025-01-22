@@ -47,7 +47,6 @@ import java.util.List;
 
 public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     private static final int TAG1 = R.id.key_normal_press, TAG2 = R.id.key_long_press;
-    private View dialogView;
 
     View createNumberSelector(String key, boolean isFloat) {
         int num = SuperDBHelper.getIntOrDefault(key);
@@ -191,20 +190,31 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         restartKeyboard();
     };
 
-    private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View p1) {
-            AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-            final String tag = p1.getTag().toString();
-            build.setTitle(getTranslation(tag));
-            final int val = SuperDBHelper.getIntOrDefault(tag);
-            dialogView = new ColorSelectorLayout(p1.getContext(), p1.getTag().toString());
-            dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-            build.setView(dialogView);
-            build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+    private final View.OnClickListener colorSelectorListener = p1 -> {
+        AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+        final String tag = p1.getTag().toString();
+        build.setTitle(getTranslation(tag));
+        final int val = SuperDBHelper.getIntOrDefault(tag);
+        dialogView = new ColorSelectorLayout(p1.getContext(), p1.getTag().toString());
+        dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
+        build.setView(dialogView);
+        build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
 
-            build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
-                int tagVal = (int) getSettings().getDefaults(tag);
+        build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
+            int tagVal = (int) getSettings().getDefaults(tag);
+            getAppDB().putInteger(tag, tagVal, true);
+            ImageView img = p1.findViewById(android.R.id.icon);
+            GradientDrawable gd = new GradientDrawable();
+            gd.setColor(tagVal);
+            gd.setCornerRadius(1000);
+            img.setImageDrawable(gd);
+            restartKeyboard();
+            d1.dismiss();
+        });
+
+        build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
+            int tagVal = ((ColorSelectorLayout) dialogView).colorValue;
+            if (tagVal != val) {
                 getAppDB().putInteger(tag, tagVal, true);
                 ImageView img = p1.findViewById(android.R.id.icon);
                 GradientDrawable gd = new GradientDrawable();
@@ -212,43 +222,42 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 gd.setCornerRadius(1000);
                 img.setImageDrawable(gd);
                 restartKeyboard();
-                d1.dismiss();
-            });
+            }
+            d1.dismiss();
+        });
 
-            build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
-                int tagVal = ((ColorSelectorLayout) dialogView).colorValue;
-                if (tagVal != val) {
-                    getAppDB().putInteger(tag, tagVal, true);
-                    ImageView img = p1.findViewById(android.R.id.icon);
-                    GradientDrawable gd = new GradientDrawable();
-                    gd.setColor(tagVal);
-                    gd.setCornerRadius(1000);
-                    img.setImageDrawable(gd);
-                    restartKeyboard();
-                }
-                d1.dismiss();
-            });
-
-            doHacksAndShow(build.create());
-        }
-
+        doHacksAndShow(build.create());
     };
-    private final View.OnClickListener numberSelectorListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View p1) {
-            AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-            final String tag = p1.getTag().toString();
-            build.setTitle(getTranslation(tag));
-            AppSettingsV3 act = (AppSettingsV3) p1.getContext();
-            final boolean isFloat = getSettings().get(tag).type == SettingType.FLOAT_NUMBER;
-            int[] minMax = getSettings().getMinMaxNumbers(tag);
-            final int val = SuperDBHelper.getIntOrDefault(tag);
-            dialogView = NumberSelectorLayout.getNumberSelectorLayout(act, isFloat, minMax[0], minMax[1], val);
-            build.setView(dialogView);
-            build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
 
-            build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
-                int tagVal = (int) getSettings().getDefaults(tag);
+    private final View.OnClickListener numberSelectorListener = p1 -> {
+        AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+        final String tag = p1.getTag().toString();
+        build.setTitle(getTranslation(tag));
+        AppSettingsV3 act = (AppSettingsV3) p1.getContext();
+        final boolean isFloat = getSettings().get(tag).type == SettingType.FLOAT_NUMBER;
+        int[] minMax = getSettings().getMinMaxNumbers(tag);
+        final int val = SuperDBHelper.getIntOrDefault(tag);
+        dialogView = NumberSelectorLayout.getNumberSelectorLayout(act, isFloat, minMax[0], minMax[1], val);
+        build.setView(dialogView);
+        build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+
+        build.setNeutralButton(R.string.settings_return_defaults, (d1, p2) -> {
+            int tagVal = (int) getSettings().getDefaults(tag);
+            getAppDB().putInteger(tag, tagVal, true);
+            TextView tv = p1.findViewById(android.R.id.text1);
+            tv.setText(isFloat
+                    ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
+                    : String.valueOf(tagVal));
+            restartKeyboard();
+            if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
+                recreate();
+            }
+            d1.dismiss();
+        });
+
+        build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
+            int tagVal = (int) dialogView.getTag();
+            if (tagVal != val) {
                 getAppDB().putInteger(tag, tagVal, true);
                 TextView tv = p1.findViewById(android.R.id.text1);
                 tv.setText(isFloat
@@ -258,133 +267,110 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
                     recreate();
                 }
-                d1.dismiss();
-            });
+            }
+            d1.dismiss();
+        });
 
-            build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
-                int tagVal = (int) dialogView.getTag();
-                if (tagVal != val) {
-                    getAppDB().putInteger(tag, tagVal, true);
-                    TextView tv = p1.findViewById(android.R.id.text1);
-                    tv.setText(isFloat
-                            ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
-                            : String.valueOf(tagVal));
-                    restartKeyboard();
-                    if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
-                        recreate();
-                    }
+        doHacksAndShow(build.create());
+    };
+
+    private final View.OnClickListener imageSelectorListener = p1 -> {
+        AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+        build.setTitle(getTranslation(p1.getTag().toString()));
+        build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+        build.setPositiveButton(android.R.string.ok, (p112, p2) -> {
+            ImageView img = dialogView.findViewById(R.id.dialog_image_preview);
+            Drawable d = img.getDrawable();
+            if (d != null) {
+                try {
+                    File bgFile = SuperBoardApplication.getBackgroundImageFile();
+                    Bitmap bmp = ((BitmapDrawable) d).getBitmap();
+                    setColorsFromBitmap(bmp);
+                    FileOutputStream fos = new FileOutputStream(bgFile);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                } catch (Throwable ignored) {
                 }
-                d1.dismiss();
-            });
+                restartKeyboard();
+                recreate();
+            }
+            p112.dismiss();
+        });
+        AlertDialog dialog = build.create();
+        dialogView = new ImageSelectorLayout(dialog, () -> {
+            Intent i = new Intent();
+            i.setType("image/*");
+            i.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(i, ""), 1);
+        }, () -> restartKeyboard());
+        dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 
-            doHacksAndShow(build.create());
+        dialog.setView(dialogView);
+        doHacksAndShow(dialog);
+    };
+
+    private final View.OnClickListener radioSelectorListener = p1 -> {
+        AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
+        final String tag = p1.getTag(TAG1).toString();
+        int val;
+        final SettingItem item = getSettings().get(tag);
+        final boolean langSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_LANG_SELECT.equals(tag);
+        final boolean iconSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_ICON_THEME.equals(tag);
+        final boolean spaceSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_SPACETYPE_SELECT.equals(tag);
+        final boolean themeSelector = item.type == SettingType.THEME_SELECTOR;
+        if (langSelector || iconSelector || spaceSelector) {
+            String value = SuperDBHelper.getStringOrDefault(tag);
+            if (langSelector)
+                val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
+            else if (iconSelector)
+                val = SuperBoardApplication.getIconThemes().indexOfKey(value);
+            else
+                val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
+        } else if (themeSelector) {
+            val = -1;
+        } else {
+            val = SuperDBHelper.getIntOrDefault(tag);
         }
 
-    };
-    private final View.OnClickListener imageSelectorListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View p1) {
-            AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-            build.setTitle(getTranslation(p1.getTag().toString()));
-            build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
-            build.setPositiveButton(android.R.string.ok, (p112, p2) -> {
-                ImageView img = dialogView.findViewById(android.R.id.custom);
-                Drawable d = img.getDrawable();
-                if (d != null) {
-                    try {
-                        File bgFile = SuperBoardApplication.getBackgroundImageFile();
-                        Bitmap bmp = ((BitmapDrawable) d).getBitmap();
-                        setColorsFromBitmap(bmp);
-                        FileOutputStream fos = new FileOutputStream(bgFile);
-                        bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    } catch (Throwable ignored) {
-                    }
-                    restartKeyboard();
-                    recreate();
-                }
+        build.setTitle(getTranslation(tag));
+        ScrollView dialogScroller = new ScrollView(p1.getContext());
+        dialogView = new RadioSelectorLayout(p1.getContext(), val, (List<String>) p1.getTag(TAG2));
+        dialogScroller.addView(dialogView);
+        build.setView(dialogScroller);
+        build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
+        if (!themeSelector) {
+            build.setNeutralButton(R.string.settings_return_defaults, (p112, p2) -> {
+                if (langSelector || iconSelector || spaceSelector)
+                    getAppDB().putString(tag, (String) getSettings().getDefaults(tag), true);
+                else getAppDB().putInteger(tag, (int) getSettings().getDefaults(tag), true);
+                restartKeyboard();
                 p112.dismiss();
             });
-            AlertDialog dialog = build.create();
-            dialogView = new ImageSelectorLayout(dialog, () -> {
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(i, ""), 1);
-            }, () -> restartKeyboard());
-            dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-
-            dialog.setView(dialogView);
-            doHacksAndShow(dialog);
         }
-    };
 
-    private final View.OnClickListener radioSelectorListener = new View.OnClickListener() {
-        @Override
-        @SuppressWarnings("unchecked")
-        public void onClick(final View p1) {
-            AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-            final String tag = p1.getTag(TAG1).toString();
-            int val;
-            final SettingItem item = getSettings().get(tag);
-            final boolean langSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_LANG_SELECT.equals(tag);
-            final boolean iconSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_ICON_THEME.equals(tag);
-            final boolean spaceSelector = item.type == SettingType.STR_SELECTOR && SettingMap.SET_KEYBOARD_SPACETYPE_SELECT.equals(tag);
-            final boolean themeSelector = item.type == SettingType.THEME_SELECTOR;
-            if (langSelector || iconSelector || spaceSelector) {
-                String value = SuperDBHelper.getStringOrDefault(tag);
-                if (langSelector)
-                    val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
-                else if (iconSelector)
-                    val = SuperBoardApplication.getIconThemes().indexOfKey(value);
-                else
-                    val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
-            } else if (themeSelector) {
-                val = -1;
-            } else {
-                val = SuperDBHelper.getIntOrDefault(tag);
+        final int xval = val;
+        build.setPositiveButton(android.R.string.ok, (p113, p2) -> {
+            int tagVal = (int) dialogView.getTag();
+            if (tagVal != xval) {
+                if (langSelector) {
+                    String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
+                    getAppDB().putString(tag, index, true);
+                } else if (iconSelector) {
+                    String index = SuperBoardApplication.getIconThemes().getKeyByIndex(tagVal);
+                    getAppDB().putString(tag, index, true);
+                } else if (spaceSelector) {
+                    String index = SuperBoardApplication.getSpaceBarStyles().getKeyByIndex(tagVal);
+                    getAppDB().putString(tag, index, true);
+                } else if (themeSelector) {
+                    List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
+                    ThemeUtils.ThemeHolder theme = themes.get(tagVal);
+                    theme.applyTheme();
+                    recreate();
+                } else getAppDB().putInteger(tag, tagVal, true);
+                restartKeyboard();
             }
+            p113.dismiss();
+        });
 
-            build.setTitle(getTranslation(tag));
-            ScrollView dialogScroller = new ScrollView(p1.getContext());
-            dialogView = new RadioSelectorLayout(p1.getContext(), val, (List<String>) p1.getTag(TAG2));
-            dialogScroller.addView(dialogView);
-            build.setView(dialogScroller);
-            build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
-            if (!themeSelector) {
-                build.setNeutralButton(R.string.settings_return_defaults, (p112, p2) -> {
-                    if (langSelector || iconSelector || spaceSelector)
-                        getAppDB().putString(tag, (String) getSettings().getDefaults(tag), true);
-                    else getAppDB().putInteger(tag, (int) getSettings().getDefaults(tag), true);
-                    restartKeyboard();
-                    p112.dismiss();
-                });
-            }
-
-            final int xval = val;
-            build.setPositiveButton(android.R.string.ok, (p113, p2) -> {
-                int tagVal = (int) dialogView.getTag();
-                if (tagVal != xval) {
-                    if (langSelector) {
-                        String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
-                        getAppDB().putString(tag, index, true);
-                    } else if (iconSelector) {
-                        String index = SuperBoardApplication.getIconThemes().getKeyByIndex(tagVal);
-                        getAppDB().putString(tag, index, true);
-                    } else if (spaceSelector) {
-                        String index = SuperBoardApplication.getSpaceBarStyles().getKeyByIndex(tagVal);
-                        getAppDB().putString(tag, index, true);
-                    } else if (themeSelector) {
-                        List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
-                        ThemeUtils.ThemeHolder theme = themes.get(tagVal);
-                        theme.applyTheme();
-                        recreate();
-                    } else getAppDB().putInteger(tag, tagVal, true);
-                    restartKeyboard();
-                }
-                p113.dismiss();
-            });
-
-            doHacksAndShow(build.create());
-        }
+        doHacksAndShow(build.create());
     };
 }

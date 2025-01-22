@@ -14,12 +14,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BaseActivity;
 import org.blinksd.board.services.KeyboardThemeApi;
@@ -43,6 +45,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     SuperTab superTab;
     SuperBoard kbdPreview;
     ImageView backgroundImageView;
+    View dialogView;
 
     public static String getTranslation(String key) {
         Context context = SuperBoardApplication.getApplication();
@@ -158,6 +161,12 @@ public abstract class SettingsBaseActivity extends BaseActivity {
             if (result != null) {
                 result = ImageUtils.getMinimizedBitmap(result);
                 backgroundImageView.setImageBitmap(result);
+                if (dialogView != null) {
+                    ImageView imageView = dialogView.findViewById(R.id.dialog_image_preview);
+                    if (imageView != null) {
+                        imageView.setImageBitmap(result);
+                    }
+                }
             }
         }
     }

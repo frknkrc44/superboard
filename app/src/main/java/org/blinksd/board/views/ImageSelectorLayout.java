@@ -125,7 +125,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                 temp = b;
             }
         };
-        prev.setId(android.R.id.custom);
+        prev.setId(R.id.dialog_image_preview);
         int gradientPadding = DensityUtils.dpInt(2);
         int frameMargin = DensityUtils.dpInt(8);
         prev.setPadding(gradientPadding, gradientPadding, gradientPadding, gradientPadding);
