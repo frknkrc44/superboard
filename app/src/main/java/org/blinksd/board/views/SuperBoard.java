@@ -67,8 +67,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public static final int SHIFT_ON = 1;
     public static final int SHIFT_LOCKED = 2;
     protected static final int
-            TAG_LONG_PRESS = R.id.key_lp,
-            TAG_NORMAL_PRESS = R.id.key_np,
+            TAG_LONG_PRESS = R.id.key_long_press,
+            TAG_NORMAL_PRESS = R.id.key_normal_press,
             TAG_KEY_WIDTH = R.id.key_width,
             TAG_DISABLE_MODIFIER = R.id.disable_type_modifier,
             TAG_KEY_REPEAT = R.id.key_repeat;
@@ -177,7 +177,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void fixHeight() {
-        setKeyboardHeight(heightPercent);
+        setKeyboardHeight(getKeyboardHeightPercent());
         for (int i = 0; i < getChildCount(); i++) {
             for (int g = 0; g < getKeyboard(i).getChildCount(); g++) {
                 getRow(i, g).setKeyWidths();
@@ -215,7 +215,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeyRepeat(SuperBoard.Key key, boolean repeat) {
-        key.setTag(TAG_KEY_REPEAT, repeat);
+        key.setRepeat(repeat);
     }
 
     public final void setKeyWidthPercent(int keyboardIndex, int rowIndex, int keyIndex, int percent) {
@@ -912,7 +912,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setPressEventForKey(Key key, int keyCode, boolean isEvent) {
-        key.setTag(TAG_NORMAL_PRESS, new Pair<>(keyCode, isEvent));
+        key.setNormalPressEvent(keyCode, isEvent);
     }
 
     public final void setLongPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode) {
@@ -924,7 +924,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setLongPressEventForKey(Key key, int keyCode, boolean isEvent) {
-        key.setTag(TAG_LONG_PRESS, new Pair<>(keyCode, isEvent));
+        key.setLongPressEvent(keyCode, isEvent);
     }
 
     public final void setDisablePopup(boolean val) {
@@ -1286,14 +1286,26 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return getTag(TAG_NORMAL_PRESS) != null;
         }
 
+        private void setNormalPressEvent(int keyCode, boolean isEvent) {
+            setTag(TAG_NORMAL_PRESS, new Pair<>(keyCode, isEvent));
+        }
+
         public boolean hasLongPressEvent() {
             return getTag(TAG_LONG_PRESS) != null;
+        }
+
+        private void setLongPressEvent(int keyCode, boolean isEvent) {
+            setTag(TAG_LONG_PRESS, new Pair<>(keyCode, isEvent));
         }
 
         public boolean isKeyRepeat() {
             if (!isRepeat) return false;
             Object tag = getTag(TAG_KEY_REPEAT);
             return tag != null && (boolean) tag;
+        }
+
+        private void setRepeat(boolean repeat) {
+            setTag(TAG_KEY_REPEAT, repeat);
         }
 
         private boolean hasPopup() {

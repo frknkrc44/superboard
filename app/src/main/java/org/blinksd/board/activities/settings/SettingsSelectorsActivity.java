@@ -46,7 +46,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
-    private static final int TAG1 = R.id.key_np, TAG2 = R.id.key_lp;
+    private static final int TAG1 = R.id.key_normal_press, TAG2 = R.id.key_long_press;
     private View dialogView;
 
     View createNumberSelector(String key, boolean isFloat) {
