@@ -80,6 +80,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     public abstract void setKeyPrefs();
 
     public void restartKeyboard() {
+        dialogView = null;
         setKeyPrefs();
         KeyboardThemeApi.restartKeyboard();
     }
@@ -158,14 +159,10 @@ public abstract class SettingsBaseActivity extends BaseActivity {
         }
 
         protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                result = ImageUtils.getMinimizedBitmap(result);
-                backgroundImageView.setImageBitmap(result);
-                if (dialogView != null) {
-                    ImageView imageView = dialogView.findViewById(R.id.dialog_image_preview);
-                    if (imageView != null) {
-                        imageView.setImageBitmap(result);
-                    }
+            if (result != null && dialogView != null) {
+                ImageView imageView = dialogView.findViewById(R.id.dialog_image_preview);
+                if (imageView != null) {
+                    imageView.setImageBitmap(ImageUtils.getMinimizedBitmap(result));
                 }
             }
         }

@@ -301,7 +301,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             i.setType("image/*");
             i.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(i, ""), 1);
-        }, () -> restartKeyboard());
+        }, this::restartKeyboard);
         dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
 
         dialog.setView(dialogView);
