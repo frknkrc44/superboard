@@ -44,12 +44,8 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     SuperBoard kbdPreview;
     ImageView backgroundImageView;
 
-    String getTranslation(String key) {
-        return getTranslation(this, key);
-    }
-
-    @SuppressLint("DiscouragedApi")
-    public static String getTranslation(Context context, String key) {
+    public static String getTranslation(String key) {
+        Context context = SuperBoardApplication.getApplication();
         String requestedKey = "settings_" + key;
         try {
             int id = context.getResources().getIdentifier(requestedKey, "string", context.getPackageName());

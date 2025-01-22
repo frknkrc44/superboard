@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.activities.settings.AppSettingsV3;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.utils.DensityUtils;
@@ -94,7 +94,7 @@ public final class BackupRestoreActivity extends BaseActivity {
         };
 
         for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = AppSettingsV3.getTranslation(this, tabTitles[i]);
+            tabTitles[i] = SettingsBaseActivity.getTranslation(tabTitles[i]);
         }
 
         host.setup();

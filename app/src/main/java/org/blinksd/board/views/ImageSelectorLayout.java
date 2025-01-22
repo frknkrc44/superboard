@@ -38,6 +38,7 @@ import android.widget.Toast;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.settings.AppSettingsV3;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
@@ -49,7 +50,7 @@ import java.util.TreeMap;
 @SuppressLint("ViewConstructor")
 @SuppressWarnings("deprecation")
 public final class ImageSelectorLayout extends LinearLayout {
-
+    private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;
     private Bitmap temp;
     private TreeMap<Integer, Integer> colorList;
@@ -100,7 +101,6 @@ public final class ImageSelectorLayout extends LinearLayout {
         }
 
     };
-    private static int indexNum = 0, gradientType = 0;
 
     public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard) {
         super(win.getContext());
@@ -160,14 +160,9 @@ public final class ImageSelectorLayout extends LinearLayout {
 
         });
         addView(host);
-
-        final String[] tabTitles = {"photo", "gradient"};
-        for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = getImageSelectorTranslation(tabTitles[i]);
-        }
-
         host.setup();
 
+        final String[] tabTitles = { "photo", "gradient" };
         for (int i = 0; i < tabTitles.length; i++) {
             TabHost.TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(win.getContext())
@@ -176,8 +171,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                     LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
-            tv.setText(tabTitles[i]);
-            tv.setText(tabTitles[i]);
+            tv.setText(getImageSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);
@@ -200,7 +194,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         return null;
     }
 
-    private static boolean isPermGranted(Context context) {
+    private boolean isPermGranted(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return Environment.isExternalStorageManager();
         }
@@ -317,12 +311,9 @@ public final class ImageSelectorLayout extends LinearLayout {
         return new ColorSelectorItemLayout(ctx, index, colorList, gradientAddColorListener, gradientDelColorListener, colorSelectorListener);
     }
 
-    private int getNextEmptyItemIndex() {
-        return indexNum++;
-    }
-
     private GradientDrawable.Orientation getGradientOrientation() {
-        return GradientOrientation.getFromIndex(gradientType);
+        GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
+        return values[gradientType % values.length];
     }
 
     private int[] getGradientColors() {
@@ -349,16 +340,6 @@ public final class ImageSelectorLayout extends LinearLayout {
         return out;
     }
 
-    private static class GradientOrientation {
-        private GradientOrientation() {
-        }
-
-        public static GradientDrawable.Orientation getFromIndex(int index) {
-            GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
-            return values[index % values.length];
-        }
-    }
-
     private final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
 
         @SuppressLint("ResourceType")
@@ -376,7 +357,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                     gradientSel = p1.findViewById(R.id.gradient_selector);
                 }
 
-                int index = getNextEmptyItemIndex();
+                int index = indexNum++;
                 View v = getColorSelectorItem(p1.getContext(), index);
                 int count = gradientSel.getChildCount();
                 gradientSel.addView(v, count - 2);
@@ -389,7 +370,6 @@ public final class ImageSelectorLayout extends LinearLayout {
     };
 
     private String getImageSelectorTranslation(String key) {
-        return AppSettingsV3.getTranslation(
-                SuperBoardApplication.getApplication(), "image_selector_" + key);
+        return SettingsBaseActivity.getTranslation("image_selector_" + key);
     }
 }

@@ -21,7 +21,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.activities.settings.AppSettingsV3;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
@@ -69,16 +69,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         host.addView(holder);
         addView(host);
 
-        final String[] tabTitles = {
-                "color_selector_rgb",
-                "color_selector_hsv",
-                "color_selector_hex"
-        };
-
-        for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = AppSettingsV3.getTranslation(ctx, tabTitles[i]);
-        }
-
+        final String[] tabTitles = { "rgb", "hsv", "hex" };
         host.setOnTabChangedListener(p1 -> {
             a.setVisibility(p1.equals(tabTitles[2]) ? View.GONE : View.VISIBLE);
             switch (host.getCurrentTab()) {
@@ -107,7 +98,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = tabTitles.length;
             tv.setLayoutParams(pr);
-            tv.setText(tabTitles[i]);
+            tv.setText(getColorSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);
@@ -346,5 +337,9 @@ public final class ColorSelectorLayout extends LinearLayout {
         return showColorInt
                 ? String.format("%s\n(%s, %s, %s, %s)", hexColor, a, r, g, b)
                 : hexColor;
+    }
+
+    private String getColorSelectorTranslation(String key) {
+        return SettingsBaseActivity.getTranslation("color_selector_" + key);
     }
 }
