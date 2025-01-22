@@ -259,20 +259,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeysPadding(final int padding) {
-        if (getReferenceKeyMargin() != padding)
-            applyToAllKeys(key -> {
-                Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
-                l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
-            });
-    }
-
-    private int getReferenceKeyMargin() {
-        try {
-            Key key = getKey(0, 0, 0);
+        applyToAllKeys(key -> {
             Row.LayoutParams l = (Row.LayoutParams) key.getLayoutParams();
-            return l.bottomMargin;
-        } catch (Throwable ignored) {}
-        return -1;
+            l.bottomMargin = l.topMargin = l.leftMargin = l.rightMargin = padding;
+        });
     }
 
     public final int getKeysTextColor() {
