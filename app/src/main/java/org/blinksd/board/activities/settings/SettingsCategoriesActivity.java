@@ -2,10 +2,13 @@ package org.blinksd.board.activities.settings;
 
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -15,6 +18,7 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.ViewUtils;
 
@@ -111,5 +115,31 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         }
 
         return (ViewGroup) mTabsHolder.getChildAt(categoryIndex);
+    }
+
+    @Override
+    public void restartKeyboard() {
+        super.restartKeyboard();
+
+        // Re-apply switch dependencies
+        for (int i = 0; i < mTabsHolder.getChildCount(); i++) {
+            ViewGroup categoryView = (ViewGroup) getCategoryView(i).getChildAt(0);
+
+            for (int g = 0; g < categoryView.getChildCount(); g++) {
+                View item = categoryView.getChildAt(g);
+
+                if (item instanceof Switch) {
+                    Switch swtch = (Switch) item;
+                    String key = (String) swtch.getTag();
+
+                    boolean enabled = getSettings().getSwitchEnabledFromDependency(key);
+                    boolean val = enabled && SuperDBHelper.getBooleanOrDefault(key);
+                    swtch.setEnabled(enabled);
+                    swtch.setOnCheckedChangeListener(null);
+                    swtch.setChecked(val);
+                    swtch.setOnCheckedChangeListener(switchListener);
+                }
+            }
+        }
     }
 }

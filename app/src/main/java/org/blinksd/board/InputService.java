@@ -150,6 +150,15 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
+    public void onCreate() {
+        if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            setTheme(R.style.Theme_OptOutEnforcement);
+        }
+
+        super.onCreate();
+    }
+
+    @Override
     public View onCreateInputView() {
         setLayout();
         return keyboardBackgroundHolder;

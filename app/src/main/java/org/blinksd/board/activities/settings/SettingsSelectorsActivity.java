@@ -184,7 +184,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         p1.getContext().startActivity(intent);
     };
 
-    private final Switch.OnCheckedChangeListener switchListener = (buttonView, isChecked) -> {
+    final Switch.OnCheckedChangeListener switchListener = (buttonView, isChecked) -> {
         String str = (String) buttonView.getTag();
         getAppDB().putBoolean(str, isChecked, true);
         restartKeyboard();

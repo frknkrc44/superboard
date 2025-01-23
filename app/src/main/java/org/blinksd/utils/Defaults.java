@@ -2,6 +2,7 @@ package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.P;
+import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
 
 public final class Defaults {
     public static final int KEYBOARD_HEIGHT = 36;
@@ -40,7 +41,7 @@ public final class Defaults {
     public static final boolean KEYBOARD_TOUCH_SOUND = true;
     public static final boolean COLORIZE_NAVBAR = SDK_INT < P;
     public static final boolean COLORIZE_NAVBAR_ALT = !COLORIZE_NAVBAR;
-    public static final boolean COLORIZE_NAVBAR_ALWAYS_TRANS = false;
+    public static final boolean COLORIZE_NAVBAR_ALWAYS_TRANS = COLORIZE_NAVBAR;
     public static final boolean DETECT_CAPSLOCK = true;
     public static final boolean ENFORCE_DETECT_CAPSLOCK = true;
     public static final boolean ENFORCE_EDITOR_ACTION = false;
