@@ -4,6 +4,7 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.ResourcesUtils.getColor;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -105,6 +106,7 @@ public final class SuperDBHelper {
         return true;
     }
 
+    @SuppressLint("UseRequiresApi")
     @TargetApi(Build.VERSION_CODES.S)
     private static int getMonetColorValue(String key) {
         Configuration conf = SuperBoardApplication.getResConfiguration();
