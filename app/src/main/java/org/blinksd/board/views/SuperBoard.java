@@ -1223,9 +1223,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
 
             label = new TextView(context);
-            setLabelParams(label);
             subLabel = new TextView(context);
-            setSubLabelParams(subLabel);
+            setLabelParams();
+            setSubLabelParams();
 
             icon = new ImageView(context);
             LayoutParams iconParams = new LayoutParams(-1, -1);
@@ -1246,7 +1246,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             setOnTouchListener(SuperBoard.this);
         }
 
-        private void setLabelParams(TextView label) {
+        private void setLabelParams() {
             label.setLayoutParams(new LayoutParams(-1, -1));
             label.setTextColor(keyTextColor);
             label.setSingleLine();
@@ -1254,13 +1254,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             label.setHintTextColor(0);
         }
 
-        private void setSubLabelParams(TextView subLabel) {
+        private void setSubLabelParams() {
             LayoutParams subParams = new LayoutParams(-2, -2);
-            subParams.addRule(ALIGN_PARENT_RIGHT, TRUE);
             subParams.addRule(ALIGN_PARENT_TOP, TRUE);
-            int margin = DensityUtils.mpInt(1.5f);
-            subParams.rightMargin = subParams.topMargin = margin;
+            subParams.addRule(CENTER_HORIZONTAL, TRUE);
+            subParams.topMargin = DensityUtils.mpInt(0.5f);
             subLabel.setLayoutParams(subParams);
+            subLabel.setTextColor(ColorUtils.setAlphaForColor(0x66, keyTextColor));
+            label.setSingleLine();
+            label.setGravity(CENTER);
+            label.setHintTextColor(0);
         }
 
         public boolean isKeyIconSet() {
@@ -1450,7 +1453,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void setKeyTextSize(float size) {
             label.setTextSize(size);
-            subLabel.setTextSize(size / 2);
+            subLabel.setTextSize(size / 1.5f);
             applyIconMultiply();
         }
 
