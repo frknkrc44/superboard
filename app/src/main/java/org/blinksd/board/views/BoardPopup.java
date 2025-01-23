@@ -56,8 +56,8 @@ public class BoardPopup extends SuperBoard {
         setBackgroundDrawable(LayoutUtils.getKeyBg(a, ap, true));
         mPopupFilter.setBackgroundColor(ColorUtils.setAlphaForColor(0x33, a));
         mKey.setVisibility(GONE);
-        int h = mKey.getLayoutParams().height;
-        setKeyLeftTop(pos[0], pos[1] - (pos[1] >= h ? h : 0));
+        int keyHeight = mKey.getLayoutParams().height;
+        setKeyLeftTop(pos[0], pos[1] - (pos[1] >= keyHeight ? keyHeight : 0));
     }
 
     private void setKeyLeftTop(int left, int top) {

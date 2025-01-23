@@ -169,9 +169,7 @@ public final class InputService extends InputMethodService implements
         if (view.getParent() != null) {
             if (recentConfiguration == null) {
                 recentConfiguration = getResources().getConfiguration();
-            }
-
-            if (recentConfiguration.orientation != getResources().getConfiguration().orientation) {
+            } else if (recentConfiguration.orientation != getResources().getConfiguration().orientation) {
                 System.exit(0);
             }
 
@@ -692,7 +690,7 @@ public final class InputService extends InputMethodService implements
         }
     }
 
-    private class SuperBoardImpl extends SuperBoard {
+    private final class SuperBoardImpl extends SuperBoard {
         private boolean shown = false;
         private SuperBoardImpl(Context context) {
             super(context);
@@ -822,7 +820,7 @@ public final class InputService extends InputMethodService implements
         }
     }
 
-    private class BoardPopupImpl extends BoardPopup {
+    private final class BoardPopupImpl extends BoardPopup {
         public BoardPopupImpl(ViewGroup root) {
             super(root);
             setSpecialCases(LayoutUtils.getSpecialCases());
