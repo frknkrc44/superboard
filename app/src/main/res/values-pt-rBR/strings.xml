@@ -46,6 +46,7 @@
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use o primeiro caractere pop-up ao pressionar longamente (você deve ativar o menu pop-up)</string>
     <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
     <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
+    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
