@@ -89,6 +89,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private int currentMotionEventAction = MotionEvent.ACTION_UP;
     protected int iconSizeMultiplier = 1;
     private int currentEditorAction = 0;
+    private float keyIndicatorHeight = 0.5f;
     private boolean longPressed = false;
     private boolean disablePopup = false;
     private boolean popupPreview = false;
@@ -326,6 +327,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         if (textStyle != style)
             applyToAllKeys(key -> key.setKeyTextStyle(style));
         textStyle = style;
+    }
+
+    public final void setKeyboardIndicatorHeight(final float height) {
+        if (height != keyIndicatorHeight) {
+            keyIndicatorHeight = height;
+            applyToAllKeys(Key::applyIndicatorHeight);
+        }
     }
 
     public final void applyToAllKeys(ApplyToKeyRunnable runnable) {
@@ -1322,7 +1330,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             if (state == null) {
                 RelativeLayout.LayoutParams stateParams =
                         new RelativeLayout.LayoutParams(
-                                DensityUtils.mpInt(4), DensityUtils.mpInt(0.5f));
+                                DensityUtils.mpInt(4), DensityUtils.mpInt(keyIndicatorHeight));
                 stateParams.bottomMargin = DensityUtils.mpInt(2);
                 stateParams.addRule(ALIGN_PARENT_BOTTOM, TRUE);
                 stateParams.addRule(CENTER_HORIZONTAL, TRUE);
@@ -1341,6 +1349,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 currentState = stateCount - 1;
             }
             changeState(currentState);
+        }
+
+        public void applyIndicatorHeight() {
+            if (state != null) {
+                state.getLayoutParams().height = DensityUtils.mpInt(keyIndicatorHeight);
+            }
         }
 
         public void changeState(int newState) {

@@ -40,6 +40,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEY_SHADOWCLR = "key_shadowclr",
             SET_KEY_PADDING = "key_padding",
             SET_KEY_RADIUS = "key_radius",
+            SET_KEY_INDICATOR_HEIGHT = "key_indicator_height",
             SET_KEY_TEXTSIZE = "key_textsize",
             SET_KEY_SHADOWSIZE = "key_shadowsize",
             SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
@@ -85,6 +86,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_KEY_RADIUS, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_TEXTSIZE, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_SHADOWSIZE, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_INDICATOR_HEIGHT, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_ICON_SIZE_MULTIPLIER, SettingType.MM_DECIMAL_NUMBER);
         putTheming(SET_KEYBOARD_TEXTTYPE_SELECT,  SettingType.REDIRECT);
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
@@ -322,6 +324,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.DICTIONARY_ALGORITHM;
                 case SET_DICTIONARY_LIMIT:
                     return Defaults.DICTIONARY_LIMIT;
+                case SET_KEY_INDICATOR_HEIGHT:
+                    return Defaults.KEY_INDICATOR_HEIGHT;
             }
         }
         return null;
@@ -337,7 +341,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                             nums[1] = Constants.MAX_OTHER_VAL;
                             break;
                         case SET_KEY_VIBRATE_DURATION:
-                            nums[1] = Constants.MAX_VIBR_DUR;
+                            nums[1] = Constants.MAX_VIBRATION_DURATION;
                             break;
                         case SET_DICTIONARY_LIMIT:
                             nums[0] = Constants.MIN_DICT_LIMIT;
@@ -348,16 +352,17 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 case MM_DECIMAL_NUMBER:
                     switch (key) {
                         case SET_KEYBOARD_HEIGHT:
-                            nums[0] = Constants.MIN_KEYBD_HGT;
-                            nums[1] = Constants.MAX_KEYBD_HGT;
+                            nums[0] = Constants.MIN_KEYBOARD_HEIGHT;
+                            nums[1] = Constants.MAX_KEYBOARD_HEIGHT;
                             break;
                         case SET_KEY_LONGPRESS_DURATION:
-                            nums[0] = Constants.MIN_LPRESS_DUR;
-                            nums[1] = Constants.MAX_LPRESS_DUR;
+                            nums[0] = Constants.MIN_LONG_PRESS_DURATION;
+                            nums[1] = Constants.MAX_LONG_PRESS_DURATION;
                             break;
                         case SET_KEY_ICON_SIZE_MULTIPLIER:
                             nums[0] = Constants.MIN_ICON_MULTI;
                             nums[1] = Constants.MAX_ICON_MULTI;
+                            break;
                     }
                     break;
                 case FLOAT_NUMBER:
@@ -367,11 +372,14 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                             nums[1] = Constants.MAX_OTHER_VAL;
                             break;
                         case SET_KEY_RADIUS:
-                            nums[1] = Constants.MAX_RADS_DUR;
+                            nums[1] = Constants.MAX_RADIUS;
                             break;
                         case SET_KEY_TEXTSIZE:
                             nums[0] = Constants.MIN_TEXT_SIZE;
                             nums[1] = Constants.MAX_TEXT_SIZE;
+                            break;
+                        case SET_KEY_INDICATOR_HEIGHT:
+                            nums[1] = Constants.MAX_INDICATOR_HEIGHT;
                             break;
                     }
                     break;

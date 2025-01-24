@@ -30,6 +30,7 @@ public final class Defaults {
     public static final int ICON_SIZE_MULTIPLIER = 3;
     public static final int DICTIONARY_ALGORITHM = 0;
     public static final int DICTIONARY_LIMIT = 10;
+    public static final int KEY_INDICATOR_HEIGHT = 5;
 
     public static final String KEYBOARD_LANGUAGE_KEY = "en_US";
     public static final String KEYBOARD_SPACETYPE = "theme";

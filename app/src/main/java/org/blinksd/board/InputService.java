@@ -481,6 +481,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.setKeysTextType(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
             superBoardView.setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
             superBoardView.setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
+            superBoardView.setKeyboardIndicatorHeight(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_INDICATOR_HEIGHT)));
             int y = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
             int yp = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
             int z = SuperDBHelper.getIntOrDefault(SettingMap.SET_ENTER_BGCLR);
