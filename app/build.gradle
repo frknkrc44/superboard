@@ -13,7 +13,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdk keystoreProperties['TARGETSDK'].toInteger()
+    compileSdkVersion "android-Baklava"
 
     buildFeatures {
         aidl true
@@ -33,7 +33,7 @@ android {
     defaultConfig {
         applicationId "org.blinksd.board"
         minSdk keystoreProperties['MINSDK'].toInteger()
-        targetSdk compileSdk
+        targetSdk keystoreProperties['TARGETSDK'].toInteger()
         versionCode keystoreProperties['VERCODE'].toInteger()
         versionName keystoreProperties['VERNAME']
     }
