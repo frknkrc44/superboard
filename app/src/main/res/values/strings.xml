@@ -52,6 +52,7 @@
 	<string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
 	<string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
 	<string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
+	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
 
 	<string name="settings_return_defaults" translatable="false">(↻)</string>
 	
