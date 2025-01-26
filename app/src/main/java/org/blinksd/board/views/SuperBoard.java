@@ -97,6 +97,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean shiftDetect = true;
     private boolean enforcedShiftDetect = true;
     private boolean enforcedEditorAction = true;
+    private boolean longPressFastDelete = false;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
     private final List<Integer> enforcedShiftRestrictedEvents = Arrays.asList(
             KEYCODE_TOGGLE_CTRL,
@@ -699,6 +700,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         getCurrentInputConnection().commitText(text, text.length());
     }
 
+    public void setLongPressFastDelete(boolean value) {
+        longPressFastDelete = value;
+    }
+
+    public boolean isLongPressFastDelete() {
+        return longPressFastDelete;
+    }
+
     public int getCtrlState() {
         return ctrl;
     }
@@ -1068,6 +1077,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private final class MyHandler {
         private final ListedMap<Integer, View> messageIds = new ListedMap<>();
         private final List<Thread> threads = new ArrayList<>();
+        private int longPressEventCounter = 0;
 
         private MyHandler() {}
 
@@ -1142,6 +1152,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             switch (what) {
                 case 0: // after
                     longPressed = false;
+                    longPressEventCounter = 0;
                     removeMessages(0);
                     afterKeyboardEvent();
                     break;
@@ -1176,6 +1187,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case 2: // normal or long start
                     if (currentMotionEventAction == MotionEvent.ACTION_UP) {
+                        if (longPressFastDelete) {
+                            setCtrlState(0);
+                            sendCtrl(false);
+                        }
+
                         removeAndSendEmptyMessage(0);
                     } else {
                         sendKeyboardEvent(v);
@@ -1183,6 +1199,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             long delay = (20L * longPressMultiplier) * (longPressed ? 1 : 20);
                             removeAndSendMessageDelayed(1, v, delay);
                             if (!longPressed) longPressed = true;
+                            else {
+                                if (longPressFastDelete) {
+                                    setCtrlState(0);
+                                    sendCtrl(false);
+
+                                    if (longPressEventCounter++ > 10) {
+                                        setCtrlState(1);
+                                        sendCtrl(true);
+                                    }
+                                }
+                            }
                         } else {
                             removeAndSendEmptyMessage(0);
                         }

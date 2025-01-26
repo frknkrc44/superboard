@@ -494,6 +494,7 @@ public final class InputService extends InputMethodService implements
             int shr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
                     shc = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR);
             superBoardView.setKeysShadow(shr, shc);
+            superBoardView.setLongPressFastDelete(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_LONG_PRESS_FAST_DELETE));
             superBoardView.setLongPressMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
             superBoardView.setKeyVibrateDuration(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
             superBoardView.setKeysTextColor(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));

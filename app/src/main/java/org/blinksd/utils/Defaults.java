@@ -58,4 +58,5 @@ public final class Defaults {
     public static final boolean DISABLE_NUMBER_ROW = false;
     public static final boolean USE_FIRST_POPUP_CHARACTER = false;
     public static final boolean SHOW_BOTTOM_BAR = false;
+    public static final boolean LONG_PRESS_FAST_DELETE = false;
 }
