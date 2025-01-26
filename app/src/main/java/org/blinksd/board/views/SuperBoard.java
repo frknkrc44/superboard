@@ -1090,9 +1090,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             messageIds.remove(what);
 
             if (what == 1) {
-                for (Thread thread : threads) {
+                for (int i = 0; i < threads.size(); i++) {
                     try {
-                        thread.interrupt();
+                        threads.get(i).interrupt();
                     } catch (Throwable ignored) {}
                 }
                 threads.clear();
@@ -1505,11 +1505,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         @SuppressLint("ClickableViewAccessibility")
         public void clone(Key k, boolean disableTouchEvent) {
+            if (getBackground() != null) {
+                Rect r = getBackground().getBounds();
+                k.getLayoutParams().width = r.right;
+                k.getLayoutParams().height = r.bottom;
+            } else {
+                k.getLayoutParams().width = getMeasuredWidth();
+                k.getLayoutParams().height = getMeasuredHeight();
+            }
             k.setBackgroundDrawable(getBackground());
-            Rect r = getBackground().getBounds();
             k.setKeyWidthPercent(getKeyWidthPercent());
-            k.getLayoutParams().width = r.right;
-            k.getLayoutParams().height = r.bottom;
             k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);
