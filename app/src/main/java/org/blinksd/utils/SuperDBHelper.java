@@ -56,9 +56,9 @@ public final class SuperDBHelper {
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
-            db.putString(key, String.valueOf(
-                    getSettings().getDefaults(key)), true);
+            return getSettings().getDefaults(key).toString();
         }
+
         return db.getString(key, ret);
     }
 

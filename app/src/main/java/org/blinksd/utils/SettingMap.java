@@ -73,7 +73,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_DICTIONARY_ALGORITHM = "dictionary_algorithm",
             SET_DICTIONARY_LIMIT = "dictionary_limit",
             SET_SHOW_BOTTOM_BAR = "show_bottom_bar",
-            SET_ENABLE_LONG_PRESS_FAST_DELETE = "long_press_fast_delete";
+            SET_ENABLE_LONG_PRESS_FAST_DELETE = "long_press_fast_delete",
+            SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -100,6 +101,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         }
         putThemingAdvanced(SET_KEYBOARD_BGIMG, SettingType.IMAGE);
         putPopup(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
+        putKbdLayout(SET_ENABLE_LONG_PRESS_FAST_DELETE, SettingType.BOOL);
+        putKbdLayout(SET_INSERT_SPACE_AFTER_PUNC, SettingType.BOOL);
         putKbdLayout(SET_PLAY_SND_PRESS, SettingType.BOOL);
         putKbdLayout(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
         if (!SystemUtils.isNotColorizeNavbar()) {
@@ -113,7 +116,6 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_DISABLE_REPEAT, SettingType.BOOL);
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putGeneral(SET_ENABLE_LONG_PRESS_FAST_DELETE, SettingType.BOOL);
         putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
@@ -341,6 +343,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.SHOW_BOTTOM_BAR;
                 case SET_ENABLE_LONG_PRESS_FAST_DELETE:
                     return Defaults.LONG_PRESS_FAST_DELETE;
+                case SET_INSERT_SPACE_AFTER_PUNC:
+                    return Defaults.INSERT_SPACE_AFTER_PUNC;
             }
         }
         return null;
@@ -348,43 +352,41 @@ public class SettingMap extends ListedMap<String, SettingItem> {
 
     public int[] getMinMaxNumbers(final String key) {
         int[] nums = new int[2];
-        if (containsKey(key)) {
-            switch (key) {
-                case SET_KEYBOARD_BGBLUR:
-                case SET_KEY_PADDING:
-                case SET_KEY_SHADOWSIZE:
-                    nums[1] = Constants.MAX_OTHER_VAL;
-                    break;
-                case SET_KEY_VIBRATE_DURATION:
-                    nums[1] = Constants.MAX_VIBRATION_DURATION;
-                    break;
-                case SET_DICTIONARY_LIMIT:
-                    nums[0] = Constants.MIN_DICT_LIMIT;
-                    nums[1] = Constants.MAX_DICT_LIMIT;
-                    break;
-                case SET_KEYBOARD_HEIGHT:
-                    nums[0] = Constants.MIN_KEYBOARD_HEIGHT;
-                    nums[1] = Constants.MAX_KEYBOARD_HEIGHT;
-                    break;
-                case SET_KEY_LONGPRESS_DURATION:
-                    nums[0] = Constants.MIN_LONG_PRESS_DURATION;
-                    nums[1] = Constants.MAX_LONG_PRESS_DURATION;
-                    break;
-                case SET_KEY_ICON_SIZE_MULTIPLIER:
-                    nums[0] = Constants.MIN_ICON_MULTI;
-                    nums[1] = Constants.MAX_ICON_MULTI;
-                    break;
-                case SET_KEY_RADIUS:
-                    nums[1] = Constants.MAX_RADIUS;
-                    break;
-                case SET_KEY_TEXTSIZE:
-                    nums[0] = Constants.MIN_TEXT_SIZE;
-                    nums[1] = Constants.MAX_TEXT_SIZE;
-                    break;
-                case SET_KEY_INDICATOR_HEIGHT:
-                    nums[1] = Constants.MAX_INDICATOR_HEIGHT;
-                    break;
-            }
+        switch (key) {
+            case SET_KEYBOARD_BGBLUR:
+            case SET_KEY_PADDING:
+            case SET_KEY_SHADOWSIZE:
+                nums[1] = Constants.MAX_OTHER_VAL;
+                break;
+            case SET_KEY_VIBRATE_DURATION:
+                nums[1] = Constants.MAX_VIBRATION_DURATION;
+                break;
+            case SET_DICTIONARY_LIMIT:
+                nums[0] = Constants.MIN_DICT_LIMIT;
+                nums[1] = Constants.MAX_DICT_LIMIT;
+                break;
+            case SET_KEYBOARD_HEIGHT:
+                nums[0] = Constants.MIN_KEYBOARD_HEIGHT;
+                nums[1] = Constants.MAX_KEYBOARD_HEIGHT;
+                break;
+            case SET_KEY_LONGPRESS_DURATION:
+                nums[0] = Constants.MIN_LONG_PRESS_DURATION;
+                nums[1] = Constants.MAX_LONG_PRESS_DURATION;
+                break;
+            case SET_KEY_ICON_SIZE_MULTIPLIER:
+                nums[0] = Constants.MIN_ICON_MULTI;
+                nums[1] = Constants.MAX_ICON_MULTI;
+                break;
+            case SET_KEY_RADIUS:
+                nums[1] = Constants.MAX_RADIUS;
+                break;
+            case SET_KEY_TEXTSIZE:
+                nums[0] = Constants.MIN_TEXT_SIZE;
+                nums[1] = Constants.MAX_TEXT_SIZE;
+                break;
+            case SET_KEY_INDICATOR_HEIGHT:
+                nums[1] = Constants.MAX_INDICATOR_HEIGHT;
+                break;
         }
         return nums;
     }

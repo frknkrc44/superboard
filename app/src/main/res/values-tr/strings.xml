@@ -52,6 +52,7 @@
 	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Tuş göstergesi yüksekliği</string>
 	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Alt barı göster</string>
 	<string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Uzun basıldığında bir süre sonra silmeyi daha da hızlandır</string>
+	<string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Noktalama işaretinden sonra boşluk bırak</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Fotoğraf</string>

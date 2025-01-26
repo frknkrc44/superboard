@@ -22,6 +22,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyCharacterMap;
@@ -98,6 +99,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean enforcedShiftDetect = true;
     private boolean enforcedEditorAction = true;
     private boolean longPressFastDelete = false;
+    private boolean insertSpaceAfterPunc = false;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
     private final List<Integer> enforcedShiftRestrictedEvents = Arrays.asList(
             KEYCODE_TOGGLE_CTRL,
@@ -105,6 +107,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             Keyboard.KEYCODE_SHIFT
     );
     private final List<Key> extraKeyViews = new ArrayList<>();
+    private final List<CharSequence> SUPPORTED_PUNCTUATION_TYPES = Arrays.asList(
+            ".", ",", ";", ":",
+            "...", "…", "?", "!"
+    );
 
     // key states
     private int ctrl = 0;
@@ -696,7 +702,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
-    private void sendText(CharSequence text) {
+    private void sendText(String text) {
+        if (insertSpaceAfterPunc &&
+                !TextUtils.isEmpty(text) &&
+                SUPPORTED_PUNCTUATION_TYPES.contains(text.substring(text.length() - 1))) {
+            text += " ";
+        }
+
         getCurrentInputConnection().commitText(text, text.length());
     }
 
@@ -704,8 +716,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         longPressFastDelete = value;
     }
 
-    public boolean isLongPressFastDelete() {
-        return longPressFastDelete;
+    public void setInsertSpaceAfterPunc(boolean value) {
+        insertSpaceAfterPunc = value;
     }
 
     public int getCtrlState() {
