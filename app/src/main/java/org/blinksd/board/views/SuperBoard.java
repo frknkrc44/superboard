@@ -1282,7 +1282,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return getTag(TAG_NORMAL_PRESS) != null;
         }
 
-        private void setNormalPressEvent(int keyCode, boolean isEvent) {
+        public void setNormalPressEvent(int keyCode, boolean isEvent) {
             setTag(TAG_NORMAL_PRESS, new Pair<>(keyCode, isEvent));
         }
 
@@ -1290,7 +1290,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return getTag(TAG_LONG_PRESS) != null;
         }
 
-        private void setLongPressEvent(int keyCode, boolean isEvent) {
+        public void setLongPressEvent(int keyCode, boolean isEvent) {
             setTag(TAG_LONG_PRESS, new Pair<>(keyCode, isEvent));
         }
 

@@ -50,6 +50,7 @@
 	<string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Sözlük sorgu yöntemi</string>
 	<string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Sözlük sorgu limiti</string>
 	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Tuş göstergesi yüksekliği</string>
+	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Alt barı göster</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Fotoğraf</string>
@@ -107,6 +108,7 @@
 	<string name="settings_category_layout">Klavye Düzeni</string>
 	<string name="settings_category_popup">Açılır Pencere</string>
 	<string name="settings_category_top_bar">Üst Çubuk</string>
+	<string name="settings_category_bottom_bar">Alt Çubuk</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_icon_theme"

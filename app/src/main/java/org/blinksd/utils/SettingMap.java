@@ -71,7 +71,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_ENABLE_CLIPBOARD = "enable_clipboard",
             SET_BACKUP_RESTORE = "backup_menu",
             SET_DICTIONARY_ALGORITHM = "dictionary_algorithm",
-            SET_DICTIONARY_LIMIT = "dictionary_limit";
+            SET_DICTIONARY_LIMIT = "dictionary_limit",
+            SET_SHOW_BOTTOM_BAR = "show_bottom_bar";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -111,9 +112,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_DISABLE_REPEAT, SettingType.BOOL);
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putTopBar(SET_ENABLE_CLIPBOARD, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL);
+        putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
+        putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putBottomBar(SET_SHOW_BOTTOM_BAR, SettingType.BOOL);
         if (Build.VERSION.SDK_INT >= 31)
             putTheming(SET_USE_MONET, SettingType.BOOL);
         putKbdLayout(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
@@ -160,6 +162,13 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
     private void putTopBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.TOP_BAR, type, dependency, dependencyEnabled));
+    }
+
+    private void putBottomBar(String name, SettingType type) {
+        putBottomBar(name, type, null, null);
+    }
+    private void putBottomBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.BOTTOM_BAR, type, dependency, dependencyEnabled));
     }
 
     private void putTheming(String name, SettingType type) {
@@ -326,6 +335,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                     return Defaults.DICTIONARY_LIMIT;
                 case SET_KEY_INDICATOR_HEIGHT:
                     return Defaults.KEY_INDICATOR_HEIGHT;
+                case SET_SHOW_BOTTOM_BAR:
+                    return Defaults.SHOW_BOTTOM_BAR;
             }
         }
         return null;

@@ -57,7 +57,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         final int size = (int) getListPreferredItemHeight(this);
         img.setGravity(Gravity.CENTER);
         img.setTextColor(Color.WHITE);
-        img.setTextSize(DensityUtils.dpInt(12));
+        // img.setTextSize(DensityUtils.dpInt(12));
         img.setText(isFloat
                 ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
                 : String.valueOf(num));

@@ -13,7 +13,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion "android-Baklava"
+    // TODO: Increase target sdk after 36 released
+    compileSdk keystoreProperties['TARGETSDK'].toInteger() - 1
 
     buildFeatures {
         aidl true

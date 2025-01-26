@@ -53,6 +53,7 @@
 	<string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
 	<string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
 	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
+	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
 
 	<string name="settings_return_defaults" translatable="false">(↻)</string>
 	
@@ -117,6 +118,7 @@
 	<string name="settings_category_layout">Keyboard Layout</string>
 	<string name="settings_category_popup">Popup</string>
 	<string name="settings_category_top_bar">Top Bar</string>
+	<string name="settings_category_bottom_bar">Bottom bar</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
@@ -165,6 +167,7 @@
 		<item>@string/settings_category_layout</item>
 		<item>@string/settings_category_popup</item>
 		<item>@string/settings_category_top_bar</item>
+		<item>@string/settings_category_bottom_bar</item>
 		<item>@string/settings_category_theming</item>
 		<item>@string/settings_category_theming_adv</item>
 	</string-array>

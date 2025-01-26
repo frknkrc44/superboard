@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.blinksd.board.views.BoardPopup;
+import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
 import org.blinksd.board.views.EmojiView;
 import org.blinksd.board.views.SuggestionLayout;
@@ -72,6 +73,7 @@ public final class InputService extends InputMethodService implements
     private Language currentLanguageCache;
     private EmojiView emojiView = null;
     private ClipboardView clipboardView = null;
+    private BottomKeyboardBarView bottomKeyboardBarView = null;
     private final BroadcastReceiver restartKeyboardReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context p1, Intent p2) {
@@ -228,6 +230,7 @@ public final class InputService extends InputMethodService implements
 
         showEmojiView(false);
         showClipboardView(false);
+        showLanguegeSelectorView(false);
 
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(null, null);
@@ -378,6 +381,7 @@ public final class InputService extends InputMethodService implements
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView == null) {
             emojiView = new EmojiView(superBoardView, emojiClick);
+            emojiView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
 
@@ -386,7 +390,18 @@ public final class InputService extends InputMethodService implements
             } else {
                 emojiView.setBackgroundDrawable(superBoardView.getBackground());
             }
+        }
 
+        if (bottomKeyboardBarView == null) {
+            bottomKeyboardBarView = new BottomKeyboardBarView(superBoardView, lang -> {
+                showLanguegeSelectorView(false);
+
+                if (!lang.equals(currentLanguageCache)) {
+                    SuperBoardApplication.getAppDB().putString(SettingMap.SET_KEYBOARD_LANG_SELECT, lang.language, true);
+                    setPrefs();
+                }
+            });
+            bottomKeyboardBarView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         }
 
         if (keyboardLayoutHolder == null) {
@@ -401,6 +416,11 @@ public final class InputService extends InputMethodService implements
             keyboardLayoutHolder.addView(superBoardView);
             if (emojiView != null) {
                 keyboardLayoutHolder.addView(emojiView);
+            }
+
+            if (bottomKeyboardBarView != null) {
+                keyboardLayoutHolder.addView(bottomKeyboardBarView.languageSelectorView);
+                keyboardLayoutHolder.addView(bottomKeyboardBarView);
             }
         }
 
@@ -548,7 +568,12 @@ public final class InputService extends InputMethodService implements
             if (enableClipboard && clipboardView == null) {
                 clipboardView = new ClipboardView(superBoardView);
                 clipboardView.setVisibility(View.GONE);
-                keyboardLayoutHolder.addView(clipboardView);
+
+                if (bottomKeyboardBarView == null) {
+                    keyboardLayoutHolder.addView(clipboardView);
+                } else {
+                    keyboardLayoutHolder.addView(clipboardView, keyboardLayoutHolder.indexOfChild(bottomKeyboardBarView) - 1);
+                }
             } else if (!enableClipboard) {
                 if (clipboardView != null) {
                     clipboardView.clearClipboard(false);
@@ -561,19 +586,29 @@ public final class InputService extends InputMethodService implements
                 SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
             }
 
-            adjustNavbar(c);
+            int kbdHeightInPixels = hpInt(kbdHeight);
+            int textKbdRowCount = superBoardView.getLayoutRowCount(superBoardView.findTextKeyboardIndex());
+            int barHeight = kbdHeightInPixels / textKbdRowCount;
 
             if (clipboardView != null) {
                 clipboardView.onPrimaryClipChanged();
+                clipboardView.getLayoutParams().height = kbdHeightInPixels;
                 clipboardView.reTheme();
-                clipboardView.getLayoutParams().height = hpInt(kbdHeight);
+            }
+
+            if (bottomKeyboardBarView != null) {
+                bottomKeyboardBarView.setBackground(superBoardView.getBackground());
+                bottomKeyboardBarView.getLayoutParams().height = barHeight;
+                bottomKeyboardBarView.languageSelectorView.getLayoutParams().height = kbdHeightInPixels;
+                bottomKeyboardBarView.reTheme();
             }
 
             if (suggestionLayout != null) {
-                int textKbdRowCount = superBoardView.getLayoutRowCount(superBoardView.findTextKeyboardIndex());
-                suggestionLayout.getLayoutParams().height = hpInt(kbdHeight) / textKbdRowCount;
+                suggestionLayout.getLayoutParams().height = barHeight;
                 suggestionLayout.reTheme();
             }
+
+            adjustNavbar(c);
         }
 
         sendCompletionRequest();
@@ -600,10 +635,15 @@ public final class InputService extends InputMethodService implements
         currentLanguageCache = language;
     }
 
+    @SuppressLint("ResourceType")
     private void adjustNavbar(int c) {
         int baseHeight = superBoardView.getKeyboardHeight();
         if (suggestionLayout.getVisibility() == View.VISIBLE) {
             baseHeight += suggestionLayout.getLayoutParams().height;
+        }
+
+        if (bottomKeyboardBarView != null && bottomKeyboardBarView.getVisibility() == View.VISIBLE) {
+            baseHeight += bottomKeyboardBarView.getLayoutParams().height;
         }
 
         if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -611,7 +651,7 @@ public final class InputService extends InputMethodService implements
             assert w != null : "Window returned null";
 
             if (detectNavbar(this)) {
-                @SuppressLint("ResourceType") View navbarView = keyboardLayoutHolder.findViewById(android.R.attr.gravity);
+                View navbarView = keyboardLayoutHolder.findViewById(android.R.attr.gravity);
                 if (navbarView != null)
                     keyboardLayoutHolder.removeView(navbarView);
 
@@ -619,7 +659,7 @@ public final class InputService extends InputMethodService implements
                     w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
-                    int color = Color.rgb(Color.red(c), Color.green(c), Color.blue(c));
+                    int color = ColorUtils.convertARGBtoRGB(c);
                     w.setNavigationBarColor(color);
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
@@ -681,6 +721,7 @@ public final class InputService extends InputMethodService implements
         }
         if (clipboardView.isShown() != value) {
             showEmojiView(false);
+            showLanguegeSelectorView(false);
 
             if (value) {
                 clipboardView.reTheme();
@@ -689,6 +730,28 @@ public final class InputService extends InputMethodService implements
             clipboardView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
         }
+    }
+
+    private void showLanguegeSelectorView(boolean value) {
+        if (bottomKeyboardBarView == null) {
+            return;
+        }
+
+        if (bottomKeyboardBarView.languageSelectorView.isShown() != value) {
+            showEmojiView(false);
+            showClipboardView(false);
+
+            if (value) {
+                bottomKeyboardBarView.reTheme();
+            }
+
+            bottomKeyboardBarView.languageSelectorView.setVisibility(value ? View.VISIBLE : View.GONE);
+            superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private boolean isLanguageSelectorViewShown() {
+        return bottomKeyboardBarView != null && bottomKeyboardBarView.languageSelectorView.isShown();
     }
 
     private final class SuperBoardImpl extends SuperBoard {
@@ -769,8 +832,12 @@ public final class InputService extends InputMethodService implements
                     showEmojiView(false);
                 }
 
+                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_3D_MODE && isLanguageSelectorViewShown()) {
+                    showLanguegeSelectorView(false);
+                }
+
                 switch (key.getNormalPressEvent().first) {
-                    case KeyEvent.KEYCODE_HENKAN: // symbol menu
+                    case KeyEvent.KEYCODE_HENKAN:  // symbol menu
                         int fnIndex = findFNKeyboardIndex();
                         setEnabledLayout(
                                 getEnabledLayoutIndex() != fnIndex
@@ -778,7 +845,7 @@ public final class InputService extends InputMethodService implements
                                         : findTextKeyboardIndex()
                         );
                         return;
-                    case KeyEvent.KEYCODE_NUM:    // number menu
+                    case KeyEvent.KEYCODE_NUM:     // number menu
                         int numIndex = findNumberKeyboardIndex();
                         setEnabledLayout(
                                 getEnabledLayoutIndex() != numIndex
@@ -786,11 +853,14 @@ public final class InputService extends InputMethodService implements
                                         : findTextKeyboardIndex()
                         );
                         return;
-                    case KeyEvent.KEYCODE_EISU:   // clipboard menu
+                    case KeyEvent.KEYCODE_EISU:    // clipboard menu
                         showClipboardView(!clipboardView.isShown());
                         return;
-                    case KeyEvent.KEYCODE_KANA:   // emoji menu
+                    case KeyEvent.KEYCODE_KANA:    // emoji menu
                         showEmojiView(!emojiView.isShown());
+                        return;
+                    case KeyEvent.KEYCODE_3D_MODE: // language selector menu
+                        showLanguegeSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
                         return;
                 }
             }

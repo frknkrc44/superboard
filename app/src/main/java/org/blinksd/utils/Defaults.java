@@ -2,7 +2,6 @@ package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.P;
-import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
 
 public final class Defaults {
     public static final int KEYBOARD_HEIGHT = 36;
@@ -58,4 +57,5 @@ public final class Defaults {
     public static final boolean ENABLE_CLIPBOARD = true;
     public static final boolean DISABLE_NUMBER_ROW = false;
     public static final boolean USE_FIRST_POPUP_CHARACTER = false;
+    public static final boolean SHOW_BOTTOM_BAR = false;
 }

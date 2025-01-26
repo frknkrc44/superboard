@@ -2,7 +2,6 @@ package org.blinksd.board.activities.settings;
 
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -43,8 +42,10 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             case 3:
                 return R.drawable.web_asset;
             case 4:
-                return R.drawable.brush;
+                return R.drawable.web_asset_reversed;
             case 5:
+                return R.drawable.brush;
+            case 6:
                 return R.drawable.format_paint;
         }
 

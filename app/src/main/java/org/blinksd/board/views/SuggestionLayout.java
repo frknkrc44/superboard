@@ -216,12 +216,14 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
             if (view instanceof SuperBoard.Key) {
                 SuperBoard.Key key = (SuperBoard.Key) view;
+                ViewUtils.setBackground(key, null);
                 key.toggleVisibility();
 
                 switch(key.getNormalPressEvent().first) {
                     case KeyEvent.KEYCODE_EISU: {
+                        boolean showBottomBar = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_SHOW_BOTTOM_BAR);
                         boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_ENABLE_CLIPBOARD);
-                        key.setVisibility(enableClipboard ? View.VISIBLE : View.GONE);
+                        key.setVisibility(enableClipboard && !showBottomBar ? View.VISIBLE : View.GONE);
                         break;
                     }
                     case KeyEvent.KEYCODE_NUM: {
