@@ -48,6 +48,8 @@
     <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
+    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Photo</string>
