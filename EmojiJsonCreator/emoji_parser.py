@@ -2,11 +2,28 @@ from json import dumps
 from requests import get
 
 
-def get_emoji_desc(line: str) -> str:
+def get_emoji_desc(line: str, mode2: bool = False) -> str:
     first = line[line.find('#') + 2:]
     second = first[first.find('E'):]
     third = second[second.find(' ') + 1:]
+
+    if mode2:
+        return third[third.rfind(',') + 2:]
+
     return third
+
+
+def compare_emoji_desc(first: str, second: str) -> bool:
+    if get_emoji_desc(first, True).startswith(get_emoji_desc(second)):
+        return True
+
+    if get_emoji_desc(first).startswith(get_emoji_desc(second, True)):
+        return True
+
+    if get_emoji_desc(first).startswith(get_emoji_desc(second)):
+        return True
+
+    return False
 
 
 
@@ -29,7 +46,7 @@ if request.status_code == 200:
             continue
 
         if not line.startswith('#') and ';' in line and 'qualified' in line and 'E' in line:
-            if not len(recent_approved_line) or not get_emoji_desc(line).startswith(get_emoji_desc(recent_approved_line)):
+            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
                 recent_approved_line = line
             else:
                 continue
