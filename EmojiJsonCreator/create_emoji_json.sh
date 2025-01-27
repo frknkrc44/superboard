@@ -14,4 +14,4 @@ then
 fi
 
 python3 emoji_parser.py
-command -v deactivate >/dev/null && deactivate
+deactivate || true

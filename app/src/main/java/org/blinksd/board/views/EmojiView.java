@@ -70,10 +70,9 @@ public class EmojiView extends LinearLayout {
                 JSONArray jsonArray = jsonObject.getJSONArray(it.next());
                 List<String> category = new ArrayList<>();
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONArray glyphs = jsonArray.getJSONArray(i);
-                    String firstGlyph = glyphs.getString(0);
-                    if (SuperBoardApplication.getTextUtils().hasGlyph(firstGlyph)) {
-                        category.add(firstGlyph);
+                    String glyph = jsonArray.getString(i);
+                    if (SuperBoardApplication.getTextUtils().hasGlyph(glyph)) {
+                        category.add(glyph);
                     }
                 }
 
