@@ -32,7 +32,7 @@ KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
 JAVAC_DEBUG_FLAGS = 
 
-all: langpacks rmdirs optimize keystore
+all: langpacks emojijson rmdirs optimize keystore
 # all: clear mkdirs langpacks keystore abuild build rmdirs zipalign sign
 # build-install: all install
 # build:
@@ -79,5 +79,8 @@ rmdirs:
 langpacks:
 	cd SuperBoardLayoutCreator && \
 		${SHELL} create_packs.sh
+emojijson:
+	cd EmojiJsonCreator && \
+		${SHELL} create_emoji_json.sh
 keystore:
 	${SHELL} apply_keystore_props.sh
