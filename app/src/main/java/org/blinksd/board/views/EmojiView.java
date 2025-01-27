@@ -22,7 +22,6 @@ import android.widget.TextView;
 import org.blinksd.board.InputService;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;

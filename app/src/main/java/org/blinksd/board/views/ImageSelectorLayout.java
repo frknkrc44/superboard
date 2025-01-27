@@ -42,7 +42,6 @@ import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.ResourcesUtils;
 
 import java.io.File;

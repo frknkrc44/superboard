@@ -13,7 +13,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperTab;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;

@@ -1,5 +1,16 @@
 package org.blinksd.utils;
 
+import static android.util.TypedValue.complexToDimension;
+import static org.blinksd.board.SuperBoardApplication.getAppResources;
+import static org.blinksd.board.SuperBoardApplication.getApplication;
+import static org.blinksd.utils.ColorUtils.getAccentColor;
+import static org.blinksd.utils.ColorUtils.getDarkerColor;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.DensityUtils.dpInt;
+import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
+import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -13,27 +24,25 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.TypedValue;
 
-import org.blinksd.board.SuperBoardApplication;
-
 @SuppressWarnings("deprecation")
 public class ResourcesUtils {
     private ResourcesUtils() {}
 
     public static Drawable getDrawable(int resId) {
-        Resources res = SuperBoardApplication.getApplication().getResources();
+        Resources res = getAppResources();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            return res.getDrawable(resId, SuperBoardApplication.getApplication().getTheme());
+            return res.getDrawable(resId, getApplication().getTheme());
         }
 
         return res.getDrawable(resId);
     }
 
     public static Drawable getTintedDrawable(int resId, Integer tintColor) {
-        Drawable drawable = ResourcesUtils.getDrawable(resId);
+        Drawable drawable = getDrawable(resId);
         if (tintColor != null) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                ColorUtils.setColorFilter(drawable, tintColor);
+                setColorFilter(drawable, tintColor);
             } else {
                 drawable.setTint(tintColor);
             }
@@ -43,10 +52,10 @@ public class ResourcesUtils {
     }
 
     public static int getColor(int resId) {
-        Resources res = SuperBoardApplication.getApplication().getResources();
+        Resources res = getApplication().getResources();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return res.getColor(resId, SuperBoardApplication.getApplication().getTheme());
+            return res.getColor(resId, getApplication().getTheme());
         }
 
         return res.getColor(resId);
@@ -55,12 +64,12 @@ public class ResourcesUtils {
     public static float getListPreferredItemHeight(Context context) {
         TypedValue value = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
-        return TypedValue.complexToDimension(value.data, context.getResources().getDisplayMetrics());
+        return complexToDimension(value.data, context.getResources().getDisplayMetrics());
     }
 
     public static Drawable getKeyBg(int clr, int pressClr, boolean pressEffect) {
-        int radius = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
-        int stroke = DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PADDING)));
+        int radius = mpInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
+        int stroke = mpInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING)));
         return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
     }
 
@@ -69,14 +78,14 @@ public class ResourcesUtils {
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, boolean pressEffect) {
-        int keyClr = ColorUtils.getAccentColor();
-        int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+        int keyClr = getAccentColor();
+        int keyPressClr = getDarkerColor(keyClr);
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void setButtonGradientOrientation(GradientDrawable gd) {
-        switch (SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
+        switch (getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
             case ThemeUtils.KEY_BG_ORIENTATION_TB:
                 gd.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
                 break;
@@ -108,7 +117,7 @@ public class ResourcesUtils {
         GradientDrawable gd = new GradientDrawable();
 
         boolean isGrad = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
+                getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
         if (isGrad) {
             gd.setColors(new int[]{clr, pressClr});
             setButtonGradientOrientation(gd);
@@ -169,12 +178,12 @@ public class ResourcesUtils {
         }
 
         GradientDrawable content = new GradientDrawable();
-        int accent = transparent ? 0 : ColorUtils.getAccentColor();
+        int accent = transparent ? 0 : getAccentColor();
         if (darker && !transparent) {
-            accent = ColorUtils.getDarkerColor(accent);
+            accent = getDarkerColor(accent);
         }
         content.setColor(accent);
-        int padding = DensityUtils.dpInt(16);
+        int padding = dpInt(16);
         content.setCornerRadius(padding);
 
         return new RippleDrawable(

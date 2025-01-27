@@ -25,7 +25,6 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.ViewUtils;
 
