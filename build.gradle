@@ -10,7 +10,7 @@ tasks.register('clean', Delete) {
 
 tasks.register('pre', Exec) {
     workingDir(rootProject.projectDir)
-    commandLine('make', 'langpacks', 'optimize', 'keystore')
+    commandLine('make', 'langpacks', 'emojijson', 'optimize', 'keystore')
 }
 
 allprojects {
