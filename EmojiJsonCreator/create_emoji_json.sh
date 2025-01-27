@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ -n "$CI" ]
+if ! python3 -c 'from requests import get' 2> /dev/null
 then
   if [ ! -d ".mypy_cache" ]
   then
@@ -14,4 +14,4 @@ then
 fi
 
 python3 emoji_parser.py
-[ -n "$VIRTUAL_ENV" ] && deactivate
+deactivate || true
