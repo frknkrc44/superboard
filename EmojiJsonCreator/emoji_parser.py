@@ -27,7 +27,7 @@ def compare_emoji_desc(first: str, second: str) -> bool:
 
 
 
-categories: dict[str, list[str]] = {}
+categories: dict[str, list[list[str]]] = {}
 request = get(
     'https://unicode.org/Public/emoji/latest/emoji-test.txt',
     allow_redirects=True,
@@ -46,14 +46,14 @@ if request.status_code == 200:
             continue
 
         if not line.startswith('#') and ';' in line and 'qualified' in line and 'E' in line:
-            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
-                recent_approved_line = line
-            else:
-                continue
-
             first = line[line.find('#') + 2:]
             sec = first[:first.find('E') - 1]
-            categories[recent_group].append(sec)
+
+            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+                recent_approved_line = line
+                categories[recent_group].append(list(sec))
+            else:
+                categories[recent_group][-1].append(sec)
 else:
     exit(1)
 

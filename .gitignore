@@ -16,3 +16,4 @@ EmojiJsonCreator/emoji*.json
 .mypy_cache/
 
 app/src/main/assets/langpacks/*.json
+app/src/main/assets/emoji_list.json
