@@ -1,19 +1,29 @@
-from json import loads, dumps
+from json import dumps
+from requests import get
 
-with open('emoji.json') as f:
-    json = loads(f.read())
 
 categories: dict[str, list[str]] = {}
+request = get(
+    'https://unicode.org/Public/emoji/latest/emoji-test.txt',
+    allow_redirects=True,
+)
 
-for item in json:
-    if item['category'] not in categories:
-        category: list[str] = []
-        categories[item['category']] = category
-    else:
-        category: list[str] = categories.get(item['category']) # type: ignore
+if request.status_code == 200:
+    recent_group = ''
+    for line in request.text.splitlines():
+        if line.startswith('# group: '):
+            recent_group = line[line.find(':') + 2:]
+            category: list[str] = []
+            categories[recent_group] = category
 
-    emoji = item['emoji']
-    category.append(emoji)
+        if not len(recent_group):
+            continue
 
-with open('emoji_list.json', 'w') as f:
+        if ';' in line and 'qualified' in line and 'E' in line:
+            first = line[line.find('#') + 2:]
+            sec = first[:first.find('E') - 1]
+            categories[recent_group].append(sec)
+
+
+with open('../app/src/main/assets/emoji_list.json', 'w') as f:
     f.write(dumps(categories, ensure_ascii=False, separators=(',', ':')))
