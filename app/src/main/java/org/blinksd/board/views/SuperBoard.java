@@ -100,6 +100,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private boolean enforcedEditorAction = true;
     private boolean longPressFastDelete = false;
     private boolean insertSpaceAfterPunc = false;
+    private boolean disableSuggestionsTemporarily = false;
     private final ListedMap<String, String> specialCases = new ListedMap<>();
     private final List<Integer> enforcedShiftRestrictedEvents = Arrays.asList(
             KEYCODE_TOGGLE_CTRL,
@@ -649,6 +650,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         getCurrentInputConnection().sendKeyEvent(event);
     }
 
+    public boolean isDisabledSuggestionsTemporarily() {
+        return disableSuggestionsTemporarily;
+    }
+
     private boolean performEditorAction() {
         boolean performedAction = false;
 
@@ -873,6 +878,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         EditorInfo ei = getCurrentIMService().getCurrentInputEditorInfo();
 
         currentEditorAction = ei.imeOptions & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        disableSuggestionsTemporarily = false;
+
+        switch (ei.inputType & InputType.TYPE_MASK_VARIATION) {
+            case InputType.TYPE_NUMBER_VARIATION_PASSWORD:
+            case InputType.TYPE_TEXT_VARIATION_PASSWORD:
+            case InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:
+            case InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD:
+                disableSuggestionsTemporarily = true;
+                break;
+        }
+
+        if ((ei.inputType & InputType.TYPE_MASK_FLAGS) == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS) {
+            disableSuggestionsTemporarily = true;
+        }
 
         switch (ei.inputType & InputType.TYPE_MASK_CLASS) {
             case InputType.TYPE_CLASS_NUMBER:

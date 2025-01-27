@@ -242,6 +242,7 @@ public final class InputService extends InputMethodService implements
     public void sendCompletionRequest() {
         boolean sugDisabled = suggestionLayout == null ||
                 !SuperBoardApplication.isDictDBReady() ||
+                superBoardView.isDisabledSuggestionsTemporarily() ||
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
         if (superBoardView == null) return;
         InputConnection ic = getCurrentInputConnection();
