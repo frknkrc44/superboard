@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.KeyboardType;
@@ -53,7 +53,7 @@ public class BoardPopup extends SuperBoard {
         int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
         a = ColorUtils.setAlphaForColor(0xCC, a);
         ap = ColorUtils.setAlphaForColor(0xCC, ap);
-        setBackgroundDrawable(LayoutUtils.getKeyBg(a, ap, true));
+        setBackgroundDrawable(ResourcesUtils.getKeyBg(a, ap, true));
         mPopupFilter.setBackgroundColor(ColorUtils.setAlphaForColor(0x33, a));
         mKey.setVisibility(GONE);
         int keyHeight = mKey.getLayoutParams().height;

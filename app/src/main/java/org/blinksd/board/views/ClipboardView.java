@@ -23,6 +23,7 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
@@ -74,7 +75,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
-        ViewUtils.setBackground(clearAllButton, LayoutUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(clearAllButton, ResourcesUtils.getTransSelectableItemBg(
                 getContext(), textColor));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
@@ -141,7 +142,7 @@ public final class ClipboardView extends LinearLayout
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
         ImageButton pasteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(pasteButton, LayoutUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(pasteButton, ResourcesUtils.getTransSelectableItemBg(
                 getContext(), textColor));
         pasteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         pasteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -154,7 +155,7 @@ public final class ClipboardView extends LinearLayout
         clipLayout.addView(pasteButton);
 
         ImageButton deleteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(deleteButton, LayoutUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(deleteButton, ResourcesUtils.getTransSelectableItemBg(
                 getContext(), textColor));
         deleteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);

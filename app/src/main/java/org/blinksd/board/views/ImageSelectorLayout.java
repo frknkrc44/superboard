@@ -43,6 +43,7 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 
 import java.io.File;
 import java.util.TreeMap;
@@ -216,7 +217,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
         l.setPadding(margin, margin, margin, margin);
         Button s = LayoutCreator.createButton(ctx);
-        s.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
+        s.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         s.setLayoutParams(params);
@@ -225,7 +226,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         l.addView(s);
 
         Button w = LayoutCreator.createButton(ctx);
-        w.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
+        w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
         params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         w.setLayoutParams(params);
@@ -260,7 +261,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         });
 
         Button rb = LayoutCreator.createButton(ctx);
-        rb.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
+        rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
         rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         l.addView(rb);
         rb.setText(getImageSelectorTranslation("rotate"));

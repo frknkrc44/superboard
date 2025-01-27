@@ -14,6 +14,7 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperTab;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
@@ -94,7 +95,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
 
             ViewUtils.setBackground(
                     categoryView.getChildAt(categoryView.getChildCount() - 1),
-                    LayoutUtils.getTransSelectableItemBg(
+                    ResourcesUtils.getTransSelectableItemBg(
                             categoryView.getContext(), 0xFFDEDEDE)
             );
         };

@@ -124,7 +124,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         View view = new View(this);
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
-        ViewUtils.setBackground(view, LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(view, ResourcesUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 false,
@@ -132,7 +132,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         ));
 
         boolean isSelected = currentLayout.equals(language.language);
-        ViewUtils.setBackground(btn, LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, ResourcesUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 isSelected
@@ -148,7 +148,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             tick.setLayoutParams(params);
             int p = tickSize / 8;
             tick.setPadding(p, p, p, p);
-            ViewUtils.setBackground(tick, LayoutUtils.getCircleButtonBackground(false));
+            ViewUtils.setBackground(tick, ResourcesUtils.getCircleButtonBackground(false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Drawable returnSymbol = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
             tick.setImageDrawable(returnSymbol);

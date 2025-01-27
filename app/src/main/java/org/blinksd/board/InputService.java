@@ -47,6 +47,7 @@ import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.KeyOptions;
@@ -490,7 +491,7 @@ public final class InputService extends InputMethodService implements
 
             int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_BGCLR);
             int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-            superBoardView.setKeysBackground(LayoutUtils.getKeyBg(keyClr, keyPressClr, true));
+            superBoardView.setKeysBackground(ResourcesUtils.getKeyBg(keyClr, keyPressClr, true));
             int shr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
                     shc = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR);
             superBoardView.setKeysShadow(shr, shc);
@@ -508,8 +509,8 @@ public final class InputService extends InputMethodService implements
             int yp = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
             int z = SuperDBHelper.getIntOrDefault(SettingMap.SET_ENTER_BGCLR);
             int zp = SuperDBHelper.getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
-            Drawable key2Bg = LayoutUtils.getKeyBg(y, yp, true);
-            Drawable enterBg = LayoutUtils.getKeyBg(z, zp, true);
+            Drawable key2Bg = ResourcesUtils.getKeyBg(y, yp, true);
+            Drawable enterBg = ResourcesUtils.getKeyBg(z, zp, true);
             for (int i = 0; i < predefinedLayouts.length; i++) {
                 if (i != 0) {
                     if (i < 3) {

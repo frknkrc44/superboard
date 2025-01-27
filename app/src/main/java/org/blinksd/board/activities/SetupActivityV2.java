@@ -288,7 +288,7 @@ public final class SetupActivityV2 extends Activity {
             textView.setGravity(Gravity.CENTER);
 
             ViewUtils.setBackground(buttonView,
-                    LayoutUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
+                    ResourcesUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
             textView.setText(String.format(content.text, getAppName()));
@@ -301,7 +301,7 @@ public final class SetupActivityV2 extends Activity {
                 buttonParams = new LayoutParams(buttonParams.width, buttonParams.height);
                 buttonParams.topMargin = padding;
                 nextButton.setLayoutParams(buttonParams);
-                ViewUtils.setBackground(nextButton, LayoutUtils.getSelectableItemBg(
+                ViewUtils.setBackground(nextButton, ResourcesUtils.getSelectableItemBg(
                         context, buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);

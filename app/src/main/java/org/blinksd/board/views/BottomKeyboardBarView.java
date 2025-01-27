@@ -17,6 +17,7 @@ import android.widget.Space;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
@@ -63,8 +64,8 @@ public class BottomKeyboardBarView extends LinearLayout {
     public void reTheme() {
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
-        ViewUtils.setBackground(langSelectorKey, LayoutUtils.getTransSelectableItemBg(getContext(), textColor));
-        ViewUtils.setBackground(clipboardKey, LayoutUtils.getTransSelectableItemBg(getContext(), textColor));
+        ViewUtils.setBackground(langSelectorKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
+        ViewUtils.setBackground(clipboardKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
 
         boolean clipboardEnabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
         clipboardKey.setVisibility(clipboardEnabled ? View.VISIBLE : View.GONE);
@@ -124,7 +125,7 @@ public class BottomKeyboardBarView extends LinearLayout {
             LinearLayout.LayoutParams okButtonParams = new LinearLayout.LayoutParams(-2, -2, 0);
             okButtonParams.gravity = Gravity.END;
             okButton.setLayoutParams(okButtonParams);
-            ViewUtils.setBackground(okButton, LayoutUtils.getTransSelectableItemBg(context, textColor));
+            ViewUtils.setBackground(okButton, ResourcesUtils.getTransSelectableItemBg(context, textColor));
             okButton.setText(android.R.string.ok);
             okButton.setTextColor(textColor);
             okButton.setOnClickListener(view -> {

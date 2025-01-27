@@ -27,7 +27,7 @@ import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.HSVColorUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
@@ -299,7 +299,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
         sb.setKeyDrawable(0, 0, -1, R.drawable.delete);
         sb.setPressEventForKey(0, 0, -1, Keyboard.KEYCODE_CANCEL);
-        sb.setKeysBackground(LayoutUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
+        sb.setKeysBackground(ResourcesUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
         ll.addView(hexIn);
         ll.addView(sb);
         return ll;

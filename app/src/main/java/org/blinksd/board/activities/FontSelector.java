@@ -15,6 +15,7 @@ import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
@@ -81,7 +82,7 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
-        ViewUtils.setBackground(btn, LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, ResourcesUtils.getSelectableItemBg(
                 this,
                 textView.getCurrentTextColor(),
                 currentFont == currentIndex

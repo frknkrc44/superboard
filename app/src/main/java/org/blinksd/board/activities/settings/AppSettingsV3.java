@@ -20,6 +20,7 @@ import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
@@ -89,11 +90,11 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         }
         int keyClr = getIntOrDefault(SettingMap.SET_KEY_BGCLR);
         int keyPressClr = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-        kbdPreview.setKeysBackground(LayoutUtils.getKeyBg(keyClr, keyPressClr, true));
-        Drawable key2Bg = LayoutUtils.getKeyBg(
+        kbdPreview.setKeysBackground(ResourcesUtils.getKeyBg(keyClr, keyPressClr, true));
+        Drawable key2Bg = ResourcesUtils.getKeyBg(
                 getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
                 getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR), true);
-        Drawable enterBg = LayoutUtils.getKeyBg(
+        Drawable enterBg = ResourcesUtils.getKeyBg(
                 getIntOrDefault(SettingMap.SET_ENTER_BGCLR),
                 getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR), true);
         kbdPreview.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),

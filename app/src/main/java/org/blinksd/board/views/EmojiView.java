@@ -22,6 +22,8 @@ import android.widget.TextView;
 import org.blinksd.board.InputService;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -98,10 +100,7 @@ public class EmojiView extends LinearLayout {
     public void applyTheme(SuperBoard sb) {
         textSize = sb.getKeysTextSize();
         keyTextColor = sb.getKeysTextColor();
-        drw = sb.keyBackground;
-        if (drw == null) {
-            drw = new ColorDrawable(0);
-        }
+        drw = emptyDrawable;
         removeAllViewsInLayout();
         apply();
         System.gc();
@@ -141,7 +140,8 @@ public class EmojiView extends LinearLayout {
         th.setup();
         for (int i = 0; i < emojis.length; i++) {
             TabHost.TabSpec ts = th.newTabSpec(emojis[i][0]);
-            TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, tw, false);
+            TextView tv = (TextView) LayoutInflater.from(getContext())
+                    .inflate(android.R.layout.simple_list_item_1, tw, false);
             tv.setLayoutParams(new LayoutParams(-1, l, 1));
             tv.setText(emojis[i][0].trim());
             tv.setTextColor(keyTextColor);
@@ -149,7 +149,7 @@ public class EmojiView extends LinearLayout {
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(textSize);
             ts.setIndicator(tv);
-            tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
+            tv.setBackgroundDrawable(emptyDrawable.getConstantState().newDrawable());
             final int x = i;
             ts.setContent(p1 -> emojiList(x));
             th.addTab(ts);
@@ -163,7 +163,7 @@ public class EmojiView extends LinearLayout {
             Button tv = new Button(getContext());
             tv.setLayoutParams(new LayoutParams(size, -1, 0));
             tv.setTextColor(keyTextColor);
-            tv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
+            tv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
             tv.setGravity(Gravity.CENTER);
             tv.setText("A");
             tv.setTag(num);
@@ -172,7 +172,7 @@ public class EmojiView extends LinearLayout {
             return tv;
         } else {
             ImageButton iv = new ImageButton(getContext());
-            iv.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
+            iv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
             iv.setLayoutParams(new LayoutParams(size, size, 0));
             iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
             iv.setAdjustViewBounds(true);

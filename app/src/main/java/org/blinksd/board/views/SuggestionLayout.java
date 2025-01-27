@@ -23,7 +23,7 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
@@ -252,7 +252,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 ImageButton btn = (ImageButton) view;
                 int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
                 int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
-                Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
+                Drawable keyPressBg = ResourcesUtils.getKeyBg(keyClr, keyPressClr, true);
 
                 if ((int) btn.getTag() == 4) {
                     boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
