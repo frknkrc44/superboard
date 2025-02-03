@@ -700,7 +700,7 @@ public final class InputService extends InputMethodService implements
         if (boardPopup != null && boardPopup.isShown()) {
             boardPopup.showPopup(false);
         }
-        showEmojiView(false);
+        // showEmojiView(false);
         return super.onKeyDown(keyCode, event);
     }
 
@@ -803,6 +803,7 @@ public final class InputService extends InputMethodService implements
         @Override
         public void afterPopupEvent() {
             super.afterPopupEvent();
+            vibrate();
             setShiftState(boardPopup.getShiftState());
         }
 
