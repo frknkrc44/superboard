@@ -1,5 +1,7 @@
 package org.blinksd.board.activities.settings;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
@@ -7,13 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomActionBar;
-import org.blinksd.board.views.SuperTab;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
@@ -37,6 +40,8 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
         setKeyPrefs();
         setContentView(main);
+
+        actionBar.setTitle(getTitle());
     }
 
     private void createPreviewView() {
@@ -59,26 +64,30 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
     }
 
     private void createAppBarView() {
-        actionBar = new CustomActionBar(this);
-        onTabChangedListener.onTabChanged(0);
+        actionBar = new CustomActionBar(this, (v) -> toggleCategory(null));
         main.addView(actionBar);
     }
 
     private void createTabBarView() {
         mTabsHolder = new FrameLayout(this);
         mTabsHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
-        superTab = new SuperTab(this, mTabsHolder);
-        superTab.setBackgroundColor(0);
-        superTab.setOnTabChangedListener(onTabChangedListener);
+        mTabsHolder.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                child.setVisibility(child.getId() == android.R.id.tabs ? VISIBLE : GONE);
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {}
+        });
         main.addView(mTabsHolder);
-        main.addView(superTab);
         addCategories();
+        createMainTab();
     }
 
     @Override
     public void setKeyPrefs() {
         boolean useMonet = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
-        superTab.toggleButton(superTab.getChildCount() - 1, !useMonet);
 
         File img = SuperBoardApplication.getBackgroundImageFile();
         if (img.exists() && !useMonet) {

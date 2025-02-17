@@ -121,7 +121,7 @@ public final class BackupRestoreActivity extends BaseActivity {
     }
 
     private CustomActionBar getCustomActionBar() {
-        CustomActionBar actionBar = new CustomActionBar(this);
+        CustomActionBar actionBar = new CustomActionBar(this, null);
         actionBar.setTitle(getTitle());
         actionBar.addAction(R.drawable.sym_board_return, v -> {
             switch (host.getCurrentTab()) {

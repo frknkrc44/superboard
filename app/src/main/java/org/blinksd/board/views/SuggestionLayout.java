@@ -12,10 +12,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.ExtractedText;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,12 +33,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @SuppressLint("ViewConstructor")
-public class SuggestionLayout extends FrameLayout implements View.OnClickListener {
-    private final LinearLayout mCompletionsLayout, mCompletionsLayoutRoot;
-    private final ImageView mReturnToQuickMenu;
+public class SuggestionLayout extends LinearLayout implements View.OnClickListener {
+    private final LinearLayout mCompletionsLayout;
     private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
-    private final LinearLayout mQuickMenuLayout;
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
     private final SuperBoard superBoard;
@@ -49,45 +45,24 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         super(superBoard.getContext());
         this.superBoard = superBoard;
 
-        mCompletionsLayoutRoot = new LinearLayout(getContext());
-        mCompletionsLayoutRoot.setLayoutParams(new LayoutParams(-1, -1));
-
-        mReturnToQuickMenu = new ImageButton(getContext());
-        int size = DensityUtils.dpInt(56);
-        LinearLayout.LayoutParams returnToQMParams =
-                new LinearLayout.LayoutParams(size, -1, 0);
-        returnToQMParams.rightMargin = returnToQMParams.leftMargin =
-                returnToQMParams.bottomMargin = returnToQMParams.topMargin = DensityUtils.dpInt(8);
-
-        mReturnToQuickMenu.setPadding(
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2,
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2
-        );
-        mReturnToQuickMenu.setLayoutParams(returnToQMParams);
-        mReturnToQuickMenu.setImageResource(R.drawable.sym_keyboard_close);
-        mReturnToQuickMenu.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mReturnToQuickMenu.setId(android.R.id.button1);
-        mReturnToQuickMenu.setOnClickListener(v -> toggleQuickMenu(true));
-        mCompletionsLayoutRoot.addView(mReturnToQuickMenu);
-
         mCompletionsLayout = new LinearLayout(getContext());
-        mCompletionsLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
+        mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
+
+        FABView fabView = new FABView(superBoard.getContext());
+        fabView.setLayoutParams(new LayoutParams(-2, -1, 0));
+        fabView.setOrientation(FABView.Orientation.TLH);
+        fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, null));
+        fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, null));
+
+        boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
+        fabView.setVisibility(topBarDisabled ? GONE : VISIBLE);
+
+        addView(fabView);
 
         HorizontalScrollView scroller = new HorizontalScrollView(getContext());
-        scroller.setLayoutParams(new LinearLayout.LayoutParams(-1, -1));
+        scroller.setLayoutParams(new LayoutParams(-1, -1, 1));
         scroller.addView(mCompletionsLayout);
-        mCompletionsLayoutRoot.addView(scroller);
-        addView(mCompletionsLayoutRoot);
-
-        // Add quick menu layout
-        mQuickMenuLayout = new LinearLayout(getContext());
-        mQuickMenuLayout.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-        mQuickMenuLayout.setVisibility(GONE);
-        mQuickMenuLayout.setGravity(Gravity.CENTER);
-        addView(mQuickMenuLayout);
-        fillQuickMenu();
+        addView(scroller);
     }
 
     public void setOnSuggestionSelectedListener(OnSuggestionSelectedListener listener) {
@@ -135,42 +110,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
             show = true;
         }
 
-        mReturnToQuickMenu.setVisibility(topBarDisabled ? View.GONE : View.VISIBLE);
-        mQuickMenuLayout.setVisibility(show ? VISIBLE : GONE);
-        mCompletionsLayoutRoot.setVisibility(show ? GONE : VISIBLE);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void fillQuickMenu() {
-        addQMItem(KeyEvent.KEYCODE_DPAD_LEFT, R.drawable.arrow_left, true);
-        addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
-        addQMItem(KeyEvent.KEYCODE_HENKAN, R.drawable.more_control, false);
-        addQMItem(KeyEvent.KEYCODE_NUM, R.drawable.number, false);
-        if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            addQMItem(KeyEvent.KEYCODE_KANA, R.drawable.sym_board_emoji, false);
-        }
-        addQMItem(KeyEvent.KEYCODE_EISU, R.drawable.clipboard, false);
-        addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
-        addQMItem(KeyEvent.KEYCODE_DPAD_RIGHT, R.drawable.arrow_right, true);
-    }
-
-    private void addQMItemStateful(int tag, String text) {
-        SuperBoard.Key key = superBoard.createKey(text);
-        superBoard.setPressEventForKey(key, tag, true);
-        key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
-        key.setStateCount(2);
-        mQuickMenuLayout.addView(key);
-        superBoard.addExtraKey(key);
-    }
-
-    private void addQMItem(int tag, int drawableRes, boolean repeat) {
-        SuperBoard.Key key = superBoard.createKey("");
-        key.setKeyIcon(drawableRes);
-        superBoard.setKeyRepeat(key, repeat);
-        superBoard.setPressEventForKey(key, tag, true);
-        key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
-        mQuickMenuLayout.addView(key);
-        superBoard.addExtraKey(key);
+        // TODO: Show or hide
     }
 
     private void addCompletionView(final CharSequence text) {
@@ -200,97 +140,12 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
 
     public void reTheme() {
         int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-
-        ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
-        ColorUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(textSize);
             ViewUtils.setBackground(tv, getSuggestionItemBackground());
-        }
-
-        for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
-            View view = mQuickMenuLayout.getChildAt(i);
-
-            if (view instanceof SuperBoard.Key) {
-                SuperBoard.Key key = (SuperBoard.Key) view;
-                ViewUtils.setBackground(key, null);
-                key.toggleVisibility();
-
-                switch(key.getNormalPressEvent().first) {
-                    case KeyEvent.KEYCODE_EISU: {
-                        boolean showBottomBar = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_SHOW_BOTTOM_BAR);
-                        boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_ENABLE_CLIPBOARD);
-                        key.setVisibility(enableClipboard && !showBottomBar ? View.VISIBLE : View.GONE);
-                        break;
-                    }
-                    case KeyEvent.KEYCODE_NUM: {
-                        boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
-                        key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
-                        break;
-                    }
-                    case KeyEvent.KEYCODE_HENKAN:
-                    case KeyEvent.KEYCODE_DPAD_LEFT:
-                    case KeyEvent.KEYCODE_DPAD_RIGHT:
-                    case SuperBoard.KEYCODE_TOGGLE_CTRL:
-                    case SuperBoard.KEYCODE_TOGGLE_ALT: {
-                        boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
-                        key.setVisibility(fnDisabled ? View.GONE : View.VISIBLE);
-                        break;
-                    }
-                    case KeyEvent.KEYCODE_KANA: {
-                        boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
-                        key.setVisibility(fnDisabled ? View.VISIBLE : View.GONE);
-                        break;
-                    }
-                }
-
-                setKeyLockStatus(key);
-            } else if (view instanceof ImageButton) {
-                ImageButton btn = (ImageButton) view;
-                int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-                int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
-                Drawable keyPressBg = ResourcesUtils.getKeyBg(keyClr, keyPressClr, true);
-
-                if ((int) btn.getTag() == 4) {
-                    boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
-                    btn.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
-                }
-
-                ViewUtils.setBackground(btn, keyPressBg);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    btn.setImageTintList(ColorStateList.valueOf(color));
-                } else {
-                    ColorUtils.setColorFilter(btn.getDrawable(), color);
-                }
-            }
-        }
-    }
-
-    public void setAllKeyLockStatus() {
-        for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
-            View v = mQuickMenuLayout.getChildAt(i);
-            if (v instanceof SuperBoard.Key) {
-                setKeyLockStatus((SuperBoard.Key) v);
-            }
-        }
-    }
-
-    private void setKeyLockStatus(SuperBoard.Key key) {
-        if (key == null || key.getNormalPressEvent() == null) {
-            return;
-        }
-
-        switch (key.getNormalPressEvent().first) {
-            case SuperBoard.KEYCODE_TOGGLE_CTRL:
-                key.changeState(superBoard.getCtrlState());
-                break;
-            case SuperBoard.KEYCODE_TOGGLE_ALT:
-                key.changeState(superBoard.getAltState());
-                break;
         }
     }
 
@@ -357,7 +212,6 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
             for (String item : result)
                 addCompletionView(item);
 
-            // mLoadDictTask = null;
             mLoadDictTasks.remove(this);
         }
     }

@@ -1,17 +1,32 @@
 package org.blinksd.board.activities.settings;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.window.OnBackAnimationCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.views.SuperTab;
+import org.blinksd.utils.ColorUtils;
+import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
@@ -25,10 +40,130 @@ import java.util.List;
 
 public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivity {
     void addCategories() {
-        for (int i = 0; i < SettingCategory.values().length; i++) {
+        for (int i = 0; i < categoryList.size(); i++) {
             addCategoryChildren(i);
-            superTab.addButton(getCategoryIconResource(i));
         }
+    }
+
+    void toggleCategory(SettingCategory category) {
+        int currentIndex = currentCategory == null ? categoryList.size() : categoryList.indexOf(currentCategory);
+        currentCategory = category;
+        int newIndex = currentCategory == null ? categoryList.size() : categoryList.indexOf(currentCategory);
+
+        if (currentIndex != newIndex) {
+            mTabsHolder.getChildAt(currentIndex).setVisibility(GONE);
+            mTabsHolder.getChildAt(newIndex).setVisibility(VISIBLE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
+
+                if (onBackAnimationCallback == null) {
+                    onBackAnimationCallback = (OnBackAnimationCallback) () -> toggleCategory(null);
+                }
+
+                if (newIndex == categoryList.size()) {
+                    actionBar.toggleBackButton(false);
+                    dispatcher.unregisterOnBackInvokedCallback((OnBackAnimationCallback) onBackAnimationCallback);
+                } else if (currentIndex == categoryList.size()) {
+                    actionBar.toggleBackButton(true);
+                    dispatcher.registerOnBackInvokedCallback(1, (OnBackAnimationCallback) onBackAnimationCallback);
+                }
+            }
+        }
+
+        actionBar.setTitle(
+                newIndex == categoryList.size()
+                        ? getTitle()
+                        : getArrayAsList("categories").get(newIndex)
+        );
+    }
+
+    void createMainTab() {
+        ListView listView = new ListView(this);
+        listView.setId(android.R.id.tabs);
+        int pad = DensityUtils.dpInt(16);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{listView.getDivider()});
+            layerDrawable.getDrawable(0).setAlpha(0);
+            layerDrawable.setLayerHeight(0, pad / 4);
+            listView.setDivider(layerDrawable);
+        }
+
+        listView.setPadding(pad, pad, pad, pad);
+        listView.setLayoutParams(LayoutCreator.createLayoutParams(mTabsHolder.getClass(), -1, -1));
+        listView.setAdapter(new BaseAdapter() {
+            final List<String> categoryTranslations = getArrayAsList("categories");
+
+            @Override
+            public int getCount() {
+                return categoryList.size();
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return categoryList.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @SuppressLint("ViewHolder")
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final SettingCategory category = categoryList.get(position);
+
+                LinearLayout item = LayoutCreator.createFilledHorizontalLayout(
+                        parent.getClass(), parent.getContext());
+                item.setGravity(Gravity.CENTER_VERTICAL);
+                item.setPadding(0, 0, pad, 0);
+                item.getLayoutParams().height =
+                        (int) ResourcesUtils.getListPreferredItemHeight(parent.getContext());
+
+                GradientDrawable gradientDrawable = new GradientDrawable();
+                gradientDrawable.setColor(ColorUtils.getAccentColor());
+
+                float softCorner = DensityUtils.dp(24);
+                float squareCorner = DensityUtils.dp(8);
+
+                if (position == 0) {
+                    gradientDrawable.setCornerRadii(new float[]{ softCorner, softCorner, softCorner, softCorner, squareCorner, squareCorner, squareCorner, squareCorner });
+                } else if (position == (categoryList.size() - 1)) {
+                    gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, softCorner, softCorner, softCorner, softCorner });
+                } else {
+                    gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
+                }
+
+                ViewUtils.setBackground(item, gradientDrawable);
+
+                TextView title = (TextView) getLayoutInflater().inflate(
+                        android.R.layout.simple_list_item_1, item, false);
+                ((LinearLayout.LayoutParams) title.getLayoutParams()).weight = 1;
+                title.setText(categoryTranslations.get(position));
+                title.setOnClickListener(v -> toggleCategory(category));
+                item.addView(title);
+
+                ImageView arrowView = new ImageView(parent.getContext());
+                int ivSize = item.getLayoutParams().height / 2;
+                arrowView.setLayoutParams(new LinearLayout.LayoutParams(ivSize, ivSize, 0));
+                arrowView.setImageResource(R.drawable.arrow_right);
+                ColorUtils.setColorFilter(arrowView, title.getCurrentTextColor());
+
+                final int aPad = pad / 4;
+                arrowView.setPadding(aPad, aPad, aPad, aPad);
+
+                GradientDrawable imageViewBg = new GradientDrawable();
+                imageViewBg.setColor(0x44000000);
+                imageViewBg.setCornerRadius(96);
+                ViewUtils.setBackground(arrowView, imageViewBg);
+                item.addView(arrowView);
+
+                return item;
+            }
+        });
+        mTabsHolder.addView(listView);
     }
 
     private int getCategoryIconResource(int categoryIndex) {
@@ -102,9 +237,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         getSettings().iterChild(category, categoryItemIterator);
     }
 
-    final SuperTab.OnTabChangedListener onTabChangedListener =
-            index -> actionBar.setTitle(getArrayAsList("categories").get(index));
-
     private ViewGroup getCategoryView(int categoryIndex) {
         if (mTabsHolder.getChildCount() - 1 < categoryIndex) {
             LinearLayout categoryLayout = LayoutCreator.createFilledVerticalLayout(ScrollView.class, this);
@@ -118,12 +250,22 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         return (ViewGroup) mTabsHolder.getChildAt(categoryIndex);
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onBackPressed() {
+        if (currentCategory != null) {
+            toggleCategory(null);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public void restartKeyboard() {
         super.restartKeyboard();
 
         // Re-apply switch dependencies
-        for (int i = 0; i < mTabsHolder.getChildCount(); i++) {
+        for (int i = 0; i < categoryList.size(); i++) {
             ViewGroup categoryView = (ViewGroup) getCategoryView(i).getChildAt(0);
 
             for (int g = 0; g < categoryView.getChildCount(); g++) {

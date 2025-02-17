@@ -27,11 +27,11 @@ import org.blinksd.board.activities.BaseActivity;
 import org.blinksd.board.services.KeyboardThemeApi;
 import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.board.views.SuperBoard;
-import org.blinksd.board.views.SuperTab;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SettingCategory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,12 +40,15 @@ import java.util.concurrent.Executors;
 
 public abstract class SettingsBaseActivity extends BaseActivity {
     LinearLayout main;
+    LinearLayout mainTab;
     FrameLayout mTabsHolder;
     CustomActionBar actionBar;
-    SuperTab superTab;
     SuperBoard kbdPreview;
     ImageView backgroundImageView;
     View dialogView;
+    SettingCategory currentCategory;
+    static final List<SettingCategory> categoryList = Arrays.asList(SettingCategory.values());
+    Object onBackAnimationCallback;
 
     public static String getTranslation(String key) {
         Context context = SuperBoardApplication.getApplication();
