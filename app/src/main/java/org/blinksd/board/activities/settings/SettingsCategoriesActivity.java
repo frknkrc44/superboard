@@ -117,6 +117,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
 
                 LinearLayout item = LayoutCreator.createFilledHorizontalLayout(
                         parent.getClass(), parent.getContext());
+                item.setOnClickListener(v -> toggleCategory(category));
                 item.setGravity(Gravity.CENTER_VERTICAL);
                 item.setPadding(0, 0, pad, 0);
                 item.getLayoutParams().height =
@@ -142,7 +143,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                         android.R.layout.simple_list_item_1, item, false);
                 ((LinearLayout.LayoutParams) title.getLayoutParams()).weight = 1;
                 title.setText(categoryTranslations.get(position));
-                title.setOnClickListener(v -> toggleCategory(category));
                 item.addView(title);
 
                 ImageView arrowView = new ImageView(parent.getContext());
