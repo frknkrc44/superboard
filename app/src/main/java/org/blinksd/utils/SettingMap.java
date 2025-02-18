@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
