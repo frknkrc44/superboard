@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -228,126 +229,125 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
 
     public Object getDefaults(final String key) {
-        if (containsKey(key)) {
-            switch (key) {
-                case SET_KEYBOARD_BGBLUR:
-                    return Defaults.KEYBOARD_BACKGROUND_BLUR;
-                case SET_KEY_VIBRATE_DURATION:
-                    return Defaults.KEY_VIBRATE_DURATION;
-                case SET_KEYBOARD_HEIGHT:
-                    return Defaults.KEYBOARD_HEIGHT;
-                case SET_KEY_LONGPRESS_DURATION:
-                    return Defaults.KEY_LONGPRESS_DURATION;
-                case SET_KEY_PADDING:
-                    return Defaults.KEY_PADDING;
-                case SET_KEY_SHADOWSIZE:
-                    return Defaults.KEY_TEXT_SHADOW_SIZE;
-                case SET_KEY_RADIUS:
-                    return Defaults.KEY_RADIUS;
-                case SET_KEY_TEXTSIZE:
-                    return Defaults.KEY_TEXT_SIZE;
-                case SET_KEYBOARD_LANG_SELECT:
-                    return Defaults.KEYBOARD_LANGUAGE_KEY;
-                case SET_KEYBOARD_TEXTTYPE_SELECT:
-                    return Defaults.KEY_FONT_TYPE;
-                case SET_KEYBOARD_BGCLR:
-                    return Defaults.KEYBOARD_BACKGROUND_COLOR;
-                case SET_KEYBOARD_SHOW_POPUP:
-                    return Defaults.KEYBOARD_SHOW_POPUP;
-                case SET_KEYBOARD_LC_ON_EMOJI:
-                    return Defaults.KEYBOARD_LC_ON_EMOJI;
-                case SET_PLAY_SND_PRESS:
-                    return Defaults.KEYBOARD_TOUCH_SOUND;
-                case SET_KEY_BGCLR:
-                    return Defaults.KEY_BACKGROUND_COLOR;
-                case SET_KEY2_BGCLR:
-                    return Defaults.KEY2_BACKGROUND_COLOR;
-                case SET_KEY_PRESS_BGCLR:
-                    return Defaults.KEY_PRESS_BACKGROUND_COLOR;
-                case SET_KEY2_PRESS_BGCLR:
-                    return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
-                case SET_ENTER_BGCLR:
-                case SET_ENTER_PRESS_BGCLR:
-                    if (Build.VERSION.SDK_INT < 21) {
-                        return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
+        switch (key) {
+            case SET_KEYBOARD_BGBLUR:
+                return Defaults.KEYBOARD_BACKGROUND_BLUR;
+            case SET_KEY_VIBRATE_DURATION:
+                return Defaults.KEY_VIBRATE_DURATION;
+            case SET_KEYBOARD_HEIGHT:
+                return Defaults.KEYBOARD_HEIGHT;
+            case SET_KEY_LONGPRESS_DURATION:
+                return Defaults.KEY_LONGPRESS_DURATION;
+            case SET_KEY_PADDING:
+                return Defaults.KEY_PADDING;
+            case SET_KEY_SHADOWSIZE:
+                return Defaults.KEY_TEXT_SHADOW_SIZE;
+            case SET_KEY_RADIUS:
+                return Defaults.KEY_RADIUS;
+            case SET_KEY_TEXTSIZE:
+                return Defaults.KEY_TEXT_SIZE;
+            case SET_KEYBOARD_LANG_SELECT:
+                return Defaults.KEYBOARD_LANGUAGE_KEY;
+            case SET_KEYBOARD_TEXTTYPE_SELECT:
+                return Defaults.KEY_FONT_TYPE;
+            case SET_KEYBOARD_BGCLR:
+                return Defaults.KEYBOARD_BACKGROUND_COLOR;
+            case SET_KEYBOARD_SHOW_POPUP:
+                return Defaults.KEYBOARD_SHOW_POPUP;
+            case SET_KEYBOARD_LC_ON_EMOJI:
+                return Defaults.KEYBOARD_LC_ON_EMOJI;
+            case SET_PLAY_SND_PRESS:
+                return Defaults.KEYBOARD_TOUCH_SOUND;
+            case SET_KEY_BGCLR:
+                return Defaults.KEY_BACKGROUND_COLOR;
+            case SET_KEY2_BGCLR:
+                return Defaults.KEY2_BACKGROUND_COLOR;
+            case SET_KEY_PRESS_BGCLR:
+                return Defaults.KEY_PRESS_BACKGROUND_COLOR;
+            case SET_KEY2_PRESS_BGCLR:
+                return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
+            case SET_ENTER_BGCLR:
+            case SET_ENTER_PRESS_BGCLR:
+                if (Build.VERSION.SDK_INT < 21) {
+                    return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
+                }
+                TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
+                int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
+                int pressColor = ColorUtils.getDarkerColor(color);
+                arr.recycle();
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        arr.close();
                     }
-                    TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
-                    int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
-                    int pressColor = ColorUtils.getDarkerColor(color);
-                    arr.recycle();
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            arr.close();
-                        }
-                    } catch (Throwable ignored) {}
-                    return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
-                case SET_KEY_BG_TYPE:
-                    return Defaults.KEY_BACKGROUND_TYPE;
-                case SET_KEY_GRADIENT_ORIENTATION:
-                    return Defaults.KEY_BACKGROUND_ORIENTATION_TYPE;
-                case SET_KEY_SHADOWCLR:
-                    return Defaults.KEY_TEXT_SHADOW_COLOR;
-                case SET_KEY_TEXTCLR:
-                    return Defaults.KEY_TEXT_COLOR;
-                case SET_COLORIZE_NAVBAR:
-                    return Defaults.COLORIZE_NAVBAR;
-                case SET_COLORIZE_NAVBAR_ALWAYS_TRANS:
-                    return Defaults.COLORIZE_NAVBAR_ALWAYS_TRANS;
-                case SET_DETECT_CAPSLOCK:
-                    return Defaults.DETECT_CAPSLOCK;
-                case SET_ENFORCE_DETECT_CAPSLOCK:
-                    return Defaults.ENFORCE_DETECT_CAPSLOCK;
-                case SET_ENFORCE_EDITOR_ACTION:
-                    return Defaults.ENFORCE_EDITOR_ACTION;
-                case SET_PREVENT_KBD_CLOSE:
-                    return Defaults.PREVENT_KBD_CLOSE;
-                case SET_COLORIZE_NAVBAR_ALT:
-                    return Defaults.COLORIZE_NAVBAR_ALT;
-                case SET_DISABLE_POPUP:
-                    return Defaults.DISABLE_POPUP;
-                case SET_DISABLE_REPEAT:
-                    return Defaults.DISABLE_REPEAT;
-                case SET_DISABLE_SUGGESTIONS:
-                    return Defaults.DISABLE_SUGGESTIONS;
-                case SET_DISABLE_TOP_BAR:
-                    return Defaults.DISABLE_TOP_BAR;
-                case SET_HIDE_TOP_BAR_FN_BUTTONS:
-                    return Defaults.HIDE_TOP_BAR_FN_BUTTONS;
-                case SET_ENABLE_CLIPBOARD:
-                    return Defaults.ENABLE_CLIPBOARD;
-                case SET_DISABLE_NUMBER_ROW:
-                    return Defaults.DISABLE_NUMBER_ROW;
-                case SET_USE_FIRST_POPUP_CHARACTER:
-                    return Defaults.USE_FIRST_POPUP_CHARACTER;
-                case SET_USE_MONET:
-                    return Defaults.USE_MONET;
-                case SET_ENABLE_POPUP_PREVIEW:
-                    return Defaults.ENABLE_POPUP_PREVIEW;
-                case SET_ICON_THEME:
-                    return Defaults.ICON_THEME;
-                case SET_KEYBOARD_SPACETYPE_SELECT:
-                    return Defaults.KEYBOARD_SPACETYPE;
-                case SET_KILL_BACKGROUND:
-                    return Defaults.KILL_BACKGROUND;
-                case SET_THEME_PRESET:
-                    return Defaults.THEME_PRESET;
-                case SET_KEY_ICON_SIZE_MULTIPLIER:
-                    return Defaults.ICON_SIZE_MULTIPLIER;
-                case SET_DICTIONARY_ALGORITHM:
-                    return Defaults.DICTIONARY_ALGORITHM;
-                case SET_DICTIONARY_LIMIT:
-                    return Defaults.DICTIONARY_LIMIT;
-                case SET_KEY_INDICATOR_HEIGHT:
-                    return Defaults.KEY_INDICATOR_HEIGHT;
-                case SET_SHOW_BOTTOM_BAR:
-                    return Defaults.SHOW_BOTTOM_BAR;
-                case SET_ENABLE_LONG_PRESS_FAST_DELETE:
-                    return Defaults.LONG_PRESS_FAST_DELETE;
-                case SET_INSERT_SPACE_AFTER_PUNC:
-                    return Defaults.INSERT_SPACE_AFTER_PUNC;
-            }
+                } catch (Throwable ignored) {}
+                return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
+            case SET_KEY_BG_TYPE:
+                return Defaults.KEY_BACKGROUND_TYPE;
+            case SET_KEY_GRADIENT_ORIENTATION:
+                return Defaults.KEY_BACKGROUND_ORIENTATION_TYPE;
+            case SET_KEY_SHADOWCLR:
+                return Defaults.KEY_TEXT_SHADOW_COLOR;
+            case SET_KEY_TEXTCLR:
+                return Defaults.KEY_TEXT_COLOR;
+            case SET_COLORIZE_NAVBAR:
+                return Defaults.COLORIZE_NAVBAR;
+            case SET_COLORIZE_NAVBAR_ALWAYS_TRANS:
+                return Defaults.COLORIZE_NAVBAR_ALWAYS_TRANS;
+            case SET_DETECT_CAPSLOCK:
+                return Defaults.DETECT_CAPSLOCK;
+            case SET_ENFORCE_DETECT_CAPSLOCK:
+                return Defaults.ENFORCE_DETECT_CAPSLOCK;
+            case SET_ENFORCE_EDITOR_ACTION:
+                return Defaults.ENFORCE_EDITOR_ACTION;
+            case SET_PREVENT_KBD_CLOSE:
+                return Defaults.PREVENT_KBD_CLOSE;
+            case SET_COLORIZE_NAVBAR_ALT:
+                return Defaults.COLORIZE_NAVBAR_ALT;
+            case SET_DISABLE_POPUP:
+                return Defaults.DISABLE_POPUP;
+            case SET_DISABLE_REPEAT:
+                return Defaults.DISABLE_REPEAT;
+            case SET_DISABLE_SUGGESTIONS:
+                return Defaults.DISABLE_SUGGESTIONS;
+            case SET_DISABLE_TOP_BAR:
+                return Defaults.DISABLE_TOP_BAR;
+            case SET_HIDE_TOP_BAR_FN_BUTTONS:
+                return Defaults.HIDE_TOP_BAR_FN_BUTTONS;
+            case SET_ENABLE_CLIPBOARD:
+                return Defaults.ENABLE_CLIPBOARD;
+            case SET_DISABLE_NUMBER_ROW:
+                return Defaults.DISABLE_NUMBER_ROW;
+            case SET_USE_FIRST_POPUP_CHARACTER:
+                return Defaults.USE_FIRST_POPUP_CHARACTER;
+            case SET_USE_MONET:
+                return Defaults.USE_MONET;
+            case SET_ENABLE_POPUP_PREVIEW:
+                return Defaults.ENABLE_POPUP_PREVIEW;
+            case SET_ICON_THEME:
+                return Defaults.ICON_THEME;
+            case SET_KEYBOARD_SPACETYPE_SELECT:
+                return Defaults.KEYBOARD_SPACETYPE;
+            case SET_KILL_BACKGROUND:
+                return Defaults.KILL_BACKGROUND;
+            case SET_THEME_PRESET:
+                return Defaults.THEME_PRESET;
+            case SET_KEY_ICON_SIZE_MULTIPLIER:
+                return Defaults.ICON_SIZE_MULTIPLIER;
+            case SET_DICTIONARY_ALGORITHM:
+                return Defaults.DICTIONARY_ALGORITHM;
+            case SET_DICTIONARY_LIMIT:
+                return Defaults.DICTIONARY_LIMIT;
+            case SET_KEY_INDICATOR_HEIGHT:
+                return Defaults.KEY_INDICATOR_HEIGHT;
+            case SET_SHOW_BOTTOM_BAR:
+                return Defaults.SHOW_BOTTOM_BAR;
+            case SET_ENABLE_LONG_PRESS_FAST_DELETE:
+                return Defaults.LONG_PRESS_FAST_DELETE;
+            case SET_INSERT_SPACE_AFTER_PUNC:
+                return Defaults.INSERT_SPACE_AFTER_PUNC;
+            default:
+                return null;
         }
-        return null;
     }
 
     public int[] getMinMaxNumbers(final String key) {

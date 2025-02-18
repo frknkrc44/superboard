@@ -51,8 +51,11 @@ class MainTabListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final SettingCategory category = SettingsBaseActivity.categoryList.get(position);
 
+        LinearLayout padItem = LayoutCreator.createFilledHorizontalLayout(
+                parent.getClass(), parent.getContext());
         LinearLayout item = LayoutCreator.createFilledHorizontalLayout(
                 parent.getClass(), parent.getContext());
+        padItem.addView(item);
         item.setTag(category);
         item.setOnClickListener(itemOnClickListener);
         item.setGravity(Gravity.CENTER_VERTICAL);
@@ -67,10 +70,13 @@ class MainTabListAdapter extends BaseAdapter {
         float squareCorner = DensityUtils.dp(8);
 
         if (position == 0) {
+            padItem.setPadding(pad, pad, pad, 0);
             gradientDrawable.setCornerRadii(new float[]{ softCorner, softCorner, softCorner, softCorner, squareCorner, squareCorner, squareCorner, squareCorner });
         } else if (position == (SettingsBaseActivity.categoryList.size() - 1)) {
+            padItem.setPadding(pad, 0, pad, pad);
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, softCorner, softCorner, softCorner, softCorner });
         } else {
+            padItem.setPadding(pad, 0, pad, 0);
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
         }
 
@@ -97,6 +103,6 @@ class MainTabListAdapter extends BaseAdapter {
         ViewUtils.setBackground(arrowView, imageViewBg);
         item.addView(arrowView);
 
-        return item;
+        return padItem;
     }
 }

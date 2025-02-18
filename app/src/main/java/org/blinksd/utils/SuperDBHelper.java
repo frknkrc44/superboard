@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.util.Log;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.frknkrc44.minidb.SuperMiniDB;

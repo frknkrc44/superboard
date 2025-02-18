@@ -47,6 +47,8 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         int newIndex = currentCategory == null ? categoryList.size() : categoryList.indexOf(currentCategory);
 
         if (currentIndex != newIndex) {
+            actionBar.toggleBackButton(currentCategory != null);
+
             View currentChild = mTabsHolder.getChildAt(currentIndex);
             View newChild = mTabsHolder.getChildAt(newIndex);
             final int animSpeed = 200;
@@ -86,10 +88,8 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                 }
 
                 if (newIndex == categoryList.size()) {
-                    actionBar.toggleBackButton(false);
                     dispatcher.unregisterOnBackInvokedCallback((OnBackAnimationCallback) onBackAnimationCallback);
                 } else if (currentIndex == categoryList.size()) {
-                    actionBar.toggleBackButton(true);
                     dispatcher.registerOnBackInvokedCallback(1, (OnBackAnimationCallback) onBackAnimationCallback);
                 }
             }
@@ -118,7 +118,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             }
         }
 
-        listView.setPadding(pad, pad, pad, pad);
         listView.setLayoutParams(LayoutCreator.createLayoutParams(mTabsHolder.getClass(), -1, -1));
         listView.setAdapter(new MainTabListAdapter(this, v -> toggleCategory((SettingCategory) v.getTag())));
         mTabsHolder.addView(listView);
