@@ -52,21 +52,13 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         mCompletionsLayoutRoot = new LinearLayout(getContext());
         mCompletionsLayoutRoot.setLayoutParams(new LayoutParams(-1, -1));
 
+        final int returnToQMWidth = DensityUtils.wpInt(12);
+        final int returnToQMPad = returnToQMWidth / 6;
         mReturnToQuickMenu = new ImageButton(getContext());
-        int size = DensityUtils.dpInt(56);
-        LinearLayout.LayoutParams returnToQMParams =
-                new LinearLayout.LayoutParams(size, -1, 0);
-        returnToQMParams.rightMargin = returnToQMParams.leftMargin =
-                returnToQMParams.bottomMargin = returnToQMParams.topMargin = DensityUtils.dpInt(8);
-
-        mReturnToQuickMenu.setPadding(
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2,
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2
-        );
-        mReturnToQuickMenu.setLayoutParams(returnToQMParams);
+        mReturnToQuickMenu.setLayoutParams(new LinearLayout.LayoutParams(returnToQMWidth, -1, 0));
         mReturnToQuickMenu.setImageResource(R.drawable.sym_keyboard_close);
+        ViewUtils.setBackground(mReturnToQuickMenu, null);
+        mReturnToQuickMenu.setPadding(returnToQMPad, returnToQMPad * 2, returnToQMPad, returnToQMPad * 2);
         mReturnToQuickMenu.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mReturnToQuickMenu.setId(android.R.id.button1);
         mReturnToQuickMenu.setOnClickListener(v -> toggleQuickMenu(true));
@@ -201,7 +193,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     public void reTheme() {
         int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
-        ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
+        // ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
         ColorUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
