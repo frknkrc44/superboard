@@ -6,29 +6,21 @@ import static org.blinksd.board.SuperBoardApplication.getSettings;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
-import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.window.OnBackAnimationCallback;
 import android.window.OnBackInvokedDispatcher;
 
-import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
@@ -115,86 +107,20 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         listView.setId(android.R.id.tabs);
         int pad = DensityUtils.dpInt(16);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{listView.getDivider()});
-            layerDrawable.getDrawable(0).setAlpha(0);
-            layerDrawable.setLayerHeight(0, pad / 8);
-            listView.setDivider(layerDrawable);
+        if (listView.getDivider() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{listView.getDivider()});
+                layerDrawable.getDrawable(0).setAlpha(0);
+                layerDrawable.setLayerHeight(0, pad / 8);
+                listView.setDivider(layerDrawable);
+            } else {
+                listView.getDivider().setAlpha(0);
+            }
         }
 
         listView.setPadding(pad, pad, pad, pad);
         listView.setLayoutParams(LayoutCreator.createLayoutParams(mTabsHolder.getClass(), -1, -1));
-        listView.setAdapter(new BaseAdapter() {
-            final List<String> categoryTranslations = getArrayAsList("categories");
-
-            @Override
-            public int getCount() {
-                return categoryList.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return categoryList.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @SuppressLint("ViewHolder")
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                final SettingCategory category = categoryList.get(position);
-
-                LinearLayout item = LayoutCreator.createFilledHorizontalLayout(
-                        parent.getClass(), parent.getContext());
-                item.setOnClickListener(v -> toggleCategory(category));
-                item.setGravity(Gravity.CENTER_VERTICAL);
-                item.setPadding(0, 0, pad, 0);
-                item.getLayoutParams().height =
-                        (int) ResourcesUtils.getListPreferredItemHeight(parent.getContext());
-
-                GradientDrawable gradientDrawable = new GradientDrawable();
-                gradientDrawable.setColor(ColorUtils.getAccentColor());
-
-                float softCorner = DensityUtils.dp(24);
-                float squareCorner = DensityUtils.dp(8);
-
-                if (position == 0) {
-                    gradientDrawable.setCornerRadii(new float[]{ softCorner, softCorner, softCorner, softCorner, squareCorner, squareCorner, squareCorner, squareCorner });
-                } else if (position == (categoryList.size() - 1)) {
-                    gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, softCorner, softCorner, softCorner, softCorner });
-                } else {
-                    gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
-                }
-
-                ViewUtils.setBackground(item, gradientDrawable);
-
-                TextView title = (TextView) getLayoutInflater().inflate(
-                        android.R.layout.simple_list_item_1, item, false);
-                ((LinearLayout.LayoutParams) title.getLayoutParams()).weight = 1;
-                title.setText(categoryTranslations.get(position));
-                item.addView(title);
-
-                ImageView arrowView = new ImageView(parent.getContext());
-                int ivSize = item.getLayoutParams().height / 2;
-                arrowView.setLayoutParams(new LinearLayout.LayoutParams(ivSize, ivSize, 0));
-                arrowView.setImageResource(R.drawable.arrow_right);
-                ColorUtils.setColorFilter(arrowView, title.getCurrentTextColor());
-
-                final int aPad = pad / 4;
-                arrowView.setPadding(aPad, aPad, aPad, aPad);
-
-                GradientDrawable imageViewBg = new GradientDrawable();
-                imageViewBg.setColor(0x44000000);
-                imageViewBg.setCornerRadius(96);
-                ViewUtils.setBackground(arrowView, imageViewBg);
-                item.addView(arrowView);
-
-                return item;
-            }
-        });
+        listView.setAdapter(new MainTabListAdapter(this, v -> toggleCategory((SettingCategory) v.getTag())));
         mTabsHolder.addView(listView);
     }
 
