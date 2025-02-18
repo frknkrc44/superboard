@@ -29,6 +29,9 @@ public class CustomActionBar extends LinearLayout {
         mBackButton.setLayoutParams(new LayoutParams(-2, -2, 0));
         mBackButton.setImageResource(R.drawable.arrow_left);
         mBackButton.setOnClickListener(onBackButtonClick);
+
+        final int pad = DensityUtils.dpInt(8);
+        mBackButton.setPadding(0, pad, 0, pad);
         addView(mBackButton);
         toggleBackButton(false);
 
