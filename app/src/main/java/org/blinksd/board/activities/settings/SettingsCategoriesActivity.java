@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 
 import android.animation.Animator;
+import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -13,6 +14,10 @@ import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -55,6 +60,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             View currentChild = mTabsHolder.getChildAt(currentIndex);
             View newChild = mTabsHolder.getChildAt(newIndex);
             final int animSpeed = 200;
+            final TimeInterpolator interpolator = new AccelerateInterpolator();
             Animator.AnimatorListener animatorListener = new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -63,6 +69,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             .alpha(1)
                             .translationX(0)
                             .setDuration(animSpeed)
+                            .setInterpolator(interpolator)
                             .setListener(null)
                             .start();
                 }
@@ -88,6 +95,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     .translationX((currentCategory == null ? 1 : -1) * displayWidth)
                     .setDuration(animSpeed)
                     .setListener(animatorListener)
+                    .setInterpolator(interpolator)
                     .start();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
