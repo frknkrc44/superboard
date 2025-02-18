@@ -12,12 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import org.blinksd.board.R;
+import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
 
 import java.lang.reflect.Field;
 
 final class CustomSeekBar extends SeekBar {
+
     CustomSeekBar(Context c) {
         super(c);
         setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(75), -2, 0));
@@ -25,6 +27,12 @@ final class CustomSeekBar extends SeekBar {
         setProgressDrawable(ResourcesUtils.getDrawable(R.drawable.seekbar));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSplitTrack(false);
+        }
+
+        try {
+            setProgressColor(ResourcesUtils.getColor(R.color.seekbar_progress));
+        } catch (Throwable ignored) {
+            setProgressColor(ColorUtils.getAccentColor());
         }
     }
 
