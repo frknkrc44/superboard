@@ -324,11 +324,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeysPopupPreviewEnabled(final boolean enabled) {
-        if (enabled != popupPreview)
-            applyToAllKeys(key -> {
-                popupPreview = enabled;
-                key.setKeyImageVisible(key.isKeyIconSet());
-            });
+        applyToAllKeys(key -> {
+            popupPreview = enabled;
+            key.setKeyImageVisible(key.isKeyIconSet());
+        });
     }
 
     public final void setKeysTextType(final int style) {
@@ -562,7 +561,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void vibrate() {
         if (vibrateDuration > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(vibrateDuration, 255));
+                vibrator.vibrate(VibrationEffect.createOneShot(vibrateDuration, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 vibrator.vibrate(vibrateDuration);
             }
