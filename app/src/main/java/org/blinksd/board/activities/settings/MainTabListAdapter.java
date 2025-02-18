@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
@@ -17,6 +18,8 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
+import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.List;
@@ -50,6 +53,11 @@ class MainTabListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final SettingCategory category = SettingsBaseActivity.categoryList.get(position);
+        final boolean monetEnabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+
+        if (monetEnabled && category == SettingCategory.THEMING_ADVANCED) {
+            return new Space(parent.getContext());
+        }
 
         LinearLayout padItem = LayoutCreator.createFilledHorizontalLayout(
                 parent.getClass(), parent.getContext());
@@ -72,7 +80,7 @@ class MainTabListAdapter extends BaseAdapter {
         if (position == 0) {
             padItem.setPadding(pad, pad, pad, 0);
             gradientDrawable.setCornerRadii(new float[]{ softCorner, softCorner, softCorner, softCorner, squareCorner, squareCorner, squareCorner, squareCorner });
-        } else if (position == (SettingsBaseActivity.categoryList.size() - 1)) {
+        } else if (position == (SettingsBaseActivity.categoryList.size() - 1) || (monetEnabled && category == SettingCategory.THEMING)) {
             padItem.setPadding(pad, 0, pad, pad);
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, softCorner, softCorner, softCorner, softCorner });
         } else {

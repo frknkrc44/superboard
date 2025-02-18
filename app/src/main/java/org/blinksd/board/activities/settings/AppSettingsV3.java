@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomActionBar;
@@ -85,6 +86,13 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         main.addView(mTabsHolder);
         addCategories();
         createMainTab();
+    }
+
+    @Override
+    public void restartKeyboard() {
+        super.restartKeyboard();
+
+        mTabListAdapter.notifyDataSetChanged();
     }
 
     @Override

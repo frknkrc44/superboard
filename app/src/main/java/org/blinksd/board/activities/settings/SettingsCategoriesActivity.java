@@ -118,8 +118,12 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             }
         }
 
+        if (mTabListAdapter == null) {
+            mTabListAdapter = new MainTabListAdapter(this, v -> toggleCategory((SettingCategory) v.getTag()));
+        }
+
         listView.setLayoutParams(LayoutCreator.createLayoutParams(mTabsHolder.getClass(), -1, -1));
-        listView.setAdapter(new MainTabListAdapter(this, v -> toggleCategory((SettingCategory) v.getTag())));
+        listView.setAdapter(mTabListAdapter);
         mTabsHolder.addView(listView);
     }
 
