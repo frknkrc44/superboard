@@ -75,6 +75,8 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
             @Override
             public void onChildViewAdded(View parent, View child) {
                 child.setVisibility(child.getId() == android.R.id.tabs ? VISIBLE : GONE);
+                child.setAlpha(child.getId() == android.R.id.tabs ? 1 : 0);
+                child.setTranslationX(child.getId() == android.R.id.tabs ? 0 : displayWidth);
             }
 
             @Override

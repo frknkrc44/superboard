@@ -49,6 +49,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     SettingCategory currentCategory;
     static final List<SettingCategory> categoryList = Arrays.asList(SettingCategory.values());
     Object onBackAnimationCallback;
+    static final int displayWidth = DensityUtils.wpInt(100);
 
     public static String getTranslation(String key) {
         Context context = SuperBoardApplication.getApplication();

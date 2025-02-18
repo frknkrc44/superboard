@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -51,8 +52,43 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         int newIndex = currentCategory == null ? categoryList.size() : categoryList.indexOf(currentCategory);
 
         if (currentIndex != newIndex) {
-            mTabsHolder.getChildAt(currentIndex).setVisibility(GONE);
-            mTabsHolder.getChildAt(newIndex).setVisibility(VISIBLE);
+            View currentChild = mTabsHolder.getChildAt(currentIndex);
+            View newChild = mTabsHolder.getChildAt(newIndex);
+            final int animSpeed = 200;
+            Animator.AnimatorListener animatorListener = new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    newChild.setVisibility(VISIBLE);
+                    newChild.animate()
+                            .alpha(1)
+                            .translationX(0)
+                            .setDuration(animSpeed)
+                            .setListener(null)
+                            .start();
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    currentChild.setVisibility(GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            };
+
+            currentChild.animate()
+                    .alpha(0)
+                    .translationX((currentCategory == null ? 1 : -1) * displayWidth)
+                    .setDuration(animSpeed)
+                    .setListener(animatorListener)
+                    .start();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
@@ -72,7 +108,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         }
 
         actionBar.setTitle(
-                newIndex == categoryList.size()
+                currentCategory == null
                         ? getTitle()
                         : getArrayAsList("categories").get(newIndex)
         );
@@ -164,27 +200,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             }
         });
         mTabsHolder.addView(listView);
-    }
-
-    private int getCategoryIconResource(int categoryIndex) {
-        switch (categoryIndex) {
-            case 0:
-                return R.drawable.more_control;
-            case 1:
-                return R.drawable.keyboard;
-            case 2:
-                return R.drawable.view_compact_alt;
-            case 3:
-                return R.drawable.web_asset;
-            case 4:
-                return R.drawable.web_asset_reversed;
-            case 5:
-                return R.drawable.brush;
-            case 6:
-                return R.drawable.format_paint;
-        }
-
-        return R.drawable.arrow_right;
     }
 
     private void addCategoryChildren(int categoryIndex) {
