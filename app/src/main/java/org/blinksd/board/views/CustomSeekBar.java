@@ -26,7 +26,6 @@ final class CustomSeekBar extends SeekBar {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSplitTrack(false);
         }
-        setProgressColor(ResourcesUtils.getColor(R.color.seekbar_progress));
     }
 
     /** @noinspection JavaReflectionMemberAccess*/
