@@ -6,6 +6,7 @@ import static org.blinksd.board.SuperBoardApplication.getSettings;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
@@ -122,6 +123,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             mTabListAdapter = new MainTabListAdapter(this, v -> toggleCategory((SettingCategory) v.getTag()));
         }
 
+        listView.setSelector(new ColorDrawable(0));
         listView.setLayoutParams(LayoutCreator.createLayoutParams(mTabsHolder.getClass(), -1, -1));
         listView.setAdapter(mTabListAdapter);
         mTabsHolder.addView(listView);
