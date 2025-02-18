@@ -21,6 +21,7 @@ import android.widget.Space;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SimpleAnimatorListener;
 import org.blinksd.utils.ViewUtils;
 
 public class FABView extends LinearLayout {
@@ -221,7 +222,7 @@ public class FABView extends LinearLayout {
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     final int g = i,d1 = Math.abs((buttonLayouts.getChildCount()-1)-(i+1))*baseDelay,d2 = (i+1)*baseDelay;
                     if(buttonLayouts.getChildAt(0).getScaleX() == 0){
-                        buttonLayouts.getChildAt(i).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new Animator.AnimatorListener() {
+                        buttonLayouts.getChildAt(i).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
                                 buttonLayouts.getChildAt(g).setVisibility(View.VISIBLE);
@@ -235,21 +236,9 @@ public class FABView extends LinearLayout {
                                     }
                                 }
                             }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {}
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {}
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {}
                         });
                     } else {
-                        buttonLayouts.getChildAt(i).animate().scaleX(0).scaleY(0).setStartDelay(REVERSE ? d2 : d1).setListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {}
-
+                        buttonLayouts.getChildAt(i).animate().scaleX(0).scaleY(0).setStartDelay(REVERSE ? d2 : d1).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 buttonLayouts.getChildAt(g).setVisibility(View.GONE);
@@ -257,12 +246,6 @@ public class FABView extends LinearLayout {
                                     sv.setVisibility(GONE);
                                 }
                             }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {}
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {}
                         });
                     }
                 }

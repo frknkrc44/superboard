@@ -26,6 +26,7 @@ import org.blinksd.board.R;
 import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SimpleAnimatorListener;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -159,11 +160,7 @@ public final class SetupActivityV2 extends Activity {
                     .animate()
                     .alpha(0)
                     .setDuration(duration)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                        }
-
+                    .setListener(new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             contentView.removeAllViews();
@@ -171,14 +168,6 @@ public final class SetupActivityV2 extends Activity {
                             view.setAlpha(0);
                             contentView.addView(view);
                             view.animate().alpha(1).setDuration(duration).start();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
                         }
                     }).start();
         } else {

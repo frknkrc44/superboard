@@ -14,10 +14,7 @@ import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,6 +35,7 @@ import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
+import org.blinksd.utils.SimpleAnimatorListener;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.ViewUtils;
@@ -61,7 +59,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             View newChild = mTabsHolder.getChildAt(newIndex);
             final int animSpeed = 200;
             final TimeInterpolator interpolator = new AccelerateInterpolator();
-            Animator.AnimatorListener animatorListener = new Animator.AnimatorListener() {
+            final SimpleAnimatorListener animatorListener = new SimpleAnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
                     newChild.setVisibility(VISIBLE);
@@ -77,16 +75,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     currentChild.setVisibility(GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
                 }
             };
 
