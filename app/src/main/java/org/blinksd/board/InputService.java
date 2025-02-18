@@ -767,7 +767,7 @@ public final class InputService extends InputMethodService implements
 
         @Override
         public void onKeyboardEvent(View v) {
-            // if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
+            if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
 
             if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);
