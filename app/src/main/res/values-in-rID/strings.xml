@@ -102,7 +102,7 @@
     <string name="settings_category_layout">Keyboard Layout</string>
     <string name="settings_category_popup">Popup</string>
     <string name="settings_category_top_bar">Top Bar</string>
-    <string name="settings_category_bottom_bar">Bottom bar</string>
+    <string name="settings_category_bottom_bar">Bottom Bar</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Reguler</item>
