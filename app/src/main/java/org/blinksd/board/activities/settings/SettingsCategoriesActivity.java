@@ -118,7 +118,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{listView.getDivider()});
             layerDrawable.getDrawable(0).setAlpha(0);
-            layerDrawable.setLayerHeight(0, pad / 4);
+            layerDrawable.setLayerHeight(0, pad / 8);
             listView.setDivider(layerDrawable);
         }
 
