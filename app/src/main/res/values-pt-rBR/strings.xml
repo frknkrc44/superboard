@@ -27,6 +27,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desativar linha de números (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar um toque longo na ação ou primeiro caractere na tecla</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar cores do monet (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar status de capslock automaticamente</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
