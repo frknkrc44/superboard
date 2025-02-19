@@ -15,7 +15,6 @@ import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -195,7 +194,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                  android.R.color.system_neutral1_400, android.R.color.system_neutral1_500,
                  android.R.color.system_neutral1_600, android.R.color.system_neutral1_700,
                  android.R.color.system_neutral1_800, android.R.color.system_neutral1_900 ->
-                    second.get((resId - android.R.color.system_neutral1_50) * 100);
+                    second.get(Math.max((resId - android.R.color.system_neutral1_50) * 100, 50));
             default -> throw new RuntimeException("Unsupported res " + resId);
         };
 
