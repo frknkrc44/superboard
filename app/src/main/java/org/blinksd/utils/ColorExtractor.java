@@ -150,6 +150,18 @@ public class ColorExtractor {
                 colorMaps.add(colorMap);
             }
 
+            // find opposite color if there's no another color
+            if (colorMaps.size() == 1) {
+                Map<Integer, Integer> second = new LinkedHashMap<>();
+                for (int key : colorMaps.get(0).keySet()) {
+                    float[] hsl = new float[3];
+                    ColorUtils.colorToHSL(colorMaps.get(0).get(key), hsl);
+                    hsl[0] = (hsl[0] + 180) % 360;
+                    second.put(key, ColorUtils.HSLToColor(hsl));
+                }
+                colorMaps.add(second);
+            }
+
             colorMapCache = colorMaps;
         }
 

@@ -15,6 +15,7 @@ import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -72,11 +73,11 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
     }
 
-    public int getSelectedMonetThemeIndex() {
+    public final int getSelectedMonetThemeIndex() {
         return getIndexByKey(SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME));
     }
 
-    public int getIndexByKey(String key) {
+    private int getIndexByKey(String key) {
         assert key != null;
         int idx = 0;
         for (String nextKey : keySet()) {
@@ -90,7 +91,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         return -1;
     }
 
-    public String getKeyByIndex(int index) {
+    public final String getKeyByIndex(int index) {
         assert index >= 0;
         int idx = 0;
         for (String nextKey : keySet()) {
@@ -104,35 +105,35 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         return null;
     }
 
-    public int getTextColor() {
+    public final int getTextColor() {
         return getColorFromIndex(0);
     }
 
-    public int getKeyboardColor() {
+    public final int getKeyboardColor() {
         return getColorFromIndex(1);
     }
 
-    public int getKeyColor() {
+    public final int getKeyColor() {
         return getColorFromIndex(2);
     }
 
-    public int getKeyPressColor() {
+    public final int getKeyPressColor() {
         return getColorFromIndex(3);
     }
 
-    public int getKey2Color() {
+    public final int getKey2Color() {
         return getColorFromIndex(4);
     }
 
-    public int getKey2PressColor() {
+    public final int getKey2PressColor() {
         return getColorFromIndex(5);
     }
 
-    public int getEnterColor() {
+    public final int getEnterColor() {
         return getColorFromIndex(6);
     }
 
-    public int getEnterPressColor() {
+    public final int getEnterPressColor() {
         return getColorFromIndex(7);
     }
 
@@ -169,11 +170,11 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
 
         var mappedColors = colorExtractor.mapColors();
         Map<Integer, Integer> first, second;
-        first = mappedColors.get(0);
-        if (mappedColors.size() > 1) {
+        try {
+            first = mappedColors.get(0);
             second = mappedColors.get(1);
-        } else {
-            second = first;
+        } catch (Throwable ignored) {
+            return 0;
         }
 
         return switch (resId) {
@@ -210,7 +211,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                 final var resId = isDark() ? AMOLED_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index];
                 yield isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
             }
-            default -> throw new RuntimeException("Pre-12 isn't supported yet");
+            default -> 0;
         };
     }
 
