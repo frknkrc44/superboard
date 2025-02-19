@@ -27,6 +27,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">எண்கள் வரிசையை முடக்கு (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">அழுத்திப் பிடித்தால் செயலை அல்லது முதல் எழுத்தைக் காண்பி</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">மோனெட் நிறங்களைப் பயன்படுத்து (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">கேப்ஸ்லாக் நிலையைத் தானாக அறிந்துகொள்</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
