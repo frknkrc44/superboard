@@ -5,7 +5,6 @@ import static org.blinksd.board.SuperBoardApplication.getSettings;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 import org.frknkrc44.minidb.SuperMiniDB;

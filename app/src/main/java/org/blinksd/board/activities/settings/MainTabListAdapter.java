@@ -19,8 +19,6 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
-import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.List;

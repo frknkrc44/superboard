@@ -18,9 +18,9 @@ package org.blinksd.color_extractor.palette.quantizers;
 
 import android.util.Log;
 
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.color_extractor.palette.Palette;
 import org.blinksd.color_extractor.palette.extras.KMeans;
+import org.blinksd.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;

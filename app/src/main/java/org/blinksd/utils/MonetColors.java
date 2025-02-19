@@ -8,7 +8,6 @@ import static org.blinksd.utils.SystemUtils.isPermGranted;
 import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;

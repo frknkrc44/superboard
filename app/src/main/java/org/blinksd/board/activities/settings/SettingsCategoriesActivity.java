@@ -33,7 +33,6 @@ import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.ViewUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivity {
