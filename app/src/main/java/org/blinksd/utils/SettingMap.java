@@ -57,6 +57,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_DISABLE_REPEAT = "disable_repeat",
             SET_DISABLE_SUGGESTIONS = "disable_suggestions",
             SET_USE_MONET = "use_monet",
+            SET_USE_COMPAT_MONET = "use_compat_monet",
             SET_ENABLE_POPUP_PREVIEW = "enable_popup_preview",
             SET_ICON_THEME = "keyboard_icon_theme",
             SET_KILL_BACKGROUND = "keyboard_kill_background",
@@ -110,7 +111,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
             putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR, true);
         }
-        if (Build.VERSION.SDK_INT >= 28)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
         putPopup(SET_DISABLE_POPUP, SettingType.BOOL);
         putPopup(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
@@ -121,10 +122,11 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putBottomBar(SET_SHOW_BOTTOM_BAR, SettingType.BOOL);
-        if (Build.VERSION.SDK_INT >= 31) {
-            putTheming(SET_USE_MONET, SettingType.BOOL);
-            putTheming(SET_MONET_COLOR_SCHEME, SettingType.THEME_SELECTOR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            putTheming(SET_USE_MONET, SettingType.BOOL, SET_USE_COMPAT_MONET, false);
         }
+        putTheming(SET_USE_COMPAT_MONET, SettingType.BOOL, SET_USE_MONET, false);
+        putTheming(SET_MONET_COLOR_SCHEME, SettingType.THEME_SELECTOR);
         putKbdLayout(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
         putGeneral(SET_ENFORCE_DETECT_CAPSLOCK, SettingType.BOOL, SET_DETECT_CAPSLOCK, true);
@@ -322,6 +324,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_USE_FIRST_POPUP_CHARACTER:
                 return Defaults.USE_FIRST_POPUP_CHARACTER;
             case SET_USE_MONET:
+            case SET_USE_COMPAT_MONET:
                 return Defaults.USE_MONET;
             case SET_ENABLE_POPUP_PREVIEW:
                 return Defaults.ENABLE_POPUP_PREVIEW;

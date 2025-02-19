@@ -2,12 +2,15 @@ package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,17 @@ import org.blinksd.board.SuperBoardApplication;
 import java.lang.reflect.Method;
 
 public final class SystemUtils {
+    public static boolean isPermGranted(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return Environment.isExternalStorageManager();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return context.checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
+    }
 
     public static boolean isNotColorizeNavbar() {
         return getSystemProp("ro.build.version.emui").length() > 1;

@@ -4,17 +4,21 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
 import static org.blinksd.utils.SuperDBHelper.setColorsFromBitmap;
+import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -24,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -186,6 +191,21 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
 
     final Switch.OnCheckedChangeListener switchListener = (buttonView, isChecked) -> {
         String str = (String) buttonView.getTag();
+        Context context = buttonView.getContext();
+
+        if (isChecked && str.equals(SettingMap.SET_USE_COMPAT_MONET) && !isPermGranted(context)) {
+            Toast.makeText(context,
+                    getTranslation("image_selector_warning_storage_access"),
+                    Toast.LENGTH_LONG).show();
+            context.startActivity(new Intent(
+                    Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                            ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            : Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.parse("package:" + context.getPackageName())));
+            buttonView.setChecked(false);
+            return;
+        }
+
         getAppDB().putBoolean(str, isChecked, true);
         restartKeyboard();
     };
@@ -327,8 +347,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
         } else if (themeSelector) {
             val = SettingMap.SET_MONET_COLOR_SCHEME.equals(tag)
-                    ? SuperBoardApplication.getMonetColors()
-                        .getIndexByKey(SuperDBHelper.getStringOrDefault(tag))
+                    ? SuperBoardApplication.getMonetColors().getSelectedMonetThemeIndex()
                     : -1;
         } else {
             val = SuperDBHelper.getIntOrDefault(tag);

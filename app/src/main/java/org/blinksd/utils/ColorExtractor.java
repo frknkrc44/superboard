@@ -35,6 +35,7 @@ public class ColorExtractor {
     private static final float MIN_COLOR_OCCURRENCE = 0.05f;
 
     private final List<Integer> colorInts;
+    private List<Map<Integer, Integer>> colorMapCache;
 
     private ColorExtractor(List<Integer> colorInts) {
         this.colorInts = colorInts;
@@ -138,15 +139,21 @@ public class ColorExtractor {
     }
 
     public final List<Map<Integer, Integer>> mapColors() {
-        List<Map<Integer, Integer>> colorMaps = new ArrayList<>();
-        for(int colorInt : colorInts) {
-            Map<Integer, Integer> colorMap = new LinkedHashMap<>();
-            for(int i = 5;i < 95;i += 5) {
-                colorMap.put(i * 10, getColorWithBrightness(colorInt, i / 100f));
+        if (colorMapCache == null) {
+            List<Map<Integer, Integer>> colorMaps = new ArrayList<>();
+            for (int colorInt : colorInts) {
+                Map<Integer, Integer> colorMap = new LinkedHashMap<>();
+                for (int i = 5; i < 95; i += 5) {
+                    colorMap.put(i * 10, getColorWithBrightness(colorInt, i / 100f));
+                }
+
+                colorMaps.add(colorMap);
             }
-            colorMaps.add(colorMap);
+
+            colorMapCache = colorMaps;
         }
-        return colorMaps;
+
+        return colorMapCache;
     }
 
     private static void clearDuplicates(List<Integer> colors) {

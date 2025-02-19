@@ -33,6 +33,7 @@
 	<string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
 	<string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
+	<string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
 	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
 	<string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>

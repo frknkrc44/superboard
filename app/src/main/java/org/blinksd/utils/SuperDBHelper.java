@@ -67,7 +67,7 @@ public final class SuperDBHelper {
     }
 
     public static int getIntOrDefault(String key) {
-        if (Build.VERSION.SDK_INT >= 31 && getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
+        if (SuperBoardApplication.getMonetColors().isMonetEnabled()) {
             return getMonetColorValue(key);
         }
 
@@ -104,26 +104,17 @@ public final class SuperDBHelper {
 
     private static int getMonetColorValue(String key) {
         MonetColors monetColors = SuperBoardApplication.getMonetColors();
-        switch (key) {
-            case SettingMap.SET_ENTER_BGCLR:
-                return monetColors.getEnterColor();
-            case SettingMap.SET_ENTER_PRESS_BGCLR:
-                return monetColors.getEnterPressColor();
-            case SettingMap.SET_KEY_BGCLR:
-                return monetColors.getKeyColor();
-            case SettingMap.SET_KEY_PRESS_BGCLR:
-                return monetColors.getKeyPressColor();
-            case SettingMap.SET_KEY2_BGCLR:
-                return monetColors.getKey2Color();
-            case SettingMap.SET_KEY2_PRESS_BGCLR:
-                return monetColors.getKey2PressColor();
-            case SettingMap.SET_KEYBOARD_BGCLR:
-                return monetColors.getKeyboardColor();
-            case SettingMap.SET_KEY_TEXTCLR:
-                return monetColors.getTextColor();
-        }
-
-        return Integer.parseInt(getStringOrDefault(key));
+        return switch (key) {
+            case SettingMap.SET_ENTER_BGCLR -> monetColors.getEnterColor();
+            case SettingMap.SET_ENTER_PRESS_BGCLR -> monetColors.getEnterPressColor();
+            case SettingMap.SET_KEY_BGCLR -> monetColors.getKeyColor();
+            case SettingMap.SET_KEY_PRESS_BGCLR -> monetColors.getKeyPressColor();
+            case SettingMap.SET_KEY2_BGCLR -> monetColors.getKey2Color();
+            case SettingMap.SET_KEY2_PRESS_BGCLR -> monetColors.getKey2PressColor();
+            case SettingMap.SET_KEYBOARD_BGCLR -> monetColors.getKeyboardColor();
+            case SettingMap.SET_KEY_TEXTCLR -> monetColors.getTextColor();
+            default -> Integer.parseInt(getStringOrDefault(key));
+        };
     }
 
     public static void removeKey(String key) {

@@ -1,68 +1,80 @@
 package org.blinksd.utils;
 
+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static org.blinksd.utils.ResourcesUtils.getColor;
+import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
+import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
-@SuppressLint("UseRequiresApi")
+@SuppressLint({"InlinedApi"})
 public class MonetColors extends LinkedHashMap<String, int[][]> {
     static final String COLOR_SCHEME_DEFAULT = "default";
     static final String COLOR_SCHEME_AMOLED = "amoled";
 
-    @TargetApi(Build.VERSION_CODES.S)
     private static final int[] LIGHT_DEF_MONET_SCHEME = {
-            android.R.color.system_neutral1_900, /* Key text color */
-            android.R.color.system_neutral1_50,  /* Keyboard background color */
-            android.R.color.system_neutral1_100, /* Key color */
-            android.R.color.system_neutral1_200, /* Key press color */
-            android.R.color.system_neutral1_200, /* Key2 color */
-            android.R.color.system_neutral1_300, /* Key2 press color */
-            android.R.color.system_accent1_300,  /* Enter color */
-            android.R.color.system_accent1_400,  /* Enter press color */
+            android.R.color.system_neutral1_900,  /* Key text color */
+            android.R.color.system_neutral1_50,   /* Keyboard background color */
+            android.R.color.system_neutral1_100,  /* Key color */
+            android.R.color.system_neutral1_200,  /* Key press color */
+            android.R.color.system_neutral1_200,  /* Key2 color */
+            android.R.color.system_neutral1_300,  /* Key2 press color */
+            android.R.color.system_accent1_300,   /* Enter color */
+            android.R.color.system_accent1_400,   /* Enter press color */
     };
 
-    @TargetApi(Build.VERSION_CODES.S)
     private static final int[] DARK_DEF_MONET_SCHEME = {
-            android.R.color.system_neutral1_100, /* Key text color */
-            android.R.color.system_neutral1_800, /* Keyboard background color */
-            android.R.color.system_neutral1_600, /* Key color */
-            android.R.color.system_neutral1_500, /* Key press color */
-            android.R.color.system_neutral1_700, /* Key2 color */
-            android.R.color.system_neutral1_600, /* Key2 press color */
-            android.R.color.system_accent1_500,  /* Enter color */
-            android.R.color.system_accent1_600,  /* Enter press color */
+            android.R.color.system_neutral1_100,  /* Key text color */
+            android.R.color.system_neutral1_800,  /* Keyboard background color */
+            android.R.color.system_neutral1_600,  /* Key color */
+            android.R.color.system_neutral1_500,  /* Key press color */
+            android.R.color.system_neutral1_700,  /* Key2 color */
+            android.R.color.system_neutral1_600,  /* Key2 press color */
+            android.R.color.system_accent1_500,   /* Enter color */
+            android.R.color.system_accent1_600,   /* Enter press color */
     };
 
-    @TargetApi(Build.VERSION_CODES.S)
     private static final int[] AMOLED_MONET_SCHEME = {
-            android.R.color.system_neutral1_200, /* Key text color */
+            android.R.color.system_neutral1_200,  /* Key text color */
             android.R.color.system_neutral1_1000, /* Keyboard background color */
-            android.R.color.system_neutral1_800, /* Key color */
-            android.R.color.system_neutral1_700, /* Key press color */
-            android.R.color.system_neutral1_900, /* Key2 color */
-            android.R.color.system_neutral1_800, /* Key2 press color */
-            android.R.color.system_accent1_700,  /* Enter color */
-            android.R.color.system_accent1_600,  /* Enter press color */
+            android.R.color.system_neutral1_800,  /* Key color */
+            android.R.color.system_neutral1_700,  /* Key press color */
+            android.R.color.system_neutral1_900,  /* Key2 color */
+            android.R.color.system_neutral1_800,  /* Key2 press color */
+            android.R.color.system_accent1_700,   /* Enter color */
+            android.R.color.system_accent1_600,   /* Enter press color */
     };
+
+    private ColorExtractor colorExtractor;
 
     public MonetColors() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            put(COLOR_SCHEME_DEFAULT, new int[][]{LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
-            put(COLOR_SCHEME_AMOLED, new int[][]{LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME});
-        }
+        put(COLOR_SCHEME_DEFAULT, new int[][]{LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
+        put(COLOR_SCHEME_AMOLED, new int[][]{LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME});
     }
 
-    // TODO: Add custom monet
     public boolean isMonetEnabled() {
+        return isSystemMonetEnabled() || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_COMPAT_MONET);
+    }
+
+    private boolean isSystemMonetEnabled() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+    }
+
+    public int getSelectedMonetThemeIndex() {
+        return getIndexByKey(SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME));
     }
 
     public int getIndexByKey(String key) {
@@ -125,25 +137,85 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         return getColorFromIndex(7);
     }
 
-    private int getColorFromIndex(int index) {
-        switch (SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME)) {
-            case COLOR_SCHEME_DEFAULT:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    return getColor(isDark() ? DARK_DEF_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index]);
+    @SuppressWarnings("ConstantConditions")
+    @SuppressLint("MissingPermission")
+    private int getColorCompat(int resId) {
+        if (colorExtractor == null) {
+            try {
+                Context context = SuperBoardApplication.getApplication();
+                if (isPermGranted(context)) {
+                    WallpaperManager wm = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
+                    Drawable wallpaperDrawable;
+                    if (wm.getWallpaperInfo() != null) {
+                        wallpaperDrawable = wm.getWallpaperInfo().loadThumbnail(context.getPackageManager());
+                    } else {
+                        wallpaperDrawable = wm.getDrawable();
+                    }
+
+                    if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
+                        colorExtractor = ColorExtractor.extractFromBitmap(
+                                bitmapDrawable.getBitmap(),
+                                ColorExtractor.QuantizerType.VAR_K_MEANS,
+                                128,
+                                15
+                        );
+                    }
                 }
-                break;
-            case COLOR_SCHEME_AMOLED:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    return getColor(isDark() ? AMOLED_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index]);
-                }
-                break;
+            } catch (Throwable ignored) {}
         }
 
-        throw new RuntimeException("Pre-12 isn't supported yet");
+        if (colorExtractor == null) {
+            return 0;
+        }
+
+        var mappedColors = colorExtractor.mapColors();
+        Map<Integer, Integer> first, second;
+        first = mappedColors.get(0);
+        if (mappedColors.size() > 1) {
+            second = mappedColors.get(1);
+        } else {
+            second = first;
+        }
+
+        return switch (resId) {
+            case android.R.color.system_accent1_0, android.R.color.system_accent2_0,
+                 android.R.color.system_accent3_0, android.R.color.system_neutral1_0,
+                 android.R.color.system_neutral2_0 -> Color.WHITE;
+            case android.R.color.system_accent1_1000, android.R.color.system_accent2_1000,
+                 android.R.color.system_accent3_1000, android.R.color.system_neutral1_1000,
+                 android.R.color.system_neutral2_1000 -> Color.BLACK;
+            case android.R.color.system_accent1_50, android.R.color.system_accent1_100,
+                 android.R.color.system_accent1_200, android.R.color.system_accent1_300,
+                 android.R.color.system_accent1_400, android.R.color.system_accent1_500,
+                 android.R.color.system_accent1_600, android.R.color.system_accent1_700,
+                 android.R.color.system_accent1_800, android.R.color.system_accent1_900 ->
+                    first.get((resId - android.R.color.system_accent1_50) * 100);
+            case android.R.color.system_neutral1_50, android.R.color.system_neutral1_100,
+                 android.R.color.system_neutral1_200, android.R.color.system_neutral1_300,
+                 android.R.color.system_neutral1_400, android.R.color.system_neutral1_500,
+                 android.R.color.system_neutral1_600, android.R.color.system_neutral1_700,
+                 android.R.color.system_neutral1_800, android.R.color.system_neutral1_900 ->
+                    second.get((resId - android.R.color.system_neutral1_50) * 100);
+            default -> throw new RuntimeException("Unsupported res " + resId);
+        };
+
+    }
+
+    private int getColorFromIndex(int index) {
+        return switch (SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME)) {
+            case COLOR_SCHEME_DEFAULT -> {
+                final var resId = isDark() ? DARK_DEF_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index];
+                yield isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
+            }
+            case COLOR_SCHEME_AMOLED -> {
+                final var resId = isDark() ? AMOLED_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index];
+                yield isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
+            }
+            default -> throw new RuntimeException("Pre-12 isn't supported yet");
+        };
     }
 
     private static boolean isDark() {
-        Configuration conf = SuperBoardApplication.getResConfiguration();
-        return (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        return (SuperBoardApplication.getResConfiguration().uiMode & UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES;
     }
 }

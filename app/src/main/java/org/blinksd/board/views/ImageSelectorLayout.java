@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.SystemUtils.isPermGranted;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -193,18 +195,6 @@ public final class ImageSelectorLayout extends LinearLayout {
                 return getGradientSelector(win.getContext());
         }
         return null;
-    }
-
-    private boolean isPermGranted(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return Environment.isExternalStorageManager();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return context.checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        }
-
-        return true;
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
