@@ -53,8 +53,16 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     };
 
     public MonetColors() {
-        put(COLOR_SCHEME_DEFAULT, new int[][]{ LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME });
-        put(COLOR_SCHEME_AMOLED, new int[][]{  LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME   });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            put(COLOR_SCHEME_DEFAULT, new int[][]{LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
+            put(COLOR_SCHEME_AMOLED, new int[][]{LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME});
+        }
+    }
+
+    // TODO: Add custom monet
+    public boolean isMonetEnabled() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
     }
 
     public int getIndexByKey(String key) {

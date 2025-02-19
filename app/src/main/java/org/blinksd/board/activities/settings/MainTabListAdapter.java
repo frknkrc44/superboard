@@ -13,6 +13,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
@@ -53,7 +54,7 @@ class MainTabListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final SettingCategory category = SettingsBaseActivity.categoryList.get(position);
-        final boolean monetEnabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+        final boolean monetEnabled = SuperBoardApplication.getMonetColors().isMonetEnabled();
 
         if (monetEnabled && category == SettingCategory.THEMING_ADVANCED) {
             return new Space(parent.getContext());

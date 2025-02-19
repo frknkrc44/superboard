@@ -469,7 +469,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.setKeyboardHeight(kbdHeight);
             File img;
             int c = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
-            if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
+            if (SuperBoardApplication.getMonetColors().isMonetEnabled()) {
                 if (keyboardBackgroundHolder != null) {
                     keyboardBackground.setImageBitmap(null);
                 }

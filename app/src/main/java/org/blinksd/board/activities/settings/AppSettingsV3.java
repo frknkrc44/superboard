@@ -96,7 +96,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
     @Override
     public void setKeyPrefs() {
-        boolean useMonet = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+        boolean useMonet = SuperBoardApplication.getMonetColors().isMonetEnabled();
 
         File img = SuperBoardApplication.getBackgroundImageFile();
         if (img.exists() && !useMonet) {

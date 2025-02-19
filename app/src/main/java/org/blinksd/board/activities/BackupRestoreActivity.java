@@ -225,7 +225,7 @@ public final class BackupRestoreActivity extends BaseActivity {
 
             // backup the current background image as file if monet mode is disabled
             File bgImageFile = SuperBoardApplication.getBackgroundImageFile();
-            if (bgImageFile.exists() && !SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
+            if (bgImageFile.exists() && !SuperBoardApplication.getMonetColors().isMonetEnabled()) {
                 ZipEntry bgImageEntry = new ZipEntry(BACKGROUND_IMAGE);
                 zipOutputStream.putNextEntry(bgImageEntry);
 

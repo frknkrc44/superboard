@@ -216,11 +216,7 @@ public final class SuperBoardApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = this;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            monetColors = new MonetColors();
-        }
-
+        monetColors = new MonetColors();
         settingMap = new SettingMap();
         appDB = SuperDBHelper.getDefault(this);
 
