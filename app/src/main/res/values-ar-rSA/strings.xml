@@ -27,6 +27,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">إلغاء تفعيل صف الأرقام (تجريبي)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">إظهار إجراء الضغط المطول أو الحرف الأول المنبثق</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">استخدم ألوان مونيت (تجريبية)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">اكتشف حالة capslock تِلْقائيًا</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">فعّل إجراءات المحرر (يصلح مشكلات زر الإدخال عند بعض التطبيقات لكنه يسبب مشكلات أخرى)</string>
