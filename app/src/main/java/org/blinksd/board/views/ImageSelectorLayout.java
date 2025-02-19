@@ -71,7 +71,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             });
             build.setNegativeButton(android.R.string.cancel, (p112, p2) -> p112.dismiss());
             build.setPositiveButton(android.R.string.ok, (p0, p2) -> {
-                p1.setTag(px.colorValue);
+                p1.setTag(px.currentColorValue);
                 prev.setImageBitmap(convertGradientToBitmap());
                 System.gc();
                 p0.dismiss();

@@ -233,7 +233,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         });
 
         build.setPositiveButton(android.R.string.ok, (d1, p2) -> {
-            int tagVal = ((ColorSelectorLayout) dialogView).colorValue;
+            int tagVal = ((ColorSelectorLayout) dialogView).currentColorValue;
             if (tagVal != val) {
                 getAppDB().putInteger(tag, tagVal, true);
                 ImageView img = p1.findViewById(android.R.id.icon);

@@ -337,10 +337,18 @@ public final class ColorUtils {
     }
 
     public static String colorIntToString(int a, int r, int g, int b) {
-        return colorIntToString(argb(a, r, g, b));
+        return colorIntToString(a, r, g, b, true);
+    }
+
+    public static String colorIntToString(int a, int r, int g, int b, boolean addHash) {
+        return colorIntToString(argb(a, r, g, b), addHash);
     }
 
     public static String colorIntToString(int colorInt) {
-        return String.format("#%08X", colorInt);
+        return colorIntToString(colorInt, true);
+    }
+
+    public static String colorIntToString(int colorInt, boolean addHash) {
+        return String.format(addHash ? "#%08X" : "%08X", colorInt);
     }
 }

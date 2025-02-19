@@ -38,14 +38,14 @@ public final class ColorSelectorLayout extends LinearLayout {
     private final CustomSeekBar a;
     private CustomSeekBar r, g, b, h, s, v;
     private EditText hexIn;
-    public int colorValue;
+    public int currentColorValue;
 
     public ColorSelectorLayout(Context ctx, int colorValue) {
         super(ctx);
         setOrientation(VERTICAL);
         TabWidget widget = new TabWidget(ctx);
         widget.setId(android.R.id.tabs);
-        this.colorValue = colorValue;
+        this.currentColorValue = colorValue;
 
         final TabHost host = new TabHost(ctx);
         host.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2));
@@ -63,7 +63,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         holder.addView(prev);
         a = new CustomSeekBar(ctx);
         a.setMax(255);
-        a.setProgress(Color.alpha(colorValue));
+        a.setProgress(Color.alpha(currentColorValue));
         holder.addView(a);
         holder.addView(fl);
         host.addView(holder);
@@ -72,20 +72,27 @@ public final class ColorSelectorLayout extends LinearLayout {
         final String[] tabTitles = { "rgb", "hsv", "hex" };
         host.setOnTabChangedListener(p1 -> {
             a.setVisibility(p1.equals(tabTitles[2]) ? View.GONE : View.VISIBLE);
+            a.setProgress(Color.alpha(currentColorValue));
             switch (host.getCurrentTab()) {
                 case 0:
-                    r.setProgress(Color.red(colorValue));
-                    g.setProgress(Color.green(colorValue));
-                    b.setProgress(Color.blue(colorValue));
+                    r.setProgress(Color.red(currentColorValue));
+                    g.setProgress(Color.green(currentColorValue));
+                    b.setProgress(Color.blue(currentColorValue));
                     break;
                 case 1:
-                    int[] hsv = getHSV(colorValue);
+                    int[] hsv = getHSV(currentColorValue);
                     h.setProgress(hsv[0]);
                     s.setProgress(hsv[1]);
                     v.setProgress(hsv[2]);
                     break;
                 case 2:
-                    hexIn.setText(getColorString(false));
+                    hexIn.setText(ColorUtils.colorIntToString(
+                            a.getProgress(),
+                            r.getProgress(),
+                            g.getProgress(),
+                            b.getProgress(),
+                            false
+                    ));
                     break;
             }
         });
@@ -116,15 +123,12 @@ public final class ColorSelectorLayout extends LinearLayout {
     }
 
     private View getView(Context ctx, int i) {
-        switch (i) {
-            case 0:
-                return getRGBSelector(ctx);
-            case 1:
-                return getHSVSelector(ctx);
-            case 2:
-                return getHexSelector(ctx);
-        }
-        return null;
+        return switch (i) {
+            case 0 -> getRGBSelector(ctx);
+            case 1 -> getHSVSelector(ctx);
+            case 2 -> getHexSelector(ctx);
+            default -> null;
+        };
     }
 
     private View getRGBSelector(final Context ctx) {
@@ -146,7 +150,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar s, int i, boolean c) {
-                colorValue = ColorUtils.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
+                currentColorValue = ColorUtils.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
                 setPreview(prev);
             }
 
@@ -159,6 +163,10 @@ public final class ColorSelectorLayout extends LinearLayout {
             }
         };
 
+        r.setProgress(Color.red(currentColorValue));
+        g.setProgress(Color.green(currentColorValue));
+        b.setProgress(Color.blue(currentColorValue));
+
         for (CustomSeekBar v : new CustomSeekBar[]{a, r, g, b}) {
             v.setOnSeekBarChangeListener(opc);
             int pad = DensityUtils.dpInt(8);
@@ -168,10 +176,6 @@ public final class ColorSelectorLayout extends LinearLayout {
                 ll.addView(v);
             }
         }
-
-        r.setProgress(Color.red(colorValue));
-        g.setProgress(Color.green(colorValue));
-        b.setProgress(Color.blue(colorValue));
 
         return ll;
     }
@@ -192,8 +196,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         s.setMax(100);
         v.setMax(100);
 
-        int[] hsv = getHSV(colorValue);
-
+        int[] hsv = getHSV(currentColorValue);
         h.setProgress(hsv[0]);
         s.setProgress(hsv[1]);
         v.setProgress(hsv[2]);
@@ -203,7 +206,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             public void onProgressChanged(SeekBar z, int i, boolean c) {
                 int color = HSVColorUtils.getColorFromHSVInt(h.getProgress(), s.getProgress(), v.getProgress());
                 color = ColorUtils.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
-                colorValue = color;
+                currentColorValue = color;
                 setPreview(prev);
             }
 
@@ -244,7 +247,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             @Override
             public void afterTextChanged(Editable p1) {
                 try {
-                    colorValue = Color.parseColor("#" + p1.toString());
+                    currentColorValue = Color.parseColor("#" + p1.toString());
                     setPreview(prev);
                 } catch (Throwable ignored) {}
             }
@@ -275,7 +278,7 @@ public final class ColorSelectorLayout extends LinearLayout {
                         return;
                     }
 
-                    hexIn.setText(hexIn.getText() + ((SuperBoard.Key) v).getText().toString());
+                    hexIn.setText(hexIn.getText() + v.getText().toString());
                     playSound(0);
                 }
             }
@@ -294,12 +297,13 @@ public final class ColorSelectorLayout extends LinearLayout {
                 });
         sb.setKeyboardHeight(20);
         sb.setKeysTextSize(20);
-        sb.setKeysPadding(DensityUtils.dpInt(4));
+        sb.setKeysPadding(DensityUtils.mpInt(0.5f));
         sb.setKeyDrawable(0, 1, -1, R.drawable.sym_keyboard_delete);
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
         sb.setKeyDrawable(0, 0, -1, R.drawable.delete);
         sb.setPressEventForKey(0, 0, -1, Keyboard.KEYCODE_CANCEL);
         sb.setKeysBackground(ResourcesUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
+        sb.setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         ll.addView(hexIn);
         ll.addView(sb);
         return ll;
@@ -320,13 +324,13 @@ public final class ColorSelectorLayout extends LinearLayout {
 
     private void setPreview(TextView x) {
         x.setText(getColorString(true));
-        x.setTextColor(ColorUtils.satisfiesTextContrast(colorValue) ? 0xFF212121 : 0XFFDEDEDE);
-        x.setBackgroundColor(colorValue);
+        x.setTextColor(ColorUtils.satisfiesTextContrast(currentColorValue) ? 0xFF212121 : 0XFFDEDEDE);
+        x.setBackgroundColor(currentColorValue);
     }
 
     private String getColorString(boolean showColorInt) {
         return getColorString(
-                Color.alpha(colorValue), Color.red(colorValue), Color.green(colorValue), Color.blue(colorValue),
+                Color.alpha(currentColorValue), Color.red(currentColorValue), Color.green(currentColorValue), Color.blue(currentColorValue),
                 showColorInt
         );
     }
