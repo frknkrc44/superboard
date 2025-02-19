@@ -27,6 +27,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nömrə sırasını deaktiv edin (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Düymədə uzun basma hərəkətini və ya açılan ilk simvolu göstərin</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Monet rənglərindən istifadə edin (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Capslock statusunu avtomatik aşkar edin</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
