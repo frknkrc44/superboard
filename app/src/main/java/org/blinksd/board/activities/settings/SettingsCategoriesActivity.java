@@ -33,6 +33,7 @@ import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.ViewUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivity {
@@ -145,20 +146,22 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     categoryView.addView(createImageSelector(key));
                     break;
                 case THEME_SELECTOR:
-                    List<String> themeKeys = ThemeUtils.getThemeNames(SuperBoardApplication.getThemes());
-                    categoryView.addView(createRadioSelector(key, themeKeys));
+                    switch (key) {
+                        case SettingMap.SET_MONET_COLOR_SCHEME:
+                            List<String> colorSchemeKeys = getArrayAsList("monet_color_schemes");
+                            categoryView.addView(createRadioSelector(key, colorSchemeKeys));
+                            break;
+                        case SettingMap.SET_THEME_PRESET:
+                            List<String> themeKeys = ThemeUtils.getThemeNames(SuperBoardApplication.getThemes());
+                            categoryView.addView(createRadioSelector(key, themeKeys));
+                            break;
+                    }
                     break;
                 case COLOR_SELECTOR:
                     categoryView.addView(createColorSelector(key));
                     break;
                 case STR_SELECTOR:
                 case SELECTOR:
-                    if (SettingMap.SET_KEYBOARD_LANG_SELECT.equals(key)) {
-                        List<String> keySet = SuperBoardApplication.getLanguageHRNames();
-                        categoryView.addView(createRadioSelector(key, keySet));
-                        return;
-                    }
-
                     List<String> selectorKeys = getArrayAsList(key);
                     categoryView.addView(createRadioSelector(key, selectorKeys));
                     break;

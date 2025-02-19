@@ -11,6 +11,7 @@ import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -83,6 +84,7 @@ public class ResourcesUtils {
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
     }
 
+    @SuppressLint("UseRequiresApi")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void setButtonGradientOrientation(GradientDrawable gd) {
         switch (getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {

@@ -332,6 +332,7 @@ public final class BackupRestoreActivity extends BaseActivity {
         byteStream.close();
     }
 
+    @SuppressLint("UseRequiresApi")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void saveToDirectory(Uri treeUri) {
         String documentId = DocumentsContract.getTreeDocumentId(treeUri);

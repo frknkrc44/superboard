@@ -137,16 +137,16 @@ public final class ColorSelectorLayout extends LinearLayout {
         g = new CustomSeekBar(ctx);
         b = new CustomSeekBar(ctx);
 
-        r.setProgressColor(Color.rgb(0xDE, 0, 0));
-        g.setProgressColor(Color.rgb(0, 0xDE, 0));
-        b.setProgressColor(Color.rgb(0, 0, 0xDE));
+        r.setProgressColor(ColorUtils.rgb(0xDE, 0, 0));
+        g.setProgressColor(ColorUtils.rgb(0, 0xDE, 0));
+        b.setProgressColor(ColorUtils.rgb(0, 0, 0xDE));
 
         setPreview(prev);
 
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar s, int i, boolean c) {
-                colorValue = Color.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
+                colorValue = ColorUtils.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
                 setPreview(prev);
             }
 
@@ -202,7 +202,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             @Override
             public void onProgressChanged(SeekBar z, int i, boolean c) {
                 int color = HSVColorUtils.getColorFromHSVInt(h.getProgress(), s.getProgress(), v.getProgress());
-                color = Color.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
+                color = ColorUtils.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
                 colorValue = color;
                 setPreview(prev);
             }

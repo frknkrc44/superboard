@@ -1,5 +1,6 @@
 package org.blinksd.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -17,12 +18,12 @@ import org.blinksd.board.SuperBoardApplication;
 // Copied from support library
 // Android Open Source Project
 
+@SuppressWarnings("deprecation")
 public final class ColorUtils {
     private static final ThreadLocal<double[]> TEMP_ARRAY = new ThreadLocal<>();
 
     private ColorUtils() {}
 
-    @SuppressWarnings("deprecation")
     public static void setColorFilter(Drawable drawable, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
@@ -31,7 +32,6 @@ public final class ColorUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static void setColorFilter(ImageView view, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             view.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
@@ -50,7 +50,7 @@ public final class ColorUtils {
                 Color.green(background), bgAlpha, a);
         int b = compositeComponent(Color.blue(foreground), fgAlpha,
                 Color.blue(background), bgAlpha, a);
-        return Color.argb(a, r, g, b);
+        return argb(a, r, g, b);
     }
 
     private static int compositeAlpha(int foregroundAlpha, int backgroundAlpha) {
@@ -70,6 +70,101 @@ public final class ColorUtils {
         colorToXYZ(color, result);
         // Luminance is the Y component
         return result[1] / 100;
+    }
+
+    public static void RGBToHSL(int r, int g, int b, float[] outHsl) {
+        final float rf = r / 255f;
+        final float gf = g / 255f;
+        final float bf = b / 255f;
+
+        final float max = Math.max(rf, Math.max(gf, bf));
+        final float min = Math.min(rf, Math.min(gf, bf));
+        final float deltaMaxMin = max - min;
+
+        float h, s;
+        float l = (max + min) / 2f;
+
+        if (max == min) {
+            // Monochromatic
+            h = s = 0f;
+        } else {
+            if (max == rf) {
+                h = ((gf - bf) / deltaMaxMin) % 6f;
+            } else if (max == gf) {
+                h = ((bf - rf) / deltaMaxMin) + 2f;
+            } else {
+                h = ((rf - gf) / deltaMaxMin) + 4f;
+            }
+
+            s = deltaMaxMin / (1f - Math.abs(2f * l - 1f));
+        }
+
+        h = (h * 60f) % 360f;
+        if (h < 0) {
+            h += 360f;
+        }
+
+        outHsl[0] = constrain(h, 360f);
+        outHsl[1] = constrain(s, 1f);
+        outHsl[2] = constrain(l, 1f);
+    }
+
+    public static void colorToHSL(int color, float[] outHsl) {
+        RGBToHSL(Color.red(color), Color.green(color), Color.blue(color), outHsl);
+    }
+
+    public static int HSLToColor(float[] hsl) {
+        final float h = hsl[0];
+        final float s = hsl[1];
+        final float l = hsl[2];
+
+        final float c = (1f - Math.abs(2 * l - 1f)) * s;
+        final float m = l - 0.5f * c;
+        final float x = c * (1f - Math.abs((h / 60f % 2f) - 1f));
+
+        final int hueSegment = (int) h / 60;
+
+        int r = 0, g = 0, b = 0;
+
+        switch (hueSegment) {
+            case 0:
+                r = Math.round(255 * (c + m));
+                g = Math.round(255 * (x + m));
+                b = Math.round(255 * m);
+                break;
+            case 1:
+                r = Math.round(255 * (x + m));
+                g = Math.round(255 * (c + m));
+                b = Math.round(255 * m);
+                break;
+            case 2:
+                r = Math.round(255 * m);
+                g = Math.round(255 * (c + m));
+                b = Math.round(255 * (x + m));
+                break;
+            case 3:
+                r = Math.round(255 * m);
+                g = Math.round(255 * (x + m));
+                b = Math.round(255 * (c + m));
+                break;
+            case 4:
+                r = Math.round(255 * (x + m));
+                g = Math.round(255 * m);
+                b = Math.round(255 * (c + m));
+                break;
+            case 5:
+            case 6:
+                r = Math.round(255 * (c + m));
+                g = Math.round(255 * m);
+                b = Math.round(255 * (x + m));
+                break;
+        }
+
+        r = constrain(r);
+        g = constrain(g);
+        b = constrain(b);
+
+        return rgb(r, g, b);
     }
 
     public static double[] getTempDouble3Array() {
@@ -119,6 +214,21 @@ public final class ColorUtils {
         outXyz[2] = 100 * (sr * 0.0193 + sg * 0.1192 + sb * 0.9505);
     }
 
+    public static int XYZToColor(double x, double y, double z) {
+        double r = (x * 3.2406 + y * -1.5372 + z * -0.4986) / 100;
+        double g = (x * -0.9689 + y * 1.8758 + z * 0.0415) / 100;
+        double b = (x * 0.0557 + y * -0.2040 + z * 1.0570) / 100;
+
+        r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
+        g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
+        b = b > 0.0031308 ? 1.055 * Math.pow(b, 1 / 2.4) - 0.055 : 12.92 * b;
+
+        return rgb(
+                constrain((int) Math.round(r * 255)),
+                constrain((int) Math.round(g * 255)),
+                constrain((int) Math.round(b * 255)));
+    }
+
     public static boolean satisfiesTextContrast(int color) {
         return satisfiesTextContrast(color, 0xFF000000);
     }
@@ -161,11 +271,11 @@ public final class ColorUtils {
     }
 
     public static int convertARGBtoRGB(int color) {
-        return Color.rgb(Color.red(color), Color.green(color), Color.blue(color));
+        return rgb(Color.red(color), Color.green(color), Color.blue(color));
     }
 
     public static int setAlphaForColor(int alpha, int color) {
-        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+        return argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
     }
 
     public static int getDarkerColor(int color) {
@@ -173,13 +283,14 @@ public final class ColorUtils {
         for (int i = 0; i < state.length; i++) {
             state[i] = (int) (state[i] / 1.2f);
         }
-        return Color.argb(Color.alpha(color), state[0], state[1], state[2]);
+        return argb(Color.alpha(color), state[0], state[1], state[2]);
     }
 
     public static int getColorWithAlpha(int color, int alpha) {
-        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+        return argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
     }
 
+    @SuppressLint("UseRequiresApi")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getAccentColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -198,8 +309,35 @@ public final class ColorUtils {
         return color;
     }
 
+    private static float constrain(float amount, float high) {
+        return amount < 0.0f ? 0.0f : Math.min(amount, high);
+    }
+
+    private static int constrain(int amount) {
+        return amount < 0 ? 0 : Math.min(amount, 255);
+    }
+
+    public static int rgb(int red, int green, int blue) {
+        return argb(0xff, red, green, blue);
+    }
+
+    public static int rgb(float red, float green, float blue) {
+        return argb(1.0f, red, green, blue);
+    }
+
+    public static int argb(int alpha, int red, int green, int blue) {
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    public static int argb(float alpha, float red, float green, float blue) {
+        return ((int) (alpha * 255.0f + 0.5f) << 24) |
+                ((int) (red   * 255.0f + 0.5f) << 16) |
+                ((int) (green * 255.0f + 0.5f) <<  8) |
+                (int) (blue  * 255.0f + 0.5f);
+    }
+
     public static String colorIntToString(int a, int r, int g, int b) {
-        return ColorUtils.colorIntToString(Color.argb(a, r, g, b));
+        return colorIntToString(argb(a, r, g, b));
     }
 
     public static String colorIntToString(int colorInt) {

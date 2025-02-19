@@ -4,12 +4,14 @@ import android.app.Application;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
 import org.blinksd.utils.DictionaryDB;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.MonetColors;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SpaceBarThemeUtils;
 import org.blinksd.utils.SuperDBHelper;
@@ -40,6 +42,7 @@ public final class SuperBoardApplication extends Application {
     private static TextUtilsCompat emojiUtils;
     private static List<ThemeHolder> themes;
     private static DictionaryDB dictDB;
+    private static MonetColors monetColors;
 
     public static DictionaryDB getDictDB() {
         return dictDB;
@@ -83,6 +86,10 @@ public final class SuperBoardApplication extends Application {
         } catch (Throwable t) {
             themes = new ArrayList<>();
         }
+    }
+
+    public static MonetColors getMonetColors() {
+        return monetColors;
     }
 
     public static IconThemeUtils getIconThemes() {
@@ -209,6 +216,11 @@ public final class SuperBoardApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            monetColors = new MonetColors();
+        }
+
         settingMap = new SettingMap();
         appDB = SuperDBHelper.getDefault(this);
 

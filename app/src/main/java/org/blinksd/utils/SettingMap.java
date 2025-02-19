@@ -74,7 +74,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_DICTIONARY_LIMIT = "dictionary_limit",
             SET_SHOW_BOTTOM_BAR = "show_bottom_bar",
             SET_ENABLE_LONG_PRESS_FAST_DELETE = "long_press_fast_delete",
-            SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc";
+            SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc",
+            SET_MONET_COLOR_SCHEME = "monet_color_scheme";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -120,8 +121,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putBottomBar(SET_SHOW_BOTTOM_BAR, SettingType.BOOL);
-        if (Build.VERSION.SDK_INT >= 31)
+        if (Build.VERSION.SDK_INT >= 31) {
             putTheming(SET_USE_MONET, SettingType.BOOL);
+            putTheming(SET_MONET_COLOR_SCHEME, SettingType.THEME_SELECTOR);
+        }
         putKbdLayout(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
         putGeneral(SET_ENFORCE_DETECT_CAPSLOCK, SettingType.BOOL, SET_DETECT_CAPSLOCK, true);
@@ -329,6 +332,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_KILL_BACKGROUND:
                 return Defaults.KILL_BACKGROUND;
             case SET_THEME_PRESET:
+            case SET_MONET_COLOR_SCHEME:
                 return Defaults.THEME_PRESET;
             case SET_KEY_ICON_SIZE_MULTIPLIER:
                 return Defaults.ICON_SIZE_MULTIPLIER;

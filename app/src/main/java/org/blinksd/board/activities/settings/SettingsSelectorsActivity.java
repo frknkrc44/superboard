@@ -326,7 +326,10 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             else
                 val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
         } else if (themeSelector) {
-            val = -1;
+            val = SettingMap.SET_MONET_COLOR_SCHEME.equals(tag)
+                    ? SuperBoardApplication.getMonetColors()
+                        .getIndexByKey(SuperDBHelper.getStringOrDefault(tag))
+                    : -1;
         } else {
             val = SuperDBHelper.getIntOrDefault(tag);
         }
@@ -361,10 +364,18 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                     String index = SuperBoardApplication.getSpaceBarStyles().getKeyByIndex(tagVal);
                     getAppDB().putString(tag, index, true);
                 } else if (themeSelector) {
-                    List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
-                    ThemeUtils.ThemeHolder theme = themes.get(tagVal);
-                    theme.applyTheme();
-                    recreate();
+                    switch (tag) {
+                        case SettingMap.SET_MONET_COLOR_SCHEME:
+                            String index = SuperBoardApplication.getMonetColors().getKeyByIndex(tagVal);
+                            getAppDB().putString(tag, index, true);
+                            break;
+                        case SettingMap.SET_THEME_PRESET:
+                            List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
+                            ThemeUtils.ThemeHolder theme = themes.get(tagVal);
+                            theme.applyTheme();
+                            recreate();
+                            break;
+                    }
                 } else getAppDB().putInteger(tag, tagVal, true);
                 restartKeyboard();
             }

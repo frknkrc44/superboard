@@ -56,6 +56,7 @@
 	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
 	<string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
 	<string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+	<string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
 
 	<string name="settings_return_defaults" translatable="false">(↻)</string>
 	
@@ -121,6 +122,10 @@
 	<string name="settings_category_popup">Popup</string>
 	<string name="settings_category_top_bar">Top Bar</string>
 	<string name="settings_category_bottom_bar">Bottom Bar</string>
+
+	<!-- Settings monet color scheme resources -->
+	<string name="settings_monet_scheme_default">Default</string>
+	<string name="settings_monet_scheme_amoled" translatable="false">AMOLED</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
@@ -172,6 +177,12 @@
 		<item>@string/settings_category_bottom_bar</item>
 		<item>@string/settings_category_theming</item>
 		<item>@string/settings_category_theming_adv</item>
+	</string-array>
+
+	<string-array name="settings_monet_color_schemes" translatable="false"
+		tools:keep="@array/settings_monet_color_schemes">
+		<item>@string/settings_monet_scheme_default</item>
+		<item>@string/settings_monet_scheme_amoled</item>
 	</string-array>
 
 	<string-array name="settings_key_bg_type"
