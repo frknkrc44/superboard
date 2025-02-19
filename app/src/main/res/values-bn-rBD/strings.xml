@@ -50,6 +50,7 @@
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
     <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">ছবি</string>
@@ -103,6 +104,8 @@
     <string name="settings_category_popup">Popup</string>
     <string name="settings_category_top_bar">Top Bar</string>
     <string name="settings_category_bottom_bar">Bottom Bar</string>
+    <!-- Settings monet color scheme resources -->
+    <string name="settings_monet_scheme_default">ডিফল্ট</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>নিয়মিত</item>
