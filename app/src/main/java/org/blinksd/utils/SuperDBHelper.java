@@ -2,6 +2,7 @@ package org.blinksd.utils;
 
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.utils.DensityUtils.mpInt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -58,7 +59,7 @@ public final class SuperDBHelper {
     }
 
     public static int getFloatPercentOrDefault(String key) {
-        return DensityUtils.mpInt(DensityUtils.getFloatNumberFromInt(getIntOrDefault(key)));
+        return mpInt(getFloatedIntOrDefault(key));
     }
 
     public static float getFloatedIntOrDefault(String key) {

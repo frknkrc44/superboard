@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
 
 public abstract class SettingsBaseActivity extends BaseActivity {
     LinearLayout main;
+    FrameLayout mPreviewHolder;
     MainTabListAdapter mTabListAdapter;
     FrameLayout mTabsHolder;
     CustomActionBar actionBar;

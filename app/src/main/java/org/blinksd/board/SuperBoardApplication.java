@@ -176,19 +176,6 @@ public final class SuperBoardApplication extends Application {
         }
     }
 
-    /**
-     * Returns human readable language name list
-     */
-    public static List<String> getLanguageHRNames() {
-        List<String> langKeys = new ArrayList<>(languageCache.keySet());
-        List<String> out = new ArrayList<>();
-        for (String key : langKeys) {
-            Language lang = languageCache.get(key);
-            if (lang != null) out.add(lang.label);
-        }
-        return out;
-    }
-
     public static List<String> getLanguageTypes() {
         List<String> langKeys = new ArrayList<>(languageCache.keySet());
         List<String> out = new ArrayList<>();

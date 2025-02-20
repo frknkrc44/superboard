@@ -231,7 +231,7 @@ public final class InputService extends InputMethodService implements
 
         showEmojiView(false);
         showClipboardView(false);
-        showLanguegeSelectorView(false);
+        showLanguageSelectorView(false);
 
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(null, null);
@@ -396,7 +396,7 @@ public final class InputService extends InputMethodService implements
 
         if (bottomKeyboardBarView == null) {
             bottomKeyboardBarView = new BottomKeyboardBarView(superBoardView, lang -> {
-                showLanguegeSelectorView(false);
+                showLanguageSelectorView(false);
 
                 if (!lang.equals(currentLanguageCache)) {
                     SuperBoardApplication.getAppDB().putString(SettingMap.SET_KEYBOARD_LANG_SELECT, lang.language, true);
@@ -501,7 +501,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.setLongPressMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_LONGPRESS_DURATION));
             superBoardView.setKeyVibrateDuration(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
             superBoardView.setKeysTextColor(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-            superBoardView.setKeysTextSize(mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+            superBoardView.setKeysTextSize(SuperDBHelper.getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             superBoardView.setKeysTextType(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
             superBoardView.setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
             superBoardView.setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
@@ -641,7 +641,10 @@ public final class InputService extends InputMethodService implements
 
     @SuppressLint("ResourceType")
     private void adjustNavbar(int c) {
-        int baseHeight = superBoardView.getKeyboardHeight();
+        int kbdPadding = SuperDBHelper.getFloatPercentOrDefault(SettingMap.SET_KEYBOARD_PADDING);
+        superBoardView.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
+
+        int baseHeight = superBoardView.getKeyboardHeight() + (kbdPadding * 2);
         if (suggestionLayout.getVisibility() == View.VISIBLE) {
             baseHeight += suggestionLayout.getLayoutParams().height;
         }
@@ -725,7 +728,7 @@ public final class InputService extends InputMethodService implements
         }
         if (clipboardView.isShown() != value) {
             showEmojiView(false);
-            showLanguegeSelectorView(false);
+            showLanguageSelectorView(false);
 
             if (value) {
                 clipboardView.reTheme();
@@ -736,7 +739,7 @@ public final class InputService extends InputMethodService implements
         }
     }
 
-    private void showLanguegeSelectorView(boolean value) {
+    private void showLanguageSelectorView(boolean value) {
         if (bottomKeyboardBarView == null) {
             return;
         }
@@ -838,7 +841,7 @@ public final class InputService extends InputMethodService implements
                 }
 
                 if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_3D_MODE && isLanguageSelectorViewShown()) {
-                    showLanguegeSelectorView(false);
+                    showLanguageSelectorView(false);
                 }
 
                 switch (key.getNormalPressEvent().first) {
@@ -865,7 +868,7 @@ public final class InputService extends InputMethodService implements
                         showEmojiView(!emojiView.isShown());
                         return;
                     case KeyEvent.KEYCODE_3D_MODE: // language selector menu
-                        showLanguegeSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
+                        showLanguageSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
                         return;
                 }
             }

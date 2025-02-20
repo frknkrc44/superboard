@@ -79,7 +79,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private float textSize = DensityUtils.mp(1.25f);
     protected Drawable keyBackground = null;
     private int selected = 0;
-    private int heightPercent = 40;
+    private float heightPercent = 40;
     private int widthPercent = 100;
     protected int shadowRadius = 0;
     private int keyTextColor = 0xFFDEDEDE;
@@ -131,6 +131,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         setLayoutParams(new LayoutParams(-1, -1));
         createEmptyLayout();
         setKeyboardHeight(heightPercent);
+        setForegroundGravity(CENTER);
     }
 
     /** @noinspection EmptyMethod*/
@@ -163,7 +164,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return getLayoutParams().height;
     }
 
-    public final void setKeyboardHeight(int percent) {
+    public final void setKeyboardHeight(float percent) {
         heightPercent = percent;
         getLayoutParams().height = DensityUtils.hpInt(percent);
         if (getChildCount() > 0) {
@@ -177,7 +178,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         setEnabledLayout(x);
     }
 
-    public final int getKeyboardHeightPercent() {
+    public final float getKeyboardHeightPercent() {
         return heightPercent;
     }
 

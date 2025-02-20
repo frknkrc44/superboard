@@ -76,7 +76,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_SHOW_BOTTOM_BAR = "show_bottom_bar",
             SET_ENABLE_LONG_PRESS_FAST_DELETE = "long_press_fast_delete",
             SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc",
-            SET_MONET_COLOR_SCHEME = "monet_color_scheme";
+            SET_MONET_COLOR_SCHEME = "monet_color_scheme",
+            SET_KEYBOARD_PADDING = "keyboard_padding";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -85,6 +86,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
         putGeneral(SET_DICTIONARY_LIMIT, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
+        putKbdLayout(SET_KEYBOARD_PADDING, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_PADDING, SettingType.FLOAT_NUMBER);
@@ -236,6 +238,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         switch (key) {
             case SET_KEYBOARD_BGBLUR:
                 return Defaults.KEYBOARD_BACKGROUND_BLUR;
+            case SET_KEYBOARD_PADDING:
+                return Defaults.KEYBOARD_PADDING;
             case SET_KEY_VIBRATE_DURATION:
                 return Defaults.KEY_VIBRATE_DURATION;
             case SET_KEYBOARD_HEIGHT:
@@ -357,44 +361,45 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
 
     public int[] getMinMaxNumbers(final String key) {
-        int[] nums = new int[2];
+        int[] minMaxNumbers = new int[2];
         switch (key) {
             case SET_KEYBOARD_BGBLUR:
             case SET_KEY_PADDING:
             case SET_KEY_SHADOWSIZE:
-                nums[1] = Constants.MAX_OTHER_VAL;
+            case SET_KEYBOARD_PADDING:
+                minMaxNumbers[1] = Constants.MAX_OTHER_VAL;
                 break;
             case SET_KEY_VIBRATE_DURATION:
-                nums[1] = Constants.MAX_VIBRATION_DURATION;
+                minMaxNumbers[1] = Constants.MAX_VIBRATION_DURATION;
                 break;
             case SET_DICTIONARY_LIMIT:
-                nums[0] = Constants.MIN_DICT_LIMIT;
-                nums[1] = Constants.MAX_DICT_LIMIT;
+                minMaxNumbers[0] = Constants.MIN_DICT_LIMIT;
+                minMaxNumbers[1] = Constants.MAX_DICT_LIMIT;
                 break;
             case SET_KEYBOARD_HEIGHT:
-                nums[0] = Constants.MIN_KEYBOARD_HEIGHT;
-                nums[1] = Constants.MAX_KEYBOARD_HEIGHT;
+                minMaxNumbers[0] = Constants.MIN_KEYBOARD_HEIGHT;
+                minMaxNumbers[1] = Constants.MAX_KEYBOARD_HEIGHT;
                 break;
             case SET_KEY_LONGPRESS_DURATION:
-                nums[0] = Constants.MIN_LONG_PRESS_DURATION;
-                nums[1] = Constants.MAX_LONG_PRESS_DURATION;
+                minMaxNumbers[0] = Constants.MIN_LONG_PRESS_DURATION;
+                minMaxNumbers[1] = Constants.MAX_LONG_PRESS_DURATION;
                 break;
             case SET_KEY_ICON_SIZE_MULTIPLIER:
-                nums[0] = Constants.MIN_ICON_MULTI;
-                nums[1] = Constants.MAX_ICON_MULTI;
+                minMaxNumbers[0] = Constants.MIN_ICON_MULTI;
+                minMaxNumbers[1] = Constants.MAX_ICON_MULTI;
                 break;
             case SET_KEY_RADIUS:
-                nums[1] = Constants.MAX_RADIUS;
+                minMaxNumbers[1] = Constants.MAX_RADIUS;
                 break;
             case SET_KEY_TEXTSIZE:
-                nums[0] = Constants.MIN_TEXT_SIZE;
-                nums[1] = Constants.MAX_TEXT_SIZE;
+                minMaxNumbers[0] = Constants.MIN_TEXT_SIZE;
+                minMaxNumbers[1] = Constants.MAX_TEXT_SIZE;
                 break;
             case SET_KEY_INDICATOR_HEIGHT:
-                nums[1] = Constants.MAX_INDICATOR_HEIGHT;
+                minMaxNumbers[1] = Constants.MAX_INDICATOR_HEIGHT;
                 break;
         }
-        return nums;
+        return minMaxNumbers;
     }
 
     public boolean getSwitchEnabledFromDependency(String settingName) {

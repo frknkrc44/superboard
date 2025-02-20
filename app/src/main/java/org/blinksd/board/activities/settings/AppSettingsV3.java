@@ -2,6 +2,7 @@ package org.blinksd.board.activities.settings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,6 +27,7 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 
 import java.io.File;
 
@@ -44,22 +47,25 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
     }
 
     private void createPreviewView() {
-        FrameLayout ll = (FrameLayout) LayoutCreator.getHFilledView(FrameLayout.class, LinearLayout.class, this);
+        LinearLayout mainHolder = (LinearLayout) LayoutCreator.getHFilledView(LinearLayout.class, LinearLayout.class, this);
+        mainHolder.setGravity(Gravity.CENTER);
+        mPreviewHolder = (FrameLayout) LayoutCreator.getHFilledView(FrameLayout.class, LinearLayout.class, this);
+        mPreviewHolder.setForegroundGravity(Gravity.CENTER);
         kbdPreview = new PreviewBoard(this);
-        int popupHeight = 12;
         kbdPreview.addRow(0, new String[]{"1", "2", "3", "4"});
         kbdPreview.getKey(0, 0, 0).setSubText("½");
         for (int i = 0; i < 4; i++) kbdPreview.getKey(0, 0, i).setId(i);
         kbdPreview.createEmptyLayout();
         kbdPreview.setEnabledLayout(0);
-        kbdPreview.setKeyboardHeight(popupHeight);
-        kbdPreview.setKeysPadding(DensityUtils.mpInt(1));
+        kbdPreview.setKeysPadding(mpInt(1));
+        kbdPreview.setKeyboardHeight(12);
         backgroundImageView = new ImageView(this);
         backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        backgroundImageView.setLayoutParams(new FrameLayout.LayoutParams(-1, DensityUtils.hpInt(popupHeight)));
-        ll.addView(backgroundImageView);
-        ll.addView(kbdPreview);
-        main.addView(ll);
+        backgroundImageView.setLayoutParams(new FrameLayout.LayoutParams(-1, -2));
+        mPreviewHolder.addView(backgroundImageView);
+        mPreviewHolder.addView(kbdPreview);
+        mainHolder.addView(mPreviewHolder);
+        main.addView(mainHolder);
     }
 
     private void createAppBarView() {
@@ -132,6 +138,17 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
         kbdPreview.setKeyVibrateDuration(getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
         kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+
+        float kbdPadPercent = SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEYBOARD_PADDING);
+        float kbdHeightPercent = 12 + (kbdPadPercent * 2);
+
+        ((View) mPreviewHolder.getParent()).getLayoutParams().height = DensityUtils.hpInt(kbdHeightPercent);
+        kbdPreview.setKeyboardHeight(kbdHeightPercent - kbdPadPercent);
+        kbdPreview.getLayoutParams().height = -1;
+
+        int kbdPadding = mpInt(kbdPadPercent);
+        kbdPreview.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
+
         try {
             SuperBoardApplication.clearCustomFont();
             SuperBoardApplication.getCustomFont();
