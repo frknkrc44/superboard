@@ -50,6 +50,7 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
+@SuppressWarnings({"unchecked", "ConstantConditions"})
 public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     private static final int TAG1 = R.id.key_normal_press, TAG2 = R.id.key_long_press;
 

@@ -17,7 +17,6 @@
 package org.blinksd.color_extractor.palette.quantizers;
 
 import android.graphics.Color;
-import android.util.TimingLogger;
 
 import org.blinksd.color_extractor.palette.Palette;
 import org.blinksd.utils.ColorUtils;
@@ -60,7 +59,6 @@ public final class ColorCutQuantizer implements Quantizer {
     int[] mColors;
     int[] mHistogram;
     List<Palette.Swatch> mQuantizedColors;
-    TimingLogger mTimingLogger;
 
     private final float[] mTempHsl = new float[3];
 
@@ -71,8 +69,6 @@ public final class ColorCutQuantizer implements Quantizer {
      * @param maxColors The maximum number of colors that should be in the result palette.
      */
     public void quantize(final int[] pixels, final int maxColors) {
-        mTimingLogger = LOG_TIMINGS ? new TimingLogger(LOG_TAG, "Creation") : null;
-
         final int[] hist = mHistogram = new int[1 << (QUANTIZE_WORD_WIDTH * 3)];
         for (int i = 0; i < pixels.length; i++) {
             final int quantizedColor = quantizeFromRgb888(pixels[i]);
@@ -80,10 +76,6 @@ public final class ColorCutQuantizer implements Quantizer {
             pixels[i] = quantizedColor;
             // And update the histogram
             hist[quantizedColor]++;
-        }
-
-        if (LOG_TIMINGS) {
-            mTimingLogger.addSplit("Histogram created");
         }
 
         // Now let's count the number of distinct colors
@@ -95,10 +87,6 @@ public final class ColorCutQuantizer implements Quantizer {
             }
         }
 
-        if (LOG_TIMINGS) {
-            mTimingLogger.addSplit("Filtered colors and distinct colors counted");
-        }
-
         // Now lets go through create an array consisting of only distinct colors
         final int[] colors = mColors = new int[distinctColorCount];
         int distinctColorIndex = 0;
@@ -108,29 +96,15 @@ public final class ColorCutQuantizer implements Quantizer {
             }
         }
 
-        if (LOG_TIMINGS) {
-            mTimingLogger.addSplit("Distinct colors copied into array");
-        }
-
         if (distinctColorCount <= maxColors) {
             // The image has fewer colors than the maximum requested, so just return the colors
             mQuantizedColors = new ArrayList<>();
             for (int color : colors) {
                 mQuantizedColors.add(new Palette.Swatch(approximateToRgb888(color), hist[color]));
             }
-
-            if (LOG_TIMINGS) {
-                mTimingLogger.addSplit("Too few colors present. Copied to Swatches");
-                mTimingLogger.dumpToLog();
-            }
         } else {
             // We need use quantization to reduce the number of colors
             mQuantizedColors = quantizePixels(maxColors);
-
-            if (LOG_TIMINGS) {
-                mTimingLogger.addSplit("Quantized colors computed");
-                mTimingLogger.dumpToLog();
-            }
         }
     }
 
@@ -174,15 +148,9 @@ public final class ColorCutQuantizer implements Quantizer {
                 // First split the box, and offer the result
                 queue.offer(vbox.splitBox());
 
-                if (LOG_TIMINGS) {
-                    mTimingLogger.addSplit("Box split");
-                }
                 // Then offer the box back
                 queue.offer(vbox);
             } else {
-                if (LOG_TIMINGS) {
-                    mTimingLogger.addSplit("All boxes split");
-                }
                 // If we get here then there are no more boxes to split, so return
                 return;
             }

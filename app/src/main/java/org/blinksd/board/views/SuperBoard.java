@@ -558,6 +558,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         onKeyboardEvent(v);
     }
 
+    @SuppressLint("MissingPermission")
     public final void vibrate() {
         if (vibrateDuration > 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
