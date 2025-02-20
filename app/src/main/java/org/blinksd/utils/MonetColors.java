@@ -7,13 +7,17 @@ import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.board.services.KeyboardThemeApi;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +26,7 @@ import java.util.Map;
 public class MonetColors extends LinkedHashMap<String, int[][]> {
     static final String COLOR_SCHEME_DEFAULT = "default";
     static final String COLOR_SCHEME_AMOLED = "amoled";
+    private WallpaperManager wallpaperManager;
 
     private static final int[] LIGHT_DEF_MONET_SCHEME = {
             android.R.color.system_neutral1_900,  /* Key text color */
@@ -136,31 +141,30 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         return getColorFromIndex(7);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @SuppressLint("MissingPermission")
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
     private int getColorCompat(int resId) {
-        if (colorExtractor == null) {
+        Context context = SuperBoardApplication.getApplication();
+        if (wallpaperManager == null) {
             try {
-                Context context = SuperBoardApplication.getApplication();
-                if (isPermGranted(context)) {
-                    WallpaperManager wm = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
-                    Drawable wallpaperDrawable;
-                    if (wm.getWallpaperInfo() != null) {
-                        wallpaperDrawable = wm.getWallpaperInfo().loadThumbnail(context.getPackageManager());
-                    } else {
-                        wallpaperDrawable = wm.getDrawable();
-                    }
-
-                    if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
-                        colorExtractor = ColorExtractor.extractFromBitmap(
-                                bitmapDrawable.getBitmap(),
-                                ColorExtractor.QuantizerType.VAR_K_MEANS,
-                                128,
-                                15
-                        );
-                    }
-                }
+                wallpaperManager = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
             } catch (Throwable ignored) {}
+
+            BroadcastReceiver mOnWallpaperChangedListener = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    colorExtractor = null;
+                    KeyboardThemeApi.restartKeyboard();
+                }
+            };
+
+            SuperBoardApplication.getApplication().registerReceiver(
+                    mOnWallpaperChangedListener,
+                    new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)
+            );
+        }
+
+        if (colorExtractor == null) {
+            reloadColors(context);
         }
 
         if (colorExtractor == null) {
@@ -198,6 +202,30 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
             default -> throw new RuntimeException("Unsupported res " + resId);
         };
 
+    }
+
+    @SuppressLint("MissingPermission")
+    private void reloadColors(Context context) {
+        try {
+            if (isPermGranted(context)) {
+                Drawable wallpaperDrawable;
+                if (wallpaperManager.getWallpaperInfo() != null) {
+                    wallpaperDrawable = wallpaperManager.getWallpaperInfo().loadThumbnail(context.getPackageManager());
+                } else {
+                    wallpaperDrawable = wallpaperManager.getDrawable();
+                }
+                wallpaperManager.forgetLoadedWallpaper();
+
+                if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
+                    colorExtractor = ColorExtractor.extractFromBitmap(
+                            bitmapDrawable.getBitmap(),
+                            ColorExtractor.QuantizerType.VAR_K_MEANS,
+                            128,
+                            15
+                    );
+                }
+            }
+        } catch (Throwable ignored) {}
     }
 
     private int getColorFromIndex(int index) {

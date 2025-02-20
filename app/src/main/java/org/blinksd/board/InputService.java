@@ -666,7 +666,11 @@ public final class InputService extends InputMethodService implements
                     w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
-                    int color = ColorUtils.convertARGBtoRGB(c);
+
+                    boolean monetEnabled = SuperBoardApplication.getMonetColors().isMonetEnabled();
+                    int color = monetEnabled
+                            ? SuperBoardApplication.getMonetColors().getKeyboardColor()
+                            : ColorUtils.convertARGBtoRGB(c);
                     w.setNavigationBarColor(color);
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
