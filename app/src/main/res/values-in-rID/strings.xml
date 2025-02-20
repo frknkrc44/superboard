@@ -52,6 +52,7 @@
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
     <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
+    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
