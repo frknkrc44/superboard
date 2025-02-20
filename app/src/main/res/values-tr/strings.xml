@@ -30,6 +30,7 @@
 	<string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Kopyalama panosunu etkinleştir</string>
 	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Sistem renklerini kullan (beta)</string>
+	<string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Duvar kağıdından sistem renklerini algıla (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
 	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Büyük karakter durumunu otomatik algılamaya zorla</string>
 	<string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Editör eylemine zorla (bazı uygulamalarda enter tuşunu düzeltir ancak sorun da yapabilir)</string>
@@ -55,6 +56,7 @@
 	<string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Noktalama işaretinden sonra boşluk bırak</string>
 	<string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Sistem rengi şeması</string>
 	<string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Klavye içe girintisi</string>
+	<string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Fotoğraf</string>

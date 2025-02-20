@@ -7,6 +7,7 @@ public final class Defaults {
     public static final int KEYBOARD_HEIGHT = 36;
     public static final int KEYBOARD_BACKGROUND_BLUR = 0;
     public static final int KEYBOARD_PADDING = 8;
+    public static final int COMPAT_MONET_MAX_COLORS = 12;
 
     public static final int KEYBOARD_BACKGROUND_COLOR = 0xFF282D31;
     public static final int KEY_BACKGROUND_COLOR = 0xFF474B4C;

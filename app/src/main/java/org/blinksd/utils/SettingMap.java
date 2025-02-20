@@ -77,7 +77,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_ENABLE_LONG_PRESS_FAST_DELETE = "long_press_fast_delete",
             SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc",
             SET_MONET_COLOR_SCHEME = "monet_color_scheme",
-            SET_KEYBOARD_PADDING = "keyboard_padding";
+            SET_KEYBOARD_PADDING = "keyboard_padding",
+            SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -128,6 +129,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             putTheming(SET_USE_MONET, SettingType.BOOL, SET_USE_COMPAT_MONET, false);
         }
         putTheming(SET_USE_COMPAT_MONET, SettingType.BOOL, SET_USE_MONET, false);
+        putTheming(SET_COMPAT_MONET_MAX_COLORS, SettingType.MM_DECIMAL_NUMBER);
         putTheming(SET_MONET_COLOR_SCHEME, SettingType.THEME_SELECTOR);
         putKbdLayout(SET_ENABLE_POPUP_PREVIEW, SettingType.BOOL);
         putGeneral(SET_DETECT_CAPSLOCK, SettingType.BOOL);
@@ -355,6 +357,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.LONG_PRESS_FAST_DELETE;
             case SET_INSERT_SPACE_AFTER_PUNC:
                 return Defaults.INSERT_SPACE_AFTER_PUNC;
+            case SET_COMPAT_MONET_MAX_COLORS:
+                return Defaults.COMPAT_MONET_MAX_COLORS;
             default:
                 return null;
         }
@@ -397,6 +401,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 break;
             case SET_KEY_INDICATOR_HEIGHT:
                 minMaxNumbers[1] = Constants.MAX_INDICATOR_HEIGHT;
+                break;
+            case SET_COMPAT_MONET_MAX_COLORS:
+                minMaxNumbers[0] = Constants.MIN_COMPAT_MONET_COLOR;
+                minMaxNumbers[1] = Constants.MAX_COMPAT_MONET_COLOR;
                 break;
         }
         return minMaxNumbers;

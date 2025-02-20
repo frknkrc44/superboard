@@ -16,5 +16,7 @@ public final class Constants {
     static final int MIN_DICT_LIMIT = 3;
     static final int MAX_DICT_LIMIT = 50;
     static final int MAX_INDICATOR_HEIGHT = 20;
+    static final int MIN_COMPAT_MONET_COLOR = 6;
+    static final int MAX_COMPAT_MONET_COLOR = 128;
 
 }

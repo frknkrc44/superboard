@@ -269,6 +269,9 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             tv.setText(isFloat
                     ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
                     : String.valueOf(tagVal));
+            if (SettingMap.SET_COMPAT_MONET_MAX_COLORS.equals(tag)) {
+                SuperBoardApplication.getMonetColors().reloadColors(p1.getContext());
+            }
             restartKeyboard();
             if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
                 recreate();
@@ -284,6 +287,9 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 tv.setText(isFloat
                         ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
                         : String.valueOf(tagVal));
+                if (SettingMap.SET_COMPAT_MONET_MAX_COLORS.equals(tag)) {
+                    SuperBoardApplication.getMonetColors().reloadColors(p1.getContext());
+                }
                 restartKeyboard();
                 if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
                     recreate();

@@ -205,7 +205,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     }
 
     @SuppressLint("MissingPermission")
-    private void reloadColors(Context context) {
+    public void reloadColors(Context context) {
         try {
             if (isPermGranted(context)) {
                 Drawable wallpaperDrawable;
@@ -220,7 +220,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                     colorExtractor = ColorExtractor.extractFromBitmap(
                             bitmapDrawable.getBitmap(),
                             ColorExtractor.QuantizerType.VAR_K_MEANS,
-                            128,
+                            SuperDBHelper.getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
                             15
                     );
                 }
