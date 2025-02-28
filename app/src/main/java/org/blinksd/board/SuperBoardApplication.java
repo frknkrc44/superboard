@@ -172,9 +172,8 @@ public final class SuperBoardApplication extends Application {
     }
 
     public synchronized static Language getCurrentKeyboardLanguage(boolean onlyUser) {
-        String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
         return getKeyboardLanguage(
-                getAppDB().getString(key, (String) getSettings().getDefaults(key)), onlyUser);
+                SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT), onlyUser);
     }
 
     public synchronized static Language getKeyboardLanguage(String name) {
