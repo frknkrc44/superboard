@@ -48,7 +48,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             themeCheckMandatoryKeys(obj);
             if (!isThemeImported(obj.getString("code"))) {
                 importThemeInternal(obj);
-                SuperBoardApplication.reloadThemeCache();
+                SuperBoardApplication.clearThemeCache();
                 return THEME_IMPORT_SUCCESS;
             }
             return THEME_IMPORT_FAILED_EXISTS;
@@ -86,7 +86,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             JSONObject obj = new JSONObject(jsonStr);
             themeCheckMandatoryKeys(obj);
             importThemeInternal(obj);
-            SuperBoardApplication.reloadThemeCache();
+            SuperBoardApplication.clearThemeCache();
             return THEME_IMPORT_SUCCESS;
         } catch (JSONException e) {
             // do nothing
@@ -192,7 +192,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             fos.write(langPkgStr.getBytes());
             fos.flush();
             fos.close();
-            SuperBoardApplication.reloadLanguageCache();
+            SuperBoardApplication.clearLanguageCache();
             return LANG_PKG_IMPORT_SUCCESS;
         } catch (Throwable t) {
             // do nothing

@@ -1,5 +1,6 @@
 package org.blinksd.board;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -26,16 +27,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressLint("StaticFieldLeak")
 public final class SuperBoardApplication extends Application {
-
     public static final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private static HashMap<String, Language> languageCache = null;
-    private static SuperMiniDB appDB = null;
-    private static SuperBoardApplication appContext = null;
-    private static SettingMap settingMap = null;
-    private static Typeface customFont = null;
-    private static File fontFile = null;
-    private static String fontPath = null;
+    private static HashMap<String, Language> languageCache;
+    private static SuperMiniDB appDB;
+    private static SuperBoardApplication appContext;
+    private static SettingMap settingMap;
+    private static Typeface customFont;
+    private static File fontFile;
+    private static File bgFile;
     private static IconThemeUtils icons;
     private static SpaceBarThemeUtils spaceBars;
     private static TextUtilsCompat emojiUtils;
@@ -43,70 +44,101 @@ public final class SuperBoardApplication extends Application {
     private static DictionaryDB dictDB;
     private static MonetColors monetColors;
 
-    public static DictionaryDB getDictDB() {
+    public synchronized static DictionaryDB getDictDB() {
+        if (dictDB == null) {
+            dictDB = new DictionaryDB(getApplication());
+        }
+
         return dictDB;
     }
 
-    public static boolean isDictDBReady() {
-        return dictDB != null && dictDB.isReady;
+    public synchronized static boolean isDictDBReady() {
+        return getDictDB() != null && getDictDB().isReady;
     }
 
-    public static SuperBoardApplication getApplication() {
+    public synchronized static SuperBoardApplication getApplication() {
         return appContext;
     }
 
-    public static Resources getAppResources() {
+    public synchronized static Resources getAppResources() {
         return getApplication().getResources();
     }
 
-    public static Configuration getResConfiguration() {
+    public synchronized static Configuration getResConfiguration() {
         return getAppResources().getConfiguration();
     }
 
-    public static SuperMiniDB getAppDB() {
+    public synchronized static SuperMiniDB getAppDB() {
+        if (appDB == null) {
+            appDB = SuperDBHelper.getDefault(getApplication());
+        }
+
         return appDB;
     }
 
-    public static File getAppFilesDir() {
+    public synchronized static File getAppFilesDir() {
         return getApplication().getFilesDir();
     }
 
-    public static HashMap<String, Language> getKeyboardLanguageList() {
+    public synchronized static void clearLanguageCache() {
+        languageCache = null;
+    }
+
+    public synchronized static HashMap<String, Language> getKeyboardLanguageList() {
+        if (languageCache == null) {
+            try {
+                languageCache = LayoutUtils.getLanguageList(getApplication());
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         return languageCache;
     }
 
-    public static List<ThemeHolder> getThemes() {
+    public synchronized static void clearThemeCache() {
+        themes = null;
+    }
+
+    public synchronized static List<ThemeHolder> getThemes() {
+        if (themes == null) {
+            try {
+                themes = ThemeUtils.getThemes();
+            } catch (Throwable t) {
+                themes = new ArrayList<>();
+            }
+        }
+
         return themes;
     }
 
-    public static void reloadThemeCache() {
-        try {
-            themes = ThemeUtils.getThemes();
-        } catch (Throwable t) {
-            themes = new ArrayList<>();
+    public synchronized static MonetColors getMonetColors() {
+        if (monetColors == null) {
+            monetColors = new MonetColors();
         }
-    }
 
-    public static MonetColors getMonetColors() {
         return monetColors;
     }
 
-    public static IconThemeUtils getIconThemes() {
+    public synchronized static IconThemeUtils getIconThemes() {
+        if (icons == null) {
+            icons = new IconThemeUtils(getApplication());
+        }
+
         return icons;
     }
 
-    public static SpaceBarThemeUtils getSpaceBarStyles() {
+    public synchronized static SpaceBarThemeUtils getSpaceBarStyles() {
         return spaceBars;
     }
 
-    public static TextUtilsCompat getTextUtils() {
+    public synchronized static TextUtilsCompat getTextUtils() {
         return emojiUtils;
     }
 
-    public static Typeface getCustomFont() {
+    public synchronized static Typeface getCustomFont() {
         if (customFont == null) {
             try {
-                if (fontFile == null) fontFile = new File(fontPath);
                 if (fontFile.exists()) customFont = Typeface.createFromFile(fontFile);
                 else throw new Throwable();
             } catch (Throwable t) {
@@ -119,30 +151,27 @@ public final class SuperBoardApplication extends Application {
         return customFont;
     }
 
-    public static void clearCustomFont() {
-        File newFile = new File(fontPath);
-        if (fontFile == null || fontFile.lastModified() != newFile.lastModified()) {
-            customFont = null;
-        }
+    public synchronized static void clearCustomFont() {
+        customFont = null;
     }
 
-    public static Language getCurrentKeyboardLanguage() {
+    public synchronized static Language getCurrentKeyboardLanguage() {
         return getCurrentKeyboardLanguage(false);
     }
 
-    public static Language getCurrentKeyboardLanguage(boolean onlyUser) {
+    public synchronized static Language getCurrentKeyboardLanguage(boolean onlyUser) {
         String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
         return getKeyboardLanguage(
-                appDB.getString(key, (String) settingMap.getDefaults(key)), onlyUser);
+                getAppDB().getString(key, (String) getSettings().getDefaults(key)), onlyUser);
     }
 
-    public static Language getKeyboardLanguage(String name) {
+    public synchronized static Language getKeyboardLanguage(String name) {
         return getKeyboardLanguage(name, false);
     }
 
-    public static Language getKeyboardLanguage(String name, boolean onlyUser) {
-        Language ret = languageCache.containsKey(name)
-                ? Objects.requireNonNull(languageCache.get(name))
+    public synchronized static Language getKeyboardLanguage(String name, boolean onlyUser) {
+        Language ret = getKeyboardLanguageList().containsKey(name)
+                ? Objects.requireNonNull(getKeyboardLanguageList().get(name))
                 : LayoutUtils.emptyLanguage;
 
         if ((!ret.userLanguage) && onlyUser) {
@@ -152,10 +181,10 @@ public final class SuperBoardApplication extends Application {
         return ret;
     }
 
-    public static void getNextLanguage() {
-        ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(languageCache);
+    public synchronized static void getNextLanguage() {
+        ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(getKeyboardLanguageList());
         String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
-        String sel = appDB.getString(key, (String) settingMap.getDefaults(key));
+        String sel = getAppDB().getString(key, (String) getSettings().getDefaults(key));
         if (!sel.isEmpty()) {
             int index = -1;
             for (int i = 0; i < ll.size(); i++) {
@@ -166,21 +195,21 @@ public final class SuperBoardApplication extends Application {
             }
             if (index >= 0) {
                 index = (index + 1) % ll.size();
-                Language l = languageCache.get(ll.get(index));
+                Language l = getKeyboardLanguageList().get(ll.get(index));
                 if (l == null) {
                     return;
                 }
-                appDB.putString(key, l.language);
-                appDB.writeAll();
+                getAppDB().putString(key, l.language);
+                getAppDB().writeAll();
             }
         }
     }
 
-    public static List<String> getLanguageTypes() {
-        List<String> langKeys = new ArrayList<>(languageCache.keySet());
+    public synchronized static List<String> getLanguageTypes() {
+        List<String> langKeys = new ArrayList<>(getKeyboardLanguageList().keySet());
         List<String> out = new ArrayList<>();
         for (String key : langKeys) {
-            Language lang = languageCache.get(key);
+            Language lang = getKeyboardLanguageList().get(key);
             if (lang != null) {
                 String name = lang.language.split("_")[0].toLowerCase();
                 if (!out.contains(name))
@@ -190,39 +219,29 @@ public final class SuperBoardApplication extends Application {
         return out;
     }
 
-    public static SettingMap getSettings() {
+    public synchronized static SettingMap getSettings() {
+        if (settingMap == null) {
+            settingMap = new SettingMap();
+        }
+
         return settingMap;
     }
 
-    public static File getBackgroundImageFile() {
-        return new File(getApplication().getFilesDir(), "bg");
+    public synchronized static File getBackgroundImageFile() {
+        return bgFile;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = this;
-        monetColors = new MonetColors();
-        settingMap = new SettingMap();
-        appDB = SuperDBHelper.getDefault(this);
 
-        fontPath = getApplication().getExternalCacheDir() + "/font.ttf";
+        bgFile = new File(getFilesDir(), "bg");
+        fontFile = new File(getExternalFilesDir(null) + "/font.ttf");
         getCustomFont();
-        reloadLanguageCache();
 
-        dictDB = new DictionaryDB(this);
-        icons = new IconThemeUtils();
         spaceBars = new SpaceBarThemeUtils();
         emojiUtils = new TextUtilsCompat();
-        reloadThemeCache();
-    }
-
-    public static void reloadLanguageCache() {
-        try {
-            languageCache = LayoutUtils.getLanguageList(getApplication());
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
     }
 
     @Override

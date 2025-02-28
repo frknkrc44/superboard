@@ -2,11 +2,14 @@ package org.blinksd.utils;
 
 import static org.blinksd.utils.LocalIconTheme.SYM_TYPE_SPACE;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -18,7 +21,11 @@ import java.io.IOException;
 import java.util.Objects;
 
 public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
-    public IconThemeUtils() {
+    private final Context mContext;
+    private final Handler mMainHandler;
+    private Runnable mRunnable;
+
+    public IconThemeUtils(Context context) {
         put("theme_default", new LocalIconTheme(new int[]{
                 R.drawable.sym_keyboard_shift,
                 R.drawable.sym_keyboard_emoji,
@@ -41,12 +48,22 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
                 R.drawable.sym_ay_delete
         }));
 
-        loadImportedIcons();
+        mContext = context;
+        mMainHandler = new Handler(Looper.getMainLooper());
+
+        mRunnable = () -> {
+            try {
+                loadImportedIcons();
+            } catch (Throwable t) {
+                mMainHandler.postDelayed(mRunnable, 2000);
+            }
+        };
+        mMainHandler.post(mRunnable);
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
     private File getIconFolder() {
-        File iconFolder = new File(SuperBoardApplication.getApplication().getFilesDir(), "icon_themes");
+        File iconFolder = new File(mContext.getFilesDir(), "icon_themes");
         if (!iconFolder.exists()) {
             iconFolder.mkdirs();
         }
