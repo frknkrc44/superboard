@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -22,7 +20,6 @@ import java.util.Objects;
 
 public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
     private final Context mContext;
-    private final Handler mMainHandler;
     private Runnable mRunnable;
 
     public IconThemeUtils(Context context) {
@@ -49,16 +46,15 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
         }));
 
         mContext = context;
-        mMainHandler = new Handler(Looper.getMainLooper());
 
         mRunnable = () -> {
             try {
                 loadImportedIcons();
             } catch (Throwable t) {
-                mMainHandler.postDelayed(mRunnable, 2000);
+                SuperBoardApplication.mainHandler.postDelayed(mRunnable, 2000);
             }
         };
-        mMainHandler.post(mRunnable);
+        SuperBoardApplication.mainHandler.post(mRunnable);
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
