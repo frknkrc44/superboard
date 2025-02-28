@@ -53,7 +53,7 @@ public final class SuperBoardApplication extends Application {
     }
 
     public synchronized static boolean isDictDBReady() {
-        return getDictDB() != null && getDictDB().isReady;
+        return getDictDB().isReady;
     }
 
     public synchronized static SuperBoardApplication getApplication() {
