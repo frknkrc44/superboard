@@ -6,6 +6,11 @@ import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
 import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.view.Gravity.CENTER;
 import static android.view.View.OnTouchListener;
+import static org.blinksd.utils.DensityUtils.dpInt;
+import static org.blinksd.utils.DensityUtils.hpInt;
+import static org.blinksd.utils.DensityUtils.mp;
+import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.wpInt;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,6 +30,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -42,7 +48,6 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
-import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
@@ -75,7 +80,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private static Locale caseLocale = new Locale("tr", "TR");
     private final MyHandler mHandler = new MyHandler();
     private final Vibrator vibrator;
-    private float textSize = DensityUtils.mp(1.25f);
+    private float textSize = mp(1.25f);
     protected Drawable keyBackground = null;
     private int selected = 0;
     private float heightPercent = 40;
@@ -165,7 +170,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setKeyboardHeight(float percent) {
         heightPercent = percent;
-        getLayoutParams().height = DensityUtils.hpInt(percent);
+        getLayoutParams().height = hpInt(percent);
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
                 getChildAt(i).getLayoutParams().height = getLayoutParams().height;
@@ -359,7 +364,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setKeyboardWidth(int percent) {
         widthPercent = percent;
-        getLayoutParams().width = DensityUtils.wpInt(percent);
+        getLayoutParams().width = wpInt(percent);
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
                 getChildAt(i).getLayoutParams().width = getLayoutParams().width;
@@ -1321,11 +1326,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         private void setSubLabelParams() {
-            LayoutParams subParams = new LayoutParams(-2, -2);
+            LayoutParams subParams = new LayoutParams(-1, -1);
             subParams.addRule(ALIGN_PARENT_TOP, TRUE);
             subParams.addRule(CENTER_HORIZONTAL, TRUE);
-            subParams.topMargin = DensityUtils.mpInt(0.5f);
+            subParams.topMargin = mpInt(0.5f);
             subLabel.setLayoutParams(subParams);
+            subLabel.setGravity(Gravity.CENTER_HORIZONTAL);
             subLabel.setTextColor(ColorUtils.setAlphaForColor(0x66, keyTextColor));
             label.setSingleLine();
             label.setGravity(CENTER);
@@ -1388,8 +1394,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             if (state == null) {
                 RelativeLayout.LayoutParams stateParams =
                         new RelativeLayout.LayoutParams(
-                                DensityUtils.mpInt(4), DensityUtils.mpInt(keyIndicatorHeight));
-                stateParams.bottomMargin = DensityUtils.mpInt(2);
+                                mpInt(4), mpInt(keyIndicatorHeight));
+                stateParams.bottomMargin = mpInt(2);
                 stateParams.addRule(ALIGN_PARENT_BOTTOM, TRUE);
                 stateParams.addRule(CENTER_HORIZONTAL, TRUE);
                 state = new View(getContext());
@@ -1397,7 +1403,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 GradientDrawable stateDrawable = new GradientDrawable();
                 stateDrawable.setColor(keyTextColor);
                 stateDrawable.setAlpha(0);
-                stateDrawable.setCornerRadius(DensityUtils.dpInt(16));
+                stateDrawable.setCornerRadius(dpInt(16));
                 state.setBackgroundDrawable(stateDrawable);
                 addView(state);
             }
@@ -1411,7 +1417,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void applyIndicatorHeight() {
             if (state != null) {
-                state.getLayoutParams().height = DensityUtils.mpInt(keyIndicatorHeight);
+                state.getLayoutParams().height = mpInt(keyIndicatorHeight);
             }
         }
 
@@ -1487,7 +1493,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyWidthPercent(int percent) {
-            getLayoutParams().width = DensityUtils.wpInt(percent);
+            getLayoutParams().width = wpInt(percent);
             setTag(TAG_KEY_WIDTH, percent);
         }
 
