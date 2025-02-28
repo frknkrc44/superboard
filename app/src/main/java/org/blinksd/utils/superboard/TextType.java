@@ -21,5 +21,10 @@ public enum TextType {
     serif_monospace_bold,
     serif_monospace_italic,
     serif_monospace_bold_italic,
-    custom
+    custom;
+
+    public static TextType getFromIndex(int index) {
+        var values = values();
+        return values[index >= values.length ? 0 : index];
+    }
 }

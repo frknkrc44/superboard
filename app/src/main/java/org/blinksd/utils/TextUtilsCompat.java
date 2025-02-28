@@ -118,6 +118,10 @@ public final class TextUtilsCompat {
         return Charset.forName(name);
     }
 
+    public static void setTypefaceFromTextType(TextView label, int style) {
+        setTypefaceFromTextType(label, TextType.getFromIndex(style));
+    }
+
     public static void setTypefaceFromTextType(TextView label, TextType style) {
         if (style == null) {
             style = TextType.regular;

@@ -1,6 +1,8 @@
 package org.blinksd.board.views;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -26,6 +28,7 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -168,11 +171,13 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     private void addCompletionView(final CharSequence text) {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         tv.setTextColor(color);
-        float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+        float textSize = getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE);
         int pad = DensityUtils.dpInt(8);
         tv.setTextSize(textSize);
+        tv.setShadowLayer(superBoard.shadowRadius, 0, 0, superBoard.shadowColor);
+        TextUtilsCompat.setTypefaceFromTextType(tv, getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
         tv.setLayoutParams(params);
@@ -183,7 +188,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     }
 
     private Drawable getSuggestionItemBackground() {
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         GradientDrawable gd = new GradientDrawable();
         gd.setColor(ColorUtils.getColorWithAlpha(color, 70));
         gd.setCornerRadius(16);
@@ -191,14 +196,14 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
     }
 
     public void reTheme() {
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
         // ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
         ColorUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
-            float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+            float textSize = getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE);
             tv.setTextSize(textSize);
             ViewUtils.setBackground(tv, getSuggestionItemBackground());
         }
@@ -242,8 +247,8 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 setKeyLockStatus(key);
             } else if (view instanceof ImageButton) {
                 ImageButton btn = (ImageButton) view;
-                int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-                int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
+                int keyClr = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+                int keyPressClr = getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
                 Drawable keyPressBg = ResourcesUtils.getKeyBg(keyClr, keyPressClr, true);
 
                 if ((int) btn.getTag() == 4) {

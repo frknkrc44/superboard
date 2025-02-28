@@ -46,7 +46,6 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
-import org.blinksd.utils.superboard.TextType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1542,11 +1541,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyTextStyle(int style) {
-            TextType[] arr = TextType.values();
-            setKeyTextStyle(arr[(arr.length - 1) < style ? 0 : style]);
-        }
-
-        public void setKeyTextStyle(TextType style) {
             TextUtilsCompat.setTypefaceFromTextType(label, style);
             subLabel.setTypeface(label.getTypeface());
         }
