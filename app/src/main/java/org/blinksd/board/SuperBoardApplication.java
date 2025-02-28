@@ -240,6 +240,10 @@ public final class SuperBoardApplication extends Application {
     }
 
     public synchronized static File getBackgroundImageFile() {
+        if (bgFile == null) {
+            bgFile = new File(getApplication().getFilesDir(), "bg");
+        }
+
         return bgFile;
     }
 
@@ -248,7 +252,6 @@ public final class SuperBoardApplication extends Application {
         super.onCreate();
         appContext = this;
 
-        bgFile = new File(getFilesDir(), "bg");
         getCustomFont();
     }
 
