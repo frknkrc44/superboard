@@ -129,14 +129,26 @@ public final class SuperBoardApplication extends Application {
     }
 
     public synchronized static SpaceBarThemeUtils getSpaceBarStyles() {
+        if (spaceBars == null) {
+            spaceBars = new SpaceBarThemeUtils();
+        }
+
         return spaceBars;
     }
 
     public synchronized static TextUtilsCompat getTextUtils() {
+        if (emojiUtils == null) {
+            emojiUtils = new TextUtilsCompat();
+        }
+
         return emojiUtils;
     }
 
     public synchronized static Typeface getCustomFont() {
+        if (fontFile == null) {
+            fontFile = new File(getApplication().getExternalFilesDir(null) + "/font.ttf");
+        }
+
         if (customFont == null) {
             try {
                 if (fontFile.exists()) customFont = Typeface.createFromFile(fontFile);
@@ -237,11 +249,7 @@ public final class SuperBoardApplication extends Application {
         appContext = this;
 
         bgFile = new File(getFilesDir(), "bg");
-        fontFile = new File(getExternalFilesDir(null) + "/font.ttf");
         getCustomFont();
-
-        spaceBars = new SpaceBarThemeUtils();
-        emojiUtils = new TextUtilsCompat();
     }
 
     @Override
