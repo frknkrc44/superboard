@@ -95,18 +95,14 @@
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Outros</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Importar pacote de dicionário (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Importando, por favor, não feche este aplicativo</string>
     <string name="settings_dict_import_count">Palavra %s importada</string>
     <string name="settings_dict_import_delete_duplicates">Excluindo duplicados…</string>
     <!-- Settings category resources -->
-    <string name="settings_category_general">General</string>
-    <string name="settings_category_theming">Theming</string>
-    <string name="settings_category_theming_adv">Advanced Theming</string>
-    <string name="settings_category_layout">Keyboard Layout</string>
-    <string name="settings_category_popup">Popup</string>
-    <string name="settings_category_top_bar">Top Bar</string>
-    <string name="settings_category_bottom_bar">Bottom Bar</string>
+    <string name="settings_category_general">Geral</string>
+    <string name="settings_category_theming">Temas</string>
+    <string name="settings_category_theming_adv">Tema Avançado</string>
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">Padrão</string>
     <!-- List selector resources -->

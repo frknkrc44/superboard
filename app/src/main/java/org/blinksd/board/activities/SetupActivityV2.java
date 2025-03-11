@@ -23,13 +23,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SimpleAnimatorListener;
+import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 
 /** @noinspection NullableProblems*/
-public class SetupActivityV2 extends Activity {
+@SuppressWarnings("deprecation")
+public final class SetupActivityV2 extends Activity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();
     int currentPage = 0;
@@ -40,7 +44,7 @@ public class SetupActivityV2 extends Activity {
         super.onCreate(savedInstanceState);
 
         if (!isInputMethodDisabled() && !isInputMethodNotSelected()) {
-            startActivity(new Intent(this, AppSettingsV2.class));
+            startActivity(new Intent(this, AppSettingsV3.class));
             finish();
             return;
         }
@@ -63,8 +67,8 @@ public class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                ResourcesUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_enable,
                 R.string.wizard_enablebtn,
                 v -> {
@@ -76,8 +80,8 @@ public class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                ResourcesUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_select,
                 R.string.wizard_selectbtn,
                 v -> {
@@ -93,18 +97,18 @@ public class SetupActivityV2 extends Activity {
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_keyboard_language, Color.WHITE),
+                ResourcesUtils.getTintedDrawable(
+                        R.drawable.sym_keyboard_language, Color.WHITE),
                 R.string.wizard_settings,
                 R.string.wizard_settingsbtn,
-                v -> startActivity(new Intent(v.getContext(), AppSettingsV2.class)),
+                v -> startActivity(new Intent(v.getContext(), AppSettingsV3.class)),
                 true,
                 true
         ));
 
         pageContents.add(new PageContent(
-                LayoutUtils.getDrawableCompat(
-                        this, R.drawable.sym_board_return, Color.WHITE),
+                ResourcesUtils.getTintedDrawable(
+                        R.drawable.sym_board_return, Color.WHITE),
                 R.string.wizard_finish,
                 R.string.wizard_finishbtn,
                 v -> finish(),
@@ -151,40 +155,24 @@ public class SetupActivityV2 extends Activity {
         PageContent content = pageContents.get(page);
         final int duration = 200;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-                && contentView.getChildCount() > 0) {
+        if (contentView.getChildCount() > 0) {
             contentView.getChildAt(0)
                     .animate()
                     .alpha(0)
                     .setDuration(duration)
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                        }
-
+                    .setListener(new SimpleAnimatorListener() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             contentView.removeAllViews();
-                            View view = new ImageTextAndButtonView(
-                                    SetupActivityV2.this, content,
-                                    content.extraNextButton, content.smallImage);
+                            View view = new ImageTextAndButtonView(SetupActivityV2.this, content);
                             view.setAlpha(0);
                             contentView.addView(view);
                             view.animate().alpha(1).setDuration(duration).start();
                         }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-                        }
                     }).start();
         } else {
             contentView.removeAllViews();
-            contentView.addView(new ImageTextAndButtonView(
-                    this, content, content.extraNextButton, content.smallImage));
+            contentView.addView(new ImageTextAndButtonView(this, content));
         }
 
         currentPage = page;
@@ -238,7 +226,6 @@ public class SetupActivityV2 extends Activity {
         }
     }
 
-    @SuppressWarnings("unused")
     private class PageContent {
         private final Drawable image;
         private final String text;
@@ -246,11 +233,6 @@ public class SetupActivityV2 extends Activity {
         private final View.OnClickListener onButtonClick;
         private final boolean extraNextButton;
         private final boolean smallImage;
-
-        private PageContent(int textRes, int buttonTextRes, View.OnClickListener onButtonClick,
-                            boolean extraNextButton, boolean smallImage) {
-            this(null, textRes, buttonTextRes, onButtonClick, extraNextButton, smallImage);
-        }
 
         private PageContent(Drawable image, int textRes, int buttonTextRes,
                             View.OnClickListener onButtonClick, boolean extraNextButton,
@@ -269,8 +251,7 @@ public class SetupActivityV2 extends Activity {
         final TextView textView;
         final Button buttonView;
 
-        private ImageTextAndButtonView(Context context, PageContent content,
-                                       boolean extraNextButton, boolean smallImage) {
+        private ImageTextAndButtonView(Context context, PageContent content) {
             super(context);
             setLayoutParams(new LayoutParams(-1, -1));
             imageView = new ImageView(context);
@@ -281,7 +262,7 @@ public class SetupActivityV2 extends Activity {
             addView(textView);
             addView(buttonView);
             int imageSize = DensityUtils.dpInt(96);
-            int imageLayoutSize = smallImage ? (int) (imageSize / 2f) : imageSize;
+            int imageLayoutSize = content.smallImage ? (int) (imageSize / 2f) : imageSize;
             imageView.setLayoutParams(new LayoutParams(imageLayoutSize, imageLayoutSize));
             buttonView.setLayoutParams(new LayoutParams(imageSize * 3, -2));
             setGravity(Gravity.CENTER);
@@ -291,28 +272,24 @@ public class SetupActivityV2 extends Activity {
             params.topMargin = padding;
             params.bottomMargin = padding;
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                textView.setTextAppearance(context, android.R.style.TextAppearance_Medium);
-            } else {
-                textView.setTextAppearance(android.R.style.TextAppearance_Medium);
-            }
+            ViewUtils.setTextAppearance(textView, android.R.style.TextAppearance_Medium);
             textView.setGravity(Gravity.CENTER);
 
-            buttonView.setBackgroundDrawable(
-                    LayoutUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
+            ViewUtils.setBackground(buttonView,
+                    ResourcesUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
             textView.setText(String.format(content.text, getAppName()));
             buttonView.setText(content.buttonText);
             buttonView.setOnClickListener(content.onButtonClick);
 
-            if (extraNextButton) {
+            if (content.extraNextButton) {
                 Button nextButton = new Button(context);
                 LayoutParams buttonParams = (LayoutParams) buttonView.getLayoutParams();
                 buttonParams = new LayoutParams(buttonParams.width, buttonParams.height);
                 buttonParams.topMargin = padding;
                 nextButton.setLayoutParams(buttonParams);
-                nextButton.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+                ViewUtils.setBackground(nextButton, ResourcesUtils.getSelectableItemBg(
                         context, buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);

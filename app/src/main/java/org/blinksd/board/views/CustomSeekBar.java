@@ -2,58 +2,37 @@ package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.widget.AbsSeekBar;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import org.blinksd.board.R;
+import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
+import org.blinksd.utils.ResourcesUtils;
 
 import java.lang.reflect.Field;
 
-class CustomSeekBar extends SeekBar {
+final class CustomSeekBar extends SeekBar {
+
     CustomSeekBar(Context c) {
         super(c);
-        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(50), -2, 0));
-        int p = DensityUtils.dpInt(4);
-        setPadding(p * 4, p, p * 4, p);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(75), -2, 0));
+        setThumb(ResourcesUtils.getDrawable(R.drawable.seekbar_thumb));
+        setProgressDrawable(ResourcesUtils.getDrawable(R.drawable.seekbar));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSplitTrack(false);
-        drawSeekBar();
-    }
+        }
 
-    void drawSeekBar() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            int thumbSize = DensityUtils.dpInt(36);
-            Bitmap b = Bitmap.createBitmap(thumbSize, thumbSize, Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(b);
-            Paint p = new Paint();
-            int color = 0xFFDEDEDE;
-            p.setStyle(Paint.Style.FILL);
-            p.setColor(color);
-            RectF r = new RectF(0, 0, b.getWidth(), b.getHeight());
-            c.drawOval(r, p);
-            setThumb(new BitmapDrawable(b));
-            Drawable ld = getResources().getDrawable(R.drawable.pbar);
-            ld.setColorFilter(p.getColor(), PorterDuff.Mode.SRC_ATOP);
-            setProgressDrawable(ld);
-        } else {
-            int color = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                    ? getResources().getColor(
-                            android.R.color.system_accent1_200, getContext().getTheme())
-                    : 0xFFDEDEDE;
-            setThumbTintList(ColorStateList.valueOf(color));
-            setBackgroundTintList(ColorStateList.valueOf(color));
-            setProgressTintList(ColorStateList.valueOf(color));
+        try {
+            setProgressColor(ResourcesUtils.getColor(R.color.seekbar_progress));
+        } catch (Throwable ignored) {
+            setProgressColor(ColorUtils.getAccentColor());
         }
     }
 
@@ -72,4 +51,46 @@ class CustomSeekBar extends SeekBar {
         return null;
     }
 
+    public void setProgressColor(int color) {
+        setThumbStrokeColor(color);
+        setTrackProgressColor(color);
+    }
+
+    private void setThumbStrokeColor(int color) {
+        GradientDrawable thumb = (GradientDrawable) getThumb();
+        thumb.setStroke(DensityUtils.dpInt(2), color);
+    }
+
+    private void setTrackProgressColor(int color) {
+        LayerDrawable layers = (LayerDrawable) getProgressDrawable();
+        ClipDrawable progressClip = (ClipDrawable) findProgressLayerById(layers);
+
+        GradientDrawable progress = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            progress = (GradientDrawable) progressClip.getDrawable();
+        } else {
+            try {
+                Field clipStateField = ClipDrawable.class.getDeclaredField("mClipState");
+                clipStateField.setAccessible(true);
+                Object clipState = clipStateField.get(progressClip);
+                Field clipMDrawableField = clipState.getClass().getDeclaredField("mDrawable");
+                clipMDrawableField.setAccessible(true);
+                progress = (GradientDrawable) clipMDrawableField.get(clipState);
+            } catch (Throwable ignore) {}
+        }
+
+        if (progress != null) {
+            progress.setColor(color);
+        }
+    }
+
+    private Drawable findProgressLayerById(LayerDrawable layers) {
+        for (int i = 0; i < layers.getNumberOfLayers(); i++) {
+            if (layers.getId(i) == android.R.id.progress) {
+                return layers.getDrawable(i);
+            }
+        }
+
+        throw new RuntimeException("No progress layer found");
+    }
 }

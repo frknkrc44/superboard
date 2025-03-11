@@ -13,59 +13,39 @@ import org.blinksd.board.SuperBoardApplication;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
-@SuppressWarnings({"unused", "deprecation"})
-public class ImageUtils {
+@SuppressWarnings("deprecation")
+public final class ImageUtils {
     public static final float minSize = 720.0f;
 
-    private ImageUtils() {
-    }
-
-    public static int getShortDimensionOfPicture(Bitmap b) {
-        if (b != null) {
-            int x = b.getWidth(), y = b.getHeight();
-            return Math.min(x, y);
-        }
-        return 0;
-    }
-
-    public static int getLongDimensionOfPicture(Bitmap b) {
-        if (b != null) {
-            int x = b.getWidth(), y = b.getHeight();
-            return Math.max(x, y);
-        }
-        return 0;
-    }
-
-    public static Bitmap getScaledBitmap(Bitmap b, float scale) {
-        if (b != null) {
-            Bitmap x = b.copy(Bitmap.Config.ARGB_8888, true);
-            int a = x.getWidth(), c = x.getHeight();
-            x = Bitmap.createScaledBitmap(x, (int) (a * scale), (int) (c * scale), true);
-            return x;
-        }
-        return null;
-    }
+    private ImageUtils() {}
 
     public static Bitmap getMinimizedBitmap(Bitmap b) {
-        if (b != null) {
-            int a = getLongDimensionOfPicture(b);
-            if (a > minSize) {
-                float f = minSize / a;
-                return getScaledBitmap(b, f);
-            }
-            return b;
+        if (b == null) return b;
+
+        int width = b.getWidth(), height = b.getHeight();
+        int longDim = Math.max(width, height);
+        if (longDim > minSize) {
+            float scale = minSize / longDim;
+            return Bitmap.createScaledBitmap(
+                    b.copy(Bitmap.Config.ARGB_8888, true),
+                    (int) (width * scale),
+                    (int) (height * scale),
+                    true
+            );
         }
-        return null;
+
+        return b;
     }
 
     public static Bitmap getBlur(Bitmap bmp, int radius) {
         try {
             // try blur processing with built-in renderscript
-            Context ctx = SuperBoardApplication.getApplication();
-            setupDiskCache(ctx);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Context ctx = SuperBoardApplication.getApplication();
+                setupDiskCache(ctx);
+
                 RenderScript rs = RenderScript.create(ctx);
                 ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
                 blur.setInput(Allocation.createFromBitmap(rs, bmp));
@@ -83,31 +63,25 @@ public class ImageUtils {
             return bmp;
         } catch (Throwable t) {
             // switch to old method on exception
-            return fastBlur(bmp, 1, radius);
+            return fastBlur(bmp, radius);
         }
     }
 
     @SuppressLint("PrivateApi")
-    private static void setupDiskCache(Context ctx) {
+    private static void setupDiskCache(Context ctx) throws Throwable {
         // Reflection is lifesaver ^-^
-        try {
-            Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
-            Method mt = clazz.getMethod("setupDiskCache", File.class);
-            mt.setAccessible(true);
-            mt.invoke(null, ctx.getCacheDir());
-        } catch (Throwable ignored) {}
+        Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
+        Method mt = clazz.getMethod("setupDiskCache", File.class);
+        mt.setAccessible(true);
+        mt.invoke(null, ctx.getCacheDir());
     }
 
-    private static Bitmap fastBlur(Bitmap sentBitmap, float scale, int radius) {
+    private static Bitmap fastBlur(Bitmap sentBitmap, int radius) {
         if (sentBitmap == null) return null;
         try {
             int rsum, gsum, bsum, x, y, i, p, yp, yi, yw, stackpointer,
                     stackstart, rbs, routsum, goutsum, boutsum, rinsum, ginsum, binsum;
-            int width = Math.round(sentBitmap.getWidth() * scale);
-            int height = Math.round(sentBitmap.getHeight() * scale);
-            if (scale != 1)
-                sentBitmap = Bitmap.createScaledBitmap(sentBitmap, width, height, false);
-            Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+            Bitmap bitmap = sentBitmap.copy(Objects.requireNonNull(sentBitmap.getConfig()), true);
             if (radius < 1) return null;
             int w = bitmap.getWidth();
             int h = bitmap.getHeight();

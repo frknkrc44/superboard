@@ -2,6 +2,7 @@ package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -12,12 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.LayoutCreator;
 
 import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
-public class ColorSelectorItemLayout extends LinearLayout {
+public final class ColorSelectorItemLayout extends LinearLayout {
 
     private final ImageView img;
     private TreeMap<Integer, Integer> colorList;
@@ -36,7 +38,7 @@ public class ColorSelectorItemLayout extends LinearLayout {
         btn.setLayoutParams(lp);
         btn.setId(android.R.id.text1);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(0xFFFFFFFF);
+        btn.setTextColor(Color.WHITE);
         btn.setMinHeight(size);
         addView(img);
         addView(btn);
@@ -45,27 +47,27 @@ public class ColorSelectorItemLayout extends LinearLayout {
         switch (index) {
             case -1:
                 img.setImageResource(android.R.drawable.ic_input_add);
-                img.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
-                btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_add_item"));
+                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_add_item"));
                 setOnClickListener(gradientAddColorListener);
                 return;
             case -2:
                 img.setImageResource(android.R.drawable.ic_media_next);
-                img.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
-                btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_change_orientation"));
+                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_change_orientation"));
                 setOnClickListener(gradientAddColorListener);
                 return;
         }
         colorList = colors;
         int color = 0xFF000000;
         updateColorView(color);
-        btn.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_item"));
+        btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_item"));
         ImageView del = LayoutCreator.createImageView(ctx);
         lp = new LayoutParams(size, size, 0);
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
-        del.setImageResource(R.drawable.sym_keyboard_close);
-        del.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+        del.setImageResource(R.drawable.delete);
+        del.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
         del.setOnClickListener(gradientDelColorListener);

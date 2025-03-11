@@ -1,19 +1,62 @@
-from json import loads, dumps
+from json import dumps
+from requests import get
 
-with open('emoji.json') as f:
-    json = loads(f.read())
+
+def get_emoji_desc(line: str, mode2: bool = False) -> str:
+    first = line[line.find('#') + 2:]
+    second = first[first.find('E'):]
+    third = second[second.find(' ') + 1:]
+
+    if mode2:
+        return third[third.rfind(',') + 2:]
+
+    return third
+
+
+def compare_emoji_desc(first: str, second: str) -> bool:
+    if get_emoji_desc(first, True).startswith(get_emoji_desc(second)):
+        return True
+
+    if get_emoji_desc(first).startswith(get_emoji_desc(second, True)):
+        return True
+
+    if get_emoji_desc(first).startswith(get_emoji_desc(second)):
+        return True
+
+    return False
+
+
 
 categories: dict[str, list[str]] = {}
+request = get(
+    'https://unicode.org/Public/emoji/latest/emoji-test.txt',
+    allow_redirects=True,
+)
 
-for item in json:
-    if item['category'] not in categories:
-        category: list[str] = []
-        categories[item['category']] = category
-    else:
-        category: list[str] = categories.get(item['category']) # type: ignore
+if request.status_code == 200:
+    recent_group = ''
+    recent_approved_line = ''
+    for line in request.text.splitlines():
+        if line.startswith('# group: '):
+            recent_group = line[line.find(':') + 2:]
+            category: list[str] = []
+            categories[recent_group] = category
 
-    emoji = item['emoji']
-    category.append(emoji)
+        if not len(recent_group):
+            continue
 
-with open('emoji_list.json', 'w') as f:
+        if not line.startswith('#') and ';' in line and 'qualified' in line and 'E' in line:
+            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+                recent_approved_line = line
+            else:
+                continue
+
+            first = line[line.find('#') + 2:]
+            sec = first[:first.find('E') - 1]
+            categories[recent_group].append(sec)
+else:
+    exit(1)
+
+
+with open('../app/src/main/assets/emoji_list.json', 'w') as f:
     f.write(dumps(categories, ensure_ascii=False, separators=(',', ':')))

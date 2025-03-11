@@ -1,13 +1,13 @@
 package org.blinksd.board.views;
 
-import android.Manifest;
+import static org.blinksd.utils.SystemUtils.isPermGranted;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,28 +30,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.board.activities.settings.AppSettingsV3;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 
 import java.io.File;
 import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
 @SuppressWarnings("deprecation")
-public class ImageSelectorLayout extends LinearLayout {
-
+public final class ImageSelectorLayout extends LinearLayout {
+    private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;
     private Bitmap temp;
     private TreeMap<Integer, Integer> colorList;
+    GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
 
         @Override
@@ -69,12 +71,12 @@ public class ImageSelectorLayout extends LinearLayout {
             });
             build.setNegativeButton(android.R.string.cancel, (p112, p2) -> p112.dismiss());
             build.setPositiveButton(android.R.string.ok, (p0, p2) -> {
-                p1.setTag(px.colorValue);
+                p1.setTag(px.currentColorValue);
                 prev.setImageBitmap(convertGradientToBitmap());
                 System.gc();
                 p0.dismiss();
             });
-            SettingsCategorizedListAdapter.doHacksAndShow(build.create());
+            AppSettingsV3.doHacksAndShow(build.create());
         }
 
     };
@@ -84,7 +86,7 @@ public class ImageSelectorLayout extends LinearLayout {
         public void onClick(View p1) {
             if (colorList.size() < 2) {
                 Context ctx = p1.getContext();
-                String out = String.format(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_gradient_remove_item_error"), colorList.size());
+                String out = String.format(getImageSelectorTranslation("gradient_remove_item_error"), colorList.size());
                 Toast.makeText(ctx, out, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -99,10 +101,8 @@ public class ImageSelectorLayout extends LinearLayout {
         }
 
     };
-    private static int indexNum = 0, gradientType = 0;
 
-    /** @noinspection unused*/
-    public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard, String key) {
+    public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard) {
         super(win.getContext());
         setOrientation(VERTICAL);
 
@@ -124,7 +124,7 @@ public class ImageSelectorLayout extends LinearLayout {
                 temp = b;
             }
         };
-        prev.setId(android.R.id.custom);
+        prev.setId(R.id.dialog_image_preview);
         int gradientPadding = DensityUtils.dpInt(2);
         int frameMargin = DensityUtils.dpInt(8);
         prev.setPadding(gradientPadding, gradientPadding, gradientPadding, gradientPadding);
@@ -160,28 +160,18 @@ public class ImageSelectorLayout extends LinearLayout {
 
         });
         addView(host);
-
-        final String[] tabTitles = {
-                "image_selector_photo",
-                "image_selector_gradient"
-        };
-
-        for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(win.getContext(), tabTitles[i]);
-        }
-
         host.setup();
 
+        final String[] tabTitles = { "photo", "gradient" };
         for (int i = 0; i < tabTitles.length; i++) {
-            TabSpec ts = host.newTabSpec(tabTitles[i]);
+            TabHost.TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(win.getContext())
                     .inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) 
                     LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
-            tv.setText(tabTitles[i]);
-            tv.setText(tabTitles[i]);
+            tv.setText(getImageSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);
@@ -204,14 +194,6 @@ public class ImageSelectorLayout extends LinearLayout {
         return null;
     }
 
-    private static boolean isPermGranted(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return context.checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        }
-
-        return true;
-    }
-
     /** @noinspection ResultOfMethodCallIgnored*/
     @SuppressLint("MissingPermission")
     private View getPhotoSelector(final Dialog win, final Runnable onImageSelectPressed,
@@ -221,52 +203,54 @@ public class ImageSelectorLayout extends LinearLayout {
         LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
         l.setPadding(margin, margin, margin, margin);
         Button s = LayoutCreator.createButton(ctx);
-        s.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
+        s.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         s.setLayoutParams(params);
-        s.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_select"));
+        s.setText(getImageSelectorTranslation("select"));
         s.setOnClickListener(p1 -> onImageSelectPressed.run());
         l.addView(s);
 
-        // Disable the current wallpaper function
-        // https://issuetracker.google.com/issues/237124750
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            Button w = LayoutCreator.createButton(ctx);
-            w.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
-            params = new LinearLayout.LayoutParams(-1, -2, 0);
-            params.bottomMargin = margin;
-            w.setLayoutParams(params);
-            w.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_wp"));
-            l.addView(w);
-            w.setOnClickListener(p1 -> {
-                if (isPermGranted(ctx)) {
-                    WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
-                    Drawable d;
-                    if (wm.getWallpaperInfo() != null) {
-                        Toast.makeText(p1.getContext(), "You're using live wallpaper, loading thumbnail ...", Toast.LENGTH_SHORT).show();
-                        d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
-                    } else {
-                        d = wm.getDrawable();
-                    }
-
-                    if (d instanceof BitmapDrawable) {
-                        Bitmap b = ((BitmapDrawable) d).getBitmap();
-                        b = ImageUtils.getMinimizedBitmap(b);
-                        prev.setImageBitmap(b);
-                    }
+        Button w = LayoutCreator.createButton(ctx);
+        w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
+        params = new LinearLayout.LayoutParams(-1, -2, 0);
+        params.bottomMargin = margin;
+        w.setLayoutParams(params);
+        w.setText(getImageSelectorTranslation("wp"));
+        l.addView(w);
+        w.setOnClickListener(p1 -> {
+            if (isPermGranted(ctx)) {
+                WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
+                Drawable d;
+                if (wm.getWallpaperInfo() != null) {
+                    Toast.makeText(p1.getContext(), getImageSelectorTranslation("warning_live_wallpaper"), Toast.LENGTH_SHORT).show();
+                    d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
                 } else {
-                    Toast.makeText(p1.getContext(), "Enable storage access for get system wallpaper", Toast.LENGTH_LONG).show();
-                    ctx.startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(Uri.parse("package:" + ctx.getPackageName())));
+                    d = wm.getDrawable();
                 }
-            });
-        }
+
+                if (d instanceof BitmapDrawable) {
+                    Bitmap b = ((BitmapDrawable) d).getBitmap();
+                    b = ImageUtils.getMinimizedBitmap(b);
+                    prev.setImageBitmap(b);
+                }
+            } else {
+                Toast.makeText(p1.getContext(),
+                        getImageSelectorTranslation("warning_storage_access"),
+                        Toast.LENGTH_LONG).show();
+                ctx.startActivity(new Intent(
+                        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                                ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                : Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                        Uri.parse("package:" + ctx.getPackageName())));
+            }
+        });
 
         Button rb = LayoutCreator.createButton(ctx);
-        rb.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
+        rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
         rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         l.addView(rb);
-        rb.setText(SettingsCategorizedListAdapter.getTranslation(ctx, "image_selector_rotate"));
+        rb.setText(getImageSelectorTranslation("rotate"));
         rb.setOnClickListener(p1 -> {
             if (temp == null) {
                 return;
@@ -315,12 +299,8 @@ public class ImageSelectorLayout extends LinearLayout {
         return new ColorSelectorItemLayout(ctx, index, colorList, gradientAddColorListener, gradientDelColorListener, colorSelectorListener);
     }
 
-    private int getNextEmptyItemIndex() {
-        return indexNum++;
-    }
-
     private GradientDrawable.Orientation getGradientOrientation() {
-        return GradientOrientation.getFromIndex(gradientType);
+        return gradientOrientations[gradientType];
     }
 
     private int[] getGradientColors() {
@@ -347,23 +327,13 @@ public class ImageSelectorLayout extends LinearLayout {
         return out;
     }
 
-    private static class GradientOrientation {
-        private GradientOrientation() {
-        }
-
-        public static GradientDrawable.Orientation getFromIndex(int index) {
-            GradientDrawable.Orientation[] values = GradientDrawable.Orientation.values();
-            return values[index % values.length];
-        }
-    }
-
     private final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
 
         @SuppressLint("ResourceType")
         @Override
         public void onClick(View p1) {
             if (p1.getId() == -2) {
-                gradientType++;
+                gradientType = (byte) ((gradientType + 1) % gradientOrientations.length);
             } else {
                 ViewGroup gradientSel;
                 if (p1 instanceof ColorSelectorItemLayout) {
@@ -374,7 +344,7 @@ public class ImageSelectorLayout extends LinearLayout {
                     gradientSel = p1.findViewById(R.id.gradient_selector);
                 }
 
-                int index = getNextEmptyItemIndex();
+                int index = indexNum++;
                 View v = getColorSelectorItem(p1.getContext(), index);
                 int count = gradientSel.getChildCount();
                 gradientSel.addView(v, count - 2);
@@ -386,5 +356,7 @@ public class ImageSelectorLayout extends LinearLayout {
 
     };
 
-
+    private String getImageSelectorTranslation(String key) {
+        return SettingsBaseActivity.getTranslation("image_selector_" + key);
+    }
 }

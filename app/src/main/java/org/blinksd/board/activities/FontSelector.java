@@ -1,8 +1,6 @@
 package org.blinksd.board.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -14,15 +12,17 @@ import android.widget.TextView;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
+import org.blinksd.utils.ViewUtils;
+import org.blinksd.utils.superboard.TextType;
 
-public class FontSelector extends Activity implements View.OnClickListener {
+@SuppressWarnings("deprecation")
+public final class FontSelector extends BaseActivity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
     private String[] fontTypeTranslations;
     private int currentFont;
@@ -32,23 +32,13 @@ public class FontSelector extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         fontTypeTranslations = getResources().getStringArray(R.array.settings_keyboard_texttype_select);
         currentFont = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
-        View main = createMainLayout();
-
-        if (Build.VERSION.SDK_INT >= 31) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
-            main.setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
-        }
-
-        setContentView(main);
+        setContentView(createMainLayout());
     }
 
     private View createMainLayout() {
         ScrollView scroller = new ScrollView(this);
         scroller.setLayoutParams(LayoutCreator.createLayoutParams(FrameLayout.class, -1, -1));
-        SuperBoard.TextType[] values = SuperBoard.TextType.values();
+        TextType[] values = TextType.values();
         int rowCount = 3;
         int columnCount = values.length / rowCount;
         LinearLayout main = LayoutCreator.createVerticalLayout(this);
@@ -65,7 +55,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private View createFontItemLayout(SuperBoard.TextType value, int i, int j, int rowCount, int columnCount) {
+    private View createFontItemLayout(TextType value, int i, int j, int rowCount, int columnCount) {
         int currentIndex = (i * rowCount) + j;
         LinearLayout btn = new LinearLayout(this);
         btn.setOrientation(LinearLayout.VERTICAL);
@@ -91,7 +81,7 @@ public class FontSelector extends Activity implements View.OnClickListener {
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
-        btn.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, ResourcesUtils.getSelectableItemBg(
                 this,
                 textView.getCurrentTextColor(),
                 currentFont == currentIndex

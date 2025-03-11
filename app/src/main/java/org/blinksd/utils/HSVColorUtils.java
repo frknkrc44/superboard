@@ -2,10 +2,9 @@ package org.blinksd.utils;
 
 import android.graphics.Color;
 
-public class HSVColorUtils {
+public final class HSVColorUtils {
 
-    private HSVColorUtils() {
-    }
+    private HSVColorUtils() {}
 
     public static int getColorFromHSVInt(float hue, int sat, int val) {
         if (hue > 360) {

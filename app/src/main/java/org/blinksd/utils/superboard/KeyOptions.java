@@ -1,7 +1,7 @@
 package org.blinksd.utils.superboard;
 
 /** @noinspection NullableProblems*/
-public class KeyOptions {
+public final class KeyOptions {
     public String key;
     public int width = 0;
     public int pressKeyCode = 0;

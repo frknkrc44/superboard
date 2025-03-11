@@ -17,36 +17,35 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.HSVColorUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
-/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 @SuppressWarnings("deprecation")
-public class ColorSelectorLayout extends LinearLayout {
+public final class ColorSelectorLayout extends LinearLayout {
     private final TextView prev;
     private final CustomSeekBar a;
     private CustomSeekBar r, g, b, h, s, v;
     private EditText hexIn;
-    public int colorValue;
+    public int currentColorValue;
 
     public ColorSelectorLayout(Context ctx, int colorValue) {
         super(ctx);
         setOrientation(VERTICAL);
         TabWidget widget = new TabWidget(ctx);
         widget.setId(android.R.id.tabs);
-        this.colorValue = colorValue;
+        this.currentColorValue = colorValue;
 
         final TabHost host = new TabHost(ctx);
         host.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2));
@@ -64,38 +63,36 @@ public class ColorSelectorLayout extends LinearLayout {
         holder.addView(prev);
         a = new CustomSeekBar(ctx);
         a.setMax(255);
-        a.setProgress(Color.alpha(colorValue));
+        a.setProgress(Color.alpha(currentColorValue));
         holder.addView(a);
         holder.addView(fl);
         host.addView(holder);
         addView(host);
 
-        final String[] tabTitles = {
-                "color_selector_rgb",
-                "color_selector_hsv",
-                "color_selector_hex"
-        };
-
-        for (int i = 0; i < tabTitles.length; i++) {
-            tabTitles[i] = SettingsCategorizedListAdapter.getTranslation(ctx, tabTitles[i]);
-        }
-
+        final String[] tabTitles = { "rgb", "hsv", "hex" };
         host.setOnTabChangedListener(p1 -> {
             a.setVisibility(p1.equals(tabTitles[2]) ? View.GONE : View.VISIBLE);
+            a.setProgress(Color.alpha(currentColorValue));
             switch (host.getCurrentTab()) {
                 case 0:
-                    r.setProgress(Color.red(colorValue));
-                    g.setProgress(Color.green(colorValue));
-                    b.setProgress(Color.blue(colorValue));
+                    r.setProgress(Color.red(currentColorValue));
+                    g.setProgress(Color.green(currentColorValue));
+                    b.setProgress(Color.blue(currentColorValue));
                     break;
                 case 1:
-                    int[] hsv = getHSV(colorValue);
+                    int[] hsv = getHSV(currentColorValue);
                     h.setProgress(hsv[0]);
                     s.setProgress(hsv[1]);
                     v.setProgress(hsv[2]);
                     break;
                 case 2:
-                    hexIn.setText(getColorString(false));
+                    hexIn.setText(ColorUtils.colorIntToString(
+                            a.getProgress(),
+                            r.getProgress(),
+                            g.getProgress(),
+                            b.getProgress(),
+                            false
+                    ));
                     break;
             }
         });
@@ -103,12 +100,12 @@ public class ColorSelectorLayout extends LinearLayout {
         host.setup();
 
         for (int i = 0; i < tabTitles.length; i++) {
-            TabSpec ts = host.newTabSpec(tabTitles[i]);
+            TabHost.TabSpec ts = host.newTabSpec(tabTitles[i]);
             TextView tv = (TextView) LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = tabTitles.length;
             tv.setLayoutParams(pr);
-            tv.setText(tabTitles[i]);
+            tv.setText(getColorSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
             tv.setGravity(Gravity.CENTER);
@@ -126,15 +123,12 @@ public class ColorSelectorLayout extends LinearLayout {
     }
 
     private View getView(Context ctx, int i) {
-        switch (i) {
-            case 0:
-                return getRGBSelector(ctx);
-            case 1:
-                return getHSVSelector(ctx);
-            case 2:
-                return getHexSelector(ctx);
-        }
-        return null;
+        return switch (i) {
+            case 0 -> getRGBSelector(ctx);
+            case 1 -> getHSVSelector(ctx);
+            case 2 -> getHexSelector(ctx);
+            default -> null;
+        };
     }
 
     private View getRGBSelector(final Context ctx) {
@@ -147,24 +141,16 @@ public class ColorSelectorLayout extends LinearLayout {
         g = new CustomSeekBar(ctx);
         b = new CustomSeekBar(ctx);
 
-        changeSeekBarColor(r, Color.rgb(0xDE, 0, 0));
-        changeSeekBarColor(g, Color.rgb(0, 0xDE, 0));
-        changeSeekBarColor(b, Color.rgb(0, 0, 0xDE));
+        r.setProgressColor(ColorUtils.rgb(0xDE, 0, 0));
+        g.setProgressColor(ColorUtils.rgb(0, 0xDE, 0));
+        b.setProgressColor(ColorUtils.rgb(0, 0, 0xDE));
 
         setPreview(prev);
-
-        for (CustomSeekBar v : new CustomSeekBar[]{r, g, b}) {
-            v.setMax(255);
-        }
-
-        r.setProgress(Color.red(colorValue));
-        g.setProgress(Color.green(colorValue));
-        b.setProgress(Color.blue(colorValue));
 
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar s, int i, boolean c) {
-                colorValue = Color.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
+                currentColorValue = ColorUtils.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
                 setPreview(prev);
             }
 
@@ -177,12 +163,20 @@ public class ColorSelectorLayout extends LinearLayout {
             }
         };
 
-        for (CustomSeekBar v : new CustomSeekBar[]{r, g, b}) {
+        r.setProgress(Color.red(currentColorValue));
+        g.setProgress(Color.green(currentColorValue));
+        b.setProgress(Color.blue(currentColorValue));
+
+        for (CustomSeekBar v : new CustomSeekBar[]{a, r, g, b}) {
             v.setOnSeekBarChangeListener(opc);
-            ll.addView(v);
+            int pad = DensityUtils.dpInt(8);
+            v.setPadding(pad * 2, pad, pad * 2, pad);
+            if (a != v) {
+                v.setMax(255);
+                ll.addView(v);
+            }
         }
 
-        a.setOnSeekBarChangeListener(opc);
         return ll;
     }
 
@@ -202,8 +196,7 @@ public class ColorSelectorLayout extends LinearLayout {
         s.setMax(100);
         v.setMax(100);
 
-        int[] hsv = getHSV(colorValue);
-
+        int[] hsv = getHSV(currentColorValue);
         h.setProgress(hsv[0]);
         s.setProgress(hsv[1]);
         v.setProgress(hsv[2]);
@@ -212,8 +205,8 @@ public class ColorSelectorLayout extends LinearLayout {
             @Override
             public void onProgressChanged(SeekBar z, int i, boolean c) {
                 int color = HSVColorUtils.getColorFromHSVInt(h.getProgress(), s.getProgress(), v.getProgress());
-                color = Color.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
-                colorValue = color;
+                color = ColorUtils.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
+                currentColorValue = color;
                 setPreview(prev);
             }
 
@@ -227,6 +220,8 @@ public class ColorSelectorLayout extends LinearLayout {
         };
         for (CustomSeekBar y : new CustomSeekBar[]{h, s, v}) {
             y.setOnSeekBarChangeListener(opc);
+            int pad = DensityUtils.dpInt(8);
+            y.setPadding(pad * 2, pad, pad * 2, pad);
             ll.addView(y);
         }
         return ll;
@@ -252,7 +247,7 @@ public class ColorSelectorLayout extends LinearLayout {
             @Override
             public void afterTextChanged(Editable p1) {
                 try {
-                    colorValue = Color.parseColor("#" + p1.toString());
+                    currentColorValue = Color.parseColor("#" + p1.toString());
                     setPreview(prev);
                 } catch (Throwable ignored) {}
             }
@@ -260,12 +255,10 @@ public class ColorSelectorLayout extends LinearLayout {
         });
 
         SuperBoard sb = new SuperBoard(ctx) {
-
-            /** @noinspection unused*/
             @SuppressLint("SetTextI18n")
             @Override
-            protected void sendDefaultKeyboardEvent(View v) {
-                Pair<Integer, Boolean> pair = ((SuperBoard.Key) v).getNormalPressEvent();
+            protected void sendKeyboardEvent(Key v) {
+                Pair<Integer, Boolean> pair = v.getNormalPressEvent();
 
                 if (pair != null) {
                     switch (pair.first) {
@@ -285,7 +278,7 @@ public class ColorSelectorLayout extends LinearLayout {
                         return;
                     }
 
-                    hexIn.setText(hexIn.getText() + ((SuperBoard.Key) v).getText().toString());
+                    hexIn.setText(hexIn.getText() + v.getText().toString());
                     playSound(0);
                 }
             }
@@ -304,12 +297,13 @@ public class ColorSelectorLayout extends LinearLayout {
                 });
         sb.setKeyboardHeight(20);
         sb.setKeysTextSize(20);
-        sb.setKeysPadding(DensityUtils.dpInt(4));
+        sb.setKeysPadding(DensityUtils.mpInt(0.5f));
         sb.setKeyDrawable(0, 1, -1, R.drawable.sym_keyboard_delete);
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
-        sb.setKeyDrawable(0, 0, -1, R.drawable.sym_keyboard_close);
+        sb.setKeyDrawable(0, 0, -1, R.drawable.delete);
         sb.setPressEventForKey(0, 0, -1, Keyboard.KEYCODE_CANCEL);
-        sb.setKeysBackground(LayoutUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
+        sb.setKeysBackground(ResourcesUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
+        sb.setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         ll.addView(hexIn);
         ll.addView(sb);
         return ll;
@@ -330,39 +324,26 @@ public class ColorSelectorLayout extends LinearLayout {
 
     private void setPreview(TextView x) {
         x.setText(getColorString(true));
-        x.setTextColor(ColorUtils.satisfiesTextContrast(colorValue) ? 0xFF212121 : 0XFFDEDEDE);
-        x.setBackgroundColor(colorValue);
+        x.setTextColor(ColorUtils.satisfiesTextContrast(currentColorValue) ? 0xFF212121 : 0XFFDEDEDE);
+        x.setBackgroundColor(currentColorValue);
     }
 
     private String getColorString(boolean showColorInt) {
         return getColorString(
-                Color.alpha(colorValue), Color.red(colorValue), Color.green(colorValue), Color.blue(colorValue),
+                Color.alpha(currentColorValue), Color.red(currentColorValue), Color.green(currentColorValue), Color.blue(currentColorValue),
                 showColorInt
         );
     }
 
     private String getColorString(int a, int r, int g, int b, boolean showColorInt) {
-        String aColorStr = getHexColorString(a);
-        String rColorStr = getHexColorString(r);
-        String gColorStr = getHexColorString(g);
-        String bColorStr = getHexColorString(b);
-
-        String hexColor = String.format("%s%s%s%s", aColorStr, rColorStr, gColorStr, bColorStr).toUpperCase();
+        String hexColor = ColorUtils.colorIntToString(a, r, g, b);
 
         return showColorInt
                 ? String.format("%s\n(%s, %s, %s, %s)", hexColor, a, r, g, b)
                 : hexColor;
     }
 
-    private String getHexColorString(int x) {
-        if (x == 0) return "00";
-        String s = Integer.toHexString(x);
-        return x < 16 ? "0" + s : s;
+    private String getColorSelectorTranslation(String key) {
+        return SettingsBaseActivity.getTranslation("color_selector_" + key);
     }
-
-    private void changeSeekBarColor(CustomSeekBar s, int c) {
-        s.getThumb().setColorFilter(c, PorterDuff.Mode.SRC_ATOP);
-        s.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_ATOP);
-    }
-
 }

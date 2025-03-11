@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="AppTheme" parent="@android:style/Theme.NoTitleBar" />
-    <style name="AppTheme.Title" parent="@android:style/Theme" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme" parent="@android:style/Theme.DeviceDefault.NoActionBar" />
+
+    <style name="Theme.OptOutEnforcement" parent="@style/Theme">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item>
+    </style>
 </resources>

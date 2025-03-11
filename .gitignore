@@ -8,6 +8,7 @@ bin/
 gen/
 .gradle/
 .androidide/
+build/
 
 # ignore others
 local.properties
@@ -15,3 +16,4 @@ EmojiJsonCreator/emoji*.json
 .mypy_cache/
 
 app/src/main/assets/langpacks/*.json
+app/src/main/assets/emoji_list.json

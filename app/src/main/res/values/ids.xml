@@ -3,6 +3,8 @@
     <item name="gradient_selector" type="id" />
     <item name="disable_type_modifier" type="id" />
     <item name="key_repeat" type="id" />
-    <item name="key_np" type="id" />
-    <item name="key_lp" type="id" />
+    <item name="key_normal_press" type="id" />
+    <item name="key_long_press" type="id" />
+    <item name="key_width" type="id" />
+    <item name="dialog_image_preview" type="id" />
 </resources>

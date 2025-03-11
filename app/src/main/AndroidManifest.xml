@@ -1,87 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
-	
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-		android:maxSdkVersion="32" />
-	<uses-permission android:name="android.permission.VIBRATE"/>
+    xmlns:tools="http://schemas.android.com/tools">
 
-	<uses-permission android:name="android.permission.GET_CLIPS" />
-	<uses-permission android:name="android.permission.WRITE_CLIPS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        android:minSdkVersion="33"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
-	<permission-group
-		android:name="org.blinksd.board.views.SuperBoard"
-		android:label="@string/app_name" />
+    <uses-permission android:name="android.permission.GET_CLIPS" />
+    <uses-permission android:name="android.permission.WRITE_CLIPS" />
 
-	<permission
-		android:icon="@mipmap/ic_launcher_foreground"
-		android:name="org.blinksd.board.BIND_THEME_API"
-		android:label="@string/keyboard_theme_api_perm_label"
-		android:permissionGroup="org.blinksd.board.views.SuperBoard"
-		android:protectionLevel="dangerous" />
+    <!--
+    <permission-group
+        android:name="org.blinksd.board.views.SuperBoard"
+        android:label="@string/app_name" />
+
+    <permission
+        android:icon="@mipmap/ic_launcher_foreground"
+        android:name="org.blinksd.board.BIND_THEME_API"
+        android:label="@string/keyboard_theme_api_perm_label"
+        android:permissionGroup="org.blinksd.board.views.SuperBoard"
+        android:protectionLevel="dangerous" />
+    -->
 
     <application
-		android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".SuperBoardApplication"
-        android:theme="@style/AppTheme"
-		android:resizeableActivity="true"
-		tools:targetApi="tiramisu">
+        android:theme="@style/Theme"
+        android:resizeableActivity="true"
+        tools:targetApi="tiramisu">
 
-		<activity
+        <activity
             android:exported="true"
-			android:launchMode="singleTop"
-			android:name=".activities.SetupActivityV2">
+            android:launchMode="singleTop"
+            android:name=".activities.SetupActivityV2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-		<activity
-			android:launchMode="singleTask"
-            android:name=".activities.AppSettingsV2"
-			android:exported="false"
+        <activity
+            android:launchMode="singleTask"
+            android:name=".activities.settings.AppSettingsV3"
+            android:exported="false"
             android:label="@string/settings_activity"/>
 
-		<activity
-			android:launchMode="singleTask"
-			android:exported="false"
-            android:name=".dictionary.DictionaryImportActivity"/>
+        <activity
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:name=".activities.DictionaryImportActivity"/>
 
-		<activity
-			android:launchMode="singleTask"
-			android:exported="false"
-			android:name=".activities.FontSelector"/>
+        <activity
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:name=".activities.FontSelector"/>
 
-		<activity
-			android:launchMode="singleTask"
-			android:exported="false"
-			android:name=".activities.KeyboardLayoutSelector"/>
+        <activity
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:name=".activities.KeyboardLayoutSelector"/>
 
-		<activity
-			android:theme="@style/AppTheme.Title"
-			android:label="@string/settings_backup_menu"
-			android:launchMode="singleTask"
-			android:exported="false"
-			android:name=".activities.BackupRestoreActivity"/>
+        <activity
+            android:label="@string/settings_backup_menu"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:name=".activities.BackupRestoreActivity"/>
 
-		<service
+        <service
             android:exported="true"
-			android:name=".InputService"
-			android:permission="android.permission.BIND_INPUT_METHOD">
+            android:directBootAware="true"
+            android:name=".InputService"
+            android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
-            </intent-filter> 
+            </intent-filter>
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
 
-		<service
-			android:exported="true"
-			android:name=".services.KeyboardThemeService"
-			android:permission="org.blinksd.board.BIND_THEME_API" />
+        <!--
+        <service
+            android:exported="true"
+            android:name=".services.KeyboardThemeService"
+            android:permission="org.blinksd.board.BIND_THEME_API" />
+        -->
 
     </application>
 

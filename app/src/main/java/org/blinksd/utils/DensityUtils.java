@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
 @SuppressWarnings("unused")
-public class DensityUtils {
+public final class DensityUtils {
 
     public static float dp(float px) {
         return getDisplayMetrics().density * px;

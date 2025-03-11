@@ -1,6 +1,5 @@
 package org.blinksd.board.views;
 
-import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -8,14 +7,16 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.blinksd.board.activities.AppSettingsV2;
+import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.ViewUtils;
 
-public class NumberSelectorLayout {
+@SuppressWarnings("deprecation")
+public final class NumberSelectorLayout {
     private NumberSelectorLayout() {}
 
-    public static View getNumberSelectorLayout(final AppSettingsV2 ctx, final boolean isFloat, final int min, int max, int val) {
+    public static View getNumberSelectorLayout(final AppSettingsV3 ctx, final boolean isFloat, final int min, int max, int val) {
         final LinearLayout main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, ctx);
         main.setGravity(Gravity.CENTER);
         main.setTag(val);
@@ -24,14 +25,11 @@ public class NumberSelectorLayout {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, -2);
         lp.bottomMargin = DensityUtils.dpInt(8);
         text.setLayoutParams(lp);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            text.setTextAppearance(ctx, android.R.style.TextAppearance_DeviceDefault_Medium);
-        }
+        ViewUtils.setTextAppearance(text, android.R.style.TextAppearance_Medium);
         text.setText(getProgressString(val, isFloat));
         main.addView(text);
 
         CustomSeekBar seek = new CustomSeekBar(ctx);
-        seek.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.wpInt(50), -2));
         seek.setMax(max - min);
         seek.setProgress(val - min);
         seek.setOnSeekBarChangeListener(new CustomSeekBar.OnSeekBarChangeListener() {

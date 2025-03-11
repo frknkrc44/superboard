@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** @noinspection NullableProblems*/
-public class RowOptions {
+public final class RowOptions {
     public final List<KeyOptions> keys;
     public final boolean enablePadding;
     public RowOptions(List<KeyOptions> keys, boolean enablePadding) {

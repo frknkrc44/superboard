@@ -1,12 +1,12 @@
 package org.blinksd.board.views;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,29 +22,28 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 @SuppressLint("ViewConstructor")
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class ClipboardView extends LinearLayout
+public final class ClipboardView extends LinearLayout
         implements ClipboardManager.OnPrimaryClipChangedListener {
     private LinearLayout listView;
     private ClipboardManager clipboardManager;
     private final SimpleDateFormat dateFormat =
             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
 
-    private List<String> clipboardHistory;
+    private final List<SpannableString> clipboardHistory = new ArrayList<>();
 
     private final SuperBoard superBoard;
     private ImageButton clearAllButton;
@@ -75,15 +74,16 @@ public class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
-        clearAllButton.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
-                getContext(), textColor, false));
+        ViewUtils.setBackground(clearAllButton, ResourcesUtils.getTransSelectableItemBg(
+                getContext(), textColor));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
         clearAllButton.setLayoutParams(buttonParams);
         clearAllButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        clearAllButton.setOnClickListener(V -> clearClipboard());
-        clearAllButton.setImageResource(R.drawable.sym_keyboard_close);
+        clearAllButton.setOnClickListener(v -> clearClipboard(false));
+        clearAllButton.setOnLongClickListener(v -> clearClipboard(true));
+        clearAllButton.setImageResource(R.drawable.delete);
         clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
         clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         addView(clearAllButton);
@@ -100,11 +100,10 @@ public class ClipboardView extends LinearLayout
 
         String[] clipboardHistoryArray = SuperBoardApplication.getAppDB()
                 .getStringArray(SettingMap.SET_CLIPBOARD_HISTORY, new String[]{});
-        clipboardHistory = new ArrayList<>();
-        clipboardHistory.addAll(Arrays.asList(clipboardHistoryArray));
-
-        for (String text: clipboardHistory) {
-            addClipView(text, false);
+        for (String str : clipboardHistoryArray) {
+            SpannableString spannableString = new SpannableString(str);
+            clipboardHistory.add(spannableString);
+            addClipView(spannableString, false);
         }
 
         clipboardManager = (ClipboardManager) getContext()
@@ -113,7 +112,7 @@ public class ClipboardView extends LinearLayout
         clipboardManager.addPrimaryClipChangedListener(this);
     }
 
-    private void addClipView(String text, boolean addToHistory) {
+    private void addClipView(SpannableString text, boolean addToHistory) {
         int buttonSize = DensityUtils.dpInt(48);
         int buttonPadding = buttonSize / 4;
 
@@ -128,8 +127,6 @@ public class ClipboardView extends LinearLayout
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
         textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
-        textHolder.setOnClickListener(this::selectClipItem);
-        textHolder.setOnLongClickListener(this::selectAndUseClipItem);
         clipLayout.addView(textHolder);
 
         TextView textView1 = textHolder.findViewById(android.R.id.text1);
@@ -143,17 +140,30 @@ public class ClipboardView extends LinearLayout
         textView2.setText(dateFormat.format(Calendar.getInstance().getTime()));
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
-        ImageButton button = new ImageButton(getContext());
-        button.setBackgroundDrawable(LayoutUtils.getTransSelectableItemBg(
-                getContext(), textColor, false));
-        button.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
-        button.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        button.setOnClickListener(v -> removeClipView(v, true));
-        button.setImageResource(R.drawable.sym_keyboard_close);
-        button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        button.setId(R.id.gradient_selector);
-        button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
-        clipLayout.addView(button);
+        ImageButton pasteButton = new ImageButton(getContext());
+        ViewUtils.setBackground(pasteButton, ResourcesUtils.getTransSelectableItemBg(
+                getContext(), textColor));
+        pasteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
+        pasteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        pasteButton.setOnClickListener(v -> selectAndUseClipItem(v, false));
+        pasteButton.setOnLongClickListener(v -> selectAndUseClipItem(v, true));
+        pasteButton.setImageResource(R.drawable.clipboard);
+        pasteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        pasteButton.setId(R.id.gradient_selector);
+        pasteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        clipLayout.addView(pasteButton);
+
+        ImageButton deleteButton = new ImageButton(getContext());
+        ViewUtils.setBackground(deleteButton, ResourcesUtils.getTransSelectableItemBg(
+                getContext(), textColor));
+        deleteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
+        deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        deleteButton.setOnClickListener(v -> removeClipView(v, true));
+        deleteButton.setImageResource(R.drawable.delete);
+        deleteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        deleteButton.setId(R.id.gradient_selector);
+        deleteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        clipLayout.addView(deleteButton);
 
         if (addToHistory) {
             clipboardHistory.add(text);
@@ -162,9 +172,9 @@ public class ClipboardView extends LinearLayout
     }
 
     /** @noinspection SameReturnValue*/
-    private boolean selectAndUseClipItem(View view) {
+    private boolean selectAndUseClipItem(View view, boolean useCtrlToPaste) {
         selectClipItem(view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !useCtrlToPaste) {
             superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
         } else {
             superBoard.setCtrlState(1);
@@ -174,11 +184,10 @@ public class ClipboardView extends LinearLayout
     }
 
     private void selectClipItem(View view) {
-        String item = (String) ((View) view.getParent()).getTag();
+        SpannableString item = (SpannableString) ((View) view.getParent()).getTag();
 
-        CharSequence text = Objects.requireNonNull(clipboardManager.getPrimaryClip())
-                .getItemAt(0).getText();
-        if (text != null && text.toString().equals(item)) {
+        List<SpannableString> texts = getLastPrimaryClipTexts();
+        if (texts.isEmpty() || texts.contains(item)) {
             return;
         }
 
@@ -187,15 +196,26 @@ public class ClipboardView extends LinearLayout
         addClipView(item, true);
     }
 
-    public void clearClipboard() {
+    /** @noinspection SameReturnValue*/
+    public boolean clearClipboard(boolean clearSystem) {
         listView.removeAllViews();
         clipboardHistory.clear();
+
+        if (clearSystem) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                clipboardManager.clearPrimaryClip();
+            } else {
+                clipboardManager.setPrimaryClip(ClipData.newPlainText(null, null));
+            }
+        }
+
         syncClipboardCache();
+        return true;
     }
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView((View) view.getParent());
-        clipboardHistory.remove((String) ((View) view.getParent()).getTag());
+        clipboardHistory.remove((SpannableString) ((View) view.getParent()).getTag());
         if (sync) syncClipboardCache();
     }
 
@@ -204,9 +224,14 @@ public class ClipboardView extends LinearLayout
         if (clipboardHistory.isEmpty()) {
             db.removeKeyFromDB(SettingMap.SET_CLIPBOARD_HISTORY);
         } else {
+            String[] outArray = new String[clipboardHistory.size()];
+            for (int i = 0; i < clipboardHistory.size(); i++) {
+                outArray[i] = clipboardHistory.get(i).toString();
+            }
+
             db.putStringArray(
                     SettingMap.SET_CLIPBOARD_HISTORY,
-                    clipboardHistory.toArray(new String[0]),
+                    outArray,
                     true
             );
         }
@@ -234,21 +259,34 @@ public class ClipboardView extends LinearLayout
         }
     }
 
-    @Override
-    public void onPrimaryClipChanged() {
+    private List<SpannableString> getLastPrimaryClipTexts() {
+        List<SpannableString> texts = new ArrayList<>();
+
         if (clipboardManager.hasPrimaryClip()) {
             ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
 
             for (int i = 0; i < data.getItemCount(); i++) {
                 CharSequence text = data.getItemAt(i).getText();
-                if (text == null) {
-                    return;
+                if (text instanceof SpannableString) {
+                    texts.add((SpannableString) text);
+                } else if (text instanceof String) {
+                    texts.add(new SpannableString(text));
                 }
+            }
+        }
 
-                String primaryText = text.toString();
-                if (listView.findViewWithTag(primaryText) == null) {
-                    addClipView(primaryText, true);
-                }
+        return texts;
+    }
+
+    @Override
+    public void onPrimaryClipChanged() {
+        List<SpannableString> texts = getLastPrimaryClipTexts();
+
+        for (int i = 0; i < texts.size(); i++) {
+            SpannableString primaryText = texts.get(i);
+
+            if (listView.findViewWithTag(primaryText) == null) {
+                addClipView(primaryText, true);
             }
         }
     }

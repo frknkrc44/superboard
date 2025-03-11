@@ -32,7 +32,7 @@ KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
 JAVAC_DEBUG_FLAGS = 
 
-all: langpacks rmdirs optimize keystore
+all: langpacks emojijson rmdirs optimize keystore
 # all: clear mkdirs langpacks keystore abuild build rmdirs zipalign sign
 # build-install: all install
 # build:
@@ -48,7 +48,7 @@ all: langpacks rmdirs optimize keystore
 # 	$(ZIPALIGN) -v -p 4 bin/$(NAME).ap_ bin/$(NAME)-aligned.ap_
 # 	mv bin/$(NAME)-aligned.ap_ bin/$(NAME).ap_
 optimize:
-	optipng -quiet -o7 `find $(RES) -name "*.png"`
+	optipng -quiet -o7 `find $(RES) -name "*.png"` || true
 # sign:
 # 	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk bin/$(NAME).ap_
 # 	#rm -f bin/$(NAME).ap_
@@ -79,5 +79,8 @@ rmdirs:
 langpacks:
 	cd SuperBoardLayoutCreator && \
 		${SHELL} create_packs.sh
+emojijson:
+	cd EmojiJsonCreator && \
+		${SHELL} create_emoji_json.sh
 keystore:
 	${SHELL} apply_keystore_props.sh

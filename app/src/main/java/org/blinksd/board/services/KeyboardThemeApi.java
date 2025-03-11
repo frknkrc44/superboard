@@ -7,10 +7,10 @@ import android.os.Build;
 import org.blinksd.board.InputService;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
-import org.blinksd.board.views.SettingsCategorizedListAdapter;
 import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.superboard.Language;
 import org.json.JSONException;
@@ -21,7 +21,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
+public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public static final int THEME_IMPORT_SUCCESS = 0,
             THEME_IMPORT_FAILED_MISSING_KEYS = 1,
             THEME_IMPORT_FAILED_EXISTS = 2,
@@ -48,7 +48,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             themeCheckMandatoryKeys(obj);
             if (!isThemeImported(obj.getString("code"))) {
                 importThemeInternal(obj);
-                SuperBoardApplication.reloadThemeCache();
+                SuperBoardApplication.clearThemeCache();
                 return THEME_IMPORT_SUCCESS;
             }
             return THEME_IMPORT_FAILED_EXISTS;
@@ -86,7 +86,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             JSONObject obj = new JSONObject(jsonStr);
             themeCheckMandatoryKeys(obj);
             importThemeInternal(obj);
-            SuperBoardApplication.reloadThemeCache();
+            SuperBoardApplication.clearThemeCache();
             return THEME_IMPORT_SUCCESS;
         } catch (JSONException e) {
             // do nothing
@@ -111,7 +111,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             File file = SuperBoardApplication.getBackgroundImageFile();
             outputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            SettingsCategorizedListAdapter.setColorsFromBitmap(bmp);
+            SuperDBHelper.setColorsFromBitmap(bmp);
 
             // disable monet because we're imported a background image
             // and pulled colors from it
@@ -134,7 +134,8 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public static void restartKeyboard() {
         try {
             SuperBoardApplication.getApplication()
-                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD));
+                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD)
+                            .setPackage(SuperBoardApplication.getApplication().getPackageName()));
         } catch (Throwable e) {
             // do nothing
         }
@@ -191,7 +192,7 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             fos.write(langPkgStr.getBytes());
             fos.flush();
             fos.close();
-            SuperBoardApplication.reloadLanguageCache();
+            SuperBoardApplication.clearLanguageCache();
             return LANG_PKG_IMPORT_SUCCESS;
         } catch (Throwable t) {
             // do nothing
@@ -204,6 +205,5 @@ public class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
         return SuperBoardApplication.getKeyboardLanguage(name, true).name.equals(name);
     }
 
-    private static class MissingKeysException extends RuntimeException {
-    }
+    private static final class MissingKeysException extends RuntimeException {}
 }

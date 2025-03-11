@@ -1,40 +1,65 @@
 package org.blinksd.utils;
 
-import android.annotation.TargetApi;
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.utils.DensityUtils.mpInt;
+
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
+import android.graphics.Bitmap;
 
 import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.board.activities.AppSettingsV2;
 import org.frknkrc44.minidb.SuperMiniDB;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-@SuppressWarnings("unused")
-public class SuperDBHelper {
+public final class SuperDBHelper {
+    private static final List<String> THEME_PROPS = Arrays.asList(
+            SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT,
+            SettingMap.SET_ICON_THEME,
+            SettingMap.SET_KEYBOARD_BGCLR,
+            SettingMap.SET_KEY_BGCLR,
+            SettingMap.SET_KEY_PRESS_BGCLR,
+            SettingMap.SET_KEY2_BGCLR,
+            SettingMap.SET_KEY2_PRESS_BGCLR,
+            SettingMap.SET_ENTER_BGCLR,
+            SettingMap.SET_ENTER_PRESS_BGCLR,
+            SettingMap.SET_KEY_SHADOWCLR,
+            SettingMap.SET_KEY_TEXTCLR,
+            SettingMap.SET_KEY_PADDING,
+            SettingMap.SET_KEY_RADIUS,
+            SettingMap.SET_KEY_TEXTSIZE,
+            SettingMap.SET_KEY_SHADOWSIZE,
+            SettingMap.SET_KEY_BG_TYPE,
 
-    private SuperDBHelper() {
-    }
+            // don't export the clipboard history for privacy
+            SettingMap.SET_CLIPBOARD_HISTORY
+    );
+
+    private SuperDBHelper() {}
 
     public static SuperMiniDB getDefault(Context c) {
         return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), false);
-    }
-
-    public static SuperMiniDB getDefaultAsync(Context c, Runnable onLoadFinished) {
-        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), onLoadFinished);
     }
 
     public static String getStringOrDefault(String key) {
         SuperMiniDB db = SuperBoardApplication.getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
-            db.putString(key, String.valueOf(
-                    SuperBoardApplication.getSettings().getDefaults(key)), true);
+            return getSettings().getDefaults(key).toString();
         }
+
         return db.getString(key, ret);
+    }
+
+    public static int getFloatPercentOrDefault(String key) {
+        return mpInt(getFloatedIntOrDefault(key));
     }
 
     public static float getFloatedIntOrDefault(String key) {
@@ -42,7 +67,7 @@ public class SuperDBHelper {
     }
 
     public static int getIntOrDefault(String key) {
-        if (Build.VERSION.SDK_INT >= 31 && getBooleanOrDefault(SettingMap.SET_USE_MONET)) {
+        if (SuperBoardApplication.getMonetColors().isMonetEnabled()) {
             return getMonetColorValue(key);
         }
 
@@ -62,61 +87,91 @@ public class SuperDBHelper {
     }
 
     private static boolean isBooleanDependencyResolved(final String key) {
-        AppSettingsV2.SettingItem item = SuperBoardApplication.getSettings().get(key);
+        SettingItem item = getSettings().get(key);
         List<String> checkedKeys = new ArrayList<>();
         checkedKeys.add(key);
 
-        while (item.dependency != null && !checkedKeys.contains(item.dependency)) {
+        while (item != null && item.dependency != null && !checkedKeys.contains(item.dependency)) {
             boolean depValue = getBooleanOrDefault(item.dependency);
             if ((boolean) item.dependencyEnabled != depValue) return false;
 
             checkedKeys.add(item.dependency);
-            item = SuperBoardApplication.getSettings().get(item.dependency);
+            item = getSettings().get(item.dependency);
         }
 
         return true;
     }
 
-    public static long getLongOrDefault(String key) {
-        return Long.parseLong(getStringOrDefault(key));
-    }
-
-    public static float getFloatOrDefault(String key) {
-        return Float.parseFloat(getStringOrDefault(key));
-    }
-
-    public static double getDoubleOrDefault(String key) {
-        return Double.parseDouble(getStringOrDefault(key));
-    }
-
-    public static byte getByteOrDefault(String key) {
-        return Byte.parseByte(getStringOrDefault(key));
-    }
-
-    @TargetApi(31)
     private static int getMonetColorValue(String key) {
-        Resources res = SuperBoardApplication.getApplication().getResources();
-        Configuration conf = res.getConfiguration();
-        boolean dark = (conf.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-        switch (key) {
-            case SettingMap.SET_ENTER_BGCLR:
-                return res.getColor(dark ? android.R.color.system_accent1_500 : android.R.color.system_accent1_300);
-            case SettingMap.SET_ENTER_PRESS_BGCLR:
-                return res.getColor(dark ? android.R.color.system_accent1_600 : android.R.color.system_accent1_400);
-            case SettingMap.SET_KEY_BGCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_100);
-            case SettingMap.SET_KEY_PRESS_BGCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_500 : android.R.color.system_neutral1_200);
-            case SettingMap.SET_KEY2_BGCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_700 : android.R.color.system_neutral1_200);
-            case SettingMap.SET_KEY2_PRESS_BGCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_600 : android.R.color.system_neutral1_300);
-            case SettingMap.SET_KEYBOARD_BGCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_800 : android.R.color.system_neutral1_50);
-            case SettingMap.SET_KEY_TEXTCLR:
-                return res.getColor(dark ? android.R.color.system_neutral1_100 : android.R.color.system_neutral1_900);
+        MonetColors monetColors = SuperBoardApplication.getMonetColors();
+        return switch (key) {
+            case SettingMap.SET_ENTER_BGCLR -> monetColors.getEnterColor();
+            case SettingMap.SET_ENTER_PRESS_BGCLR -> monetColors.getEnterPressColor();
+            case SettingMap.SET_KEY_BGCLR -> monetColors.getKeyColor();
+            case SettingMap.SET_KEY_PRESS_BGCLR -> monetColors.getKeyPressColor();
+            case SettingMap.SET_KEY2_BGCLR -> monetColors.getKey2Color();
+            case SettingMap.SET_KEY2_PRESS_BGCLR -> monetColors.getKey2PressColor();
+            case SettingMap.SET_KEYBOARD_BGCLR -> monetColors.getKeyboardColor();
+            case SettingMap.SET_KEY_TEXTCLR -> monetColors.getTextColor();
+            default -> Integer.parseInt(getStringOrDefault(key));
+        };
+    }
+
+    public static void removeKey(String key) {
+        SuperMiniDB db = SuperBoardApplication.getAppDB();
+        if (db.isDBContainsKey(key)) {
+            db.removeKeyFromDB(key);
+        }
+    }
+
+    public static void importAllFromJSON(JSONObject json) throws JSONException {
+        Iterator<String> it = json.keys();
+
+        while(it.hasNext()) {
+            String key = it.next();
+            getAppDB().putString(key, json.getString(key));
         }
 
-        return Integer.parseInt(getStringOrDefault(key));
+        getAppDB().writeAll();
+    }
+
+    public static void setColorsFromBitmap(Bitmap b) {
+        if (b == null) return;
+        int c = ColorUtils.getBitmapColor(b);
+        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, c - 0xAA000000);
+        int keyClr = c - 0xAA000000;
+        int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+        int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_BGCLR, keyClr);
+        getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR, keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
+        getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
+        boolean isLight = ColorUtils.satisfiesTextContrast(c);
+        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, ColorUtils.getDarkerColor(keyPress2Clr));
+        keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
+        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, keyClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, keyClr ^ 0x00FFFFFF);
+        getAppDB().writeAll();
+    }
+
+    public static Map<String, String> exportAllToMap(List<String> except) {
+        Map<String, String> exportMap = new HashMap<>();
+
+        for (String key : SuperBoardApplication.getAppDB().getKeys()) {
+            if (except.contains(key)) {
+                continue;
+            }
+
+            String value = SuperBoardApplication.getAppDB().getString(key, null);
+            if (value != null) {
+                exportMap.put(key, value);
+            }
+        }
+
+        return exportMap;
+    }
+
+    public static Map<String, String> exportAllExceptTheme() {
+        return exportAllToMap(THEME_PROPS);
     }
 }

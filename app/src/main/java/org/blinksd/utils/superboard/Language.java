@@ -2,7 +2,7 @@ package org.blinksd.utils.superboard;
 
 import java.util.List;
 
-public class Language {
+public final class Language {
     public String name = "";
     public String label = "";
     public boolean enabled;

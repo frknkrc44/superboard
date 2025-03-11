@@ -1,8 +1,11 @@
 package org.blinksd.board.views;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -22,9 +25,11 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.TextUtilsCompat;
+import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,21 +55,13 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         mCompletionsLayoutRoot = new LinearLayout(getContext());
         mCompletionsLayoutRoot.setLayoutParams(new LayoutParams(-1, -1));
 
+        final int returnToQMWidth = DensityUtils.wpInt(12);
+        final int returnToQMPad = returnToQMWidth / 6;
         mReturnToQuickMenu = new ImageButton(getContext());
-        int size = DensityUtils.dpInt(56);
-        LinearLayout.LayoutParams returnToQMParams =
-                new LinearLayout.LayoutParams(size, -1, 0);
-        returnToQMParams.rightMargin = returnToQMParams.leftMargin =
-                returnToQMParams.bottomMargin = returnToQMParams.topMargin = DensityUtils.dpInt(8);
-
-        mReturnToQuickMenu.setPadding(
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2,
-                returnToQMParams.leftMargin * 2,
-                returnToQMParams.topMargin * 2
-        );
-        mReturnToQuickMenu.setLayoutParams(returnToQMParams);
+        mReturnToQuickMenu.setLayoutParams(new LinearLayout.LayoutParams(returnToQMWidth, -1, 0));
         mReturnToQuickMenu.setImageResource(R.drawable.sym_keyboard_close);
+        ViewUtils.setBackground(mReturnToQuickMenu, null);
+        mReturnToQuickMenu.setPadding(returnToQMPad, returnToQMPad * 2, returnToQMPad, returnToQMPad * 2);
         mReturnToQuickMenu.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mReturnToQuickMenu.setId(android.R.id.button1);
         mReturnToQuickMenu.setOnClickListener(v -> toggleQuickMenu(true));
@@ -103,7 +100,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
             text = "";
 
         if (lang == null)
-            lang = this.superBoard.getKeyboardLanguage().getLanguage();
+            lang = superBoard.getKeyboardLanguage().getLanguage();
 
         String str = text.toString();
         mCompleteText = str;
@@ -144,106 +141,86 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_CTRL, "ctrl");
         addQMItem(KeyEvent.KEYCODE_HENKAN, R.drawable.more_control, false);
         addQMItem(KeyEvent.KEYCODE_NUM, R.drawable.number, false);
-        addQMItem(KeyEvent.KEYCODE_KANA, R.drawable.sym_board_emoji, false);
+        if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            addQMItem(KeyEvent.KEYCODE_KANA, R.drawable.sym_board_emoji, false);
+        }
         addQMItem(KeyEvent.KEYCODE_EISU, R.drawable.clipboard, false);
         addQMItemStateful(SuperBoard.KEYCODE_TOGGLE_ALT, "alt");
         addQMItem(KeyEvent.KEYCODE_DPAD_RIGHT, R.drawable.arrow_right, true);
     }
 
     private void addQMItemStateful(int tag, String text) {
-        SuperBoard.Key key = superBoard.createKey(text, null);
+        SuperBoard.Key key = superBoard.createKey(text);
         superBoard.setPressEventForKey(key, tag, true);
         key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
         key.setStateCount(2);
         mQuickMenuLayout.addView(key);
+        superBoard.addExtraKey(key);
     }
 
     private void addQMItem(int tag, int drawableRes, boolean repeat) {
-        SuperBoard.Key key = superBoard.createKey("", null);
+        SuperBoard.Key key = superBoard.createKey("");
         key.setKeyIcon(drawableRes);
         superBoard.setKeyRepeat(key, repeat);
         superBoard.setPressEventForKey(key, tag, true);
         key.setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(16), -1));
         mQuickMenuLayout.addView(key);
+        superBoard.addExtraKey(key);
     }
 
     private void addCompletionView(final CharSequence text) {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         tv.setTextColor(color);
-        float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+        float textSize = getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE);
         int pad = DensityUtils.dpInt(8);
         tv.setTextSize(textSize);
+        tv.setShadowLayer(superBoard.shadowRadius, 0, 0, superBoard.shadowColor);
+        TextUtilsCompat.setTypefaceFromTextType(tv, getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
         tv.setLayoutParams(params);
-        tv.setPadding(pad, pad, pad, pad);
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setText(text);
         tv.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            tv.setBackground(getSuggestionItemBackground());
-        } else {
-            tv.setBackgroundDrawable(getSuggestionItemBackground());
-        }
         mCompletionsLayout.addView(tv);
     }
 
     private Drawable getSuggestionItemBackground() {
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         GradientDrawable gd = new GradientDrawable();
         gd.setColor(ColorUtils.getColorWithAlpha(color, 70));
         gd.setCornerRadius(16);
         return gd;
     }
 
-    private void setBackground(View view, Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
-        } else {
-            view.setBackgroundDrawable(drawable);
-        }
-    }
-
     public void reTheme() {
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int color = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
-        setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
-        mReturnToQuickMenu.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        // ViewUtils.setBackground(mReturnToQuickMenu, getSuggestionItemBackground());
+        ColorUtils.setColorFilter(mReturnToQuickMenu.getDrawable(), color);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(color);
-            float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+            float textSize = getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE);
             tv.setTextSize(textSize);
-            setBackground(tv, getSuggestionItemBackground());
+            ViewUtils.setBackground(tv, getSuggestionItemBackground());
         }
 
         for (int i = 0; i < mQuickMenuLayout.getChildCount(); i++) {
             View view = mQuickMenuLayout.getChildAt(i);
-            int keyClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-            int keyPressClr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
-            Drawable keyPressBg = LayoutUtils.getKeyBg(keyClr, keyPressClr, true);
 
             if (view instanceof SuperBoard.Key) {
                 SuperBoard.Key key = (SuperBoard.Key) view;
-                key.setKeyItemColor(color);
-
-                setBackground(key, keyPressBg);
-
-                int textSize = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
-                key.setKeyTextSize(textSize);
-
-                int shr = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
-                        shc = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR);
-                key.setKeyShadow(shr, shc);
-
-                key.setKeyImageVisible(key.isKeyIconSet());
+                ViewUtils.setBackground(key, null);
+                key.toggleVisibility();
 
                 switch(key.getNormalPressEvent().first) {
                     case KeyEvent.KEYCODE_EISU: {
+                        boolean showBottomBar = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_SHOW_BOTTOM_BAR);
                         boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(SettingMap.SET_ENABLE_CLIPBOARD);
-                        key.setVisibility(enableClipboard ? View.VISIBLE : View.GONE);
+                        key.setVisibility(enableClipboard && !showBottomBar ? View.VISIBLE : View.GONE);
                         break;
                     }
                     case KeyEvent.KEYCODE_NUM: {
@@ -251,6 +228,7 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                         key.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                         break;
                     }
+                    case KeyEvent.KEYCODE_HENKAN:
                     case KeyEvent.KEYCODE_DPAD_LEFT:
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
                     case SuperBoard.KEYCODE_TOGGLE_CTRL:
@@ -269,18 +247,21 @@ public class SuggestionLayout extends FrameLayout implements View.OnClickListene
                 setKeyLockStatus(key);
             } else if (view instanceof ImageButton) {
                 ImageButton btn = (ImageButton) view;
+                int keyClr = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+                int keyPressClr = getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
+                Drawable keyPressBg = ResourcesUtils.getKeyBg(keyClr, keyPressClr, true);
 
                 if ((int) btn.getTag() == 4) {
                     boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
                     btn.setVisibility(numDisabled ? View.VISIBLE : View.GONE);
                 }
 
-                setBackground(btn, keyPressBg);
+                ViewUtils.setBackground(btn, keyPressBg);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     btn.setImageTintList(ColorStateList.valueOf(color));
                 } else {
-                    btn.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    ColorUtils.setColorFilter(btn.getDrawable(), color);
                 }
             }
         }

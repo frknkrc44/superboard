@@ -2,10 +2,9 @@ package org.blinksd.board.activities;
 
 import static org.blinksd.utils.DensityUtils.mpInt;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,15 +23,18 @@ import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.Language;
 import org.blinksd.utils.superboard.RowOptions;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class KeyboardLayoutSelector extends Activity implements View.OnClickListener {
+@SuppressWarnings("deprecation")
+public final class KeyboardLayoutSelector extends BaseActivity implements View.OnClickListener {
     public static final int KEYBOARD_LAYOUT_SELECTOR_RESULT = 0xFF;
     private String currentLayout;
 
@@ -122,7 +124,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         View view = new View(this);
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
-        view.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(view, ResourcesUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 false,
@@ -130,7 +132,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         ));
 
         boolean isSelected = currentLayout.equals(language.language);
-        btn.setBackgroundDrawable(LayoutUtils.getSelectableItemBg(
+        ViewUtils.setBackground(btn, ResourcesUtils.getSelectableItemBg(
                 this,
                 Color.WHITE,
                 isSelected
@@ -146,10 +148,10 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
             tick.setLayoutParams(params);
             int p = tickSize / 8;
             tick.setPadding(p, p, p, p);
-            tick.setBackgroundDrawable(LayoutUtils.getCircleButtonBackground(false));
+            ViewUtils.setBackground(tick, ResourcesUtils.getCircleButtonBackground(false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            tick.setImageResource(R.drawable.sym_board_return);
-            tick.getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            Drawable returnSymbol = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
+            tick.setImageDrawable(returnSymbol);
             layers.addView(tick);
         }
 
@@ -166,7 +168,6 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         finish();
     }
 
-    /** @noinspection unused*/
     private static class SuperBoardPreview extends SuperBoard {
         public SuperBoardPreview(Context c) {
             super(c);
@@ -181,12 +182,7 @@ public class KeyboardLayoutSelector extends Activity implements View.OnClickList
         }
 
         @Override
-        public void sendDefaultKeyboardEvent(View v) {
-            fakeKeyboardEvent((Key) v);
-        }
-
-        @Override
-        public void addRows(int keyboardIndex, String[][] keys) {
+        public void addRows(int keyboardIndex, CharSequence[][] keys) {
             super.addRows(keyboardIndex, keys);
             setShiftState(SHIFT_ON);
         }

@@ -95,18 +95,14 @@
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">অন্যান্য</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd/combined.gz) আমদানি করুন</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
     <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
     <string name="settings_dict_import_delete_duplicates">ডুপ্লিকেট মুছে ফেলা হচ্ছে</string>
     <!-- Settings category resources -->
-    <string name="settings_category_general">General</string>
-    <string name="settings_category_theming">Theming</string>
-    <string name="settings_category_theming_adv">Advanced Theming</string>
-    <string name="settings_category_layout">Keyboard Layout</string>
-    <string name="settings_category_popup">Popup</string>
-    <string name="settings_category_top_bar">Top Bar</string>
-    <string name="settings_category_bottom_bar">Bottom Bar</string>
+    <string name="settings_category_general">সাধারণ</string>
+    <string name="settings_category_theming">থিমিং</string>
+    <string name="settings_category_theming_adv">উন্নত থিমিং</string>
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">ডিফল্ট</string>
     <!-- List selector resources -->

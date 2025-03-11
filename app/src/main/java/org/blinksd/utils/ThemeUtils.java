@@ -1,9 +1,15 @@
 package org.blinksd.utils;
 
+import static org.blinksd.utils.ColorUtils.colorIntToString;
+import static org.blinksd.utils.SuperDBHelper.getFloatedIntOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getStringOrDefault;
+
 import android.content.res.AssetManager;
 import android.graphics.Color;
 
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.utils.superboard.TextType;
 import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
-public class ThemeUtils {
+public final class ThemeUtils {
     public static final int KEY_BG_TYPE_FLAT     = 0,
                             KEY_BG_TYPE_GRADIENT = 1;
 
@@ -59,28 +64,6 @@ public class ThemeUtils {
             }
         }
         return null;
-    }
-
-    public static ThemeHolder getThemeFromCodeName(List<ThemeHolder> themes, String name) {
-        for (ThemeHolder holder : themes) {
-            if (holder.codeName.equals(name)) {
-                return holder;
-            }
-        }
-        return null;
-    }
-
-    public static int getThemeIndexFromCodeName(List<ThemeHolder> themes, String name) {
-        for (int i = 0; i < themes.size(); i++) {
-            if (themes.get(i).codeName.equals(name)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static List<String> getThemeNames() throws IOException, JSONException {
-        return getThemeNames(getThemes());
     }
 
     public static List<String> getThemeNames(List<ThemeHolder> themes) {
@@ -134,29 +117,72 @@ public class ThemeUtils {
         return holders;
     }
 
+    public static JSONObject getCurrentThemeJSON() {
+        long millis = System.currentTimeMillis();
+        String name = String.format("Current %s", millis);
+        String codeName = String.format("current_%s", millis);
+
+        String iconTheme = getStringOrDefault(SettingMap.SET_ICON_THEME);
+        String backgroundColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
+        String primaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_BGCLR));
+        String secondaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
+        String enterColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
+        String textShadowColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
+        String textColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+        String primaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR));
+        String secondaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
+        String enterPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
+
+        double keyPadding = getFloatedIntOrDefault(SettingMap.SET_KEY_PADDING);
+        double keyRadius = getFloatedIntOrDefault(SettingMap.SET_KEY_RADIUS);
+        double textSize = getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE);
+        double textShadow = getFloatedIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE);
+
+        int fontType = getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
+        int keyBgType = getIntOrDefault(SettingMap.SET_KEY_BG_TYPE);
+        int keyBgGradientOrientation = getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION);
+
+        JSONObject export = new JSONObject();
+
+        try {
+            export.put("name", name);
+            export.put("code", codeName);
+
+            TextType[] values = TextType.values();
+
+            export.put("fnTyp", values[fontType < values.length ? fontType : 0].toString());
+            export.put("icnThm", iconTheme);
+            export.put("bgClr", backgroundColor);
+            export.put("priClr", primaryColor);
+            export.put("priPressClr", primaryPressColor);
+            export.put("secClr", secondaryColor);
+            export.put("secPressClr", secondaryPressColor);
+            export.put("enterClr", enterColor);
+            export.put("enterPressClr", enterPressColor);
+            export.put("tShdwClr", textShadowColor);
+            export.put("txtClr", textColor);
+            export.put("keyPad", keyPadding);
+            export.put("keyRad", keyRadius);
+            export.put("txtSize", textSize);
+            export.put("txtShadow", textShadow);
+            export.put("kBgType", keyBgType);
+            export.put("kBGOri", keyBgGradientOrientation);
+        } catch (JSONException ignored) {}
+
+        return export;
+    }
+
     public static class ThemeHolder {
         public final String name, codeName, fontType, iconTheme,
                 backgroundColor, primaryColor, secondaryColor,
                 enterColor, textShadowColor, textColor,
                 primaryPressColor, secondaryPressColor, enterPressColor;
         public final int keyPadding, keyRadius, textSize, textShadow,
-                keyBgType, key2BgType, enterBgType, keyBgGradientOrientation;
+                keyBgType, keyBgGradientOrientation;
         public final boolean isUserTheme;
-
-        public ThemeHolder() throws JSONException {
-            this(true);
-        }
 
         public ThemeHolder(String str) throws JSONException {
             this(new JSONObject(str), true);
-        }
-
-        public ThemeHolder(JSONObject json) {
-            this(json, true);
-        }
-
-        private ThemeHolder(boolean userTheme) throws JSONException {
-            this("{}", userTheme);
         }
 
         private ThemeHolder(String str, boolean userTheme) throws JSONException {
@@ -188,8 +214,6 @@ public class ThemeUtils {
             this.textShadow = getInt(json, "txtShadow");
 
             this.keyBgType = getInt(json, "kBgType", KEY_BG_TYPE_FLAT, false);
-            this.key2BgType = getInt(json, "k2BgType", KEY_BG_TYPE_FLAT, false);
-            this.enterBgType = getInt(json, "eBgType", KEY_BG_TYPE_FLAT, false);
             this.keyBgGradientOrientation =
                     getInt(json, "kBGOri", KEY_BG_ORIENTATION_TB, false);
             this.isUserTheme = userTheme;
@@ -286,6 +310,7 @@ public class ThemeUtils {
             putControlledInt(SettingMap.SET_KEY_RADIUS, keyRadius);
             putControlledInt(SettingMap.SET_KEY_TEXTSIZE, textSize);
             putControlledInt(SettingMap.SET_KEY_SHADOWSIZE, textShadow);
+            putControlledInt(SettingMap.SET_KEY_BG_TYPE, keyBgType);
         }
     }
 }

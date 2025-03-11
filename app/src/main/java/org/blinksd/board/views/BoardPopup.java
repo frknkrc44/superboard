@@ -1,92 +1,85 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.inputmethodservice.InputMethodService;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.superboard.KeyboardType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection unused*/
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {
-    private static final int[] pos = new int[2];
+    private static final int[] pos = new int[]{0, 0};
     private static int khp = 0;
     private final Key mKey;
-    private final View popupFilter, mRoot;
+    private final View mPopupFilter;
 
     @SuppressLint("ClickableViewAccessibility")
     public BoardPopup(ViewGroup root) {
         super(root.getContext());
-        mRoot = root;
-        setKeyboardHeight(10);
-        pos[0] = pos[1] = 0;
-        updateKeyState((InputMethodService) root.getContext());
-        popupFilter = new View(root.getContext());
-        popupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, getKeyboardHeight()));
-        popupFilter.setVisibility(View.GONE);
+        createEmptyLayout(KeyboardType.NUMBER);
+        updateKeyState();
+        mPopupFilter = new View(root.getContext());
+        mPopupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, -2));
+        mPopupFilter.setFocusable(false);
         mKey = new Key(getContext());
         mKey.setOnTouchListener(null);
-        root.addView(popupFilter);
+        root.addView(mPopupFilter);
         root.addView(mKey);
+        mPopupFilter.setVisibility(View.GONE);
         mKey.setVisibility(GONE);
         setVisibility(GONE);
     }
 
     public void setFilterHeight(int h) {
-        popupFilter.getLayoutParams().height = h;
+        mPopupFilter.getLayoutParams().height = h;
     }
 
     public void setKeyboardPrefs() {
-        setKeyboardHeight(10);
-        popupFilter.getLayoutParams().height = getKeyboardHeight();
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         khp = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
         int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
         int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-        a = Color.argb(0xCC, Color.red(a), Color.green(a), Color.blue(a));
-        ap = Color.argb(0xCC, Color.red(ap), Color.green(ap), Color.blue(ap));
-        setBackgroundDrawable(LayoutUtils.getKeyBg(a, ap, true));
-        popupFilter.setBackgroundColor(a - 0x33000000);
+        a = ColorUtils.setAlphaForColor(0xCC, a);
+        ap = ColorUtils.setAlphaForColor(0xCC, ap);
+        setBackgroundDrawable(ResourcesUtils.getKeyBg(a, ap, true));
+        mPopupFilter.setBackgroundColor(ColorUtils.setAlphaForColor(0x33, a));
         mKey.setVisibility(GONE);
-        setKeyLeft(pos[0]);
-        int h = mKey.getLayoutParams().height;
-        setKeyTop(pos[1] - (pos[1] >= h ? h : 0));
+        int keyHeight = mKey.getLayoutParams().height;
+        setKeyLeftTop(pos[0], pos[1] - (pos[1] >= keyHeight ? keyHeight : 0));
     }
 
-    private void setKeyLeft(int pos) {
+    private void setKeyLeftTop(int left, int top) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
-        params.leftMargin = pos;
-    }
-
-    private void setKeyTop(int pos) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
-        params.topMargin = pos;
+        params.leftMargin = left;
+        params.topMargin = top;
     }
 
     public void setKey(SuperBoard board, Key key) {
         setShiftState(board.getShiftState());
         key.clone(mKey);
         key.getLocationInWindow(pos);
-        setKeysTextColor(key.getTextColor());
-        setKeysTextType(key.txtst);
-        setKeysShadow(key.shr, key.shc);
+        setKeysTextType(board.textStyle);
+        setKeysShadow(board.shadowRadius, board.shadowColor);
+        setKeysTextColor(board.getKeysTextColor());
         setKeysTextSize((int) board.getKeysTextSize());
         mKey.setKeyTextSize(board.getKeysTextSize());
         setKeyboardPrefs();
     }
 
     public void showCharacter() {
-        if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             hideCharacter();
             return;
         }
@@ -100,19 +93,18 @@ public class BoardPopup extends SuperBoard {
 
     public void showPopup(boolean visible) {
         hideCharacter();
-        CharSequence hint = mKey.getHint();
-        String str = hint != null ? hint.toString().trim() : "";
+        CharSequence[] popupCharacters = mKey.getPopupCharacters();
         boolean useFC = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
-        visible = visible && !str.isEmpty();
+        visible = visible && popupCharacters != null;
         setVisibility(visible && !useFC ? VISIBLE : GONE);
-        popupFilter.setVisibility(getVisibility());
+        mPopupFilter.setVisibility(getVisibility());
 
         if (visible) {
             if (useFC) {
-                String ret = Character.toString(str.charAt(0));
+                CharSequence ret = popupCharacters[0];
                 ret = getCase(ret, getShiftState() > SHIFT_OFF);
 
-                commitText(ret);
+                commitText(ret.toString());
 
                 if (getShiftState() == SHIFT_ON) {
                     setShiftState(SHIFT_OFF);
@@ -120,42 +112,36 @@ public class BoardPopup extends SuperBoard {
 
                 afterKeyboardEvent();
             } else {
-                setCharacters(str);
+                setCharacters(popupCharacters);
             }
         }
     }
 
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        mRoot.setFocusable(visibility != VISIBLE);
-    }
-
-    private void setCharacters(String chr) {
+    private void setCharacters(CharSequence[] chars) {
         clear();
-        String[] chars = chr.split("");
 
-        List<String> uppercaseCharacters = new ArrayList<>();
-        for (String c : chars) {
-            uppercaseCharacters.add(getCase(c, getShiftState() > SHIFT_OFF));
+        List<CharSequence> uppercaseCharacters = new ArrayList<>();
+        for (CharSequence c : chars) {
+            uppercaseCharacters.add(getCase(c, getShiftState() != SHIFT_OFF));
         }
 
         createPopup(uppercaseCharacters.toArray(chars));
-        setKeysShadow(mKey.shr, mKey.shc);
     }
 
-    private void createPopup(String[] a) {
+    private void createPopup(CharSequence[] a) {
         int h, c = 6;
         setKeyboardWidth(a.length < c ? 11 * a.length : 11 * c);
-        setX(DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)));
         h = a.length / c;
         h = h > 0 ? h : 1;
         h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 : 0;
         setKeyboardHeight(10 * h);
-        setY(DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f));
-        String[] x;
+        setXY(
+                DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)),
+                DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f)
+        );
+        CharSequence[] x;
         for (int i = 0, k = 0; i < h; i++) {
-            x = new String[Math.min(a.length, c)];
+            x = new CharSequence[Math.min(a.length, c)];
             x[0] = "";
             for (int g = 0; g < c; g++) {
                 k++;
@@ -166,33 +152,28 @@ public class BoardPopup extends SuperBoard {
                 }
                 break;
             }
-            if (!x[0].isEmpty() && k > 1) addRow(0, x);
+            if (x[0].length() > 0 && k > 1) addRow(0, x);
         }
-        for (int i = 0; i < getKeyboard(0).getChildCount(); i++) {
-            getRow(0, i).setKeyWidths();
-        }
+
+        fixHeight();
+    }
+
+    public void setXY(float x, float y) {
+        setX(x);
+        setY(y);
     }
 
     @Override
-    protected void sendDefaultKeyboardEvent(View v) {
-        super.sendDefaultKeyboardEvent(v);
+    protected void sendKeyboardEvent(Key v) {
+        super.sendKeyboardEvent(v);
         showPopup(false);
         clear();
         System.gc();
     }
 
     @Override
-    public int findKeyboardIndex(KeyboardType type) {
-        return super.findKeyboardIndex(KeyboardType.TEXT);
-    }
-
-    @Override
     public void clear() {
         super.clear();
-        mKey.setHint(null);
-    }
-
-    public int getIntOrDefault(String key) {
-        return SuperDBHelper.getIntOrDefault(key);
+        mKey.setPopupCharacters(null);
     }
 }

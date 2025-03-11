@@ -13,7 +13,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdk keystoreProperties['TARGETSDK'].toInteger()
+    // TODO: Increase target sdk after 36 released
+    compileSdk keystoreProperties['TARGETSDK'].toInteger() - 1
 
     buildFeatures {
         aidl true
@@ -36,18 +37,9 @@ android {
         targetSdk keystoreProperties['TARGETSDK'].toInteger()
         versionCode keystoreProperties['VERCODE'].toInteger()
         versionName keystoreProperties['VERNAME']
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    
-   signingConfigs {
-        release {
-            keyAlias keystoreProperties['KEYALIAS']
-            keyPassword keystoreProperties['KEYPASS']
-            storeFile file(keystoreProperties['KEYFILE'])
-            storePassword keystoreProperties['STOREPASS']
-        }
 
+   signingConfigs {
        debug {
            keyAlias keystoreProperties['KEYALIAS']
            keyPassword keystoreProperties['KEYPASS']
@@ -56,10 +48,9 @@ android {
        }
     }
 
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             debuggable false
             jniDebuggable false
             minifyEnabled true
@@ -68,19 +59,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    namespace 'org.blinksd.board'
+
+    namespace android.defaultConfig.applicationId
 }
 
 dependencies {
-    implementation 'com.github.frknkrc44:superminidb:main-SNAPSHOT'
+    implementation 'com.github.frknkrc44:superminidb:b05b17d'
 }
 
 android.applicationVariants.configureEach { variant ->
     variant.outputs.configureEach {
-        outputFileName = "${rootProject.name}-v${variant.versionName}.apk"
+        outputFileName = "${rootProject.name}-v${variant.versionName}-${variant.buildType.name}.apk"
     }
 }
 

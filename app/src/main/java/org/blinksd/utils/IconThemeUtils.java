@@ -2,6 +2,7 @@ package org.blinksd.utils;
 
 import static org.blinksd.utils.LocalIconTheme.SYM_TYPE_SPACE;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,8 +18,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
-    public IconThemeUtils() {
+public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
+    private final Context mContext;
+    private Runnable mRunnable;
+
+    public IconThemeUtils(Context context) {
         put("theme_default", new LocalIconTheme(new int[]{
                 R.drawable.sym_keyboard_shift,
                 R.drawable.sym_keyboard_emoji,
@@ -41,12 +45,21 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
                 R.drawable.sym_ay_delete
         }));
 
-        loadImportedIcons();
+        mContext = context;
+
+        mRunnable = () -> {
+            try {
+                loadImportedIcons();
+            } catch (Throwable t) {
+                SuperBoardApplication.mainHandler.postDelayed(mRunnable, 2000);
+            }
+        };
+        SuperBoardApplication.mainHandler.post(mRunnable);
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
     private File getIconFolder() {
-        File iconFolder = new File(SuperBoardApplication.getApplication().getFilesDir(), "icon_themes");
+        File iconFolder = new File(mContext.getFilesDir(), "icon_themes");
         if (!iconFolder.exists()) {
             iconFolder.mkdirs();
         }
@@ -79,8 +92,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
 
     /** @noinspection ResultOfMethodCallIgnored*/
     public void importIconTheme(String themeName, LocalIconTheme iconTheme) {
-        File mainFolder = getIconFolder();
-        File themeFolder = new File(mainFolder, String.format("%s_(I)", themeName));
+        File themeFolder = new File(getIconFolder(), String.format("%s_(I)", themeName));
         themeFolder.mkdirs();
         writeIconToFile(new File(themeFolder, "shift"), iconTheme.shiftIcon);
         writeIconToFile(new File(themeFolder, "emoji"), iconTheme.emojiIcon);
@@ -93,12 +105,10 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
     private void writeIconToFile(File file, Drawable drawable) {
         try (FileOutputStream stream = new FileOutputStream(file)) {
             if (drawable instanceof BitmapDrawable) {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                Bitmap bmp = bitmapDrawable.getBitmap();
+                Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             }
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
     }
 
     private Drawable loadFromFile(File file) {
@@ -107,7 +117,10 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
         }
 
         try (FileInputStream stream = new FileInputStream(file)) {
-            return new BitmapDrawable(BitmapFactory.decodeStream(stream));
+            return new BitmapDrawable(
+                    SuperBoardApplication.getApplication().getResources(),
+                    BitmapFactory.decodeStream(stream)
+            );
         } catch (IOException ignored) {
             return null;
         }
@@ -126,8 +139,7 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
             }
         }
 
-        LocalIconTheme theme = get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME);
-        return theme.getIconByType(type);
+        return Objects.requireNonNull(get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME)).getIconByType(type);
     }
 
     private Drawable getDrawable(int res) {
@@ -140,7 +152,6 @@ public class IconThemeUtils extends BaseMap<String, LocalIconTheme> {
                 return null;
         }
 
-        return LayoutUtils.getDrawableCompat(
-                SuperBoardApplication.getApplication(), res, null);
+        return ResourcesUtils.getTintedDrawable(res, null);
     }
 }
