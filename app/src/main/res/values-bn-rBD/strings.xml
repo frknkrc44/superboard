@@ -11,12 +11,12 @@
     <string name="wizard_settingsbtn">কিবোর্ড সেটিংস খুলুন</string>
     <string name="wizard_finish">অভিনন্দন, আপনি সেটআপ উইজার্ড সম্পূর্ণ করেছেন!</string>
     <string name="wizard_finishbtn">সমাপ্ত</string>
-    <string name="keyboard_theme_api_perm_label">FBoard ব্যবহারকারী থিম API অ্যাক্সেস</string>
     <!-- Settings resources -->
     <string name="settings_activity">সেটিংস</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">কীবোর্ড ব্যাকগ্রাউন্ড ছবি</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">টাইপ করার সময় অক্ষর দেখান</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">নেভবারে স্বচ্ছ ব্যাকগ্রাউন্ড ব্যবহার করুন</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">নববারে রঙ প্রয়োগ করুন (অ্যান্ড্রয়েড ৯+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">পপআপ মেনু নিষ্ক্রিয় করুন</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">দীর্ঘ প্রেসে অক্ষর পুনরাবৃত্তি অক্ষম করুন</string>
@@ -27,7 +27,11 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">সংখ্যা সারি অক্ষম করুন (বিটা)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">দীর্ঘ প্রেস অ্যাকশন দেখান বা কী-তে প্রথম অক্ষর পপআপ করুন</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">মোনেট রং ব্যবহার করুন (বিটা)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">ক্যাপসলক স্থিতি স্বয়ংক্রিয়ভাবে সনাক্ত করুন</string>
+    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">ইমোজি বোতামে দীর্ঘক্ষণ চাপলে কীবোর্ডের ভাষা পরিবর্তন করুন</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">কী পটভূমির রঙ লিখুন</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">কী প্রেস ব্যাকগ্রাউন্ড রঙ লিখুন</string>
@@ -41,6 +45,15 @@
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">কী প্রেস ইভেন্টে শব্দ চালান</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">র‍্যাম ব্যবহার কমান (init বিলম্ব বাড়ায়)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">দীর্ঘ প্রেসে প্রথম পপআপ অক্ষর ব্যবহার করুন (আপনাকে অবশ্যই পপআপ মেনু সক্ষম করতে হবে)</string>
+    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
+    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
+    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
+    <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
+    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
+    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
+    <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">ছবি</string>
@@ -53,6 +66,8 @@
     <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">ছবি নির্বাচন করুন</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">ওয়ালপেপার পান</string>
     <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">ঘোরান</string>
+    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">You\'re using a live wallpaper, loading thumbnail…</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">কীবোর্ড ভাষা</string>
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">কীবোর্ড ফন্ট</string>
@@ -72,11 +87,13 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">বাটন ছায়া আকার</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">আইকন আইকন আকার গুণক</string>
     <!-- Backup/Restore options -->
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">ব্যাকআপ</string>
     <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">পুনরুদ্ধার করুন</string>
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">সকল প্রকার</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">অন্যান্য</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">ডিকশনারি প্যাক (.fbd/combined.gz) আমদানি করুন</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
@@ -86,6 +103,8 @@
     <string name="settings_category_general">সাধারণ</string>
     <string name="settings_category_theming">থিমিং</string>
     <string name="settings_category_theming_adv">উন্নত থিমিং</string>
+    <!-- Settings monet color scheme resources -->
+    <string name="settings_monet_scheme_default">ডিফল্ট</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>নিয়মিত</item>
@@ -135,5 +154,11 @@
         <item>উপরে ডান → নীচে বাম</item>
         <item>নীচে বাম → উপরে ডান</item>
         <item>নীচে ডান → উপরে বাম</item>
+    </string-array>
+    <string-array name="settings_dictionary_algorithms" tools:keep="@array/settings_dictionary_algorithms">
+        <item>First check for word length, then usage count</item>
+        <item>First check for usage count, then word length</item>
+        <item>Only check for word length</item>
+        <item>Only check for usage count</item>
     </string-array>
 </resources>
