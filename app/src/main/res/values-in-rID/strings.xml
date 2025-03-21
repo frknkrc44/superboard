@@ -11,12 +11,12 @@
     <string name="wizard_settingsbtn">Buka pengaturan papan ketik</string>
     <string name="wizard_finish">Selamat, Anda telah menyelesaikan wizard pengaturan!</string>
     <string name="wizard_finishbtn">Menyelesaikan</string>
-    <string name="keyboard_theme_api_perm_label">Akses API Tema Pengguna FBoard</string>
     <!-- Settings resources -->
     <string name="settings_activity">Pengaturan</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Gambar latar belakang papan ketik</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Tampilkan karakter saat mengetik</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Gunakan latar belakang transparan di navbar</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Menerapkan warna ke bilah navigasi (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Nonaktifkan menu pop-up</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Nonaktifkan pengulangan karakter saat ditekan lama</string>
@@ -27,7 +27,11 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nonaktifkan baris nomor (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Tampilkan tindakan tekan lama atau munculkan karakter pertama pada tombol</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Gunakan warna monet (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Deteksi status capslock secara otomatis</string>
+    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Ganti bahasa keyboard dengan menekan lama ke tombol emoji</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Masukkan warna latar belakang kunci</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Masukkan warna latar belakang penekanan tombol</string>
@@ -41,6 +45,15 @@
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Memutar suara saat tombol ditekan</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Mengurangi penggunaan RAM (meningkatkan penundaan init)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Gunakan karakter popup pertama saat ditekan lama (Anda harus mengaktifkan menu popup)</string>
+    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
+    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
+    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
+    <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
+    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
+    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
+    <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
@@ -53,6 +66,8 @@
     <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Pilih gambar</string>
     <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Dapatkan kertas dinding</string>
     <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Memutar</string>
+    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
+    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">You\'re using a live wallpaper, loading thumbnail…</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Bahasa papan ketik</string>
     <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Font papan ketik</string>
@@ -72,11 +87,13 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Ukuran bayangan kunci</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Pengganda ukuran ikon kunci</string>
     <!-- Backup/Restore options -->
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Cadangan</string>
     <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Memulihkan</string>
     <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Semua barang</string>
     <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (tema ikon, gambar latar belakang, warna,…)</string>
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Yang lain</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
     <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Impor paket kamus (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Mengimpor, mohon jangan tutup aplikasi ini</string>
@@ -86,6 +103,8 @@
     <string name="settings_category_general">Umum</string>
     <string name="settings_category_theming">Tema</string>
     <string name="settings_category_theming_adv">Tema Tingkat Lanjut</string>
+    <!-- Settings monet color scheme resources -->
+    <string name="settings_monet_scheme_default">Bawaan</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Reguler</item>
@@ -135,5 +154,11 @@
         <item>Kanan atas → kiri bawah</item>
         <item>Kiri bawah → kanan atas</item>
         <item>Kanan bawah → kiri atas</item>
+    </string-array>
+    <string-array name="settings_dictionary_algorithms" tools:keep="@array/settings_dictionary_algorithms">
+        <item>First check for word length, then usage count</item>
+        <item>First check for usage count, then word length</item>
+        <item>Only check for word length</item>
+        <item>Only check for usage count</item>
     </string-array>
 </resources>
