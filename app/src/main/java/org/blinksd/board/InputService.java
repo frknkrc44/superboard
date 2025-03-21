@@ -443,7 +443,10 @@ public final class InputService extends InputMethodService implements
             boardPopup.setFocusable(false);
             keyboardBackgroundHolder.addView(boardPopup);
         }
-        setPrefs();
+
+        if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            setPrefs();
+        }
     }
 
     public void setPrefs() {
