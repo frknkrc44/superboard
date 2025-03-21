@@ -25,7 +25,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -430,7 +429,8 @@ public final class InputService extends InputMethodService implements
             keyboardBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
             keyboardBackground.setAdjustViewBounds(false);
 
-            if (SDK_INT >= Build.VERSION_CODES.P) {
+            if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                // noinspection ConstantConditions
                 getWindow().getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
                     insetPaddingBottom = windowInsets.getSystemWindowInsetBottom();
                     setPrefs();
@@ -678,7 +678,9 @@ public final class InputService extends InputMethodService implements
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
                             : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                    w.setDecorFitsSystemWindows(true);
+                    if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                        w.setDecorFitsSystemWindows(true);
+                    }
                 } else if (isColorized()) {
                     // I found a bug at SDK 30 (Android R)
                     // FLAG_LAYOUT_NO_LIMITS not working
