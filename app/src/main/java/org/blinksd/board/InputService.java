@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -83,6 +84,7 @@ public final class InputService extends InputMethodService implements
     };
     private Configuration recentConfiguration;
     private boolean hiddenBySelf = false;
+    private int insetPaddingBottom = 0;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -150,15 +152,6 @@ public final class InputService extends InputMethodService implements
                 .increaseUsageCount(
                         currentLanguageCache.language.split("_")[0],
                         suggestion.toString().trim());
-    }
-
-    @Override
-    public void onCreate() {
-        if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            setTheme(R.style.Theme_OptOutEnforcement);
-        }
-
-        super.onCreate();
     }
 
     @Override
@@ -436,6 +429,14 @@ public final class InputService extends InputMethodService implements
             keyboardBackgroundHolder.addView(keyboardLayoutHolder);
             keyboardBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
             keyboardBackground.setAdjustViewBounds(false);
+
+            if (SDK_INT >= Build.VERSION_CODES.P) {
+                getWindow().getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
+                    insetPaddingBottom = windowInsets.getSystemWindowInsetBottom();
+                    setPrefs();
+                    return windowInsets;
+                });
+            }
         }
         if (boardPopup == null) {
             boardPopup = new BoardPopupImpl(keyboardBackgroundHolder);
@@ -653,6 +654,8 @@ public final class InputService extends InputMethodService implements
             baseHeight += bottomKeyboardBarView.getLayoutParams().height;
         }
 
+        baseHeight += insetPaddingBottom;
+
         if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window w = getWindow().getWindow();
             assert w != null : "Window returned null";
@@ -662,7 +665,7 @@ public final class InputService extends InputMethodService implements
                 if (navbarView != null)
                     keyboardLayoutHolder.removeView(navbarView);
 
-                if (SDK_INT >= 28 && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT) && !isColorized()) {
+                if (SDK_INT >= Build.VERSION_CODES.P && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT) && !isColorized()) {
                     w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
@@ -675,6 +678,7 @@ public final class InputService extends InputMethodService implements
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
                             : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                    w.setDecorFitsSystemWindows(true);
                 } else if (isColorized()) {
                     // I found a bug at SDK 30 (Android R)
                     // FLAG_LAYOUT_NO_LIMITS not working
