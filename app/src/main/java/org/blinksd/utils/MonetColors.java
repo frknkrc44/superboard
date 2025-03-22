@@ -26,6 +26,7 @@ import java.util.Map;
 public class MonetColors extends LinkedHashMap<String, int[][]> {
     static final String COLOR_SCHEME_DEFAULT = "default";
     static final String COLOR_SCHEME_AMOLED = "amoled";
+    static final String COLOR_SCHEME_MD3 = "md3";
     private WallpaperManager wallpaperManager;
 
     private static final int[] LIGHT_DEF_MONET_SCHEME = {
@@ -37,6 +38,17 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
             android.R.color.system_neutral1_300,  /* Key2 press color */
             android.R.color.system_accent1_300,   /* Enter color */
             android.R.color.system_accent1_400,   /* Enter press color */
+    };
+
+    private static final int[] LIGHT_MD3_MONET_SCHEME = {
+            android.R.color.system_neutral1_900,  /* Key text color */
+            android.R.color.system_neutral1_50,   /* Keyboard background color */
+            android.R.color.system_neutral1_0,    /* Key color */
+            android.R.color.system_neutral1_50,   /* Key press color */
+            android.R.color.system_accent1_100,   /* Key2 color */
+            android.R.color.system_accent1_200,   /* Key2 press color */
+            android.R.color.system_accent1_100,   /* Enter color */
+            android.R.color.system_accent1_200,   /* Enter press color */
     };
 
     private static final int[] DARK_DEF_MONET_SCHEME = {
@@ -66,6 +78,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     public MonetColors() {
         put(COLOR_SCHEME_DEFAULT, new int[][]{LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
         put(COLOR_SCHEME_AMOLED, new int[][]{LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME});
+        put(COLOR_SCHEME_MD3, new int[][]{LIGHT_MD3_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
     }
 
     public boolean isMonetEnabled() {
@@ -192,7 +205,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                  android.R.color.system_accent1_400, android.R.color.system_accent1_500,
                  android.R.color.system_accent1_600, android.R.color.system_accent1_700,
                  android.R.color.system_accent1_800, android.R.color.system_accent1_900 ->
-                    first.get((resId - android.R.color.system_accent1_50) * 100);
+                    first.get(Math.max((resId - android.R.color.system_accent1_50) * 100, 50));
             case android.R.color.system_neutral1_50, android.R.color.system_neutral1_100,
                  android.R.color.system_neutral1_200, android.R.color.system_neutral1_300,
                  android.R.color.system_neutral1_400, android.R.color.system_neutral1_500,
@@ -228,18 +241,11 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         } catch (Throwable ignored) {}
     }
 
+    /** @noinspection ConstantConditions */
     private int getColorFromIndex(int index) {
-        return switch (SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME)) {
-            case COLOR_SCHEME_DEFAULT -> {
-                final var resId = isDark() ? DARK_DEF_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index];
-                yield isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
-            }
-            case COLOR_SCHEME_AMOLED -> {
-                final var resId = isDark() ? AMOLED_MONET_SCHEME[index] : LIGHT_DEF_MONET_SCHEME[index];
-                yield isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
-            }
-            default -> 0;
-        };
+        final var scheme = SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME);
+        final var resId = get(scheme)[isDark() ? 1 : 0][index];
+        return isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
     }
 
     private static boolean isDark() {

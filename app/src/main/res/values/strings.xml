@@ -130,6 +130,7 @@
 	<!-- Settings monet color scheme resources -->
 	<string name="settings_monet_scheme_default">Default</string>
 	<string name="settings_monet_scheme_amoled" translatable="false">AMOLED</string>
+	<string name="settings_monet_scheme_md3">Material Design 3</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_texttype_select">
@@ -187,6 +188,7 @@
 		tools:keep="@array/settings_monet_color_schemes">
 		<item>@string/settings_monet_scheme_default</item>
 		<item>@string/settings_monet_scheme_amoled</item>
+		<item>@string/settings_monet_scheme_md3</item>
 	</string-array>
 
 	<string-array name="settings_key_bg_type"

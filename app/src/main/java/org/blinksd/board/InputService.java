@@ -273,6 +273,9 @@ public final class InputService extends InputMethodService implements
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this);
             superBoardView.setFocusable(false);
+            try {
+                unregisterReceiver(restartKeyboardReceiver);
+            } catch (Throwable ignored) {}
             if (SDK_INT >= Build.VERSION_CODES.O) {
                 registerReceiver(restartKeyboardReceiver,
                         new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);

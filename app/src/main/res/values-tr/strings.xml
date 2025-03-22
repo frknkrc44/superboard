@@ -119,6 +119,7 @@
 
 	<!-- Settings monet color scheme resources -->
 	<string name="settings_monet_scheme_default">Varsayılan</string>
+	<string name="settings_monet_scheme_md3">Material Dizayn 3</string>
 	
 	<!-- List selector resources -->
 	<string-array name="settings_keyboard_icon_theme"
