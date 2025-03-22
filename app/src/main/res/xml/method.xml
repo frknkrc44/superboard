@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
-	android:settingsActivity="org.blinksd.board.activities.SetupActivityV2"
-	android:isDefault="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:settingsActivity="org.blinksd.board.activities.SetupActivityV2"
+	android:suppressesSpellChecker="true"
+	android:supportsSwitchingToNextInputMethod="false"
+	android:supportsConnectionlessStylusHandwriting="false"
+	android:supportsStylusHandwriting="false"
+	android:supportsInlineSuggestions="false"
+	android:isDefault="true"
+    tools:ignore="UnusedAttribute">
     <subtype android:label="%s" />
 </input-method>
