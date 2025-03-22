@@ -32,6 +32,7 @@
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
     <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
+    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Force-show the keyboard when the physical keyboard is connected</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">இமோஜி பொத்தானை அழுத்திப் பிடித்தால் மொழியை மாற்று</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">விசையின் பின்னணி நிறத்தை உள்ளிடவும்</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">அழுத்திய விசையின் பின்னணி நிறத்தை உள்ளிடவும்</string>
@@ -95,14 +96,18 @@
     <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">மற்றவை</string>
     <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">அகராதியை உள்ளிடு (.fbd/combined.gz)</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
     <string name="settings_dict_import_count">%s சொல் அகராதியில் சேர்க்கப்பட்டது</string>
     <string name="settings_dict_import_delete_duplicates">நகல்கள் நீக்கப்படுகின்றன</string>
     <!-- Settings category resources -->
-    <string name="settings_category_general">பொது அமைப்புகள்</string>
-    <string name="settings_category_theming">தீம் அமைப்புகள்</string>
-    <string name="settings_category_theming_adv">மேலும் துல்லிய தீம் அமைப்புகள்</string>
+    <string name="settings_category_general">General</string>
+    <string name="settings_category_theming">Theming</string>
+    <string name="settings_category_theming_adv">Advanced Theming</string>
+    <string name="settings_category_layout">Keyboard Layout</string>
+    <string name="settings_category_popup">Popup</string>
+    <string name="settings_category_top_bar">Top Bar</string>
+    <string name="settings_category_bottom_bar">Bottom Bar</string>
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">இயல்புநிலை</string>
     <!-- List selector resources -->
