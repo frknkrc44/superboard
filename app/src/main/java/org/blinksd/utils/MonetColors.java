@@ -2,7 +2,12 @@ package org.blinksd.utils;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
+import static org.blinksd.board.SuperBoardApplication.getApplication;
+import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.utils.ResourcesUtils.getColor;
+import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+import static org.blinksd.utils.SuperDBHelper.getStringOrDefault;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
@@ -82,16 +87,16 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     }
 
     public boolean isMonetEnabled() {
-        return isSystemMonetEnabled() || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_COMPAT_MONET);
+        return isSystemMonetEnabled() || getBooleanOrDefault(SettingMap.SET_USE_COMPAT_MONET);
     }
 
     private boolean isSystemMonetEnabled() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_MONET);
+                getBooleanOrDefault(SettingMap.SET_USE_MONET);
     }
 
     public final int getSelectedMonetThemeIndex() {
-        return getIndexByKey(SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME));
+        return getIndexByKey(getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME));
     }
 
     private int getIndexByKey(String key) {
@@ -156,7 +161,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
     private int getColorCompat(int resId) {
-        Context context = SuperBoardApplication.getApplication();
+        Context context = getApplication();
         if (wallpaperManager == null) {
             try {
                 wallpaperManager = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
@@ -170,7 +175,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                 }
             };
 
-            SuperBoardApplication.getApplication().registerReceiver(
+            getApplication().registerReceiver(
                     mOnWallpaperChangedListener,
                     new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)
             );
@@ -233,7 +238,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                     colorExtractor = ColorExtractor.extractFromBitmap(
                             bitmapDrawable.getBitmap(),
                             ColorExtractor.QuantizerType.VAR_K_MEANS,
-                            SuperDBHelper.getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
+                            getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
                             15
                     );
                 }
@@ -243,12 +248,12 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
 
     /** @noinspection ConstantConditions */
     private int getColorFromIndex(int index) {
-        final var scheme = SuperDBHelper.getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME);
+        final var scheme = getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME);
         final var resId = get(scheme)[isDark() ? 1 : 0][index];
         return isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
     }
 
     private static boolean isDark() {
-        return (SuperBoardApplication.getResConfiguration().uiMode & UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES;
+        return (getResConfiguration().uiMode & UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES;
     }
 }
