@@ -110,6 +110,7 @@
     <string name="settings_category_bottom_bar">Bottom Bar</string>
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">افتراضي</string>
+    <string name="settings_monet_scheme_md3">Material Design 3</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>عادي</item>
