@@ -100,8 +100,8 @@ public final class InputService extends InputMethodService implements
 
     @Override
     public boolean onEvaluateInputViewShown() {
-        super.onEvaluateInputViewShown();
-        return true;
+        boolean defValue = super.onEvaluateInputViewShown();
+        return defValue || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_FORCE_SHOW_KEYBOARD_PHYSICAL);
     }
 
     @Override

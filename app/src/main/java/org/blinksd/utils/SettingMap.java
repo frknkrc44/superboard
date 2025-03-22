@@ -78,7 +78,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_INSERT_SPACE_AFTER_PUNC = "insert_space_after_punc",
             SET_MONET_COLOR_SCHEME = "monet_color_scheme",
             SET_KEYBOARD_PADDING = "keyboard_padding",
-            SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors";
+            SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors",
+            SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -136,6 +137,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_ENFORCE_DETECT_CAPSLOCK, SettingType.BOOL, SET_DETECT_CAPSLOCK, true);
         putGeneral(SET_ENFORCE_EDITOR_ACTION, SettingType.BOOL);
         putGeneral(SET_PREVENT_KBD_CLOSE, SettingType.BOOL);
+        putGeneral(SET_FORCE_SHOW_KEYBOARD_PHYSICAL, SettingType.BOOL);
         putGeneral(SET_KILL_BACKGROUND, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGBLUR, SettingType.DECIMAL_NUMBER);
         putThemingAdvanced(SET_KEYBOARD_BGCLR, SettingType.COLOR_SELECTOR);
@@ -311,6 +313,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.ENFORCE_EDITOR_ACTION;
             case SET_PREVENT_KBD_CLOSE:
                 return Defaults.PREVENT_KBD_CLOSE;
+            case SET_FORCE_SHOW_KEYBOARD_PHYSICAL:
+                return Defaults.FORCE_SHOW_KEYBOARD_PHYSICAL;
             case SET_COLORIZE_NAVBAR_ALT:
                 return Defaults.COLORIZE_NAVBAR_ALT;
             case SET_DISABLE_POPUP:
