@@ -16,7 +16,7 @@
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Imagen de fondo del teclado</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Mostrar caracter mientras escribe</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Usar un fondo transparente para la barra de navegación</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Hacer la barra de navegación completamente transparente</string>
     <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Aplicar color a la barra de navegación (Android 9+)</string>
     <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Deshabilitar menú emergente</string>
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Deshabilitar repetición de caracteres al presionar contínuamente</string>
@@ -26,10 +26,10 @@
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Deshabilitar palabras sugeridas</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desactivar fila de números (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
-    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
-    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
-    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar colores del monet (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Usar colores compactos del monet (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar automáticamente el estado del capslock</string>
+    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Forzar a detectar automáticamente el estado del capslock</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
     <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
     <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Force-show the keyboard when the physical keyboard is connected</string>
