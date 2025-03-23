@@ -30,10 +30,10 @@
     <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Usar colores compactos del monet (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar automáticamente el estado del capslock</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Forzar a detectar automáticamente el estado del capslock</string>
-    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
-    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
-    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Force-show the keyboard when the physical keyboard is connected</string>
-    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Forzar la acción del editor (arregla algunos problemas clave de algunas aplicaciones pero puede causar errores)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevenir que el teclado sea cerrado por el sistema (puedes apagarlo manteniendo pulsado el botón !?#)</string>
+    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Forzar mostrar el teclado cuando el teclado físico está conectado</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Cambia el idioma del teclado al pulsar el botón emoji</string>
     <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
     <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
     <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Key text shadow color</string>
@@ -43,38 +43,38 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
-    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
-    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
-    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Reproducir sonido al pulsar la tecla eventos</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce el uso de la RAM (aumenta el tiempo de espera al inicio)</string>
+    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Usa el primer carácter emergente con pulsación larga (debes habilitar el menú emergente)</string>
     <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
     <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
-    <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
-    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
-    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
-    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
-    <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
+    <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Mostrar barra inferior</string>
+    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Aumenta la velocidad de borrado después de un momento presionando</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insertar espacio después de la puntuación</string>
+    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Esquema de color Monet</string>
+    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Relleno de teclas</string>
+    <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
-    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Photo</string>
-    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Gradient</string>
+    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Foto</string>
+    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Degradado</string>
     <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Color</string>
-    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Add color</string>
-    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Oops! Max limit is %s</string>
-    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Oops! Min limit is %s</string>
-    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Change orientation</string>
-    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Select image</string>
-    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Get wallpaper</string>
-    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Rotate</string>
-    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Grant storage access to get the system wallpaper</string>
-    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">You\'re using a live wallpaper, loading thumbnail…</string>
+    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Agregar color</string>
+    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">¡Uy! El límite máximo es %s</string>
+    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">¡Uy! El límite mínimo es %s</string>
+    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Cambiar orientación</string>
+    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Elegir imagen</string>
+    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Establecer fondo</string>
+    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Rotar</string>
+    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Conceder acceso al almacenamiento para obtener el fondo de pantalla del sistema</string>
+    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">Estás usando un fondo de pantalla animado, cargando miniatura…</string>
     <!-- Radio selector resources -->
-    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Keyboard language</string>
-    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Keyboard font</string>
-    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Keyboard theme</string>
-    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Icon theme</string>
-    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Space bar style</string>
+    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Idioma del teclado</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Fuente del teclado</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Tema del teclado</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Tema del icono</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Estilo de la barra espaciadora</string>
     <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Key background type</string>
     <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Key background gradient orientation</string>
     <!-- Number selector resources -->
@@ -88,83 +88,83 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Key shadow size</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Key icon size multiplier</string>
     <!-- Backup/Restore options -->
-    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
-    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
-    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restore</string>
-    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">All items</string>
-    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
-    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
-    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Copia de seguridad y restauración</string>
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Copia de seguridad</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restaurar</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Todos los ítems</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (tema del icono, imagen de fondo, colores, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Otros</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Seleccionar archivo</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
-    <string name="settings_dict_importing">Importing, please don\'t close this app</string>
-    <string name="settings_dict_import_count">%s word imported</string>
-    <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Importar paquete de diccionarios (.fbd/combined.gz)</string>
+    <string name="settings_dict_importing">Importando, por favor no cierres esta aplicación</string>
+    <string name="settings_dict_import_count">%s palabra importada</string>
+    <string name="settings_dict_import_delete_duplicates">Eliminando duplicados</string>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
-    <string name="settings_category_theming">Theming</string>
-    <string name="settings_category_theming_adv">Advanced Theming</string>
-    <string name="settings_category_layout">Keyboard Layout</string>
-    <string name="settings_category_popup">Popup</string>
-    <string name="settings_category_top_bar">Top Bar</string>
-    <string name="settings_category_bottom_bar">Bottom Bar</string>
+    <string name="settings_category_theming">Temas</string>
+    <string name="settings_category_theming_adv">Temas Avanzados</string>
+    <string name="settings_category_layout">Diseño del Teclado</string>
+    <string name="settings_category_popup">Emergente</string>
+    <string name="settings_category_top_bar">Barra Superior</string>
+    <string name="settings_category_bottom_bar">Barra Inferior</string>
     <!-- Settings monet color scheme resources -->
-    <string name="settings_monet_scheme_default">Default</string>
+    <string name="settings_monet_scheme_default">Por defecto</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Regular</item>
-        <item>Bold</item>
-        <item>Italic</item>
-        <item>Bold Italic</item>
+        <item>Negrita (Bold)</item>
+        <item>Itálica (Cursiva)</item>
+        <item>Cursiva en negrita</item>
         <item>Condensed</item>
-        <item>Condensed Bold</item>
-        <item>Condensed Italic</item>
-        <item>Condensed Bold Italic</item>
+        <item>Condensed negrita</item>
+        <item>Condensed Cursiva</item>
+        <item>Negrita y cursiva condensed</item>
         <item>Serif</item>
-        <item>Serif Bold</item>
-        <item>Serif Italic</item>
-        <item>Serif Bold Italic</item>
-        <item>Monospace</item>
-        <item>Monospace Bold</item>
-        <item>Monospace Italic</item>
-        <item>Monospace Bold Italic</item>
-        <item>Serif Monospace</item>
-        <item>Serif Monospace Bold</item>
-        <item>Serif Monospace Italic</item>
-        <item>Serif Monospace Bold Italic</item>
-        <item>Custom (in app data folder)</item>
+        <item>Negrita Serif</item>
+        <item>Cursiva en negrita</item>
+        <item>Serif en negrita y cursiva</item>
+        <item>Monoespaciado</item>
+        <item>Monoespaciada en negrita</item>
+        <item>Monoespaciada en cursiva</item>
+        <item>Monoespaciada y negrita en cursiva</item>
+        <item>Serif monoespaciada</item>
+        <item>Serif monoespaciada y en negrita</item>
+        <item>Serif monoespaciada y en cursiva</item>
+        <item>Serif monoespaciada y negrita en cursiva</item>
+        <item>Personalizado (en la carpeta data de la aplicación)</item>
     </string-array>
     <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
-        <item>Default</item>
+        <item>Por defecto</item>
         <item>Material</item>
         <item>Apricot</item>
     </string-array>
     <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
-        <item>Theme default</item>
-        <item>Selected language</item>
+        <item>Tema por defecto</item>
+        <item>Idioma seleccionado</item>
         <item>Daisy</item>
-        <item>Space bar</item>
-        <item>Empty</item>
+        <item>Espacio de la barra</item>
+        <item>Vacío</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
-        <item>Flat</item>
-        <item>Gradient</item>
+        <item>Plano</item>
+        <item>Degradado</item>
     </string-array>
     <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
-        <item>Top → bottom</item>
-        <item>Bottom → top</item>
-        <item>Left → right</item>
-        <item>Right → left</item>
-        <item>Top left → bottom right</item>
-        <item>Top right → bottom left</item>
-        <item>Bottom left → top right</item>
-        <item>Bottom right → top left</item>
+        <item>Arriba → abajo</item>
+        <item>Abajo → arriba</item>
+        <item>Izquierda → derecha</item>
+        <item>Derecha → izquierda</item>
+        <item>Arriba izquierda → abajo derecha</item>
+        <item>Arriba derecha → abajo izquierda</item>
+        <item>Abajo izquierda → arriba derecha</item>
+        <item>Abajo derecha → arriba izquierda</item>
     </string-array>
     <string-array name="settings_dictionary_algorithms" tools:keep="@array/settings_dictionary_algorithms">
-        <item>First check for word length, then usage count</item>
-        <item>First check for usage count, then word length</item>
-        <item>Only check for word length</item>
-        <item>Only check for usage count</item>
+        <item>Primero compruebe la longitud de la palabra, luego el recuento de uso</item>
+        <item>Primero compruebe el recuento de uso, luego la longitud de la palabra</item>
+        <item>Comprobar solo la longitud de la palabra</item>
+        <item>Comprobar solo el conteo de uso</item>
     </string-array>
 </resources>
