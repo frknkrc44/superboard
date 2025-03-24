@@ -25,7 +25,7 @@
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Habilitar portapapeles</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Deshabilitar palabras sugeridas</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desactivar fila de números (beta)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar acción de pulsación larga o primer carácter emergente</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar simbolos en las teclas</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar colores del monet (beta)</string>
     <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Usar colores compactos del monet (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar automáticamente el estado del capslock</string>
