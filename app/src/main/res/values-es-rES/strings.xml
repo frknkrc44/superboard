@@ -25,7 +25,7 @@
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Habilitar portapapeles</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Deshabilitar palabras sugeridas</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desactivar fila de números (beta)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar acción de pulsación larga o primer carácter emergente</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar colores del monet (beta)</string>
     <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Usar colores compactos del monet (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar automáticamente el estado del capslock</string>
@@ -34,21 +34,21 @@
     <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevenir que el teclado sea cerrado por el sistema (puedes apagarlo manteniendo pulsado el botón !?#)</string>
     <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Forzar mostrar el teclado cuando el teclado físico está conectado</string>
     <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Cambia el idioma del teclado al pulsar el botón emoji</string>
-    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
-    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
-    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Key text shadow color</string>
-    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">First key background color</string>
-    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Second key background color</string>
-    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">First key press background color</string>
-    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
-    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
-    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Color de fondo de la tecla Enter</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Color de fondo de la tecla Enter cuando presionas</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Color de sombra del texto en las teclas</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Color de fondo de la primera tecla</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Color de fondo de la segunda tecla</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Color al presionar la primera tecla</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Color al presionar la segunda tecla</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Color de fondo del teclado</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Color del texto en las teclas</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Reproducir sonido al pulsar la tecla eventos</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce el uso de la RAM (aumenta el tiempo de espera al inicio)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Usa el primer carácter emergente con pulsación larga (debes habilitar el menú emergente)</string>
-    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
-    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
-    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
+    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Algoritmo de búsqueda en el diccionario</string>
+    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Límite de consultas al diccionario</string>
+    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Altura del indicador de teclas</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Mostrar barra inferior</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Aumenta la velocidad de borrado después de un momento presionando</string>
     <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insertar espacio después de la puntuación</string>
@@ -75,18 +75,18 @@
     <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Tema del teclado</string>
     <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Tema del icono</string>
     <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Estilo de la barra espaciadora</string>
-    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Key background type</string>
-    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Key background gradient orientation</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Tipo de fondo de las teclas</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Orientación del degradado del fondo de las teclas</string>
     <!-- Number selector resources -->
-    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
-    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
-    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Desenfoque de la imagen de fondo del teclado</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Duración de la vibración al presionar una tecla</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Altura del teclado</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
     <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Key text size</string>
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Key shadow size</string>
-    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Key icon size multiplier</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Tamaño de algunos iconos</string>
     <!-- Backup/Restore options -->
     <string name="settings_backup_menu" tools:keep="@string/backup_menu">Copia de seguridad y restauración</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Copia de seguridad</string>
