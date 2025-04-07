@@ -24,7 +24,7 @@ public final class Defaults {
     public static final int KEY_PADDING = 10;
     public static final int KEY_RADIUS = 10;
 
-    public static final int KEY_TEXT_SIZE = 13;
+    public static final int KEY_TEXT_SIZE = 20;
     public static final int KEY_TEXT_SHADOW_SIZE = 0;
     public static final int KEY_LONGPRESS_DURATION = 1;
     public static final int KEY_VIBRATE_DURATION = 0;
