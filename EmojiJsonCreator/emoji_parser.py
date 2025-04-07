@@ -1,5 +1,5 @@
 from json import dumps
-from requests import get
+from urllib.request import urlopen
 
 """
 def get_emoji_desc(line: str, mode2: bool = False) -> str:
@@ -28,15 +28,14 @@ def compare_emoji_desc(first: str, second: str) -> bool:
 
 
 categories: dict[str, list[str]] = {}
-request = get(
-    'https://unicode.org/Public/emoji/latest/emoji-test.txt',
-    allow_redirects=True,
-)
+with urlopen('https://unicode.org/Public/emoji/latest/emoji-test.txt') as request:
+    text = str(request.read())
+    status_code = request.code
 
-if request.status_code == 200:
+if status_code == 200:
     recent_group = ''
     recent_approved_line = ''
-    for line in request.text.splitlines():
+    for line in text.splitlines():
         if line.startswith('# group: '):
             recent_group = line[line.find(':') + 2:]
             category: list[str] = []

@@ -81,6 +81,6 @@ langpacks:
 		${SHELL} create_packs.sh
 emojijson:
 	cd EmojiJsonCreator && \
-		${SHELL} create_emoji_json.sh
+		python3 emoji_parser.py
 keystore:
 	${SHELL} apply_keystore_props.sh
