@@ -260,6 +260,7 @@ public final class InputService extends InputMethodService implements
         boolean sugDisabled = suggestionLayout == null ||
                 !SuperBoardApplication.isDictDBReady() ||
                 superBoardView.isDisabledSuggestionsTemporarily() ||
+                SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR) ||
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
         if (superBoardView == null) return;
         InputConnection ic = getCurrentInputConnection();
@@ -561,12 +562,12 @@ public final class InputService extends InputMethodService implements
             superBoardView.setDisablePopup(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP));
             boolean isDBEmpty = SuperBoardApplication.getDictDB()
                     .getTableLength(currentLanguageCache.language.split("_")[0]) < 1;
-            boolean sugDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
             boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
-            boolean fnDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
-            boolean numDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+            boolean sugDisabled = topBarDisabled || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
+            boolean fnDisabled = topBarDisabled || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
+            boolean numDisabled = !topBarDisabled && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
             superBoardView.setPressEventForKey(2, 3, 0,
-                    topBarDisabled || fnDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
+                    fnDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
             superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
