@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.blinksd.board.InputService;
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
+import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -151,7 +152,8 @@ public class EmojiView extends LinearLayout {
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(textSize);
             ts.setIndicator(tv);
-            tv.setBackgroundDrawable(emptyDrawable.getConstantState().newDrawable());
+            tv.setBackgroundResource(R.drawable.tab_indicator_material);
+            ColorUtils.setColorFilter(tv.getBackground(), keyTextColor);
             final int x = i;
             ts.setContent(p1 -> emojiList(x));
             th.addTab(ts);
@@ -235,6 +237,7 @@ public class EmojiView extends LinearLayout {
             v.setTextColor(keyTextColor);
             v.setGravity(Gravity.CENTER);
             v.setSingleLine();
+            v.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
             v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
             v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
             v.setTextSize(mp(100.0f / (columns * columns)));
