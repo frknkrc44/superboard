@@ -1,12 +1,14 @@
 package org.blinksd.board;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
 import static org.blinksd.utils.SystemUtils.isColorized;
 import static org.blinksd.utils.SystemUtils.navbarH;
+import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -21,7 +23,6 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -500,7 +501,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.setKeyboardHeight(kbdHeight);
             File img;
             int c = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
-            if (SuperBoardApplication.getMonetColors().isMonetEnabled()) {
+            if (getMonetColors().isMonetEnabled()) {
                 if (keyboardBackgroundHolder != null) {
                     keyboardBackground.setImageBitmap(null);
                 }
@@ -698,7 +699,7 @@ public final class InputService extends InputMethodService implements
                     w.setDecorFitsSystemWindows(false);
                 }
 
-                if (SDK_INT >= Build.VERSION_CODES.P && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT) && !isColorized()) {
+                if (navbarAndroid9ModeEnabled() && !isColorized()) {
                     w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                     w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
@@ -708,22 +709,36 @@ public final class InputService extends InputMethodService implements
 
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
 
-                    boolean monetEnabled = SuperBoardApplication.getMonetColors().isMonetEnabled();
+                    boolean monetEnabled = getMonetColors().isMonetEnabled();
                     int color = monetEnabled
-                            ? SuperBoardApplication.getMonetColors().getKeyboardColor()
+                            ? getMonetColors().getKeyboardColor()
                             : ColorUtils.convertARGBtoRGB(c);
                     w.setNavigationBarColor(color);
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
                             : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                 } else if (isColorized()) {
-                    // I found a bug at SDK 30 (Android R)
-                    // FLAG_LAYOUT_NO_LIMITS not working
-                    // set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
-                    if (SDK_INT == Build.VERSION_CODES.R)
-                        w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    w.setNavigationBarColor(0);
+                    if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                        // I found a bug at SDK 30 (Android R)
+                        // FLAG_LAYOUT_NO_LIMITS not working
+                        // set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
+                        if (SDK_INT == Build.VERSION_CODES.R)
+                            w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                        else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                        w.setNavigationBarColor(0);
+                    } else {
+                        w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                        w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+                        boolean monetEnabled = getMonetColors().isMonetEnabled();
+                        int color = monetEnabled
+                                ? getMonetColors().getKeyboardColor()
+                                : ColorUtils.convertARGBtoRGB(c);
+                        w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
+                                ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                                : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                    }
+
                     int navbarHeight = SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
                             ? baseHeight
                             : baseHeight + navbarH(this);

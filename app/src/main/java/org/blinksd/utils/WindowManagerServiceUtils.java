@@ -4,6 +4,7 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
@@ -14,6 +15,23 @@ import java.lang.reflect.Method;
 @SuppressLint("PrivateApi")
 public final class WindowManagerServiceUtils {
     private WindowManagerServiceUtils() {}
+
+    public static boolean navbarCustomModeEnabled() {
+        if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR)) {
+            return true;
+        }
+
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
+                SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT);
+    }
+
+    public static boolean navbarAndroid9ModeEnabled() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            return SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT);
+        }
+
+        return navbarCustomModeEnabled();
+    }
 
     public static int getDisplayId(Context context) {
         try {

@@ -1,10 +1,15 @@
 package org.blinksd.utils;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN;
+import static android.os.Build.VERSION_CODES.P;
+import static android.os.Build.VERSION_CODES.S;
+import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.Build;
 
 import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
@@ -101,7 +106,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
         putThemingAdvanced(SET_THEME_PRESET, SettingType.THEME_SELECTOR);
         putTheming(SET_ICON_THEME, SettingType.STR_SELECTOR);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (SDK_INT >= JELLY_BEAN) {
             putTheming(SET_KEY_BG_TYPE, SettingType.SELECTOR);
             putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
         }
@@ -111,11 +116,11 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_INSERT_SPACE_AFTER_PUNC, SettingType.BOOL);
         putKbdLayout(SET_PLAY_SND_PRESS, SettingType.BOOL);
         putKbdLayout(SET_KEYBOARD_LC_ON_EMOJI, SettingType.BOOL);
-        if (!SystemUtils.isNotColorizeNavbar()) {
-            putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
+        if (!SystemUtils.isNotColorizeNavbar() || SDK_INT >= VANILLA_ICE_CREAM) {
+            putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, SDK_INT >= VANILLA_ICE_CREAM);
             putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR, true);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        if (SDK_INT >= P && SDK_INT < VANILLA_ICE_CREAM)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
         putPopup(SET_DISABLE_POPUP, SettingType.BOOL);
         putPopup(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
@@ -126,7 +131,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putBottomBar(SET_SHOW_BOTTOM_BAR, SettingType.BOOL);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (SDK_INT >= S) {
             putTheming(SET_USE_MONET, SettingType.BOOL, SET_USE_COMPAT_MONET, false);
         }
         putTheming(SET_USE_COMPAT_MONET, SettingType.BOOL, SET_USE_MONET, false);
@@ -280,7 +285,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
             case SET_ENTER_BGCLR:
             case SET_ENTER_PRESS_BGCLR:
-                if (Build.VERSION.SDK_INT < 21) {
+                if (SDK_INT < 21) {
                     return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
                 }
                 TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
@@ -288,7 +293,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 int pressColor = ColorUtils.getDarkerColor(color);
                 arr.recycle();
                 try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (SDK_INT >= S) {
                         arr.close();
                     }
                 } catch (Throwable ignored) {}

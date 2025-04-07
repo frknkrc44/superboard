@@ -1,6 +1,7 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.utils.WindowManagerServiceUtils.navbarCustomModeEnabled;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -128,7 +129,7 @@ public final class SystemUtils {
     }
 
     public static boolean isColorized() {
-        return !(isNotColorizeNavbar() || !SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR));
+        return !(isNotColorizeNavbar() || !navbarCustomModeEnabled());
     }
 
     private static boolean isTablet() {

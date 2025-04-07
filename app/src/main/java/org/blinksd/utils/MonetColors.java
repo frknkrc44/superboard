@@ -21,7 +21,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.KeyboardThemeApi;
 
 import java.util.LinkedHashMap;
