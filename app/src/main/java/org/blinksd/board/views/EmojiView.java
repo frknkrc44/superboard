@@ -1,6 +1,5 @@
 package org.blinksd.board.views;
 
-import static org.blinksd.utils.DensityUtils.dp;
 import static org.blinksd.utils.DensityUtils.mp;
 
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;

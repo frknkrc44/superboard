@@ -5,6 +5,11 @@ import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 import static android.os.Build.VERSION_CODES.P;
 import static android.os.Build.VERSION_CODES.S;
 import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
+import static org.blinksd.board.SuperBoardApplication.getAppResources;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
+import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
+import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
 
 import android.content.Context;
 import android.content.Intent;
@@ -203,9 +208,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         put(name, new SettingItem(SettingCategory.THEMING_ADVANCED, type, null, null));
     }
 
-    public void iterChild(SettingCategory category, ChildIterator iterator) {
+    public void iterateChild(SettingCategory category, ChildIterator iterator) {
         for (String str : keyList()) {
             SettingItem item = get(str);
+            // noinspection ConstantConditions
             if (item.category == category) {
                 iterator.onIterate(str, item);
             }
@@ -213,34 +219,26 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
 
     public Intent getRedirect(Context context, final String key) {
-        switch (key) {
-            case SET_BACKUP_RESTORE:
-                return new Intent(context, BackupRestoreActivity.class).setData(Uri.EMPTY);
-            case SET_IMPORT_DICT_PACK:
-                return new Intent(context, DictionaryImportActivity.class);
-            case SET_KEYBOARD_LANG_SELECT:
-                return new Intent(context, KeyboardLayoutSelector.class);
-            case SET_KEYBOARD_TEXTTYPE_SELECT:
-                return new Intent(context, FontSelector.class);
-        }
-        return null;
+        return switch (key) {
+            case SET_BACKUP_RESTORE ->
+                    new Intent(context, BackupRestoreActivity.class).setData(Uri.EMPTY);
+            case SET_IMPORT_DICT_PACK -> new Intent(context, DictionaryImportActivity.class);
+            case SET_KEYBOARD_LANG_SELECT -> new Intent(context, KeyboardLayoutSelector.class);
+            case SET_KEYBOARD_TEXTTYPE_SELECT -> new Intent(context, FontSelector.class);
+            default -> null;
+        };
     }
 
     public List<String> getSelector(final String key) {
-        switch (key) {
-            case SET_DICTIONARY_ALGORITHM:
-                return Arrays.asList(SuperBoardApplication.getAppResources()
-                        .getStringArray(R.array.settings_dictionary_algorithms));
-            case SET_KEY_BG_TYPE:
-                return ThemeUtils.getKeyBgTypes();
-            case SET_KEY_GRADIENT_ORIENTATION:
-                return ThemeUtils.getKeyBgOrientationTypes();
-            case SET_KEYBOARD_SPACETYPE_SELECT:
-                return SuperBoardApplication.getSpaceBarStyles().keyList();
-            case SET_ICON_THEME:
-                return SuperBoardApplication.getIconThemes().keyList();
-        }
-        return new ArrayList<>();
+        return switch (key) {
+            case SET_DICTIONARY_ALGORITHM -> Arrays.asList(getAppResources()
+                    .getStringArray(R.array.settings_dictionary_algorithms));
+            case SET_KEY_BG_TYPE -> getKeyBgTypes();
+            case SET_KEY_GRADIENT_ORIENTATION -> getKeyBgOrientationTypes();
+            case SET_KEYBOARD_SPACETYPE_SELECT -> getSpaceBarStyles().keyList();
+            case SET_ICON_THEME -> getIconThemes().keyList();
+            default -> new ArrayList<>();
+        };
     }
 
     public Object getDefaults(final String key) {

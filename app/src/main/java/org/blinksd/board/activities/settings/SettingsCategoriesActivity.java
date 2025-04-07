@@ -178,7 +178,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             );
         };
 
-        getSettings().iterChild(category, categoryItemIterator);
+        getSettings().iterateChild(category, categoryItemIterator);
     }
 
     private ViewGroup getCategoryView(int categoryIndex) {
@@ -194,7 +194,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         return (ViewGroup) mTabsHolder.getChildAt(categoryIndex);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onBackPressed() {
         if (currentCategory != null) {
