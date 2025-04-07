@@ -1,7 +1,7 @@
 from json import dumps
 from requests import get
 
-
+"""
 def get_emoji_desc(line: str, mode2: bool = False) -> str:
     first = line[line.find('#') + 2:]
     second = first[first.find('E'):]
@@ -24,7 +24,7 @@ def compare_emoji_desc(first: str, second: str) -> bool:
         return True
 
     return False
-
+"""
 
 
 categories: dict[str, list[str]] = {}
@@ -46,10 +46,10 @@ if request.status_code == 200:
             continue
 
         if not line.startswith('#') and ';' in line and 'qualified' in line and 'E' in line:
-            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
-                recent_approved_line = line
-            else:
-                continue
+            # if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+            recent_approved_line = line
+            # else:
+            #     continue
 
             first = line[line.find('#') + 2:]
             sec = first[:first.find('E') - 1]
