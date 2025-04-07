@@ -163,31 +163,18 @@ public class EmojiView extends LinearLayout {
     }
 
     private View categoryItem(int num, int size, View.OnClickListener ocl) {
-        if (num == -1) {
-            Button tv = new Button(getContext());
-            tv.setLayoutParams(new LayoutParams(size, -1, 0));
-            tv.setTextColor(keyTextColor);
-            tv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
-            tv.setGravity(Gravity.CENTER);
-            tv.setText("A");
-            tv.setTag(num);
-            tv.setTextSize(textSize);
-            tv.setOnClickListener(ocl);
-            return tv;
-        } else {
-            ImageButton iv = new ImageButton(getContext());
-            iv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
-            iv.setLayoutParams(new LayoutParams(size, size, 0));
-            iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            iv.setAdjustViewBounds(true);
-            int p = size / 4;
-            iv.setPadding(p, p, p, p);
-            iv.setImageResource(R.drawable.sym_keyboard_delete);
-            iv.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
-            iv.setTag(num);
-            iv.setOnClickListener(ocl);
-            return iv;
-        }
+        ImageButton iv = new ImageButton(getContext());
+        iv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
+        iv.setLayoutParams(new LayoutParams(size, size, 0));
+        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        iv.setAdjustViewBounds(true);
+        int p = size / 4;
+        iv.setPadding(p, p, p, p);
+        iv.setImageResource(num == -1 ? R.drawable.arrow_left : R.drawable.sym_keyboard_delete);
+        iv.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
+        iv.setTag(num);
+        iv.setOnClickListener(ocl);
+        return iv;
     }
 
     private GridView emojiList(final int index) {
