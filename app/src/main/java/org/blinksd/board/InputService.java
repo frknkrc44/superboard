@@ -85,7 +85,7 @@ public final class InputService extends InputMethodService implements
     };
     private Configuration recentConfiguration;
     private boolean hiddenBySelf = false;
-    private int insetPaddingBottom = 0;
+    // private int insetPaddingBottom = 0;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -457,6 +457,7 @@ public final class InputService extends InputMethodService implements
             keyboardBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
             keyboardBackground.setAdjustViewBounds(false);
 
+            /*
             if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                 // noinspection ConstantConditions
                 getWindow().getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
@@ -465,6 +466,7 @@ public final class InputService extends InputMethodService implements
                     return windowInsets;
                 });
             }
+             */
         }
         if (boardPopup == null) {
             boardPopup = new BoardPopupImpl(keyboardBackgroundHolder);
@@ -472,9 +474,9 @@ public final class InputService extends InputMethodService implements
             keyboardBackgroundHolder.addView(boardPopup);
         }
 
-        if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        // if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             setPrefs();
-        }
+        // }
     }
 
     public void setPrefs() {
@@ -695,7 +697,7 @@ public final class InputService extends InputMethodService implements
                     keyboardLayoutHolder.removeView(navbarView);
 
                 if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                    baseHeight += insetPaddingBottom;
+                    // baseHeight += insetPaddingBottom;
                     w.setDecorFitsSystemWindows(false);
                 }
 
@@ -739,9 +741,9 @@ public final class InputService extends InputMethodService implements
                                 : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                     }
 
-                    int navbarHeight = SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+                    int navbarHeight = /*SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
                             ? baseHeight
-                            : baseHeight + navbarH(this);
+                            :*/ baseHeight + navbarH(this);
                     keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, navbarHeight));
                     keyboardLayoutHolder.addView(createNavbarLayout(this, c));
                 } else {
