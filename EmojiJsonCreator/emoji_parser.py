@@ -29,7 +29,7 @@ def compare_emoji_desc(first: str, second: str) -> bool:
 
 categories: dict[str, list[str]] = {}
 with urlopen('https://unicode.org/Public/emoji/latest/emoji-test.txt') as request:
-    text = str(request.read())
+    text = request.read().decode()
     status_code = request.code
 
 if status_code == 200:
