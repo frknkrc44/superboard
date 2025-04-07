@@ -1,5 +1,8 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.DensityUtils.dp;
+import static org.blinksd.utils.DensityUtils.mp;
+
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -189,8 +192,8 @@ public class EmojiView extends LinearLayout {
         final GridView gv = new GridView(getContext());
         gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
         gv.setLayoutParams(new LayoutParams(-1, -1));
-        int columns = SuperBoardApplication.getTextUtils()
-                .getTextBounds(textSize, emojis[0][0]).width() / 2;
+        int columns = Math.min(6, SuperBoardApplication.getTextUtils()
+                .getTextBounds(textSize, emojis[0][0]).width() / 2);
         gv.setNumColumns(columns);
         gv.setGravity(Gravity.CENTER);
         gv.setSelector(emptyDrawable);
@@ -234,7 +237,7 @@ public class EmojiView extends LinearLayout {
             v.setSingleLine();
             v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
             v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
-            v.setTextSize(textSize);
+            v.setTextSize(mp(100.0f / (columns * columns)));
             v.setText(getItem(position).trim());
             return v;
         }
