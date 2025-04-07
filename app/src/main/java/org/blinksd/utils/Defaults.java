@@ -22,7 +22,7 @@ public final class Defaults {
     public static final int KEY_TEXT_COLOR = 0xFFDDE1E2;
     public static final int KEY_TEXT_SHADOW_COLOR = KEY_TEXT_COLOR;
     public static final int KEY_PADDING = 10;
-    public static final int KEY_RADIUS = 10;
+    public static final int KEY_RADIUS = 24;
 
     public static final int KEY_TEXT_SIZE = 20;
     public static final int KEY_TEXT_SHADOW_SIZE = 0;
