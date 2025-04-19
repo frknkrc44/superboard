@@ -2,6 +2,8 @@ package org.blinksd.board.views;
 
 import static android.os.Build.VERSION.SDK_INT;
 
+import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -61,7 +63,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView.addButton(new FABView.SubButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU));
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
 
-        boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
+        boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
         fabView.setVisibility(topBarDisabled ? GONE : VISIBLE);
 
         HorizontalScrollView scroller = new HorizontalScrollView(getContext());
@@ -150,7 +152,20 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             ViewUtils.setBackground(tv, getSuggestionItemBackground());
         }
 
+        var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
+                                !getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
+
+        toggleButtonVisibility(KeyEvent.KEYCODE_EISU, !clipboardDisabled);
+
         fabView.reTheme(color);
+    }
+
+    private void toggleButtonVisibility(int keyCode, boolean enabled) {
+        if (fabView.disabledKeycodes.contains(keyCode) && enabled) {
+            fabView.disabledKeycodes.remove((Integer) keyCode);
+        } else if (!fabView.disabledKeycodes.contains(keyCode) && !enabled) {
+            fabView.disabledKeycodes.add(keyCode);
+        }
     }
 
     @Override

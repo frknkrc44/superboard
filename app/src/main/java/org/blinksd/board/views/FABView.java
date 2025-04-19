@@ -13,6 +13,8 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -30,6 +32,9 @@ import org.blinksd.utils.SimpleAnimatorListener;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FABView extends LinearLayout {
     private static int BUTTON_SIZE = 64, DEFAULT_ICON_COLOR = 0xFFFFFFFF, iconColor = DEFAULT_ICON_COLOR;
     private static boolean REVERSE = false, EXCEPTION = false, OLD_REVERSE = false;
@@ -40,9 +45,11 @@ public class FABView extends LinearLayout {
     private Orientation oldOri = null;
     private final OnButtonClickListener onButtonClickListener;
     private final OnButtonClickInternalListener onButtonClickInternalListener;
+    public final List<Integer> disabledKeycodes;
 
     public FABView(Context context, OnButtonClickListener onButtonClickListener){
         super(context);
+        this.disabledKeycodes = new ArrayList<>();
         this.onButtonClickListener = onButtonClickListener;
         this.onButtonClickInternalListener = new OnButtonClickInternalListener();
         setOrientation(Orientation.BRV);
@@ -137,16 +144,23 @@ public class FABView extends LinearLayout {
         }
     }
 
+    public View findButtonByKeyCode(int keyCode) {
+        for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
+            var child = buttonLayouts.getChildAt(i);
+            var np = child.getTag(R.id.key_normal_press);
+            if (np != null && (int) np == keyCode) {
+                return child;
+            }
+        }
+
+        return null;
+    }
+
     public void addButton(SubButton sb){
         ImageView buttonItem = new ImageView(getContext());
         buttonItem.setImageDrawable(sb.buttonImage);
         int p = DensityUtils.dpInt(16);
         buttonItem.setPadding(p,p,p,p);
-        if (sb.keyCode == null) {
-            ViewUtils.setBackground(buttonItem, getTransSelectableItemBg(getContext(), iconColor));
-        } else {
-            ViewUtils.setBackground(buttonItem, getCircleButtonBackground(iconColor, true));
-        }
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
         buttonItem.setTag(R.id.key_normal_press, sb.keyCode);
         buttonItem.setOnClickListener(onButtonClickInternalListener);
@@ -156,6 +170,7 @@ public class FABView extends LinearLayout {
         }
         int btnSize = DensityUtils.dpInt(BUTTON_SIZE);
         if(buttonLayouts == null){
+            ViewUtils.setBackground(buttonItem, getTransSelectableItemBg(getContext(), iconColor));
             addView(main = buttonItem);
             buttonItem.setTag(getChildCount());
             var params = new LayoutParams((int) (btnSize * 0.85f),(int) (btnSize * 0.85f),0);
@@ -175,9 +190,11 @@ public class FABView extends LinearLayout {
             bugFixLayout.setVisibility(GONE);
             add(this, bugFixLayout);
         } else {
+            ViewUtils.setBackground(buttonItem, getCircleButtonBackground(iconColor, true));
             var subBtnSize = (int) (btnSize * 0.75f);
             var params = new LinearLayout.LayoutParams(subBtnSize, subBtnSize);
             params.rightMargin = p / 2;
+            buttonItem.setVisibility(GONE);
             buttonItem.setLayoutParams(params);
             buttonItem.setTag(buttonLayouts.getChildCount());
             add(buttonLayouts, buttonItem);
@@ -222,7 +239,14 @@ public class FABView extends LinearLayout {
     }
 
     void reTheme(int textColor) {
+        collapse();
         ColorUtils.setColorFilter(main, textColor);
+    }
+
+    void collapse() {
+        if (main.getRotation() != 0) {
+            onButtonClickInternalListener.onClick(main);
+        }
     }
 
     /*
@@ -232,11 +256,7 @@ public class FABView extends LinearLayout {
         }
     }
 
-    void collapse() {
-        if (main.getRotation() != 0) {
-            onButtonClickInternalListener.onClick(main);
-        }
-    }
+
 
     void toggle(boolean expand) {
         if (expand) {
@@ -269,6 +289,10 @@ public class FABView extends LinearLayout {
                     main.animate().rotation(0);
                 }
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
+                    if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
+                        continue;
+                    }
+
                     final int g = i,d1 = Math.abs((buttonLayouts.getChildCount()-1)-(i+1))*baseDelay,d2 = (i+1)*baseDelay;
                     if(buttonLayouts.getChildAt(0).getScaleX() == 0){
                         buttonLayouts.getChildAt(i).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
@@ -310,7 +334,7 @@ public class FABView extends LinearLayout {
             this(resource, null);
         }
 
-        SubButton(Drawable img, int keyCode) {
+        SubButton(Drawable img, Integer keyCode) {
             buttonImage = img;
             this.keyCode = keyCode;
             ColorUtils.setColorFilter(buttonImage, iconColor);
