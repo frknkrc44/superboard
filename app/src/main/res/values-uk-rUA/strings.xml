@@ -25,26 +25,26 @@
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Увімкнути буфер обміну</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Вимкнути пропозиції слів</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Вимкнути рядок цифр (beta)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
-    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
-    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
-    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
-    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
-    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Prevent keyboard is closed by the system (you can turn off by long pressing the !?# button)</string>
-    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Force-show the keyboard when the physical keyboard is connected</string>
-    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Switch keyboard language at long pressed to emoji button</string>
-    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter key background color</string>
-    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter key press background color</string>
-    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Key text shadow color</string>
-    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">First key background color</string>
-    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Second key background color</string>
-    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">First key press background color</string>
-    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
-    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
-    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
-    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
-    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
+    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Показувати дію при довгому натисканні або спливаючий перший символ на клавіші</string>
+    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Використовувати monet кольори (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Використовувати сумісні monet кольори (beta)</string>
+    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Автоматично виявляти стан CapsLock</string>
+    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Автоматичне примусове виявлення стану CapsLock</string>
+    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Примусити редактор діяти (виправляє проблеми з клавішею Enter у деяких програмах, але може спричинити помилки)</string>
+    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Запобігати закриття клавіатури системою (можна вимкнути довгим натисканням кнопки \"!?#\")</string>
+    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Примусово показувати клавіатуру, коли фізична клавіатура підключена</string>
+    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Перемикати мови клавіатури при довгому натисканні кнопки \"емодзі\"</string>
+    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Фоновий колір кнопки \"Enter\"</string>
+    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Фоновий колір натиснутої кнопки \"Enter\"</string>
+    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Колір тіні клавіші тексту</string>
+    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Фоновий колір першої клавіші</string>
+    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Фоновий колір другої клавіші</string>
+    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Фоновий колір натиснутої першої клавіші</string>
+    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Фоновий колір натиснутої другої клавіші</string>
+    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Колір фону клавіатури</string>
+    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Колір клавіші тексту</string>
+    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Звуковий сигнал при натисканні клавіш</string>
+    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Знизити споживання ОЗП (збільшує затримку відкриття клавіатури)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
     <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Dictionary query algorithm</string>
     <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Dictionary query limit</string>
