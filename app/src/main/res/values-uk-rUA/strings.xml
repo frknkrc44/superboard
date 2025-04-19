@@ -15,16 +15,16 @@
     <string name="settings_activity">Налаштування</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Фонове зображення клавіатури</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Збільшувати символи під час введення</string>
-    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Use transparent background at navbar</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
-    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
-    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
-    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
-    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
-    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
-    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
-    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
-    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Використовувати прозорий фон для панелі навігації</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Зробити панель навігації повністю прозорим</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Застосувати колір до панелі навігації (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Вимкнути спливаюче меню</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Вимкнути повторення символу при довгому натисканні</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Вимкнути верхню панель</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Сховати функціональні кнопки верхньої панелі</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Увімкнути буфер обміну</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Вимкнути пропозиції слів</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Вимкнути рядок цифр (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
     <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
