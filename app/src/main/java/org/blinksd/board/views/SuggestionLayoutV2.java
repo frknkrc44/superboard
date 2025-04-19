@@ -1,8 +1,11 @@
 package org.blinksd.board.views;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -41,6 +44,9 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         super(superBoard.getContext());
         this.superBoard = superBoard;
 
+        int p = DensityUtils.dpInt(8);
+        setPadding(p, 0, p, 0);
+
         mCompletionsLayout = new LinearLayout(getContext());
         mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
 
@@ -49,6 +55,10 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView.setOrientation(FABView.Orientation.TLH);
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
         fabView.addButton(new FABView.SubButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN));
+        if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            fabView.addButton(new FABView.SubButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA));
+        }
+        fabView.addButton(new FABView.SubButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU));
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
 
         boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);

@@ -6,6 +6,9 @@ import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
 
+import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -140,9 +143,9 @@ public class FABView extends LinearLayout {
         int p = DensityUtils.dpInt(16);
         buttonItem.setPadding(p,p,p,p);
         if (sb.keyCode == null) {
-            ViewUtils.setBackground(buttonItem, ResourcesUtils.getTransSelectableItemBg(getContext(), iconColor));
+            ViewUtils.setBackground(buttonItem, getTransSelectableItemBg(getContext(), iconColor));
         } else {
-            ViewUtils.setBackground(buttonItem, ResourcesUtils.getCircleButtonBackground(false));
+            ViewUtils.setBackground(buttonItem, getCircleButtonBackground(iconColor, true));
         }
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
         buttonItem.setTag(R.id.key_normal_press, sb.keyCode);
@@ -155,7 +158,10 @@ public class FABView extends LinearLayout {
         if(buttonLayouts == null){
             addView(main = buttonItem);
             buttonItem.setTag(getChildCount());
-            buttonItem.setLayoutParams(new LayoutParams(btnSize,btnSize,0));
+            var params = new LayoutParams((int) (btnSize * 0.85f),(int) (btnSize * 0.85f),0);
+            params.gravity = CENTER_VERTICAL;
+            params.rightMargin = p / 2;
+            buttonItem.setLayoutParams(params);
             buttonLayouts = new LinearLayout(getContext());
             EXCEPTION = false;
             buttonLayouts.setOrientation(getOrientation());

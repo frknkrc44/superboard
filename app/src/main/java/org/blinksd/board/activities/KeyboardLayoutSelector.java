@@ -1,6 +1,8 @@
 package org.blinksd.board.activities;
 
 import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.ResourcesUtils.getButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getTintedDrawable;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -148,9 +150,9 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             tick.setLayoutParams(params);
             int p = tickSize / 8;
             tick.setPadding(p, p, p, p);
-            ViewUtils.setBackground(tick, ResourcesUtils.getCircleButtonBackground(false));
+            ViewUtils.setBackground(tick, getButtonBackground(64, 2, false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            Drawable returnSymbol = ResourcesUtils.getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
+            Drawable returnSymbol = getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
             tick.setImageDrawable(returnSymbol);
             layers.addView(tick);
         }

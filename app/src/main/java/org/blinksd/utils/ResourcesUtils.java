@@ -5,6 +5,7 @@ import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getApplication;
 import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
+import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
@@ -21,7 +22,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.util.TypedValue;
 
@@ -74,8 +78,15 @@ public class ResourcesUtils {
         return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
     }
 
-    public static Drawable getCircleButtonBackground(boolean pressEffect) {
-        return getButtonBackground(64, 2, pressEffect);
+    public static Drawable getCircleButtonBackground(int iconColor, boolean pressEffect) {
+        int keyClr = setAlphaForColor(0x88, pressEffect ? iconColor : getDarkerColor(iconColor));
+        var source = getButtonBackground(64, 2, pressEffect);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                ? new RippleDrawable(
+                    ColorStateList.valueOf(keyClr),
+                    source,
+                    new ShapeDrawable(new OvalShape()))
+                : source;
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, boolean pressEffect) {
@@ -161,11 +172,20 @@ public class ResourcesUtils {
     }
 
     public static Drawable getTransSelectableItemBg(Context context, int textColor) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return new RippleDrawable(
+                    ColorStateList.valueOf(setAlphaForColor(0x88, textColor)),
+                    null,
+                    new ShapeDrawable(new OvalShape())
+            );
+        }
+
         TypedArray array = context.getTheme().obtainStyledAttributes(
                 new int[]{android.R.attr.selectableItemBackground}
         );
         int resId = array.getResourceId(0, 0);
         int color = textColor - 0x88000000;
+
         Drawable d = ResourcesUtils.getTintedDrawable(resId, color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             array.close();
