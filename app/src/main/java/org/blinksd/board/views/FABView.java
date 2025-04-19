@@ -1,6 +1,7 @@
 package org.blinksd.board.views;
 
 import static android.view.Gravity.BOTTOM;
+import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
@@ -17,14 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 
+import org.blinksd.board.R;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
+import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SimpleAnimatorListener;
+import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
 
 public class FABView extends LinearLayout {
-
     private static int BUTTON_SIZE = 64, DEFAULT_ICON_COLOR = 0xFFFFFFFF, iconColor = DEFAULT_ICON_COLOR;
     private static boolean REVERSE = false, EXCEPTION = false, OLD_REVERSE = false;
     private LinearLayout buttonLayouts = null;
@@ -32,11 +35,15 @@ public class FABView extends LinearLayout {
     private ViewGroup sv = null;
     private Space bugFixLayout = null;
     private Orientation oldOri = null;
+    private final OnButtonClickListener onButtonClickListener;
+    private final OnButtonClickInternalListener onButtonClickInternalListener;
 
-    public FABView(Context context){
+    public FABView(Context context, OnButtonClickListener onButtonClickListener){
         super(context);
+        this.onButtonClickListener = onButtonClickListener;
+        this.onButtonClickInternalListener = new OnButtonClickInternalListener();
         setOrientation(Orientation.BRV);
-        addButton(new SubButton(android.R.drawable.ic_input_add, null));
+        addButton(new SubButton(android.R.drawable.ic_input_add));
     }
 
     @SuppressLint("WrongConstant")
@@ -132,35 +139,40 @@ public class FABView extends LinearLayout {
         buttonItem.setImageDrawable(sb.buttonImage);
         int p = DensityUtils.dpInt(16);
         buttonItem.setPadding(p,p,p,p);
-        ViewUtils.setBackground(buttonItem, ResourcesUtils.getTransSelectableItemBg(getContext(), iconColor));
+        if (sb.keyCode == null) {
+            ViewUtils.setBackground(buttonItem, ResourcesUtils.getTransSelectableItemBg(getContext(), iconColor));
+        } else {
+            ViewUtils.setBackground(buttonItem, ResourcesUtils.getCircleButtonBackground(false));
+        }
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        buttonItem.setOnClickListener(
-                sb.onButtonClickListener != null
-                        ? sb.onButtonClickListener
-                        : new OnButtonClickListener("")
-        );
+        buttonItem.setTag(R.id.key_normal_press, sb.keyCode);
+        buttonItem.setOnClickListener(onButtonClickInternalListener);
         if(getChildCount() != 0){
             buttonItem.setScaleX(0);
             buttonItem.setScaleY(0);
         }
-        p = DensityUtils.dpInt(BUTTON_SIZE);
+        int btnSize = DensityUtils.dpInt(BUTTON_SIZE);
         if(buttonLayouts == null){
             addView(main = buttonItem);
             buttonItem.setTag(getChildCount());
-            buttonItem.setLayoutParams(new LayoutParams(p,p,0));
+            buttonItem.setLayoutParams(new LayoutParams(btnSize,btnSize,0));
             buttonLayouts = new LinearLayout(getContext());
             EXCEPTION = false;
             buttonLayouts.setOrientation(getOrientation());
-            buttonLayouts.setLayoutParams(new ScrollView.LayoutParams(-2,-2));
+            buttonLayouts.setGravity(CENTER_VERTICAL);
+            buttonLayouts.setLayoutParams(new ScrollView.LayoutParams(-2,-1));
             setScrollView();
-            add(this,sv);
+            add(this, sv);
             // BUG FIX ITEM, DON'T DELETE IT
             bugFixLayout = new Space(getContext());
-            bugFixLayout.setLayoutParams(new LayoutParams(p,p,0));
+            bugFixLayout.setLayoutParams(new LayoutParams(btnSize,btnSize,0));
             bugFixLayout.setVisibility(GONE);
             add(this, bugFixLayout);
         } else {
-            buttonItem.setLayoutParams(new LayoutParams(p,p));
+            var subBtnSize = (int) (btnSize * 0.75f);
+            var params = new LinearLayout.LayoutParams(subBtnSize, subBtnSize);
+            params.rightMargin = p / 2;
+            buttonItem.setLayoutParams(params);
             buttonItem.setTag(buttonLayouts.getChildCount());
             add(buttonLayouts, buttonItem);
         }
@@ -175,7 +187,7 @@ public class FABView extends LinearLayout {
         sv = (buttonLayouts.getOrientation() == VERTICAL)
                 ? new ScrollView(getContext())
                 : new HorizontalScrollView(getContext());
-        sv.setLayoutParams(new LayoutParams(-2,-2,0));
+        sv.setLayoutParams(new LayoutParams(-2,buttonLayouts.getOrientation() == VERTICAL ? -2 : -1,0));
         sv.setVisibility(View.GONE);
         sv.addView(buttonLayouts);
         sv.setHorizontalScrollBarEnabled(false);
@@ -203,14 +215,24 @@ public class FABView extends LinearLayout {
         }
     }
 
-    public class OnButtonClickListener implements OnClickListener {
-        int baseDelay = 25;
+    void reTheme(int textColor) {
+        ColorUtils.setColorFilter(main, textColor);
+    }
 
-        public OnButtonClickListener(String t) {
-        }
+    public interface OnButtonClickListener {
+        void onClick(int keyCode);
+    }
+
+    private class OnButtonClickInternalListener implements OnClickListener {
+        int baseDelay = 25;
 
         @Override
         public void onClick(View v){
+            if (v.getTag(R.id.key_normal_press) != null) {
+                onButtonClickListener.onClick((int) v.getTag(R.id.key_normal_press));
+                return;
+            }
+
             if(getChildCount() != 1){
                 if(buttonLayouts.getChildAt(0).getScaleX() == 0){
                     sv.setVisibility(VISIBLE);
@@ -254,18 +276,22 @@ public class FABView extends LinearLayout {
 
     public static class SubButton {
         private final Drawable buttonImage;
-        private final OnButtonClickListener onButtonClickListener;
+        private final Integer keyCode;
 
-        SubButton(Drawable img, OnButtonClickListener listener) {
-            buttonImage = img;
-            ColorUtils.setColorFilter(buttonImage, iconColor);
-            onButtonClickListener = listener;
+        private SubButton(int resource) {
+            this(resource, null);
         }
 
-        SubButton(int resource, OnButtonClickListener listener) {
-            buttonImage = ResourcesUtils.getDrawable(resource);
+        SubButton(Drawable img, int keyCode) {
+            buttonImage = img;
+            this.keyCode = keyCode;
             ColorUtils.setColorFilter(buttonImage, iconColor);
-            onButtonClickListener = listener;
+        }
+
+        SubButton(int resource, Integer keyCode) {
+            buttonImage = ResourcesUtils.getDrawable(resource);
+            this.keyCode = keyCode;
+            ColorUtils.setColorFilter(buttonImage, iconColor);
         }
     }
 

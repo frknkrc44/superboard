@@ -42,6 +42,7 @@ import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
 import org.blinksd.board.views.EmojiView;
 import org.blinksd.board.views.SuggestionLayout;
+import org.blinksd.board.views.SuggestionLayoutV2;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
@@ -62,7 +63,7 @@ import java.util.List;
 
 @SuppressWarnings({"deprecation", "InlinedApi"})
 public final class InputService extends InputMethodService implements
-        SuggestionLayout.OnSuggestionSelectedListener {
+        SuggestionLayoutV2.OnSuggestionSelectedListener {
 
     public static final String RESTART_KEYBOARD = "org.blinksd.board.KILL";
     private SuperBoard superBoardView = null;
@@ -70,7 +71,7 @@ public final class InputService extends InputMethodService implements
     private String[][][] predefinedLayouts = null;
     private String appName;
     private LinearLayout keyboardLayoutHolder = null;
-    private SuggestionLayout suggestionLayout = null;
+    private SuggestionLayoutV2 suggestionLayout = null;
     private RelativeLayout keyboardBackgroundHolder = null;
     private ImageView keyboardBackground = null;
     private Language currentLanguageCache;
@@ -432,7 +433,7 @@ public final class InputService extends InputMethodService implements
             keyboardLayoutHolder.setFocusable(false);
             keyboardLayoutHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
             keyboardLayoutHolder.setOrientation(LinearLayout.VERTICAL);
-            suggestionLayout = new SuggestionLayout(superBoardView);
+            suggestionLayout = new SuggestionLayoutV2(superBoardView);
             suggestionLayout.setFocusable(false);
             suggestionLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, mpInt(12), 0));
             keyboardLayoutHolder.addView(suggestionLayout);
@@ -836,7 +837,7 @@ public final class InputService extends InputMethodService implements
 
         @Override
         public void onKeyboardEvent(View v) {
-            if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
+            // if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
 
             if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);

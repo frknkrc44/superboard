@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.ExtractedText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
@@ -26,13 +28,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @SuppressLint("ViewConstructor")
-public class SuggestionLayoutV2 extends LinearLayout implements View.OnClickListener {
+public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickListener {
     private final LinearLayout mCompletionsLayout;
     private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
     private final SuperBoard superBoard;
+    private final FABView fabView;
 
     public SuggestionLayoutV2(SuperBoard superBoard) {
         super(superBoard.getContext());
@@ -41,21 +44,28 @@ public class SuggestionLayoutV2 extends LinearLayout implements View.OnClickList
         mCompletionsLayout = new LinearLayout(getContext());
         mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
 
-        FABView fabView = new FABView(superBoard.getContext());
-        fabView.setLayoutParams(new LayoutParams(-2, -1, 0));
+        fabView = new FABView(superBoard.getContext(), superBoard::sendKeyEvent);
+        fabView.setLayoutParams(new LayoutParams(-2, -1));
         fabView.setOrientation(FABView.Orientation.TLH);
-        fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, null));
-        fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, null));
+        fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
+        fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
 
         boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
         fabView.setVisibility(topBarDisabled ? GONE : VISIBLE);
 
-        addView(fabView);
-
         HorizontalScrollView scroller = new HorizontalScrollView(getContext());
-        scroller.setLayoutParams(new LayoutParams(-1, -1, 1));
+        var params = new LayoutParams(-1, -1);
+
+        fabView.getChildAt(0).addOnLayoutChangeListener((v, left, top, right, bottom, leftWas, topWas, rightWas, bottomWas) -> {
+            params.leftMargin = (int) (v.getMeasuredWidth() * 1.15f);
+            scroller.setLayoutParams(params);
+        });
+
+        scroller.setLayoutParams(params);
         scroller.addView(mCompletionsLayout);
         addView(scroller);
+
+        addView(fabView);
     }
 
     public void setOnSuggestionSelectedListener(OnSuggestionSelectedListener listener) {
@@ -140,6 +150,8 @@ public class SuggestionLayoutV2 extends LinearLayout implements View.OnClickList
             tv.setTextSize(textSize);
             ViewUtils.setBackground(tv, getSuggestionItemBackground());
         }
+
+        fabView.reTheme(color);
     }
 
     @Override
