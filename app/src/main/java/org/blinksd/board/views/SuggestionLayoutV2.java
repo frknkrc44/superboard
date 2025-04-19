@@ -154,16 +154,18 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
 
         var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
                                 !getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
+        var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
 
-        toggleButtonVisibility(KeyEvent.KEYCODE_EISU, !clipboardDisabled);
+        toggleButtonVisibility(KeyEvent.KEYCODE_EISU, clipboardDisabled);
+        toggleButtonVisibility(KeyEvent.KEYCODE_HENKAN, fnButtonsDisabled);
 
         fabView.reTheme(color);
     }
 
-    private void toggleButtonVisibility(int keyCode, boolean enabled) {
-        if (fabView.disabledKeycodes.contains(keyCode) && enabled) {
+    private void toggleButtonVisibility(int keyCode, boolean disabled) {
+        if (fabView.disabledKeycodes.contains(keyCode) && !disabled) {
             fabView.disabledKeycodes.remove((Integer) keyCode);
-        } else if (!fabView.disabledKeycodes.contains(keyCode) && !enabled) {
+        } else if (!fabView.disabledKeycodes.contains(keyCode) && disabled) {
             fabView.disabledKeycodes.add(keyCode);
         }
     }
