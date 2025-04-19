@@ -104,18 +104,6 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         task.execute(lang, str);
     }
 
-    public void toggleQuickMenu(boolean show) {
-        boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
-
-        if (topBarDisabled) {
-            show = false;
-        } else if (mOnSuggestionSelectedListener == null) {
-            show = true;
-        }
-
-        // TODO: Show or hide
-    }
-
     private void addCompletionView(final CharSequence text) {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
@@ -208,8 +196,6 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             if (!mLoadDictTasks.contains(this)) {
                 return;
             }
-
-            toggleQuickMenu(result.isEmpty());
 
             ((HorizontalScrollView) mCompletionsLayout.getParent()).scrollTo(0, 0);
             mCompletionsLayout.removeAllViews();

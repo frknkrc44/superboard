@@ -219,6 +219,28 @@ public class FABView extends LinearLayout {
         ColorUtils.setColorFilter(main, textColor);
     }
 
+    /*
+    void expand() {
+        if (main.getRotation() != 135) {
+            onButtonClickInternalListener.onClick(main);
+        }
+    }
+
+    void collapse() {
+        if (main.getRotation() != 0) {
+            onButtonClickInternalListener.onClick(main);
+        }
+    }
+
+    void toggle(boolean expand) {
+        if (expand) {
+            expand();
+        } else {
+            collapse();
+        }
+    }
+     */
+
     public interface OnButtonClickListener {
         void onClick(int keyCode);
     }

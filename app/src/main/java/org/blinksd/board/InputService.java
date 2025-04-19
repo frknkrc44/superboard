@@ -267,7 +267,7 @@ public final class InputService extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
-        if (sugDisabled) suggestionLayout.toggleQuickMenu(true);
+        // if (sugDisabled) suggestionLayout.toggleQuickMenu(true);
         if (text != null && !sugDisabled) suggestionLayout.setCompletionText(text, currentLanguageCache.language);
     }
 
@@ -572,7 +572,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
-            suggestionLayout.toggleQuickMenu(topBarDisabled);
+            // suggestionLayout.toggleQuickMenu(topBarDisabled);
             String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
             if (!lang.equals(currentLanguageCache.language)) {
                 loadKeyboardLayout();
