@@ -48,6 +48,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView.setLayoutParams(new LayoutParams(-2, -1));
         fabView.setOrientation(FABView.Orientation.TLH);
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
+        fabView.addButton(new FABView.SubButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN));
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
 
         boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);

@@ -897,6 +897,51 @@ public final class InputService extends InputMethodService implements
         }
 
         @Override
+        public void sendKeyEvent(int code) {
+            if (code != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {
+                showClipboardView(false);
+            }
+
+            if (code != KeyEvent.KEYCODE_KANA && isEmojiViewShown()) {
+                showEmojiView(false);
+            }
+
+            if (code != KeyEvent.KEYCODE_3D_MODE && isLanguageSelectorViewShown()) {
+                showLanguageSelectorView(false);
+            }
+
+            switch (code) {
+                case KeyEvent.KEYCODE_HENKAN:  // symbol menu
+                    int fnIndex = findFNKeyboardIndex();
+                    setEnabledLayout(
+                            getEnabledLayoutIndex() != fnIndex
+                                    ? fnIndex
+                                    : findTextKeyboardIndex()
+                    );
+                    return;
+                case KeyEvent.KEYCODE_NUM:     // number menu
+                    int numIndex = findNumberKeyboardIndex();
+                    setEnabledLayout(
+                            getEnabledLayoutIndex() != numIndex
+                                    ? numIndex
+                                    : findTextKeyboardIndex()
+                    );
+                    return;
+                case KeyEvent.KEYCODE_EISU:    // clipboard menu
+                    showClipboardView(!clipboardView.isShown());
+                    return;
+                case KeyEvent.KEYCODE_KANA:    // emoji menu
+                    showEmojiView(!emojiView.isShown());
+                    return;
+                case KeyEvent.KEYCODE_3D_MODE: // language selector menu
+                    showLanguageSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
+                    return;
+            }
+
+            super.sendKeyEvent(code);
+        }
+
+        @Override
         public void sendKeyboardEvent(Key key) {
             if (key.hasNormalPressEvent()) {
                 if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {

@@ -583,7 +583,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     @SuppressLint("InlinedApi")
-    public final void sendKeyEvent(int code) {
+    public void sendKeyEvent(int code) {
         switch (code) {
             case KEYCODE_CLOSE_KEYBOARD:
                 getCurrentIMService().requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS);
