@@ -241,6 +241,15 @@ public class FABView extends LinearLayout {
     void reTheme(int textColor) {
         collapse();
         ColorUtils.setColorFilter(main, textColor);
+
+        for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
+            var child = buttonLayouts.getChildAt(i);
+            var np = child.getTag(R.id.key_normal_press);
+            if (np != null) {
+                ViewUtils.setBackground(child, getCircleButtonBackground(textColor, true));
+                ColorUtils.setColorFilter((ImageView) child, textColor);
+            }
+        }
     }
 
     void collapse() {

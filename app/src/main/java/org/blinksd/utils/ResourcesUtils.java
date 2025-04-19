@@ -79,8 +79,9 @@ public class ResourcesUtils {
     }
 
     public static Drawable getCircleButtonBackground(int iconColor, boolean pressEffect) {
+        int buttonClr = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
         int keyClr = setAlphaForColor(0x88, pressEffect ? iconColor : getDarkerColor(iconColor));
-        var source = getButtonBackground(64, 2, pressEffect);
+        var source = getButtonBackground(buttonClr, buttonClr, 64, 2, pressEffect);
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 ? new RippleDrawable(
                     ColorStateList.valueOf(keyClr),
