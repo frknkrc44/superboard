@@ -53,7 +53,7 @@
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Збільшення швидкості видалення при довгому натисканні</string>
     <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Кольорова схема Monet</string>
-    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Відступи клавіатури</string>
+    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Відступ клавіатури</string>
     <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
@@ -71,22 +71,22 @@
     <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">Ви використовуєте живі шпалери, завантаження ескізу…</string>
     <!-- Radio selector resources -->
     <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Мова клавіатури</string>
-    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Keyboard font</string>
-    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Keyboard theme</string>
-    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Icon theme</string>
-    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Space bar style</string>
-    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Key background type</string>
-    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Key background gradient orientation</string>
+    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Шрифт клавіатури</string>
+    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Тема клавіатури</string>
+    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Тема піктограми</string>
+    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Стиль пробілу</string>
+    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Тип фону клавіш</string>
+    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Орієнтація фонового градієнта клавіш</string>
     <!-- Number selector resources -->
-    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
-    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
-    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
-    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
-    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
-    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
-    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Key text size</string>
-    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Key shadow size</string>
-    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Key icon size multiplier</string>
+    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Розмиття фонового зображення клавіатури</string>
+    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Тривалість вібрації при натисканні клавіш</string>
+    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Висота клавіатури</string>
+    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Множник тривалості довгого натискання</string>
+    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Відступ клавіш</string>
+    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Радіус клавіш</string>
+    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Розмір тексту клавіш</string>
+    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Розмір тіні клавіш</string>
+    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Множник розміру піктограми клавіш</string>
     <!-- Backup/Restore options -->
     <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
     <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
