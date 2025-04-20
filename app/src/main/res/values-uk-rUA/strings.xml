@@ -88,64 +88,64 @@
     <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Розмір тіні клавіш</string>
     <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Множник розміру піктограми клавіш</string>
     <!-- Backup/Restore options -->
-    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Backup and restore</string>
-    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Backup</string>
-    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Restore</string>
-    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">All items</string>
-    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Theme (icon theme, background image, colors, …)</string>
-    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Others</string>
-    <string name="settings_select_file" tools:keep="@string/settings_select_file">Select file</string>
+    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Резервне копіювання і відновлення</string>
+    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Резервне копіювання</string>
+    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Відновлення</string>
+    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Усі елементи</string>
+    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Тема (іконки, фонове зображення, кольори, …)</string>
+    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Інші</string>
+    <string name="settings_select_file" tools:keep="@string/settings_select_file">Обрати файл</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
-    <string name="settings_dict_importing">Importing, please don\'t close this app</string>
-    <string name="settings_dict_import_count">%s word imported</string>
-    <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
+    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Імпорт словника (.fbd/combined.gz)</string>
+    <string name="settings_dict_importing">Імпортування. Будь ласка, не закривайте програму</string>
+    <string name="settings_dict_import_count">%s слів імпортовано</string>
+    <string name="settings_dict_import_delete_duplicates">Видалення дублікатів</string>
     <!-- Settings category resources -->
-    <string name="settings_category_general">General</string>
-    <string name="settings_category_theming">Theming</string>
-    <string name="settings_category_theming_adv">Advanced Theming</string>
-    <string name="settings_category_layout">Keyboard Layout</string>
-    <string name="settings_category_popup">Popup</string>
-    <string name="settings_category_top_bar">Top Bar</string>
-    <string name="settings_category_bottom_bar">Bottom Bar</string>
+    <string name="settings_category_general">Загальні</string>
+    <string name="settings_category_theming">Вигляд</string>
+    <string name="settings_category_theming_adv">Розширене оформлення</string>
+    <string name="settings_category_layout">Розкладка клавіатури</string>
+    <string name="settings_category_popup">Спливаючі меню</string>
+    <string name="settings_category_top_bar">Верхня панель</string>
+    <string name="settings_category_bottom_bar">Нижня панель</string>
     <!-- Settings monet color scheme resources -->
-    <string name="settings_monet_scheme_default">Default</string>
+    <string name="settings_monet_scheme_default">За замовчуванням</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
-        <item>Regular</item>
-        <item>Bold</item>
-        <item>Italic</item>
-        <item>Bold Italic</item>
-        <item>Condensed</item>
-        <item>Condensed Bold</item>
-        <item>Condensed Italic</item>
-        <item>Condensed Bold Italic</item>
-        <item>Serif</item>
-        <item>Serif Bold</item>
-        <item>Serif Italic</item>
-        <item>Serif Bold Italic</item>
-        <item>Monospace</item>
-        <item>Monospace Bold</item>
-        <item>Monospace Italic</item>
-        <item>Monospace Bold Italic</item>
-        <item>Serif Monospace</item>
+        <item>Звичайний</item>
+        <item>Напівжирний</item>
+        <item>Курсив</item>
+        <item>Напівжирний курсив</item>
+        <item>Ущільнений</item>
+        <item>Ущільнений напівжирний</item>
+        <item>Ущільнений курсив</item>
+        <item>Ущільнений напівжирний курсив</item>
+        <item>З засічками</item>
+        <item>Напівжирний з засічками</item>
+        <item>Курсив з засічками</item>
+        <item>Напівжирний курсив з засічками</item>
+        <item>Моноширинний</item>
+        <item>Моноширинний напівжирний</item>
+        <item>Моноширинний курсив</item>
+        <item>Моноширинний напівжирний курсив</item>
+        <item>Моноширинний з засічками</item>
         <item>Serif Monospace Bold</item>
         <item>Serif Monospace Italic</item>
         <item>Serif Monospace Bold Italic</item>
-        <item>Custom (in app data folder)</item>
+        <item>Власна (в теці \"data\" додатка)</item>
     </string-array>
     <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
-        <item>Default</item>
+        <item>За замовчуванням</item>
         <item>Material</item>
         <item>Apricot</item>
     </string-array>
     <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
-        <item>Theme default</item>
-        <item>Selected language</item>
+        <item>Типова тема</item>
+        <item>Обрана мова</item>
         <item>Daisy</item>
-        <item>Space bar</item>
-        <item>Empty</item>
+        <item>Пробіл</item>
+        <item>Пусто</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
         <item>Flat</item>
