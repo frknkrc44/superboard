@@ -240,6 +240,7 @@ public class FABView extends LinearLayout {
 
     void reTheme(int textColor) {
         collapse();
+        ViewUtils.setBackground(main, getTransSelectableItemBg(getContext(), textColor));
         ColorUtils.setColorFilter(main, textColor);
 
         for (int i = 0; i < buttonLayouts.getChildCount(); i++) {

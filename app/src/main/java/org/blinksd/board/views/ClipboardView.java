@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -22,7 +24,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
@@ -74,8 +75,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
-        ViewUtils.setBackground(clearAllButton, ResourcesUtils.getTransSelectableItemBg(
-                getContext(), textColor));
+        ViewUtils.setBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
@@ -141,7 +141,7 @@ public final class ClipboardView extends LinearLayout
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
         ImageButton pasteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(pasteButton, ResourcesUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(pasteButton, getTransSelectableItemBg(
                 getContext(), textColor));
         pasteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         pasteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -149,19 +149,19 @@ public final class ClipboardView extends LinearLayout
         pasteButton.setOnLongClickListener(v -> selectAndUseClipItem(v, true));
         pasteButton.setImageResource(R.drawable.clipboard);
         pasteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        pasteButton.setId(R.id.gradient_selector);
+        pasteButton.setId(android.R.id.button1);
         pasteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(pasteButton);
 
         ImageButton deleteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(deleteButton, ResourcesUtils.getTransSelectableItemBg(
+        ViewUtils.setBackground(deleteButton, getTransSelectableItemBg(
                 getContext(), textColor));
         deleteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         deleteButton.setOnClickListener(v -> removeClipView(v, true));
         deleteButton.setImageResource(R.drawable.delete);
         deleteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        deleteButton.setId(R.id.gradient_selector);
+        deleteButton.setId(android.R.id.button2);
         deleteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(deleteButton);
 
@@ -244,6 +244,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        ViewUtils.setBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
 
         for (int i = 0; i < listView.getChildCount(); i++) {
             View child = listView.getChildAt(i);
@@ -254,8 +255,13 @@ public final class ClipboardView extends LinearLayout
             TextView textView2 = child.findViewById(android.R.id.text2);
             textView2.setTextColor(textColor);
 
-            ImageButton button = child.findViewById(R.id.gradient_selector);
-            button.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+            ImageButton button1 = child.findViewById(android.R.id.button1);
+            ColorUtils.setColorFilter(button1, textColor);
+            ViewUtils.setBackground(button1, getTransSelectableItemBg(getContext(), textColor));
+
+            ImageButton button2 = child.findViewById(android.R.id.button2);
+            ColorUtils.setColorFilter(button2, textColor);
+            ViewUtils.setBackground(button2, getTransSelectableItemBg(getContext(), textColor));
         }
     }
 
