@@ -1,7 +1,6 @@
 package org.blinksd.board.views;
 
 import static android.os.Build.VERSION.SDK_INT;
-
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
@@ -25,7 +24,6 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

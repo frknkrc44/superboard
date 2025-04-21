@@ -5,7 +5,6 @@ import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
-
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
@@ -15,9 +14,6 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.ColorStateListDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +24,15 @@ import android.widget.ScrollView;
 import android.widget.Space;
 
 import org.blinksd.board.R;
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SimpleAnimatorListener;
-import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressLint("ViewConstructor")
 public class FABView extends LinearLayout {
-    private static int BUTTON_SIZE = 10, DEFAULT_ICON_COLOR = 0xFFFFFFFF, iconColor = DEFAULT_ICON_COLOR;
+    private static final int BUTTON_SIZE = 10;
     private static boolean REVERSE = false, EXCEPTION = false, OLD_REVERSE = false;
     private LinearLayout buttonLayouts = null;
     private ImageView main = null;

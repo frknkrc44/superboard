@@ -25,7 +25,6 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
 import android.util.TypedValue;
 
