@@ -45,13 +45,15 @@ public class FABView extends LinearLayout {
     private Orientation oldOri = null;
     private final OnButtonClickListener onButtonClickListener;
     private final OnButtonClickInternalListener onButtonClickInternalListener;
+    private final OnStateChangedListener onStateChangedListener;
     public final List<Integer> disabledKeycodes;
 
-    public FABView(Context context, OnButtonClickListener onButtonClickListener){
+    public FABView(Context context, OnButtonClickListener onButtonClickListener, OnStateChangedListener onStateChangedListener){
         super(context);
         this.disabledKeycodes = new ArrayList<>();
         this.onButtonClickListener = onButtonClickListener;
         this.onButtonClickInternalListener = new OnButtonClickInternalListener();
+        this.onStateChangedListener = onStateChangedListener;
         setOrientation(Orientation.BRV);
         addButton(new SubButton(android.R.drawable.ic_input_add));
     }
@@ -292,19 +294,21 @@ public class FABView extends LinearLayout {
             }
 
             if(getChildCount() != 1){
-                if(buttonLayouts.getChildAt(0).getScaleX() == 0){
+                boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
+                if(collapsed){
                     sv.setVisibility(VISIBLE);
                     main.animate().rotation(135);
                 } else {
                     main.animate().rotation(0);
                 }
+                onStateChangedListener.onStateChanged(collapsed);
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
                         continue;
                     }
 
                     final int g = i,d1 = Math.abs((buttonLayouts.getChildCount()-1)-(i+1))*baseDelay,d2 = (i+1)*baseDelay;
-                    if(buttonLayouts.getChildAt(0).getScaleX() == 0){
+                    if(collapsed){
                         buttonLayouts.getChildAt(i).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
@@ -358,4 +362,8 @@ public class FABView extends LinearLayout {
     }
 
     public enum Orientation { BRH, BRV, BLH, BLV, TRH, TRV, TLH, TLV }
+
+    public interface OnStateChangedListener {
+        void onStateChanged(boolean expanded);
+    }
 }

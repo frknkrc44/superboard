@@ -52,7 +52,10 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         mCompletionsLayout = new LinearLayout(getContext());
         mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
 
-        fabView = new FABView(superBoard.getContext(), superBoard::sendKeyEvent);
+        fabView = new FABView(
+                superBoard.getContext(),
+                superBoard::sendKeyEvent,
+                expanded -> mCompletionsLayout.animate().setStartDelay(expanded ? 0 : 250).alpha(expanded ? 0 : 1));
         fabView.setLayoutParams(new LayoutParams(-2, -1));
         fabView.setOrientation(FABView.Orientation.TLH);
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
