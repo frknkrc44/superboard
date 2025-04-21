@@ -57,16 +57,17 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
                 (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha));
         fabView.setLayoutParams(new LayoutParams(-2, -1));
         fabView.setOrientation(FABView.Orientation.TLH);
-        fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
+        fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
         if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            fabView.addButton(new FABView.SubButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA));
+            fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA);
         }
 
-        fabView.addButton(new FABView.SubButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true));
-        fabView.addButton(new FABView.SubButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN));
-        fabView.addButton(new FABView.SubButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true));
-        fabView.addButton(new FABView.SubButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU));
-        fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
+        fabView.addButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true);
+        fabView.addButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN);
+        fabView.addButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true);
+        fabView.addButton(R.drawable.number, KeyEvent.KEYCODE_NUM);
+        fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU);
+        fabView.addButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT);
 
         boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
         fabView.setVisibility(topBarDisabled ? GONE : VISIBLE);
@@ -165,11 +166,13 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
                                 !getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
         var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
+        var numberRowDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
 
         toggleButtonVisibility(KeyEvent.KEYCODE_EISU, clipboardDisabled);
         toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_CTRL, fnButtonsDisabled);
         toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_ALT, fnButtonsDisabled);
         toggleButtonVisibility(KeyEvent.KEYCODE_HENKAN, fnButtonsDisabled);
+        toggleButtonVisibility(KeyEvent.KEYCODE_NUM, !numberRowDisabled);
 
         fabView.reTheme(keyColor, textColor);
     }

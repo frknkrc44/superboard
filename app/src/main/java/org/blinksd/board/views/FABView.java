@@ -57,7 +57,7 @@ public class FABView extends LinearLayout {
         this.onButtonClickInternalListener = new OnButtonClickInternalListener();
         this.onStateChangedListener = onStateChangedListener;
         setOrientation(Orientation.BRV);
-        addButton(new SubButton(android.R.drawable.ic_input_add));
+        addButton(android.R.drawable.ic_input_add, null);
     }
 
     @SuppressLint("WrongConstant")
@@ -160,13 +160,17 @@ public class FABView extends LinearLayout {
         return null;
     }
 
-    public void addButton(SubButton sb){
+    public void addButton(int resource, Integer keyCode) {
+        addButton(resource, keyCode, false);
+    }
+
+    public void addButton(int resource, Integer keyCode, boolean stateful) {
         StatefulImageView buttonItem = new StatefulImageView(getContext());
-        buttonItem.setImageDrawable(sb.buttonImage);
+        buttonItem.setImageResource(resource);
         int p = DensityUtils.mpInt(2);
         buttonItem.setPadding(p,p,p,p);
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        buttonItem.setTag(R.id.key_normal_press, sb.keyCode);
+        buttonItem.setTag(R.id.key_normal_press, keyCode);
         buttonItem.setOnClickListener(onButtonClickInternalListener);
         if(getChildCount() != 0){
             buttonItem.setScaleX(0);
@@ -199,7 +203,7 @@ public class FABView extends LinearLayout {
             buttonItem.setVisibility(GONE);
             buttonItem.setLayoutParams(params);
             buttonItem.setTag(buttonLayouts.getChildCount());
-            buttonItem.setTag(R.id.key_long_press, sb.stateful);
+            buttonItem.setTag(R.id.key_long_press, stateful);
             add(buttonLayouts, buttonItem);
         }
     }
@@ -360,38 +364,9 @@ public class FABView extends LinearLayout {
         }
     }
 
-    public static class SubButton {
-        private final Drawable buttonImage;
-        private final Integer keyCode;
-        private final boolean stateful;
-
-        private SubButton(int resource) {
-            this(resource, null);
-        }
-
-        SubButton(int resource, Integer keyCode) {
-            this(resource, keyCode, false);
-        }
-
-        SubButton(int resource, Integer keyCode, boolean stateful) {
-            this(ResourcesUtils.getDrawable(resource), keyCode, stateful);
-        }
-
-        SubButton(Drawable img, Integer keyCode, boolean stateful) {
-            buttonImage = img;
-            this.keyCode = keyCode;
-            this.stateful = stateful;
-            setColorFilter(buttonImage, iconColor);
-        }
-    }
-
     public enum Orientation { BRH, BRV, BLH, BLV, TRH, TRV, TLH, TLV }
 
     public interface OnStateChangedListener {
         void onStateChanged(int alpha, int requiredDelay);
-    }
-
-    public interface KeyStateGetter {
-        boolean getStateForKeyCode(int keyCode);
     }
 }
