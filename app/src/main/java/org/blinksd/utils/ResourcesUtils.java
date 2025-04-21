@@ -78,10 +78,14 @@ public class ResourcesUtils {
         return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
     }
 
-    public static Drawable getCircleButtonBackground(int iconColor, boolean pressEffect) {
-        int buttonClr = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-        int keyClr = setAlphaForColor(0x88, pressEffect ? iconColor : getDarkerColor(iconColor));
-        var source = getButtonBackground(buttonClr, buttonClr, 64, 2, pressEffect);
+    public static Drawable getCircleButtonBackground(int keyColor, int iconColor, boolean pressEffect) {
+        int buttonClr = pressEffect ? iconColor : keyColor;
+        int keyClr = setAlphaForColor(0x88, pressEffect ? keyColor : iconColor);
+
+        GradientDrawable source = new GradientDrawable();
+        source.setColor(buttonClr);
+        source.setCornerRadius(64);
+        source.setStroke(2, 0);
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 ? new RippleDrawable(
                     ColorStateList.valueOf(keyClr),

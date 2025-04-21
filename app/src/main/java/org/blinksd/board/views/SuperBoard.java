@@ -51,6 +51,7 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
+import org.blinksd.utils.superboard.OnModifierChangedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,6 +117,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             ".", ",", ";", ":",
             "...", "…", "?", "!"
     );
+    private final OnModifierChangedListener onModifierChangedListener;
 
     // key states
     private int ctrl = 0;
@@ -123,7 +125,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private int shift = 0;
 
     public SuperBoard(Context context) {
+        this(context, null);
+    }
+
+    public SuperBoard(Context context, OnModifierChangedListener onModifierChangedListener) {
         super(context);
+        this.onModifierChangedListener = onModifierChangedListener;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
             vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -740,9 +747,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         ctrl = state;
+
+        if (onModifierChangedListener != null) {
+            onModifierChangedListener.onModifierChanged(KEYCODE_TOGGLE_CTRL, state);
+        }
     }
 
-    private void toggleCtrlState() {
+    protected void toggleCtrlState() {
         setCtrlState((ctrl + 1) % 2);
     }
 
@@ -756,9 +767,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         alt = state;
+
+        if (onModifierChangedListener != null) {
+            onModifierChangedListener.onModifierChanged(KEYCODE_TOGGLE_ALT, state);
+        }
     }
 
-    private void toggleAltState() {
+    protected void toggleAltState() {
         setAltState((alt + 1) % 2);
     }
 

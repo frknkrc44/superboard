@@ -171,7 +171,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     break;
             }
 
-            ViewUtils.setBackground(
+            ViewUtils.setViewBackground(
                     categoryView.getChildAt(categoryView.getChildCount() - 1),
                     ResourcesUtils.getTransSelectableItemBg(
                             categoryView.getContext(), 0xFFDEDEDE)

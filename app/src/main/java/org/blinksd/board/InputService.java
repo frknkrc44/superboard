@@ -41,7 +41,6 @@ import org.blinksd.board.views.BoardPopup;
 import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
 import org.blinksd.board.views.EmojiView;
-import org.blinksd.board.views.SuggestionLayout;
 import org.blinksd.board.views.SuggestionLayoutV2;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.ColorUtils;
@@ -56,6 +55,7 @@ import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.KeyOptions;
 import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.Language;
+import org.blinksd.utils.superboard.OnModifierChangedListener;
 import org.blinksd.utils.superboard.RowOptions;
 
 import java.io.File;
@@ -252,7 +252,7 @@ public final class InputService extends InputMethodService implements
         showLanguageSelectorView(false);
 
         if (suggestionLayout != null)
-            suggestionLayout.setCompletion(null, null);
+            suggestionLayout.setCompletion(superBoardView, null, null);
 
         System.gc();
     }
@@ -268,13 +268,14 @@ public final class InputService extends InputMethodService implements
         if (ic == null) return;
         CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
         // if (sugDisabled) suggestionLayout.toggleQuickMenu(true);
-        if (text != null && !sugDisabled) suggestionLayout.setCompletionText(text, currentLanguageCache.language);
+        if (text != null && !sugDisabled) suggestionLayout.setCompletionText(superBoardView, text, currentLanguageCache.language);
     }
 
     @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
     private void setLayout() {
         if (superBoardView == null) {
-            superBoardView = new SuperBoardImpl(this);
+            superBoardView = new SuperBoardImpl(this,
+                    (keyCode, modifierValue) -> suggestionLayout.changeFABKeyState(keyCode, modifierValue > 0));
             superBoardView.setFocusable(false);
             try {
                 unregisterReceiver(restartKeyboardReceiver);
@@ -830,8 +831,8 @@ public final class InputService extends InputMethodService implements
 
     private final class SuperBoardImpl extends SuperBoard {
         private boolean shown = false;
-        private SuperBoardImpl(Context context) {
-            super(context);
+        private SuperBoardImpl(Context context, OnModifierChangedListener listener) {
+            super(context, listener);
             setSpecialCases(LayoutUtils.getSpecialCases());
         }
 
@@ -911,6 +912,12 @@ public final class InputService extends InputMethodService implements
             }
 
             switch (code) {
+                case SuperBoard.KEYCODE_TOGGLE_CTRL:
+                    toggleCtrlState();
+                    return;
+                case SuperBoard.KEYCODE_TOGGLE_ALT:
+                    toggleAltState();
+                    return;
                 case KeyEvent.KEYCODE_HENKAN:  // symbol menu
                     int fnIndex = findFNKeyboardIndex();
                     setEnabledLayout(

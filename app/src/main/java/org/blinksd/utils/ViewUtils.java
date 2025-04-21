@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class ViewUtils {
     private ViewUtils() {}
 
-    public static void setBackground(View view, Drawable drawable) {
+    public static void setViewBackground(View view, Drawable drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.setBackground(drawable);
         } else {

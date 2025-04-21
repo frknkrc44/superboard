@@ -75,7 +75,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
-        ViewUtils.setBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
+        ViewUtils.setViewBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
         LinearLayout.LayoutParams buttonParams =
                 new LinearLayout.LayoutParams(buttonSize, buttonSize, 0);
         buttonParams.rightMargin = buttonPadding;
@@ -141,7 +141,7 @@ public final class ClipboardView extends LinearLayout
         textView2.setTextColor(ColorUtils.setAlphaForColor(0x88, textColor));
 
         ImageButton pasteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(pasteButton, getTransSelectableItemBg(
+        ViewUtils.setViewBackground(pasteButton, getTransSelectableItemBg(
                 getContext(), textColor));
         pasteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         pasteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -154,7 +154,7 @@ public final class ClipboardView extends LinearLayout
         clipLayout.addView(pasteButton);
 
         ImageButton deleteButton = new ImageButton(getContext());
-        ViewUtils.setBackground(deleteButton, getTransSelectableItemBg(
+        ViewUtils.setViewBackground(deleteButton, getTransSelectableItemBg(
                 getContext(), textColor));
         deleteButton.setLayoutParams(new LinearLayout.LayoutParams(buttonSize, buttonSize, 0));
         deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -244,7 +244,7 @@ public final class ClipboardView extends LinearLayout
         textColor = ColorUtils.convertARGBtoRGB(textColor);
 
         clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        ViewUtils.setBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
+        ViewUtils.setViewBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
 
         for (int i = 0; i < listView.getChildCount(); i++) {
             View child = listView.getChildAt(i);
@@ -257,11 +257,11 @@ public final class ClipboardView extends LinearLayout
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
             ColorUtils.setColorFilter(button1, textColor);
-            ViewUtils.setBackground(button1, getTransSelectableItemBg(getContext(), textColor));
+            ViewUtils.setViewBackground(button1, getTransSelectableItemBg(getContext(), textColor));
 
             ImageButton button2 = child.findViewById(android.R.id.button2);
             ColorUtils.setColorFilter(button2, textColor);
-            ViewUtils.setBackground(button2, getTransSelectableItemBg(getContext(), textColor));
+            ViewUtils.setViewBackground(button2, getTransSelectableItemBg(getContext(), textColor));
         }
     }
 

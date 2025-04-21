@@ -6,15 +6,19 @@ import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
 
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorStateListDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.graphics.drawable.StateListDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -27,16 +31,14 @@ import org.blinksd.board.R;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
-import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SimpleAnimatorListener;
-import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FABView extends LinearLayout {
-    private static int BUTTON_SIZE = 64, DEFAULT_ICON_COLOR = 0xFFFFFFFF, iconColor = DEFAULT_ICON_COLOR;
+    private static int BUTTON_SIZE = 10, DEFAULT_ICON_COLOR = 0xFFFFFFFF, iconColor = DEFAULT_ICON_COLOR;
     private static boolean REVERSE = false, EXCEPTION = false, OLD_REVERSE = false;
     private LinearLayout buttonLayouts = null;
     private ImageView main = null;
@@ -159,9 +161,9 @@ public class FABView extends LinearLayout {
     }
 
     public void addButton(SubButton sb){
-        ImageView buttonItem = new ImageView(getContext());
+        StatefulImageView buttonItem = new StatefulImageView(getContext());
         buttonItem.setImageDrawable(sb.buttonImage);
-        int p = DensityUtils.dpInt(16);
+        int p = DensityUtils.mpInt(2);
         buttonItem.setPadding(p,p,p,p);
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
         buttonItem.setTag(R.id.key_normal_press, sb.keyCode);
@@ -170,9 +172,8 @@ public class FABView extends LinearLayout {
             buttonItem.setScaleX(0);
             buttonItem.setScaleY(0);
         }
-        int btnSize = DensityUtils.dpInt(BUTTON_SIZE);
+        int btnSize = DensityUtils.mpInt(BUTTON_SIZE);
         if(buttonLayouts == null){
-            ViewUtils.setBackground(buttonItem, getTransSelectableItemBg(getContext(), iconColor));
             addView(main = buttonItem);
             buttonItem.setTag(getChildCount());
             var params = new LayoutParams((int) (btnSize * 0.85f),(int) (btnSize * 0.85f),0);
@@ -192,13 +193,13 @@ public class FABView extends LinearLayout {
             bugFixLayout.setVisibility(GONE);
             add(this, bugFixLayout);
         } else {
-            ViewUtils.setBackground(buttonItem, getCircleButtonBackground(iconColor, true));
             var subBtnSize = (int) (btnSize * 0.75f);
             var params = new LinearLayout.LayoutParams(subBtnSize, subBtnSize);
             params.rightMargin = p / 2;
             buttonItem.setVisibility(GONE);
             buttonItem.setLayoutParams(params);
             buttonItem.setTag(buttonLayouts.getChildCount());
+            buttonItem.setTag(R.id.key_long_press, sb.stateful);
             add(buttonLayouts, buttonItem);
         }
     }
@@ -240,17 +241,36 @@ public class FABView extends LinearLayout {
         }
     }
 
-    void reTheme(int textColor) {
+    void changeKeyState(int keyCode, boolean state) {
+        var button = findButtonByKeyCode(keyCode);
+        if (button != null)
+            button.setSelected(state);
+    }
+
+    void reTheme(int keyColor, int textColor) {
         collapse();
-        ViewUtils.setBackground(main, getTransSelectableItemBg(getContext(), textColor));
-        ColorUtils.setColorFilter(main, textColor);
+        setViewBackground(main, getTransSelectableItemBg(getContext(), textColor));
+        setColorFilter(main, textColor);
 
         for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
-            var child = buttonLayouts.getChildAt(i);
-            var np = child.getTag(R.id.key_normal_press);
-            if (np != null) {
-                ViewUtils.setBackground(child, getCircleButtonBackground(textColor, true));
-                ColorUtils.setColorFilter((ImageView) child, textColor);
+            if (buttonLayouts.getChildAt(i) instanceof StatefulImageView child) {
+                if ((boolean) child.getTag(R.id.key_long_press)) {
+                    var stateListDrawable = new StateListDrawable();
+                    stateListDrawable.addState(new int[]{android.R.attr.state_selected}, getCircleButtonBackground(keyColor, textColor, true));
+                    stateListDrawable.addState(new int[]{}, getCircleButtonBackground(keyColor, textColor, false));
+                    child.setSelected(false);
+
+                    setViewBackground(child, stateListDrawable);
+
+                    var colorStates = new ColorStateList(new int[][]{
+                            new int[] {android.R.attr.state_selected},
+                            new int[]{},
+                    }, new int[] {keyColor, textColor});
+                    child.saveState(colorStates);
+                } else {
+                    setViewBackground(child, getCircleButtonBackground(keyColor, textColor, false));
+                    setColorFilter(child, textColor);
+                }
             }
         }
     }
@@ -301,7 +321,7 @@ public class FABView extends LinearLayout {
                 } else {
                     main.animate().rotation(0);
                 }
-                onStateChangedListener.onStateChanged(collapsed, baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2);
+                onStateChangedListener.onStateChanged(collapsed ? 0 : 1, collapsed ? 0 : baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2);
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
                         continue;
@@ -315,8 +335,8 @@ public class FABView extends LinearLayout {
                                 buttonLayouts.getChildAt(g).setVisibility(View.VISIBLE);
                                 if(g == (REVERSE ? (buttonLayouts.getChildCount()-1) : 0)){
                                     if(REVERSE){
-                                        sv.setScrollX(buttonLayouts.getChildCount()*DensityUtils.dpInt(BUTTON_SIZE));
-                                        sv.setScrollY(buttonLayouts.getChildCount()*DensityUtils.dpInt(BUTTON_SIZE));
+                                        sv.setScrollX(buttonLayouts.getChildCount()*DensityUtils.mpInt(BUTTON_SIZE));
+                                        sv.setScrollY(buttonLayouts.getChildCount()*DensityUtils.mpInt(BUTTON_SIZE));
                                     } else {
                                         sv.setScrollX(0);
                                         sv.setScrollY(0);
@@ -343,27 +363,35 @@ public class FABView extends LinearLayout {
     public static class SubButton {
         private final Drawable buttonImage;
         private final Integer keyCode;
+        private final boolean stateful;
 
         private SubButton(int resource) {
             this(resource, null);
         }
 
-        SubButton(Drawable img, Integer keyCode) {
-            buttonImage = img;
-            this.keyCode = keyCode;
-            ColorUtils.setColorFilter(buttonImage, iconColor);
+        SubButton(int resource, Integer keyCode) {
+            this(resource, keyCode, false);
         }
 
-        SubButton(int resource, Integer keyCode) {
-            buttonImage = ResourcesUtils.getDrawable(resource);
+        SubButton(int resource, Integer keyCode, boolean stateful) {
+            this(ResourcesUtils.getDrawable(resource), keyCode, stateful);
+        }
+
+        SubButton(Drawable img, Integer keyCode, boolean stateful) {
+            buttonImage = img;
             this.keyCode = keyCode;
-            ColorUtils.setColorFilter(buttonImage, iconColor);
+            this.stateful = stateful;
+            setColorFilter(buttonImage, iconColor);
         }
     }
 
     public enum Orientation { BRH, BRV, BLH, BLV, TRH, TRV, TLH, TLV }
 
     public interface OnStateChangedListener {
-        void onStateChanged(boolean expanded, int requiredDelay);
+        void onStateChanged(int alpha, int requiredDelay);
+    }
+
+    public interface KeyStateGetter {
+        boolean getStateForKeyCode(int keyCode);
     }
 }

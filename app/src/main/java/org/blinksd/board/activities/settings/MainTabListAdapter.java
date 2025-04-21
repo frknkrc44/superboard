@@ -87,7 +87,7 @@ class MainTabListAdapter extends BaseAdapter {
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
         }
 
-        ViewUtils.setBackground(item, gradientDrawable);
+        ViewUtils.setViewBackground(item, gradientDrawable);
 
         TextView title = (TextView) LayoutInflater.from(parent.getContext()).inflate(
                 android.R.layout.simple_list_item_1, item, false);
@@ -107,7 +107,7 @@ class MainTabListAdapter extends BaseAdapter {
         GradientDrawable imageViewBg = new GradientDrawable();
         imageViewBg.setColor(0x44000000);
         imageViewBg.setCornerRadius(96);
-        ViewUtils.setBackground(arrowView, imageViewBg);
+        ViewUtils.setViewBackground(arrowView, imageViewBg);
         item.addView(arrowView);
 
         return padItem;

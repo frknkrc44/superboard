@@ -3,6 +3,7 @@ package org.blinksd.board.views;
 import static android.os.Build.VERSION.SDK_INT;
 
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -32,19 +33,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@SuppressLint("ViewConstructor")
+@SuppressLint({"ViewConstructor", "InlinedApi"})
 public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickListener {
     private final LinearLayout mCompletionsLayout;
     private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
-    private final SuperBoard superBoard;
     private final FABView fabView;
 
     public SuggestionLayoutV2(SuperBoard superBoard) {
         super(superBoard.getContext());
-        this.superBoard = superBoard;
 
         int p = DensityUtils.dpInt(8);
         setPadding(p, 0, p, 0);
@@ -55,14 +54,17 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView = new FABView(
                 superBoard.getContext(),
                 superBoard::sendKeyEvent,
-                (expanded, delay) -> mCompletionsLayout.animate().setStartDelay(expanded ? 0 : delay).alpha(expanded ? 0 : 1));
+                (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha));
         fabView.setLayoutParams(new LayoutParams(-2, -1));
         fabView.setOrientation(FABView.Orientation.TLH);
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT));
-        fabView.addButton(new FABView.SubButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN));
         if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             fabView.addButton(new FABView.SubButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA));
         }
+
+        fabView.addButton(new FABView.SubButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true));
+        fabView.addButton(new FABView.SubButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN));
+        fabView.addButton(new FABView.SubButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true));
         fabView.addButton(new FABView.SubButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU));
         fabView.addButton(new FABView.SubButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT));
 
@@ -84,16 +86,20 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         addView(fabView);
     }
 
+    public final void changeFABKeyState(int keyCode, boolean state) {
+        fabView.changeKeyState(keyCode, state);
+    }
+
     public void setOnSuggestionSelectedListener(OnSuggestionSelectedListener listener) {
         mOnSuggestionSelectedListener = listener;
     }
 
-    public void setCompletion(ExtractedText text, String lang) {
-        setCompletionText(text == null ? "" : text.text, lang);
+    public void setCompletion(SuperBoard superBoard, ExtractedText text, String lang) {
+        setCompletionText(superBoard, text == null ? "" : text.text, lang);
     }
 
-    public void setCompletionText(CharSequence text, String lang) {
-        mCompletionsLayout.removeAllViews();
+    public void setCompletionText(SuperBoard superBoard, CharSequence text, String lang) {
+        // mCompletionsLayout.removeAllViews();
 
         if (text == null)
             text = "";
@@ -146,13 +152,14 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     }
 
     public void reTheme() {
-        int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        int keyColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+        int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
-            tv.setTextColor(color);
+            tv.setTextColor(textColor);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(textSize);
-            ViewUtils.setBackground(tv, getSuggestionItemBackground());
+            setViewBackground(tv, getSuggestionItemBackground());
         }
 
         var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
@@ -160,9 +167,11 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
 
         toggleButtonVisibility(KeyEvent.KEYCODE_EISU, clipboardDisabled);
+        toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_CTRL, fnButtonsDisabled);
+        toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_ALT, fnButtonsDisabled);
         toggleButtonVisibility(KeyEvent.KEYCODE_HENKAN, fnButtonsDisabled);
 
-        fabView.reTheme(color);
+        fabView.reTheme(keyColor, textColor);
     }
 
     private void toggleButtonVisibility(int keyCode, boolean disabled) {

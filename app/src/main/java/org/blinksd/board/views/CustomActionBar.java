@@ -39,7 +39,7 @@ public class CustomActionBar extends LinearLayout {
         mTitle.setLayoutParams(new LayoutParams(-1, -2, 1));
         ViewUtils.setTextAppearance(mTitle, android.R.style.TextAppearance_Medium);
         ColorUtils.setColorFilter(mBackButton, mTitle.getCurrentTextColor());
-        ViewUtils.setBackground(mBackButton,
+        ViewUtils.setViewBackground(mBackButton,
                 ResourcesUtils.getTransSelectableItemBg(context, mTitle.getCurrentTextColor()));
         addView(mTitle);
 
