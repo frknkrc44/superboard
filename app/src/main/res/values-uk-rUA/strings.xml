@@ -148,7 +148,7 @@
         <item>Пусто</item>
     </string-array>
     <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
-        <item>Flat</item>
+        <item>Плоский</item>
         <item>Градієнт</item>
     </string-array>
     <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
