@@ -301,7 +301,7 @@ public class FABView extends LinearLayout {
                 } else {
                     main.animate().rotation(0);
                 }
-                onStateChangedListener.onStateChanged(collapsed);
+                onStateChangedListener.onStateChanged(collapsed, baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2);
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
                         continue;
@@ -364,6 +364,6 @@ public class FABView extends LinearLayout {
     public enum Orientation { BRH, BRV, BLH, BLV, TRH, TRV, TLH, TLV }
 
     public interface OnStateChangedListener {
-        void onStateChanged(boolean expanded);
+        void onStateChanged(boolean expanded, int requiredDelay);
     }
 }
