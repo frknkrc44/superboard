@@ -8,9 +8,6 @@ import android.util.Pair;
 
 import org.blinksd.color_extractor.palette.Palette;
 import org.blinksd.color_extractor.palette.extras.cam.Cam;
-import org.blinksd.color_extractor.palette.quantizers.CelebiQuantizer;
-import org.blinksd.color_extractor.palette.quantizers.ColorCutQuantizer;
-import org.blinksd.color_extractor.palette.quantizers.Quantizer;
 import org.blinksd.color_extractor.palette.quantizers.VariationalKMeansQuantizer;
 
 import java.util.ArrayList;
@@ -37,14 +34,14 @@ public class ColorExtractor {
     private final List<Integer> colorInts;
     private List<Map<Integer, Integer>> colorMapCache;
 
+    private static final VariationalKMeansQuantizer quantizer = new VariationalKMeansQuantizer();
+
     private ColorExtractor(List<Integer> colorInts) {
         this.colorInts = colorInts;
     }
 
-    public static ColorExtractor extractFromBitmap(
-            Bitmap bitmap, QuantizerType quantizerType, int maxColors, int correction) {
+    public static ColorExtractor extractFromBitmap(Bitmap bitmap, int maxColors, int correction) {
         assert bitmap != null : "bitmap cannot be null";
-        assert quantizerType != null : "quantizerType cannot be null";
         assert maxColors >= 1 : "maxColors should be >= 1";
         assert correction >= 1 : "correction should be >= 1";
 
@@ -56,12 +53,6 @@ public class ColorExtractor {
             bitmap = Bitmap.createScaledBitmap(bitmap, optimalSize.first,
                     optimalSize.second, true /* filter */);
         }
-
-        Quantizer quantizer = switch (quantizerType) {
-            case CELEBI -> new CelebiQuantizer();
-            case COLOR_CUT -> new ColorCutQuantizer();
-            case VAR_K_MEANS -> new VariationalKMeansQuantizer();
-        };
 
         final Palette palette = Palette
                 .from(bitmap, quantizer)
@@ -253,11 +244,5 @@ public class ColorExtractor {
         hsl[2] = 1f - brightness;
 
         return HSLToColor(hsl);
-    }
-
-    public enum QuantizerType {
-        CELEBI,
-        COLOR_CUT,
-        VAR_K_MEANS,
     }
 }

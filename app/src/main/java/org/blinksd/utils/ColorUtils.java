@@ -321,19 +321,8 @@ public final class ColorUtils {
         return argb(0xff, red, green, blue);
     }
 
-    public static int rgb(float red, float green, float blue) {
-        return argb(1.0f, red, green, blue);
-    }
-
     public static int argb(int alpha, int red, int green, int blue) {
         return (alpha << 24) | (red << 16) | (green << 8) | blue;
-    }
-
-    public static int argb(float alpha, float red, float green, float blue) {
-        return ((int) (alpha * 255.0f + 0.5f) << 24) |
-                ((int) (red   * 255.0f + 0.5f) << 16) |
-                ((int) (green * 255.0f + 0.5f) <<  8) |
-                (int) (blue  * 255.0f + 0.5f);
     }
 
     public static String colorIntToString(int a, int r, int g, int b) {

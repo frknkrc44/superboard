@@ -21,7 +21,6 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
 
-import org.blinksd.color_extractor.palette.quantizers.ColorCutQuantizer;
 import org.blinksd.color_extractor.palette.quantizers.Quantizer;
 
 import java.util.Collections;
@@ -70,16 +69,6 @@ public final class Palette {
     /** Start generating a {@link Palette} with the returned {@link Builder} instance. */
     public static Builder from(Bitmap bitmap, Quantizer quantizer) {
         return new Builder(bitmap, quantizer);
-    }
-
-    /**
-     * Generate a {@link Palette} from the pre-generated list of {@link Palette.Swatch} swatches.
-     * This
-     * is useful for testing, or if you want to resurrect a {@link Palette} instance from a list of
-     * swatches. Will return null if the {@code swatches} is null.
-     */
-    public static Palette from(List<Swatch> swatches) {
-        return new Builder(swatches).generate();
     }
 
     private final List<Swatch> mSwatches;
@@ -162,9 +151,11 @@ public final class Palette {
             if (bitmap == null || bitmap.isRecycled()) {
                 throw new IllegalArgumentException("Bitmap is not valid");
             }
+
+            assert quantizer == null : "Quantizer cannot be null";
             mSwatches = null;
             mBitmap = bitmap;
-            mQuantizer = quantizer == null ? new ColorCutQuantizer() : quantizer;
+            mQuantizer = quantizer;
         }
 
         /**

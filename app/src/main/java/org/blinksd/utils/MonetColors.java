@@ -236,7 +236,6 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                 if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
                     colorExtractor = ColorExtractor.extractFromBitmap(
                             bitmapDrawable.getBitmap(),
-                            ColorExtractor.QuantizerType.VAR_K_MEANS,
                             getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
                             15
                     );
