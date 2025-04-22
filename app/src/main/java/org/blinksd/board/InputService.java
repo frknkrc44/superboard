@@ -38,7 +38,6 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,6 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
-import org.blinksd.utils.MiniLSPass;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
@@ -75,7 +73,6 @@ import org.blinksd.utils.superboard.OnModifierChangedListener;
 import org.blinksd.utils.superboard.RowOptions;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.List;
 
 @SuppressWarnings({"deprecation", "InlinedApi"})
@@ -103,7 +100,6 @@ public final class InputService extends InputMethodService implements
     };
     private Configuration recentConfiguration;
     private boolean hiddenBySelf = false;
-    // private int insetPaddingBottom = 0;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -283,7 +279,6 @@ public final class InputService extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
-        // if (sugDisabled) suggestionLayout.toggleQuickMenu(true);
         if (text != null && !sugDisabled) suggestionLayout.setCompletionText(superBoardView, text, currentLanguageCache.language);
     }
 
@@ -475,27 +470,15 @@ public final class InputService extends InputMethodService implements
             keyboardBackgroundHolder.addView(keyboardLayoutHolder);
             keyboardBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
             keyboardBackground.setAdjustViewBounds(false);
-
-            /*
-            if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                // noinspection ConstantConditions
-                getWindow().getWindow().getDecorView().setOnApplyWindowInsetsListener((view, windowInsets) -> {
-                    insetPaddingBottom = windowInsets.getSystemWindowInsetBottom();
-                    setPrefs();
-                    return windowInsets;
-                });
-            }
-             */
         }
+
         if (boardPopup == null) {
             boardPopup = new BoardPopupImpl(keyboardBackgroundHolder);
             boardPopup.setFocusable(false);
             keyboardBackgroundHolder.addView(boardPopup);
         }
 
-        // if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            setPrefs();
-        // }
+        setPrefs();
     }
 
     public void setPrefs() {
@@ -589,7 +572,6 @@ public final class InputService extends InputMethodService implements
             superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
-            // suggestionLayout.toggleQuickMenu(topBarDisabled);
             String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
             if (!lang.equals(currentLanguageCache.language)) {
                 loadKeyboardLayout();
@@ -697,13 +679,13 @@ public final class InputService extends InputMethodService implements
         int kbdPadding = SuperDBHelper.getFloatPercentOrDefault(SettingMap.SET_KEYBOARD_PADDING);
         superBoardView.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
 
-        int baseHeight = superBoardView.getKeyboardHeight() + (kbdPadding * 2);
+        int calculatedHeight = superBoardView.getKeyboardHeight() + (kbdPadding * 2);
         if (suggestionLayout.getVisibility() == View.VISIBLE) {
-            baseHeight += suggestionLayout.getLayoutParams().height;
+            calculatedHeight += suggestionLayout.getLayoutParams().height;
         }
 
         if (bottomKeyboardBarView != null && bottomKeyboardBarView.getVisibility() == View.VISIBLE) {
-            baseHeight += bottomKeyboardBarView.getLayoutParams().height;
+            calculatedHeight += bottomKeyboardBarView.getLayoutParams().height;
         }
 
         if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP && detectNavbar(this)) {
@@ -715,7 +697,6 @@ public final class InputService extends InputMethodService implements
                 keyboardLayoutHolder.removeView(navbarView);
 
             if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                // baseHeight += insetPaddingBottom;
                 disableEdgeToEdge(w);
                 w.setDecorFitsSystemWindows(true);
             }
@@ -743,7 +724,7 @@ public final class InputService extends InputMethodService implements
                 else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 w.setNavigationBarColor(0);
 
-                baseHeight += navbarH(this);
+                calculatedHeight += navbarH(this);
                 keyboardLayoutHolder.addView(createNavbarLayout(this, c));
             } else {
                 w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -753,8 +734,8 @@ public final class InputService extends InputMethodService implements
             }
         }
 
-        if (keyboardBackground.getLayoutParams().height != baseHeight) {
-            keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
+        if (keyboardBackground.getLayoutParams().height != calculatedHeight) {
+            keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, calculatedHeight));
             keyboardLayoutHolder.getLayoutParams().height = keyboardBackground.getLayoutParams().height;
             boardPopup.setFilterHeight(keyboardLayoutHolder.getLayoutParams().height);
         }
@@ -832,8 +813,6 @@ public final class InputService extends InputMethodService implements
 
         @Override
         public void onKeyboardEvent(View v) {
-            // if (suggestionLayout != null) suggestionLayout.setAllKeyLockStatus();
-
             if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);
             }

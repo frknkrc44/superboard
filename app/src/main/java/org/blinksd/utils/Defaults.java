@@ -2,7 +2,6 @@ package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.P;
-import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
 
 public final class Defaults {
     public static final int KEYBOARD_HEIGHT = 36;
