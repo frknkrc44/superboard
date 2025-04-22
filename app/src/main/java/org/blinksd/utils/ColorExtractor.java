@@ -57,20 +57,11 @@ public class ColorExtractor {
                     optimalSize.second, true /* filter */);
         }
 
-        Quantizer quantizer;
-        switch (quantizerType) {
-            case CELEBI:
-                quantizer = new CelebiQuantizer();
-                break;
-            case COLOR_CUT:
-                quantizer = new ColorCutQuantizer();
-                break;
-            case VAR_K_MEANS:
-                quantizer = new VariationalKMeansQuantizer();
-                break;
-            default:
-                throw new RuntimeException("Unknown quantizer type");
-        }
+        Quantizer quantizer = switch (quantizerType) {
+            case CELEBI -> new CelebiQuantizer();
+            case COLOR_CUT -> new ColorCutQuantizer();
+            case VAR_K_MEANS -> new VariationalKMeansQuantizer();
+        };
 
         final Palette palette = Palette
                 .from(bitmap, quantizer)
