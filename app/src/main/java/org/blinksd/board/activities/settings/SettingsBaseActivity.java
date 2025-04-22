@@ -1,6 +1,8 @@
 package org.blinksd.board.activities.settings;
 
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.board.SuperBoardApplication.mainHandler;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -22,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BaseActivity;
 import org.blinksd.board.services.KeyboardThemeApi;
 import org.blinksd.board.views.CustomActionBar;
@@ -53,7 +54,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     static final int displayWidth = DensityUtils.wpInt(100);
 
     public static String getTranslation(String key) {
-        Context context = SuperBoardApplication.getApplication();
+        Context context = getSBApplication();
         String requestedKey = "settings_" + key;
         try {
             int id = context.getResources().getIdentifier(requestedKey, "string", context.getPackageName());
@@ -145,7 +146,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
         public void execute(Object... args) {
             Executors.newSingleThreadExecutor().execute(() -> {
                 Bitmap bmp = doInBackground(args);
-                SuperBoardApplication.mainHandler.post(() -> onPostExecute(bmp));
+                mainHandler.post(() -> onPostExecute(bmp));
             });
         }
 

@@ -1,5 +1,8 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
+import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.LocalIconTheme.SYM_TYPE_SPACE;
 
 import android.content.Context;
@@ -10,7 +13,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,10 +53,10 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
             try {
                 loadImportedIcons();
             } catch (Throwable t) {
-                SuperBoardApplication.mainHandler.postDelayed(mRunnable, 2000);
+                mainHandler.postDelayed(mRunnable, 2000);
             }
         };
-        SuperBoardApplication.mainHandler.post(mRunnable);
+        mainHandler.post(mRunnable);
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
@@ -118,7 +120,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
 
         try (FileInputStream stream = new FileInputStream(file)) {
             return new BitmapDrawable(
-                    SuperBoardApplication.getApplication().getResources(),
+                    getSBApplication().getResources(),
                     BitmapFactory.decodeStream(stream)
             );
         } catch (IOException ignored) {
@@ -133,7 +135,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
 
     public Drawable getIconResource(String themeKey, int type) {
         if (type == SYM_TYPE_SPACE) {
-            int res = SuperBoardApplication.getSpaceBarStyles().getIconResource();
+            int res = getSpaceBarStyles().getIconResource();
             if (res != SpaceBarThemeUtils.SPACEBAR_DEFAULT) {
                 return getDrawable(res);
             }

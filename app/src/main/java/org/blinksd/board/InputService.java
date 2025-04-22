@@ -1,9 +1,23 @@
 package org.blinksd.board;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.board.SuperBoardApplication.clearCustomFont;
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.board.SuperBoardApplication.getCustomFont;
+import static org.blinksd.board.SuperBoardApplication.getDictDB;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
+import static org.blinksd.board.SuperBoardApplication.getNextLanguage;
+import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
+import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
+import static org.blinksd.utils.LayoutUtils.getSpecialCases;
+import static org.blinksd.utils.LayoutUtils.setKeyOpts;
+import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
 import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
 import static org.blinksd.utils.SystemUtils.isColorized;
@@ -47,7 +61,6 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
@@ -173,8 +186,7 @@ public final class InputService extends InputMethodService implements
 
         superBoardView.afterKeyboardEvent();
 
-        SuperBoardApplication.getDictDB()
-                .increaseUsageCount(
+        getDictDB().increaseUsageCount(
                         currentLanguageCache.language.split("_")[0],
                         suggestion.toString().trim());
     }
@@ -259,7 +271,7 @@ public final class InputService extends InputMethodService implements
 
     public void sendCompletionRequest() {
         boolean sugDisabled = suggestionLayout == null ||
-                !SuperBoardApplication.isDictDBReady() ||
+                !isDictDBReady() ||
                 superBoardView.isDisabledSuggestionsTemporarily() ||
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR) ||
                 SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
@@ -422,7 +434,7 @@ public final class InputService extends InputMethodService implements
                 showLanguageSelectorView(false);
 
                 if (!lang.equals(currentLanguageCache)) {
-                    SuperBoardApplication.getAppDB().putString(SettingMap.SET_KEYBOARD_LANG_SELECT, lang.language, true);
+                    getAppDB().putString(SettingMap.SET_KEYBOARD_LANG_SELECT, lang.language, true);
                     setPrefs();
                 }
             });
@@ -486,8 +498,8 @@ public final class InputService extends InputMethodService implements
         if (superBoardView != null) {
             superBoardView.fixHeight();
 
-            LayoutUtils.setKeyOpts(currentLanguageCache, superBoardView);
-            IconThemeUtils icons = SuperBoardApplication.getIconThemes();
+            setKeyOpts(currentLanguageCache, superBoardView);
+            IconThemeUtils icons = getIconThemes();
             superBoardView.setKeyDrawable(-1, -2, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
             superBoardView.setKeyDrawable(-1, -1, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
             superBoardView.setKeyDrawable(3, 1, 2, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
@@ -495,7 +507,7 @@ public final class InputService extends InputMethodService implements
             for (int i : indexes) {
                 superBoardView.setKeyDrawable(i, 3, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
                 superBoardView.setKeyDrawable(i, 4, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
-                LayoutUtils.setSpaceBarViewPrefs(icons, superBoardView.getKey(i, 4, 2), appName);
+                setSpaceBarViewPrefs(icons, superBoardView.getKey(i, 4, 2), appName);
             }
             superBoardView.setShiftDetection(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DETECT_CAPSLOCK));
             superBoardView.setEnforcedShiftDetection(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENFORCE_DETECT_CAPSLOCK));
@@ -511,7 +523,7 @@ public final class InputService extends InputMethodService implements
                     keyboardBackground.setImageBitmap(null);
                 }
             } else {
-                img = SuperBoardApplication.getBackgroundImageFile();
+                img = getBackgroundImageFile();
                 if (keyboardBackgroundHolder != null) {
                     if (img.exists()) {
                         int blur = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
@@ -519,7 +531,7 @@ public final class InputService extends InputMethodService implements
                         keyboardBackground.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b, blur) : b);
                     } else {
                         keyboardBackground.setImageBitmap(null);
-                        c = ColorUtils.convertARGBtoRGB(c);
+                        c = convertARGBtoRGB(c);
                     }
                 }
             }
@@ -562,7 +574,7 @@ public final class InputService extends InputMethodService implements
                 }
             }
             superBoardView.setDisablePopup(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP));
-            boolean isDBEmpty = SuperBoardApplication.getDictDB()
+            boolean isDBEmpty = getDictDB()
                     .getTableLength(currentLanguageCache.language.split("_")[0]) < 1;
             boolean topBarDisabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
             boolean sugDisabled = topBarDisabled || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
@@ -600,8 +612,8 @@ public final class InputService extends InputMethodService implements
                 emojiView.applyTheme(superBoardView);
                 emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
             }
-            SuperBoardApplication.clearCustomFont();
-            SuperBoardApplication.getCustomFont();
+            clearCustomFont();
+            getCustomFont();
 
             boolean enableClipboard = SuperDBHelper.getBooleanOrDefaultResolved(
                     SettingMap.SET_ENABLE_CLIPBOARD);
@@ -658,13 +670,13 @@ public final class InputService extends InputMethodService implements
     private void loadKeyboardLayout() {
         String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
         int keyboardIndex = superBoardView.findTextKeyboardIndex();
-        Language language = SuperBoardApplication.getKeyboardLanguage(lang);
+        Language language = getKeyboardLanguage(lang);
         if (!language.language.equals(lang)) {
             throw new RuntimeException("Where is the layout JSON file (in assets)?");
         }
-        String[][] lkeys = LayoutUtils.getLayoutKeys(language.layout);
+        String[][] lkeys = getLayoutKeys(language.layout);
         superBoardView.replaceTextKeyboard(lkeys);
-        superBoardView.setLayoutPopup(keyboardIndex, LayoutUtils.getLayoutKeys(language.popup));
+        superBoardView.setLayoutPopup(keyboardIndex, getLayoutKeys(language.popup));
         for (int i = 0; i < language.layout.size(); i++) {
             RowOptions opts = language.layout.get(i);
             if (opts.enablePadding) {
@@ -672,7 +684,7 @@ public final class InputService extends InputMethodService implements
             }
         }
         superBoardView.setKeyboardLanguage(language.language);
-        LayoutUtils.setKeyOpts(language, superBoardView);
+        setKeyOpts(language, superBoardView);
         currentLanguageCache = language;
     }
 
@@ -717,7 +729,7 @@ public final class InputService extends InputMethodService implements
                     boolean monetEnabled = getMonetColors().isMonetEnabled();
                     int color = monetEnabled
                             ? getMonetColors().getKeyboardColor()
-                            : ColorUtils.convertARGBtoRGB(c);
+                            : convertARGBtoRGB(c);
                     w.setNavigationBarColor(color);
                     w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                             ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
@@ -738,7 +750,7 @@ public final class InputService extends InputMethodService implements
                         boolean monetEnabled = getMonetColors().isMonetEnabled();
                         int color = monetEnabled
                                 ? getMonetColors().getKeyboardColor()
-                                : ColorUtils.convertARGBtoRGB(c);
+                                : convertARGBtoRGB(c);
                         w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                                 ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
                                 : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -833,7 +845,7 @@ public final class InputService extends InputMethodService implements
         private boolean shown = false;
         private SuperBoardImpl(Context context, OnModifierChangedListener listener) {
             super(context, listener);
-            setSpecialCases(LayoutUtils.getSpecialCases());
+            setSpecialCases(getSpecialCases());
         }
 
         @Override
@@ -999,7 +1011,7 @@ public final class InputService extends InputMethodService implements
         @Override
         public void switchLanguage() {
             if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_LC_ON_EMOJI)) {
-                SuperBoardApplication.getNextLanguage();
+                getNextLanguage();
                 setPrefs();
             } else {
                 openEmojiLayout();
@@ -1021,7 +1033,7 @@ public final class InputService extends InputMethodService implements
     private final class BoardPopupImpl extends BoardPopup {
         public BoardPopupImpl(ViewGroup root) {
             super(root);
-            setSpecialCases(LayoutUtils.getSpecialCases());
+            setSpecialCases(getSpecialCases());
         }
 
         @Override

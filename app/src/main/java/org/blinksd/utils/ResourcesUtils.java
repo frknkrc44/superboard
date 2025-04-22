@@ -2,7 +2,7 @@ package org.blinksd.utils;
 
 import static android.util.TypedValue.complexToDimension;
 import static org.blinksd.board.SuperBoardApplication.getAppResources;
-import static org.blinksd.board.SuperBoardApplication.getApplication;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
@@ -36,7 +36,7 @@ public class ResourcesUtils {
         Resources res = getAppResources();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            return res.getDrawable(resId, getApplication().getTheme());
+            return res.getDrawable(resId, getSBApplication().getTheme());
         }
 
         return res.getDrawable(resId);
@@ -56,10 +56,10 @@ public class ResourcesUtils {
     }
 
     public static int getColor(int resId) {
-        Resources res = getApplication().getResources();
+        Resources res = getSBApplication().getResources();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return res.getColor(resId, getApplication().getTheme());
+            return res.getColor(resId, getSBApplication().getTheme());
         }
 
         return res.getColor(resId);
@@ -176,7 +176,11 @@ public class ResourcesUtils {
     }
 
     public static Drawable getTransSelectableItemBg(Context context, int textColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        return getTransSelectableItemBg(context, textColor, false);
+    }
+
+    public static Drawable getTransSelectableItemBg(Context context, int textColor, boolean forceSquare) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceSquare) {
             return new RippleDrawable(
                     ColorStateList.valueOf(setAlphaForColor(0x88, textColor)),
                     null,
@@ -188,9 +192,9 @@ public class ResourcesUtils {
                 new int[]{android.R.attr.selectableItemBackground}
         );
         int resId = array.getResourceId(0, 0);
-        int color = textColor - 0x88000000;
+        int color = setAlphaForColor(0x88, textColor);
 
-        Drawable d = ResourcesUtils.getTintedDrawable(resId, color);
+        Drawable d = getTintedDrawable(resId, color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             array.close();
         }

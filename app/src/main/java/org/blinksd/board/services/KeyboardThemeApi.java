@@ -1,13 +1,24 @@
 package org.blinksd.board.services;
 
+import static org.blinksd.board.SuperBoardApplication.clearLanguageCache;
+import static org.blinksd.board.SuperBoardApplication.clearThemeCache;
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguage;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.board.SuperBoardApplication.getThemesCache;
+import static org.blinksd.utils.LayoutUtils.createLanguage;
+import static org.blinksd.utils.LayoutUtils.getUserLanguageFilesDir;
+import static org.blinksd.utils.ThemeUtils.getUserThemeFromCodeName;
+import static org.blinksd.utils.ThemeUtils.getUserThemesDir;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 
 import org.blinksd.board.InputService;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
@@ -48,7 +59,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             themeCheckMandatoryKeys(obj);
             if (!isThemeImported(obj.getString("code"))) {
                 importThemeInternal(obj);
-                SuperBoardApplication.clearThemeCache();
+                clearThemeCache();
                 return THEME_IMPORT_SUCCESS;
             }
             return THEME_IMPORT_FAILED_EXISTS;
@@ -64,7 +75,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     private void importThemeInternal(JSONObject obj) {
         String themeStr = obj.toString();
         try {
-            File file = new File(ThemeUtils.getUserThemesDir() + "/user_" + obj.getString("code") + Integer.toHexString(themeStr.hashCode()) + ".json");
+            File file = new File(getUserThemesDir(), "user_" + obj.getString("code") + Integer.toHexString(themeStr.hashCode()) + ".json");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(themeStr.getBytes());
             fos.flush();
@@ -86,7 +97,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             JSONObject obj = new JSONObject(jsonStr);
             themeCheckMandatoryKeys(obj);
             importThemeInternal(obj);
-            SuperBoardApplication.clearThemeCache();
+            clearThemeCache();
             return THEME_IMPORT_SUCCESS;
         } catch (JSONException e) {
             // do nothing
@@ -98,8 +109,8 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public boolean isThemeImported(String name) {
-        List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
-        ThemeUtils.ThemeHolder theme = ThemeUtils.getUserThemeFromCodeName(themes, name);
+        List<ThemeUtils.ThemeHolder> themes = getThemesCache();
+        ThemeUtils.ThemeHolder theme = getUserThemeFromCodeName(themes, name);
         // System.out.println("NAME: " + name + " OBJ: " + theme);
         return theme != null;
     }
@@ -108,15 +119,14 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public int importBgImage(Bitmap bmp) {
         FileOutputStream outputStream = null;
         try {
-            File file = SuperBoardApplication.getBackgroundImageFile();
+            File file = getBackgroundImageFile();
             outputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             SuperDBHelper.setColorsFromBitmap(bmp);
 
             // disable monet because we're imported a background image
             // and pulled colors from it
-            SuperBoardApplication.getAppDB()
-                    .putBoolean(SettingMap.SET_USE_MONET, false, true);
+            getAppDB().putBoolean(SettingMap.SET_USE_MONET, false, true);
 
             restartKeyboard();
             return IMAGE_IMPORT_SUCCESS;
@@ -133,9 +143,9 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     public static void restartKeyboard() {
         try {
-            SuperBoardApplication.getApplication()
+            getSBApplication()
                     .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD)
-                            .setPackage(SuperBoardApplication.getApplication().getPackageName()));
+                            .setPackage(getSBApplication().getPackageName()));
         } catch (Throwable e) {
             // do nothing
         }
@@ -154,8 +164,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
     public int importIconThemeForced(IconThemeParcel icons) {
         try {
             String name = icons.mThemeName;
-            SuperBoardApplication.getIconThemes()
-                    .importIconTheme(name, new LocalIconTheme(icons));
+            getIconThemes().importIconTheme(name, new LocalIconTheme(icons));
         } catch (Throwable t) {
             return ICON_THEME_IMPORT_FAILED_UNKNOWN;
         }
@@ -165,7 +174,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public boolean isIconThemeImported(String name) {
-        return SuperBoardApplication.getIconThemes().isThemeExists(name);
+        return getIconThemes().isThemeExists(name);
     }
 
     @Override
@@ -180,19 +189,19 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     private int importLangPkgInternal(String langPkgStr, boolean forced) {
         try {
-            Language lang = LayoutUtils.createLanguage(langPkgStr, true);
+            Language lang = createLanguage(langPkgStr, true);
             if (!forced && isLangPkgImported(lang.name))
                 return LANG_PKG_IMPORT_FAILED_EXISTS;
             else if (lang.enabledSdk > Build.VERSION.SDK_INT)
                 return LANG_PKG_IMPORT_FAILED_SDK;
             else if (!lang.enabled)
                 return LANG_PKG_IMPORT_FAILED_NOT_ENABLED;
-            File file = new File(LayoutUtils.getUserLanguageFilesDir() + "/user_" + lang.name + Integer.toHexString(langPkgStr.hashCode()) + ".json");
+            File file = new File(getUserLanguageFilesDir(), "user_" + lang.name + Integer.toHexString(langPkgStr.hashCode()) + ".json");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(langPkgStr.getBytes());
             fos.flush();
             fos.close();
-            SuperBoardApplication.clearLanguageCache();
+            clearLanguageCache();
             return LANG_PKG_IMPORT_SUCCESS;
         } catch (Throwable t) {
             // do nothing
@@ -202,7 +211,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     @Override
     public boolean isLangPkgImported(String name) {
-        return SuperBoardApplication.getKeyboardLanguage(name, true).name.equals(name);
+        return getKeyboardLanguage(name, true).name.equals(name);
     }
 
     private static final class MissingKeysException extends RuntimeException {}

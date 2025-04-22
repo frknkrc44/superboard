@@ -1,5 +1,7 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,8 +10,6 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-
-import org.blinksd.board.SuperBoardApplication;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public final class ImageUtils {
         try {
             // try blur processing with built-in renderscript
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                Context ctx = SuperBoardApplication.getApplication();
+                Context ctx = getSBApplication();
                 setupDiskCache(ctx);
 
                 RenderScript rs = RenderScript.create(ctx);

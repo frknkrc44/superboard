@@ -1,9 +1,11 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.board.SuperBoardApplication.getTextUtils;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.mp;
+import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
@@ -22,9 +24,6 @@ import android.widget.TextView;
 
 import org.blinksd.board.InputService;
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.utils.ColorUtils;
-import org.blinksd.utils.ResourcesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -74,7 +73,7 @@ public class EmojiView extends LinearLayout {
                 List<String> category = new ArrayList<>();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     String glyph = jsonArray.getString(i);
-                    if (SuperBoardApplication.getTextUtils().hasGlyph(glyph)) {
+                    if (getTextUtils().hasGlyph(glyph)) {
                         category.add(glyph);
                     }
                 }
@@ -84,7 +83,7 @@ public class EmojiView extends LinearLayout {
                 }
             }
 
-            if (SuperBoardApplication.getTextUtils().hasGlyph("🇦")) {
+            if (getTextUtils().hasGlyph("🇦")) {
                 emojiList.add(new String[]{
                         "🇦 ", "🇧 ", "🇨 ", "🇩 ", "🇪 ", "🇫 ", "🇬 ",
                         "🇭 ", "🇮 ", "🇯 ", "🇰 ", "🇱 ", "🇲 ", "🇳 ",
@@ -151,7 +150,7 @@ public class EmojiView extends LinearLayout {
             tv.setTextSize(textSize);
             ts.setIndicator(tv);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            ColorUtils.setColorFilter(tv.getBackground(), keyTextColor);
+            setColorFilter(tv.getBackground(), keyTextColor);
             final int x = i;
             ts.setContent(p1 -> emojiList(x));
             th.addTab(ts);
@@ -162,14 +161,14 @@ public class EmojiView extends LinearLayout {
 
     private View categoryItem(int num, int size, View.OnClickListener ocl) {
         ImageButton iv = new ImageButton(getContext());
-        iv.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
+        iv.setBackgroundDrawable(getTransSelectableItemBg(getContext(), keyTextColor));
         iv.setLayoutParams(new LayoutParams(size, size, 0));
         iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
         iv.setAdjustViewBounds(true);
         int p = size / 4;
         iv.setPadding(p, p, p, p);
         iv.setImageResource(num == -1 ? R.drawable.arrow_left : R.drawable.sym_keyboard_delete);
-        iv.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(iv, keyTextColor);
         iv.setTag(num);
         iv.setOnClickListener(ocl);
         return iv;
@@ -179,7 +178,7 @@ public class EmojiView extends LinearLayout {
         final GridView gv = new GridView(getContext());
         gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
         gv.setLayoutParams(new LayoutParams(-1, -1));
-        int columns = Math.min(6, SuperBoardApplication.getTextUtils()
+        int columns = Math.min(6, getTextUtils()
                 .getTextBounds(textSize, emojis[0][0]).width() / 2);
         gv.setNumColumns(columns);
         gv.setGravity(Gravity.CENTER);
@@ -222,7 +221,7 @@ public class EmojiView extends LinearLayout {
             v.setTextColor(keyTextColor);
             v.setGravity(Gravity.CENTER);
             v.setSingleLine();
-            v.setBackgroundDrawable(ResourcesUtils.getTransSelectableItemBg(getContext(), keyTextColor));
+            v.setBackgroundDrawable(getTransSelectableItemBg(getContext(), keyTextColor));
             v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
             v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
             v.setTextSize(mp(100.0f / (columns * columns)));

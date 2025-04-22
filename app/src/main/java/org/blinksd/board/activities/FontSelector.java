@@ -1,5 +1,7 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +13,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
@@ -93,7 +94,7 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        SuperBoardApplication.getAppDB().putInteger(
+        getAppDB().putInteger(
                 SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, (int) v.getTag(), true);
         setResult(FONT_SELECTOR_RESULT);
         finish();

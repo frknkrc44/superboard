@@ -7,6 +7,7 @@ import static android.os.Build.VERSION_CODES.S;
 import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
 import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
 import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
@@ -17,7 +18,6 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.DictionaryImportActivity;
 import org.blinksd.board.activities.FontSelector;
@@ -286,7 +286,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 if (SDK_INT < 21) {
                     return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
                 }
-                TypedArray arr = SuperBoardApplication.getApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
+                TypedArray arr = getSBApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
                 int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
                 int pressColor = ColorUtils.getDarkerColor(color);
                 arr.recycle();

@@ -1,5 +1,7 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getCustomFont;
+
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -7,7 +9,6 @@ import android.os.Build;
 import android.util.Pair;
 import android.widget.TextView;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.superboard.TextType;
 
 import java.nio.charset.Charset;
@@ -190,7 +191,7 @@ public final class TextUtilsCompat {
             case custom:
                 // Contains a system problem about custom font files,
                 // Custom fonts applying too slowly and I can't fix it!
-                label.setTypeface(SuperBoardApplication.getCustomFont());
+                label.setTypeface(getCustomFont());
                 break;
         }
     }

@@ -1,6 +1,11 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
+import static org.blinksd.utils.ColorUtils.getDarkerColor;
+import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarCustomModeEnabled;
 
 import android.Manifest;
@@ -19,7 +24,6 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import org.blinksd.board.InputService;
-import org.blinksd.board.SuperBoardApplication;
 
 import java.lang.reflect.Method;
 
@@ -65,9 +69,9 @@ public final class SystemUtils {
         if (isForcedTrans) {
             color = Color.TRANSPARENT;
         } else {
-            boolean isLight = Build.VERSION.SDK_INT < 31 && ColorUtils.satisfiesTextContrast(ColorUtils.convertARGBtoRGB(color));
+            boolean isLight = Build.VERSION.SDK_INT < 31 && satisfiesTextContrast(convertARGBtoRGB(color));
             if (isLight)
-                color = ColorUtils.getDarkerColor(color);
+                color = getDarkerColor(color);
         }
 
         v.setBackgroundColor(color);
@@ -99,7 +103,7 @@ public final class SystemUtils {
 
     public static boolean isGesturesEnabled() {
         try {
-            return Settings.Secure.getInt(SuperBoardApplication.getApplication().getContentResolver(), "navigation_mode") == 2;
+            return Settings.Secure.getInt(getSBApplication().getContentResolver(), "navigation_mode") == 2;
         } catch (Throwable t) {
             return false;
         }
@@ -133,10 +137,10 @@ public final class SystemUtils {
     }
 
     private static boolean isTablet() {
-        return SuperBoardApplication.getResConfiguration().smallestScreenWidthDp >= 600;
+        return getResConfiguration().smallestScreenWidthDp >= 600;
     }
 
     private static boolean isLand() {
-        return SuperBoardApplication.getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }

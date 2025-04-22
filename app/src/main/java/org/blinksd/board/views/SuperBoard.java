@@ -6,6 +6,9 @@ import static android.media.AudioManager.FX_KEYPRESS_SPACEBAR;
 import static android.media.AudioManager.FX_KEYPRESS_STANDARD;
 import static android.view.Gravity.CENTER;
 import static android.view.View.OnTouchListener;
+import static org.blinksd.board.SuperBoardApplication.mainHandler;
+import static org.blinksd.utils.ColorUtils.setAlphaForColor;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mp;
@@ -15,7 +18,6 @@ import static org.blinksd.utils.DensityUtils.wpInt;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -46,8 +48,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
@@ -387,7 +387,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, Drawable d) {
-        d.setColorFilter(keyTextColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(d, keyTextColor);
         Key t = getKey(keyboardIndex, rowIndex, keyIndex);
         ((LinearLayout.LayoutParams) t.getLayoutParams()).gravity = CENTER;
         t.setKeyIcon(d);
@@ -1181,7 +1181,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     public void run() {
                         try {
                             Thread.sleep(time);
-                            SuperBoardApplication.mainHandler.post(() -> sendMessage(what, v));
+                            mainHandler.post(() -> sendMessage(what, v));
                         } catch (InterruptedException ignored) {}
 
                         try {
@@ -1347,7 +1347,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             subParams.topMargin = mpInt(0.5f);
             subLabel.setLayoutParams(subParams);
             subLabel.setGravity(Gravity.CENTER_HORIZONTAL);
-            subLabel.setTextColor(ColorUtils.setAlphaForColor(0x66, keyTextColor));
+            subLabel.setTextColor(setAlphaForColor(0x66, keyTextColor));
             label.setSingleLine();
             label.setGravity(CENTER);
             label.setHintTextColor(0);
@@ -1463,9 +1463,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void setKeyItemColor(int color) {
             label.setTextColor(color);
-            subLabel.setTextColor(ColorUtils.setAlphaForColor(0x66, color));
+            subLabel.setTextColor(setAlphaForColor(0x66, color));
             if (isKeyIconSet()) {
-                getKeyIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                setColorFilter(getKeyIcon(), color);
             }
             changeState(currentState);
         }

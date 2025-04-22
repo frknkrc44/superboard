@@ -1,9 +1,13 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ThemeUtils.getCurrentThemeJSON;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.board.views.CustomRadioButton;
@@ -106,7 +109,7 @@ public final class BackupRestoreActivity extends BaseActivity {
             tv.setLayoutParams(pr);
             tv.setText(tabTitles[i]);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
+            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -217,14 +220,14 @@ public final class BackupRestoreActivity extends BaseActivity {
             ZipEntry themeJsonEntry = new ZipEntry(THEME_JSON);
             zipOutputStream.putNextEntry(themeJsonEntry);
 
-            JSONObject exportedTheme = ThemeUtils.getCurrentThemeJSON();
+            JSONObject exportedTheme = getCurrentThemeJSON();
             byte[] data = exportedTheme.toString().getBytes();
             zipOutputStream.write(data, 0, data.length);
             zipOutputStream.closeEntry();
 
             // backup the current background image as file if monet mode is disabled
-            File bgImageFile = SuperBoardApplication.getBackgroundImageFile();
-            if (bgImageFile.exists() && !SuperBoardApplication.getMonetColors().isMonetEnabled()) {
+            File bgImageFile = getBackgroundImageFile();
+            if (bgImageFile.exists() && !getMonetColors().isMonetEnabled()) {
                 ZipEntry bgImageEntry = new ZipEntry(BACKGROUND_IMAGE);
                 zipOutputStream.putNextEntry(bgImageEntry);
 
@@ -303,7 +306,7 @@ public final class BackupRestoreActivity extends BaseActivity {
                     break;
                 }
                 case BACKGROUND_IMAGE: {
-                    File file = SuperBoardApplication.getBackgroundImageFile();
+                    File file = getBackgroundImageFile();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
 
                     while ((count = zipInputStream.read(buf, 0, buf.length)) > 0) {

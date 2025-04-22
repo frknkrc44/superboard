@@ -1,6 +1,10 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
 import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
+import static org.blinksd.utils.LayoutUtils.setKeyOpts;
 import static org.blinksd.utils.ResourcesUtils.getButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTintedDrawable;
 
@@ -20,11 +24,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
@@ -43,7 +45,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Map<String, Language> languageList = SuperBoardApplication.getKeyboardLanguageList();
+        Map<String, Language> languageList = getKeyboardLanguageList();
         currentLayout = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
 
         int m = DensityUtils.dpInt(8);
@@ -98,11 +100,11 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
 
         SuperBoardPreview preview = new SuperBoardPreview(this);
         preview.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
-        preview.addRows(0, LayoutUtils.getLayoutKeys(language.layout));
-        LayoutUtils.setKeyOpts(language, preview);
+        preview.addRows(0, getLayoutKeys(language.layout));
+        setKeyOpts(language, preview);
         preview.setId(android.R.id.primary);
         preview.setKeyboardHeight(30);
-        // preview.setLayoutPopup(0, LayoutUtils.getLayoutKeys(language.popup));
+        // preview.setLayoutPopup(0, getLayoutKeys(language.popup));
 
         for (int i = 0; i < language.layout.size(); i++) {
             RowOptions opts = language.layout.get(i);
@@ -164,8 +166,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
     @Override
     public void onClick(View v) {
         String value = (String) ((View) v.getParent()).getTag();
-        SuperBoardApplication.getAppDB()
-                .putString(SettingMap.SET_KEYBOARD_LANG_SELECT, value, true);
+        getAppDB().putString(SettingMap.SET_KEYBOARD_LANG_SELECT, value, true);
         setResult(KEYBOARD_LAYOUT_SELECTOR_RESULT);
         finish();
     }

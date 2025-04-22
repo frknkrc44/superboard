@@ -3,6 +3,11 @@ package org.blinksd.board.activities.settings;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.board.SuperBoardApplication.getThemesCache;
+import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
+import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+import static org.blinksd.utils.ThemeUtils.getThemeNames;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
@@ -21,17 +26,13 @@ import android.widget.Switch;
 import android.window.OnBackAnimationCallback;
 import android.window.OnBackInvokedDispatcher;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
 import org.blinksd.utils.SimpleAnimatorListener;
 import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.ThemeUtils;
-import org.blinksd.utils.ViewUtils;
 
 import java.util.List;
 
@@ -151,7 +152,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             categoryView.addView(createRadioSelector(key, colorSchemeKeys));
                             break;
                         case SettingMap.SET_THEME_PRESET:
-                            List<String> themeKeys = ThemeUtils.getThemeNames(SuperBoardApplication.getThemes());
+                            List<String> themeKeys = getThemeNames(getThemesCache());
                             categoryView.addView(createRadioSelector(key, themeKeys));
                             break;
                     }
@@ -171,10 +172,10 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     break;
             }
 
-            ViewUtils.setViewBackground(
+            setViewBackground(
                     categoryView.getChildAt(categoryView.getChildCount() - 1),
-                    ResourcesUtils.getTransSelectableItemBg(
-                            categoryView.getContext(), 0xFFDEDEDE)
+                    getTransSelectableItemBg(
+                            categoryView.getContext(), 0xFFDEDEDE, true)
             );
         };
 
@@ -183,7 +184,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
 
     private ViewGroup getCategoryView(int categoryIndex) {
         if (mTabsHolder.getChildCount() - 1 < categoryIndex) {
-            LinearLayout categoryLayout = LayoutCreator.createFilledVerticalLayout(ScrollView.class, this);
+            LinearLayout categoryLayout = createFilledVerticalLayout(ScrollView.class, this);
             ScrollView scrollView = new ScrollView(this);
             scrollView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
             scrollView.addView(categoryLayout);

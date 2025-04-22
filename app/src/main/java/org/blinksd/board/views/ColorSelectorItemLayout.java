@@ -1,11 +1,12 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         super(ctx);
         setLayoutParams(new LayoutParams(-1, -2));
         img = LayoutCreator.createImageView(ctx);
-        int size = (int) getListPreferredItemHeight();
+        int size = (int) getListPreferredItemHeight(ctx);
         img.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, size, size));
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
         int pad = size / 4;
@@ -47,13 +48,13 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         switch (index) {
             case -1:
                 img.setImageResource(android.R.drawable.ic_input_add);
-                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                setColorFilter(img, Color.WHITE);
                 btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_add_item"));
                 setOnClickListener(gradientAddColorListener);
                 return;
             case -2:
                 img.setImageResource(android.R.drawable.ic_media_next);
-                img.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                setColorFilter(img, Color.WHITE);
                 btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_change_orientation"));
                 setOnClickListener(gradientAddColorListener);
                 return;
@@ -67,7 +68,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
         del.setImageResource(R.drawable.delete);
-        del.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(del, Color.WHITE);
         pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
         del.setOnClickListener(gradientDelColorListener);
@@ -78,10 +79,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
     }
 
     private void updateColorView(int color) {
-        GradientDrawable gd = new GradientDrawable();
-        gd.setColor(color);
-        gd.setCornerRadius(1000);
-        img.setImageDrawable(gd);
+        img.setImageDrawable(getCircleButtonBackground(color, 0xFFDEDEDE, false));
     }
 
     @Override
@@ -90,12 +88,6 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         colorList.put(getId(), (int) tag);
         int color = (int) tag;
         updateColorView(color);
-    }
-
-    private float getListPreferredItemHeight() {
-        TypedValue value = new TypedValue();
-        getContext().getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
-        return TypedValue.complexToDimension(value.data, getResources().getDisplayMetrics());
     }
 
 }

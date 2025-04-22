@@ -1,5 +1,9 @@
 package org.blinksd.board.activities.settings;
 
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
+
 import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
@@ -13,13 +17,11 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingCategory;
-import org.blinksd.utils.ViewUtils;
 
 import java.util.List;
 
@@ -52,7 +54,7 @@ class MainTabListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final SettingCategory category = SettingsBaseActivity.categoryList.get(position);
-        final boolean monetEnabled = SuperBoardApplication.getMonetColors().isMonetEnabled();
+        final boolean monetEnabled = getMonetColors().isMonetEnabled();
 
         if (monetEnabled && category == SettingCategory.THEMING_ADVANCED) {
             return new Space(parent.getContext());
@@ -87,7 +89,7 @@ class MainTabListAdapter extends BaseAdapter {
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
         }
 
-        ViewUtils.setViewBackground(item, gradientDrawable);
+        setViewBackground(item, gradientDrawable);
 
         TextView title = (TextView) LayoutInflater.from(parent.getContext()).inflate(
                 android.R.layout.simple_list_item_1, item, false);
@@ -97,17 +99,17 @@ class MainTabListAdapter extends BaseAdapter {
 
         ImageView arrowView = new ImageView(parent.getContext());
         int ivSize = item.getLayoutParams().height / 2;
-        arrowView.setLayoutParams(new LinearLayout.LayoutParams(ivSize, ivSize, 0));
-        arrowView.setImageResource(R.drawable.arrow_right);
-        ColorUtils.setColorFilter(arrowView, title.getCurrentTextColor());
-
         final int aPad = pad / 4;
-        arrowView.setPadding(aPad, aPad, aPad, aPad);
+        var arrowParams = new LinearLayout.LayoutParams(ivSize, ivSize, 0);
+        arrowParams.setMargins(aPad, aPad, aPad, aPad);
+        arrowView.setLayoutParams(arrowParams);
+        arrowView.setImageResource(R.drawable.arrow_right);
+        setColorFilter(arrowView, title.getCurrentTextColor());
 
         GradientDrawable imageViewBg = new GradientDrawable();
         imageViewBg.setColor(0x44000000);
         imageViewBg.setCornerRadius(96);
-        ViewUtils.setViewBackground(arrowView, imageViewBg);
+        setViewBackground(arrowView, imageViewBg);
         item.addView(arrowView);
 
         return padItem;

@@ -1,5 +1,7 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
@@ -12,8 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.widget.ImageView;
-
-import org.blinksd.board.SuperBoardApplication;
 
 // Copied from support library
 // Android Open Source Project
@@ -297,7 +297,7 @@ public final class ColorUtils {
             return ResourcesUtils.getColor(android.R.color.system_accent1_700);
         }
 
-        TypedArray arr = SuperBoardApplication.getApplication()
+        TypedArray arr = getSBApplication()
                 .obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
         int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
         arr.recycle();

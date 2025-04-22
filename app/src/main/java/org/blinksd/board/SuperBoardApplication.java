@@ -1,5 +1,9 @@
 package org.blinksd.board;
 
+import static org.blinksd.utils.LayoutUtils.getKeyListFromLanguageList;
+import static org.blinksd.utils.LayoutUtils.getLanguageList;
+import static org.blinksd.utils.ThemeUtils.getThemes;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.res.Configuration;
@@ -16,7 +20,6 @@ import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SpaceBarThemeUtils;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
-import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.ThemeUtils.ThemeHolder;
 import org.blinksd.utils.superboard.Language;
 import org.frknkrc44.minidb.SuperMiniDB;
@@ -46,7 +49,7 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static DictionaryDB getDictDB() {
         if (dictDB == null) {
-            dictDB = new DictionaryDB(getApplication());
+            dictDB = new DictionaryDB(getSBApplication());
         }
 
         return dictDB;
@@ -56,12 +59,12 @@ public final class SuperBoardApplication extends Application {
         return getDictDB().isReady;
     }
 
-    public synchronized static SuperBoardApplication getApplication() {
+    public synchronized static SuperBoardApplication getSBApplication() {
         return appContext;
     }
 
     public synchronized static Resources getAppResources() {
-        return getApplication().getResources();
+        return getSBApplication().getResources();
     }
 
     public synchronized static Configuration getResConfiguration() {
@@ -70,14 +73,14 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static SuperMiniDB getAppDB() {
         if (appDB == null) {
-            appDB = SuperDBHelper.getDefault(getApplication());
+            appDB = SuperDBHelper.getDefault(getSBApplication());
         }
 
         return appDB;
     }
 
     public synchronized static File getAppFilesDir() {
-        return getApplication().getFilesDir();
+        return getSBApplication().getFilesDir();
     }
 
     public synchronized static void clearLanguageCache() {
@@ -87,7 +90,7 @@ public final class SuperBoardApplication extends Application {
     public synchronized static HashMap<String, Language> getKeyboardLanguageList() {
         if (languageCache == null) {
             try {
-                languageCache = LayoutUtils.getLanguageList(getApplication());
+                languageCache = getLanguageList(getSBApplication());
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
@@ -100,10 +103,10 @@ public final class SuperBoardApplication extends Application {
         themes = null;
     }
 
-    public synchronized static List<ThemeHolder> getThemes() {
+    public synchronized static List<ThemeHolder> getThemesCache() {
         if (themes == null) {
             try {
-                themes = ThemeUtils.getThemes();
+                themes = getThemes();
             } catch (Throwable t) {
                 themes = new ArrayList<>();
             }
@@ -122,7 +125,7 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static IconThemeUtils getIconThemes() {
         if (icons == null) {
-            icons = new IconThemeUtils(getApplication());
+            icons = new IconThemeUtils(getSBApplication());
         }
 
         return icons;
@@ -146,7 +149,7 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static Typeface getCustomFont() {
         if (fontFile == null) {
-            fontFile = new File(getApplication().getExternalFilesDir(null) + "/font.ttf");
+            fontFile = new File(getSBApplication().getExternalFilesDir(null),"font.ttf");
         }
 
         if (customFont == null) {
@@ -193,7 +196,7 @@ public final class SuperBoardApplication extends Application {
     }
 
     public synchronized static void getNextLanguage() {
-        ArrayList<String> ll = LayoutUtils.getKeyListFromLanguageList(getKeyboardLanguageList());
+        ArrayList<String> ll = getKeyListFromLanguageList(getKeyboardLanguageList());
         String key = SettingMap.SET_KEYBOARD_LANG_SELECT;
         String sel = getAppDB().getString(key, (String) getSettings().getDefaults(key));
         if (!sel.isEmpty()) {
@@ -240,7 +243,7 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static File getBackgroundImageFile() {
         if (bgFile == null) {
-            bgFile = new File(getApplication().getFilesDir(), "bg");
+            bgFile = new File(getSBApplication().getFilesDir(), "bg");
         }
 
         return bgFile;

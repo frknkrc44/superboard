@@ -1,7 +1,13 @@
 package org.blinksd.board.activities.settings;
 
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
+import static org.blinksd.board.SuperBoardApplication.getThemesCache;
+import static org.blinksd.utils.LayoutUtils.getKeyListFromLanguageList;
 import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
 import static org.blinksd.utils.SuperDBHelper.setColorsFromBitmap;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
@@ -31,14 +37,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.ColorSelectorLayout;
 import org.blinksd.board.views.ImageSelectorLayout;
 import org.blinksd.board.views.NumberSelectorLayout;
 import org.blinksd.board.views.RadioSelectorLayout;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.SettingItem;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SettingType;
@@ -270,7 +274,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                     ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
                     : String.valueOf(tagVal));
             if (SettingMap.SET_COMPAT_MONET_MAX_COLORS.equals(tag)) {
-                SuperBoardApplication.getMonetColors().reloadColors(p1.getContext());
+                getMonetColors().reloadColors(p1.getContext());
             }
             restartKeyboard();
             if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
@@ -288,7 +292,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                         ? String.valueOf(DensityUtils.getFloatNumberFromInt(tagVal))
                         : String.valueOf(tagVal));
                 if (SettingMap.SET_COMPAT_MONET_MAX_COLORS.equals(tag)) {
-                    SuperBoardApplication.getMonetColors().reloadColors(p1.getContext());
+                    getMonetColors().reloadColors(p1.getContext());
                 }
                 restartKeyboard();
                 if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
@@ -310,7 +314,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             Drawable d = img.getDrawable();
             if (d != null) {
                 try {
-                    File bgFile = SuperBoardApplication.getBackgroundImageFile();
+                    File bgFile = getBackgroundImageFile();
                     Bitmap bmp = ((BitmapDrawable) d).getBitmap();
                     setColorsFromBitmap(bmp);
                     FileOutputStream fos = new FileOutputStream(bgFile);
@@ -347,14 +351,14 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         if (langSelector || iconSelector || spaceSelector) {
             String value = SuperDBHelper.getStringOrDefault(tag);
             if (langSelector)
-                val = LayoutUtils.getKeyListFromLanguageList().indexOf(value);
+                val = getKeyListFromLanguageList().indexOf(value);
             else if (iconSelector)
-                val = SuperBoardApplication.getIconThemes().indexOfKey(value);
+                val = getIconThemes().indexOfKey(value);
             else
-                val = SuperBoardApplication.getSpaceBarStyles().indexOfKey(value);
+                val = getSpaceBarStyles().indexOfKey(value);
         } else if (themeSelector) {
             val = SettingMap.SET_MONET_COLOR_SCHEME.equals(tag)
-                    ? SuperBoardApplication.getMonetColors().getSelectedMonetThemeIndex()
+                    ? getMonetColors().getSelectedMonetThemeIndex()
                     : -1;
         } else {
             val = SuperDBHelper.getIntOrDefault(tag);
@@ -381,22 +385,22 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             int tagVal = (int) dialogView.getTag();
             if (tagVal != xval) {
                 if (langSelector) {
-                    String index = LayoutUtils.getKeyListFromLanguageList().get(tagVal);
+                    String index = getKeyListFromLanguageList().get(tagVal);
                     getAppDB().putString(tag, index, true);
                 } else if (iconSelector) {
-                    String index = SuperBoardApplication.getIconThemes().getKeyByIndex(tagVal);
+                    String index = getIconThemes().getKeyByIndex(tagVal);
                     getAppDB().putString(tag, index, true);
                 } else if (spaceSelector) {
-                    String index = SuperBoardApplication.getSpaceBarStyles().getKeyByIndex(tagVal);
+                    String index = getSpaceBarStyles().getKeyByIndex(tagVal);
                     getAppDB().putString(tag, index, true);
                 } else if (themeSelector) {
                     switch (tag) {
                         case SettingMap.SET_MONET_COLOR_SCHEME:
-                            String index = SuperBoardApplication.getMonetColors().getKeyByIndex(tagVal);
+                            String index = getMonetColors().getKeyByIndex(tagVal);
                             getAppDB().putString(tag, index, true);
                             break;
                         case SettingMap.SET_THEME_PRESET:
-                            List<ThemeUtils.ThemeHolder> themes = SuperBoardApplication.getThemes();
+                            List<ThemeUtils.ThemeHolder> themes = getThemesCache();
                             ThemeUtils.ThemeHolder theme = themes.get(tagVal);
                             theme.applyTheme();
                             recreate();

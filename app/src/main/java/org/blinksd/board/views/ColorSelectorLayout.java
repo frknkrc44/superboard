@@ -1,9 +1,10 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.inputmethodservice.Keyboard;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -107,7 +108,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             tv.setLayoutParams(pr);
             tv.setText(getColorSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
+            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);

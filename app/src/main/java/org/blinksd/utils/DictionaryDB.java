@@ -1,11 +1,11 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getLanguageTypes;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import org.blinksd.board.SuperBoardApplication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase p1) {
-        List<String> types = SuperBoardApplication.getLanguageTypes();
+        List<String> types = getLanguageTypes();
         StringBuilder sb = new StringBuilder();
         isReady = false;
 

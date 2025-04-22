@@ -2,8 +2,8 @@ package org.blinksd.utils;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
-import static org.blinksd.board.SuperBoardApplication.getApplication;
 import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.utils.ResourcesUtils.getColor;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
@@ -160,7 +160,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
     private int getColorCompat(int resId) {
-        Context context = getApplication();
+        Context context = getSBApplication();
         if (wallpaperManager == null) {
             try {
                 wallpaperManager = (WallpaperManager) context.getSystemService(Context.WALLPAPER_SERVICE);
@@ -174,7 +174,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
                 }
             };
 
-            getApplication().registerReceiver(
+            getSBApplication().registerReceiver(
                     mOnWallpaperChangedListener,
                     new IntentFilter(Intent.ACTION_WALLPAPER_CHANGED)
             );

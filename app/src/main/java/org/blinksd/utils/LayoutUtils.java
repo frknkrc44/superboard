@@ -1,5 +1,10 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getAppFilesDir;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
@@ -9,7 +14,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.superboard.KeyOptions;
 import org.blinksd.utils.superboard.Language;
@@ -143,7 +147,7 @@ public class LayoutUtils {
 
     /** @noinspection ResultOfMethodCallIgnored*/
     public static File getUserLanguageFilesDir() {
-        File file = new File(SuperBoardApplication.getAppFilesDir() + "/langpacks");
+        File file = new File(getAppFilesDir(), "langpacks");
         if (!file.exists())
             file.mkdirs();
         return file;
@@ -153,7 +157,7 @@ public class LayoutUtils {
         Map<String, String> out = new HashMap<>();
 
         try {
-            AssetManager assets = SuperBoardApplication.getApplication().getAssets();
+            AssetManager assets = getSBApplication().getAssets();
             Scanner sc = new Scanner(assets.open("special_cases.json"));
             StringBuilder s = new StringBuilder();
             while (sc.hasNext()) s.append(sc.nextLine());
@@ -200,7 +204,7 @@ public class LayoutUtils {
         File langFilesDir = getUserLanguageFilesDir();
 
         for (String file : Objects.requireNonNull(langFilesDir.list())) {
-            Scanner sc = new Scanner(new File(langFilesDir + "/" + file));
+            Scanner sc = new Scanner(new File(langFilesDir, file));
             StringBuilder s = new StringBuilder();
             while (sc.hasNext()) s.append(sc.nextLine());
             sc.close();
@@ -238,7 +242,7 @@ public class LayoutUtils {
                 if (ko.repeat) {
                     sb.setKeyRepeat(0, i, g);
                 }
-                IconThemeUtils icons = SuperBoardApplication.getIconThemes();
+                IconThemeUtils icons = getIconThemes();
                 String theme = SuperDBHelper.getStringOrDefault(SettingMap.SET_ICON_THEME);
                 switch (ko.pressKeyCode) {
                     case Keyboard.KEYCODE_SHIFT:
@@ -273,7 +277,7 @@ public class LayoutUtils {
     }
 
     public static void setSpaceBarViewPrefs(IconThemeUtils icons, SuperBoard.Key space, String label) {
-        if (icons == null) icons = SuperBoardApplication.getIconThemes();
+        if (icons == null) icons = getIconThemes();
 
         Drawable drawable = icons.getIconResource(LocalIconTheme.SYM_TYPE_SPACE);
         if (drawable == null) {
@@ -284,7 +288,7 @@ public class LayoutUtils {
     }
 
     public static ArrayList<String> getKeyListFromLanguageList() {
-        return getKeyListFromLanguageList(SuperBoardApplication.getKeyboardLanguageList());
+        return getKeyListFromLanguageList(getKeyboardLanguageList());
     }
 
     public static ArrayList<String> getKeyListFromLanguageList(HashMap<String, Language> list) {

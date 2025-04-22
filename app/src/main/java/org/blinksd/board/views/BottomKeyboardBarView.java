@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
+import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
 import static org.blinksd.utils.DensityUtils.mpInt;
 
 import android.annotation.SuppressLint;
@@ -15,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.Space;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
@@ -103,10 +104,10 @@ public class BottomKeyboardBarView extends LinearLayout {
             radioGroup.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
             languageListScroller.addView(radioGroup);
 
-            List<Language> languageList = new ArrayList<>(SuperBoardApplication.getKeyboardLanguageList().values());
+            List<Language> languageList = new ArrayList<>(getKeyboardLanguageList().values());
             for (int i = 0; i < languageList.size(); i++) {
                 Language language = languageList.get(i);
-                boolean checked = language.equals(SuperBoardApplication.getCurrentKeyboardLanguage());
+                boolean checked = language.equals(getCurrentKeyboardLanguage());
 
                 CustomRadioButton customRadioButton = new CustomRadioButton(context);
                 customRadioButton.setId(i);

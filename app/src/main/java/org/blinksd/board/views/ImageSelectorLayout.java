@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
@@ -12,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -35,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
@@ -173,7 +173,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             tv.setLayoutParams(pr);
             tv.setText(getImageSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            tv.getBackground().setColorFilter(0xFFDEDEDE, PorterDuff.Mode.SRC_ATOP);
+            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -264,7 +264,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             prev.setImageBitmap(temp);
         });
         s.setOnLongClickListener(p1 -> {
-            SuperBoardApplication.getBackgroundImageFile().delete();
+            getBackgroundImageFile().delete();
             prev.setImageDrawable(null);
             win.dismiss();
             onRestartKeyboard.run();
@@ -274,7 +274,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     }
 
     private void setCurrentWallpaperPreview() {
-        final File f = SuperBoardApplication.getBackgroundImageFile();
+        final File f = getBackgroundImageFile();
         if (f.exists()) {
             prev.setImageBitmap(BitmapFactory.decodeFile(f.getAbsolutePath()));
         }

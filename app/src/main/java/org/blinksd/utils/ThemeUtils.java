@@ -1,5 +1,8 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.ColorUtils.colorIntToString;
 import static org.blinksd.utils.SuperDBHelper.getFloatedIntOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
@@ -8,7 +11,6 @@ import static org.blinksd.utils.SuperDBHelper.getStringOrDefault;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.superboard.TextType;
 import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
@@ -75,7 +77,7 @@ public final class ThemeUtils {
 
     /** @noinspection ResultOfMethodCallIgnored*/
     public static File getUserThemesDir() {
-        File themesDir = new File(SuperBoardApplication.getApplication().getFilesDir() + "/themes");
+        File themesDir = new File(getSBApplication().getFilesDir(), "themes");
 
         if (!themesDir.exists()) {
             themesDir.mkdirs();
@@ -88,7 +90,7 @@ public final class ThemeUtils {
         List<ThemeHolder> holders = new ArrayList<>();
 
         // Import default themes
-        AssetManager assets = SuperBoardApplication.getApplication().getAssets();
+        AssetManager assets = getSBApplication().getAssets();
         String subdir = "themes";
         String[] items = assets.list(subdir);
         assert items != null;
@@ -107,7 +109,7 @@ public final class ThemeUtils {
         File themesDir = getUserThemesDir();
 
         for (String file : Objects.requireNonNull(themesDir.list())) {
-            Scanner sc = new Scanner(new File(themesDir + "/" + file));
+            Scanner sc = new Scanner(new File(themesDir, file));
             StringBuilder s = new StringBuilder();
             while (sc.hasNext()) s.append(sc.nextLine());
             sc.close();
@@ -254,8 +256,8 @@ public final class ThemeUtils {
         }
 
         private void putControlledColor(String key, String color) {
-            SuperMiniDB smdb = SuperBoardApplication.getAppDB();
-            SettingMap sMap = SuperBoardApplication.getSettings();
+            SuperMiniDB smdb = getAppDB();
+            SettingMap sMap = getSettings();
             if (color.trim().isEmpty()) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
@@ -264,8 +266,8 @@ public final class ThemeUtils {
         }
 
         private void putControlledString(String key, String value) {
-            SuperMiniDB smdb = SuperBoardApplication.getAppDB();
-            SettingMap sMap = SuperBoardApplication.getSettings();
+            SuperMiniDB smdb = getAppDB();
+            SettingMap sMap = getSettings();
             if (value.trim().isEmpty()) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
@@ -274,8 +276,8 @@ public final class ThemeUtils {
         }
 
         private void putControlledInt(String key, int value) {
-            SuperMiniDB smdb = SuperBoardApplication.getAppDB();
-            SettingMap sMap = SuperBoardApplication.getSettings();
+            SuperMiniDB smdb = getAppDB();
+            SettingMap sMap = getSettings();
             if (value < 0) {
                 smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
                 return;
@@ -285,7 +287,7 @@ public final class ThemeUtils {
 
         public void applyTheme() {
             try {
-                SettingMap sMap = SuperBoardApplication.getSettings();
+                SettingMap sMap = getSettings();
                 List<String> textTypes = sMap.getSelector(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
                 putControlledInt(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT, textTypes.indexOf(fontType));
             } catch (Throwable t) {

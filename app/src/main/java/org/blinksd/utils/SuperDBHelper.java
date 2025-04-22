@@ -1,13 +1,13 @@
 package org.blinksd.utils;
 
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.DensityUtils.mpInt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +49,7 @@ public final class SuperDBHelper {
     }
 
     public static String getStringOrDefault(String key) {
-        SuperMiniDB db = SuperBoardApplication.getAppDB();
+        SuperMiniDB db = getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
             return getSettings().getDefaults(key).toString();
@@ -67,7 +67,7 @@ public final class SuperDBHelper {
     }
 
     public static int getIntOrDefault(String key) {
-        if (SuperBoardApplication.getMonetColors().isMonetEnabled()) {
+        if (getMonetColors().isMonetEnabled()) {
             return getMonetColorValue(key);
         }
 
@@ -103,7 +103,7 @@ public final class SuperDBHelper {
     }
 
     private static int getMonetColorValue(String key) {
-        MonetColors monetColors = SuperBoardApplication.getMonetColors();
+        MonetColors monetColors = getMonetColors();
         return switch (key) {
             case SettingMap.SET_ENTER_BGCLR -> monetColors.getEnterColor();
             case SettingMap.SET_ENTER_PRESS_BGCLR -> monetColors.getEnterPressColor();
@@ -118,7 +118,7 @@ public final class SuperDBHelper {
     }
 
     public static void removeKey(String key) {
-        SuperMiniDB db = SuperBoardApplication.getAppDB();
+        SuperMiniDB db = getAppDB();
         if (db.isDBContainsKey(key)) {
             db.removeKeyFromDB(key);
         }
@@ -157,12 +157,12 @@ public final class SuperDBHelper {
     public static Map<String, String> exportAllToMap(List<String> except) {
         Map<String, String> exportMap = new HashMap<>();
 
-        for (String key : SuperBoardApplication.getAppDB().getKeys()) {
+        for (String key : getAppDB().getKeys()) {
             if (except.contains(key)) {
                 continue;
             }
 
-            String value = SuperBoardApplication.getAppDB().getString(key, null);
+            String value = getAppDB().getString(key, null);
             if (value != null) {
                 exportMap.put(key, value);
             }

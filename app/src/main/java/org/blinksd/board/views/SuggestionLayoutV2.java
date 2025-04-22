@@ -1,6 +1,8 @@
 package org.blinksd.board.views;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.board.SuperBoardApplication.getDictDB;
+import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
@@ -19,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
@@ -199,7 +200,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             onPreExecute();
             mThreadPool.execute(() -> {
                 List<String> out = doInBackground(args);
-                SuperBoardApplication.mainHandler.post(() -> onPostExecute(out));
+                mainHandler.post(() -> onPostExecute(out));
             });
         }
 
@@ -230,7 +231,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             }
 
             String lang = p1[0].toLowerCase();
-            return SuperBoardApplication.getDictDB().getQuery(lang, prefix);
+            return getDictDB().getQuery(lang, prefix);
         }
 
         protected void onPostExecute(final List<String> result) {

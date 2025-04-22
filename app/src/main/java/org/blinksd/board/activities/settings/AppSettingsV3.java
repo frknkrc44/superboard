@@ -2,7 +2,14 @@ package org.blinksd.board.activities.settings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.blinksd.board.SuperBoardApplication.clearCustomFont;
+import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
+import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
+import static org.blinksd.board.SuperBoardApplication.getCustomFont;
+import static org.blinksd.board.SuperBoardApplication.getIconThemes;
+import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
@@ -17,13 +24,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
@@ -101,9 +106,9 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
     @Override
     public void setKeyPrefs() {
-        boolean useMonet = SuperBoardApplication.getMonetColors().isMonetEnabled();
+        boolean useMonet = getMonetColors().isMonetEnabled();
 
-        File img = SuperBoardApplication.getBackgroundImageFile();
+        File img = getBackgroundImageFile();
         if (img.exists() && !useMonet) {
             int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
             Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
@@ -128,12 +133,12 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         kbdPreview.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
         kbdPreview.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         kbdPreview.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
-        IconThemeUtils iconThemes = SuperBoardApplication.getIconThemes();
+        IconThemeUtils iconThemes = getIconThemes();
         kbdPreview.setKeyDrawable(0, 0, 2,
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
-        LayoutUtils.setSpaceBarViewPrefs(iconThemes,
+        setSpaceBarViewPrefs(iconThemes,
                 kbdPreview.getKey(0, 0, 1),
-                SuperBoardApplication.getCurrentKeyboardLanguage().name);
+                getCurrentKeyboardLanguage().name);
         kbdPreview.setKeyDrawable(0, 0, -1,
                 iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
         kbdPreview.setKeyVibrateDuration(getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
@@ -150,8 +155,8 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         kbdPreview.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
 
         try {
-            SuperBoardApplication.clearCustomFont();
-            SuperBoardApplication.getCustomFont();
+            clearCustomFont();
+            getCustomFont();
         } catch (Throwable ignored) {}
     }
 }

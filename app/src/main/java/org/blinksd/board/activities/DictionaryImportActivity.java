@@ -1,5 +1,8 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.board.SuperBoardApplication.getDictDB;
+import static org.blinksd.board.SuperBoardApplication.mainHandler;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.DictionaryDB;
 import org.blinksd.utils.ViewUtils;
@@ -103,7 +105,7 @@ public final class DictionaryImportActivity extends Activity {
             onPreExecute();
             Executors.newSingleThreadExecutor().execute(() -> {
                 Void out = doInBackground(args);
-                SuperBoardApplication.mainHandler.post(() -> onPostExecute(out));
+                mainHandler.post(() -> onPostExecute(out));
             });
         }
 
@@ -129,7 +131,7 @@ public final class DictionaryImportActivity extends Activity {
 
                 InputStream pfd = getContentResolver().openInputStream(uri);
 
-                SuperBoardApplication.getDictDB().saveToDB(name, langName, pfd, this);
+                getDictDB().saveToDB(name, langName, pfd, this);
             } catch (IOException ignored) {
             } finally {
                 if (returnCursor != null) {

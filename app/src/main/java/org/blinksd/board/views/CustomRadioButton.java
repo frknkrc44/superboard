@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.ColorUtils.setColorFilter;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -9,7 +11,6 @@ import android.os.Build;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ResourcesUtils;
 
@@ -28,7 +29,7 @@ public final class CustomRadioButton extends RadioButton {
                 return;
             }
 
-            ColorUtils.setColorFilter(drw, 0xFFDEDEDE);
+            setColorFilter(drw, 0xFFDEDEDE);
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                 setPadding(i + drw.getIntrinsicWidth(), 0, i, 0);

@@ -1,12 +1,14 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.text.SpannableString;
 import android.view.Gravity;
@@ -21,7 +23,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
@@ -64,7 +65,7 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void init() {
-        setOrientation(LinearLayout.VERTICAL);
+        setOrientation(VERTICAL);
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -72,7 +73,7 @@ public final class ClipboardView extends LinearLayout
         int buttonPadding = buttonSize / 4;
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-        textColor = ColorUtils.convertARGBtoRGB(textColor);
+        textColor = convertARGBtoRGB(textColor);
 
         clearAllButton = new ImageButton(getContext());
         ViewUtils.setViewBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
@@ -84,7 +85,7 @@ public final class ClipboardView extends LinearLayout
         clearAllButton.setOnClickListener(v -> clearClipboard(false));
         clearAllButton.setOnLongClickListener(v -> clearClipboard(true));
         clearAllButton.setImageResource(R.drawable.delete);
-        clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(clearAllButton, textColor);
         clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         addView(clearAllButton);
 
@@ -98,7 +99,7 @@ public final class ClipboardView extends LinearLayout
 
         addView(scrollView);
 
-        String[] clipboardHistoryArray = SuperBoardApplication.getAppDB()
+        String[] clipboardHistoryArray = getAppDB()
                 .getStringArray(SettingMap.SET_CLIPBOARD_HISTORY, new String[]{});
         for (String str : clipboardHistoryArray) {
             SpannableString spannableString = new SpannableString(str);
@@ -133,7 +134,7 @@ public final class ClipboardView extends LinearLayout
         textView1.setText(text);
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-        textColor = ColorUtils.convertARGBtoRGB(textColor);
+        textColor = convertARGBtoRGB(textColor);
         textView1.setTextColor(textColor);
 
         TextView textView2 = textHolder.findViewById(android.R.id.text2);
@@ -148,7 +149,7 @@ public final class ClipboardView extends LinearLayout
         pasteButton.setOnClickListener(v -> selectAndUseClipItem(v, false));
         pasteButton.setOnLongClickListener(v -> selectAndUseClipItem(v, true));
         pasteButton.setImageResource(R.drawable.clipboard);
-        pasteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(pasteButton, textColor);
         pasteButton.setId(android.R.id.button1);
         pasteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(pasteButton);
@@ -160,7 +161,7 @@ public final class ClipboardView extends LinearLayout
         deleteButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         deleteButton.setOnClickListener(v -> removeClipView(v, true));
         deleteButton.setImageResource(R.drawable.delete);
-        deleteButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(deleteButton, textColor);
         deleteButton.setId(android.R.id.button2);
         deleteButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(deleteButton);
@@ -220,7 +221,7 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void syncClipboardCache() {
-        SuperMiniDB db = SuperBoardApplication.getAppDB();
+        SuperMiniDB db = getAppDB();
         if (clipboardHistory.isEmpty()) {
             db.removeKeyFromDB(SettingMap.SET_CLIPBOARD_HISTORY);
         } else {
@@ -241,9 +242,9 @@ public final class ClipboardView extends LinearLayout
         getLayoutParams().height = superBoard.getHeight();
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-        textColor = ColorUtils.convertARGBtoRGB(textColor);
+        textColor = convertARGBtoRGB(textColor);
 
-        clearAllButton.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        setColorFilter(clearAllButton, textColor);
         ViewUtils.setViewBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
 
         for (int i = 0; i < listView.getChildCount(); i++) {
@@ -256,11 +257,11 @@ public final class ClipboardView extends LinearLayout
             textView2.setTextColor(textColor);
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
-            ColorUtils.setColorFilter(button1, textColor);
+            setColorFilter(button1, textColor);
             ViewUtils.setViewBackground(button1, getTransSelectableItemBg(getContext(), textColor));
 
             ImageButton button2 = child.findViewById(android.R.id.button2);
-            ColorUtils.setColorFilter(button2, textColor);
+            setColorFilter(button2, textColor);
             ViewUtils.setViewBackground(button2, getTransSelectableItemBg(getContext(), textColor));
         }
     }
