@@ -17,20 +17,11 @@ public final class WindowManagerServiceUtils {
     private WindowManagerServiceUtils() {}
 
     public static boolean navbarCustomModeEnabled() {
-        if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR)) {
-            return true;
-        }
-
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
-                SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT);
+        return SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR);
     }
 
     public static boolean navbarAndroid9ModeEnabled() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            return SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT);
-        }
-
-        return navbarCustomModeEnabled();
+        return SuperDBHelper.getBooleanOrDefault(SettingMap.SET_COLORIZE_NAVBAR_ALT);
     }
 
     public static int getDisplayId(Context context) {

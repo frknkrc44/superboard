@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -142,5 +143,9 @@ public final class SystemUtils {
 
     private static boolean isLand() {
         return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public static void disableEdgeToEdge(Window window) {
+        MiniLSPass.setField(window, "mEdgeToEdgeEnforced", false);
     }
 }

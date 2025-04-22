@@ -42,8 +42,8 @@ public final class Defaults {
     public static final boolean KEYBOARD_SHOW_POPUP = true;
     public static final boolean KEYBOARD_LC_ON_EMOJI = false;
     public static final boolean KEYBOARD_TOUCH_SOUND = true;
-    public static final boolean COLORIZE_NAVBAR = SDK_INT < P || SDK_INT >= VANILLA_ICE_CREAM;
-    public static final boolean COLORIZE_NAVBAR_ALT = SDK_INT >= P && SDK_INT < VANILLA_ICE_CREAM;
+    public static final boolean COLORIZE_NAVBAR = SDK_INT < P ;
+    public static final boolean COLORIZE_NAVBAR_ALT = SDK_INT >= P;
     public static final boolean COLORIZE_NAVBAR_ALWAYS_TRANS = COLORIZE_NAVBAR;
     public static final boolean DETECT_CAPSLOCK = true;
     public static final boolean ENFORCE_DETECT_CAPSLOCK = true;

@@ -20,6 +20,7 @@ import static org.blinksd.utils.LayoutUtils.setKeyOpts;
 import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
 import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
+import static org.blinksd.utils.SystemUtils.disableEdgeToEdge;
 import static org.blinksd.utils.SystemUtils.isColorized;
 import static org.blinksd.utils.SystemUtils.navbarH;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
@@ -37,6 +38,7 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +63,7 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
 import org.blinksd.utils.ImageUtils;
+import org.blinksd.utils.MiniLSPass;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
@@ -72,6 +75,7 @@ import org.blinksd.utils.superboard.OnModifierChangedListener;
 import org.blinksd.utils.superboard.RowOptions;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
 
 @SuppressWarnings({"deprecation", "InlinedApi"})
@@ -702,73 +706,56 @@ public final class InputService extends InputMethodService implements
             baseHeight += bottomKeyboardBarView.getLayoutParams().height;
         }
 
-        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP && detectNavbar(this)) {
             Window w = getWindow().getWindow();
             assert w != null : "Window returned null";
 
-            if (detectNavbar(this)) {
-                View navbarView = keyboardLayoutHolder.findViewById(android.R.attr.gravity);
-                if (navbarView != null)
-                    keyboardLayoutHolder.removeView(navbarView);
+            View navbarView = keyboardLayoutHolder.findViewById(android.R.attr.gravity);
+            if (navbarView != null)
+                keyboardLayoutHolder.removeView(navbarView);
 
-                if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                    // baseHeight += insetPaddingBottom;
-                    w.setDecorFitsSystemWindows(false);
-                }
+            if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                // baseHeight += insetPaddingBottom;
+                disableEdgeToEdge(w);
+                w.setDecorFitsSystemWindows(true);
+            }
 
-                if (navbarAndroid9ModeEnabled() && !isColorized()) {
-                    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            if (navbarAndroid9ModeEnabled() && !isColorized()) {
+                w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-                    if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                        w.setDecorFitsSystemWindows(true);
-                    }
+                keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
 
-                    keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
+                boolean monetEnabled = getMonetColors().isMonetEnabled();
+                int color = monetEnabled
+                        ? getMonetColors().getKeyboardColor()
+                        : convertARGBtoRGB(c);
+                w.setNavigationBarColor(color);
+                w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
+                        ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                        : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            } else if (isColorized()) {
+                w.setDecorFitsSystemWindows(false);
 
-                    boolean monetEnabled = getMonetColors().isMonetEnabled();
-                    int color = monetEnabled
-                            ? getMonetColors().getKeyboardColor()
-                            : convertARGBtoRGB(c);
-                    w.setNavigationBarColor(color);
-                    w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
-                            ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-                            : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                } else if (isColorized()) {
-                    if (SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                        // I found a bug at SDK 30 (Android R)
-                        // FLAG_LAYOUT_NO_LIMITS not working
-                        // set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
-                        if (SDK_INT == Build.VERSION_CODES.R)
-                            w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                        else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                        w.setNavigationBarColor(0);
-                    } else {
-                        w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                        w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                // I found a bug at SDK 30 (Android R)
+                // FLAG_LAYOUT_NO_LIMITS not working
+                // set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
+                if (SDK_INT == Build.VERSION_CODES.R)
+                    w.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                w.setNavigationBarColor(0);
 
-                        boolean monetEnabled = getMonetColors().isMonetEnabled();
-                        int color = monetEnabled
-                                ? getMonetColors().getKeyboardColor()
-                                : convertARGBtoRGB(c);
-                        w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
-                                ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-                                : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                    }
-
-                    int navbarHeight = /*SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+                int navbarHeight = /*SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
                             ? baseHeight
                             :*/ baseHeight + navbarH(this);
-                    keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, navbarHeight));
-                    keyboardLayoutHolder.addView(createNavbarLayout(this, c));
-                } else {
-                    w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                    w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                    w.setNavigationBarColor(Color.BLACK);
-                    keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
-                }
+                keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, navbarHeight));
+                keyboardLayoutHolder.addView(createNavbarLayout(this, c));
             } else {
+                w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                w.setNavigationBarColor(Color.BLACK);
+
                 keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
             }
         } else {
