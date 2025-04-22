@@ -216,7 +216,7 @@ public final class WuQuantizer implements Quantizer {
             }
         }
 
-        return new CreateBoxesResult(maxColorCount, generatedColorCount);
+        return new CreateBoxesResult(generatedColorCount);
     }
 
     private int[] createResult(int colorCount) {
@@ -439,11 +439,9 @@ public final class WuQuantizer implements Quantizer {
     }
 
     private static class CreateBoxesResult {
-        final int mRequestedCount;
         final int mResultCount;
 
-        CreateBoxesResult(int requestedCount, int resultCount) {
-            mRequestedCount = requestedCount;
+        CreateBoxesResult(int resultCount) {
             mResultCount = resultCount;
         }
     }

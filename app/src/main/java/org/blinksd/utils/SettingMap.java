@@ -182,9 +182,6 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         put(name, new SettingItem(SettingCategory.POPUP, type, dependency, dependencyEnabled));
     }
 
-    private void putTopBar(String name, SettingType type) {
-        putTopBar(name, type, null, null);
-    }
     private void putTopBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.TOP_BAR, type, dependency, dependencyEnabled));
     }

@@ -140,14 +140,6 @@ public final class CamUtils {
     }
 
     /** Converts a color from linear RGB components to ARGB format. */
-    public static int argbFromLinrgb(double[] linrgb) {
-        int r = delinearized(linrgb[0]);
-        int g = delinearized(linrgb[1]);
-        int b = delinearized(linrgb[2]);
-        return argbFromRgb(r, g, b);
-    }
-
-    /** Converts a color from linear RGB components to ARGB format. */
     public static int argbFromLinrgbComponents(double r, double g, double b) {
         return argbFromRgb(delinearized(r), delinearized(g), delinearized(b));
     }

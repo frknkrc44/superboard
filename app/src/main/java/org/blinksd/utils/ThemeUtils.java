@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public final class ThemeUtils {
     public static final int KEY_BG_TYPE_FLAT     = 0,
                             KEY_BG_TYPE_GRADIENT = 1;

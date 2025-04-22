@@ -162,10 +162,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void openEmojiLayout() {}
 
-    public final void setPadding(int p) {
-        setPadding(p, p, p, p);
-    }
-
     public final void setSpecialCases(Map<String, String> items) {
         specialCases.clear();
         specialCases.putAll(items);
@@ -302,10 +298,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void addExtraKey(Key key) {
         extraKeyViews.add(key);
-    }
-
-    public void removeExtraKey(Key key) {
-        extraKeyViews.remove(key);
     }
 
     protected final float getKeysTextSize() {
@@ -952,6 +944,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return tag != null && (boolean) tag;
     }
 
+    @SuppressWarnings("unused")
     public final void setDisableModifierForKeyboard(int keyboardIndex, boolean value) {
         getKeyboard(keyboardIndex).setTag(TAG_DISABLE_MODIFIER, value);
     }
@@ -1564,13 +1557,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         public void setKeyTextStyle(int style) {
             TextUtilsCompat.setTypefaceFromTextType(label, style);
             subLabel.setTypeface(label.getTypeface());
-        }
-
-        // it fixes the icon multiplier on top bar
-        public void toggleVisibility() {
-            boolean shown = isShown();
-            setVisibility(shown ? GONE : VISIBLE);
-            setVisibility(shown ? VISIBLE : GONE);
         }
 
         public void clone(Key k) {

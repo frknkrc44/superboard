@@ -34,13 +34,6 @@ public class KMeans {
     private final int mMaxIterations;
     private float mSqConvergenceEpsilon;
 
-    public KMeans() {
-        this(new Random());
-    }
-
-    public KMeans(Random random) {
-        this(random, 30 /* maxIterations */, 0.005f /* convergenceEpsilon */);
-    }
     public KMeans(Random random, int maxIterations, float convergenceEpsilon) {
         mRandomState = random;
         mMaxIterations = maxIterations;
@@ -214,10 +207,6 @@ public class KMeans {
 
         public Mean(int dimension) {
             mCentroid = new float[dimension];
-        }
-
-        public Mean(float ...centroid) {
-            mCentroid = centroid;
         }
 
         public float[] getCentroid() {

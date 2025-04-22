@@ -45,10 +45,6 @@ import java.util.PriorityQueue;
  * colors.
  */
 public final class ColorCutQuantizer implements Quantizer {
-
-    private static final String LOG_TAG = "ColorCutQuantizer";
-    private static final boolean LOG_TIMINGS = false;
-
     static final int COMPONENT_RED = -3;
     static final int COMPONENT_GREEN = -2;
     static final int COMPONENT_BLUE = -1;
@@ -59,8 +55,6 @@ public final class ColorCutQuantizer implements Quantizer {
     int[] mColors;
     int[] mHistogram;
     List<Palette.Swatch> mQuantizedColors;
-
-    private final float[] mTempHsl = new float[3];
 
     /**
      * Execute color quantization.

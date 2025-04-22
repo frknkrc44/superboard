@@ -22,6 +22,7 @@ import org.blinksd.utils.ColorUtils;
  * A color appearance model, based on CAM16, extended to use L* as the lightness dimension, and
  * coupled to a gamut mapping algorithm. Creates a color system, enables a digital design system.
  */
+@SuppressWarnings("unused")
 public class Cam {
     // The maximum difference between the requested L* and the L* returned.
     private static final float DL_MAX = 0.2f;
@@ -120,16 +121,6 @@ public class Cam {
         mJstar = jstar;
         mAstar = astar;
         mBstar = bstar;
-    }
-
-    /**
-     * Given a hue & chroma in CAM16, L* in L*a*b*, return an ARGB integer. The chroma of the color
-     * returned may, and frequently will, be lower than requested. Assumes the color is viewed in
-     * the
-     * frame defined by the sRGB standard.
-     */
-    public static int getInt(float hue, float chroma, float lstar) {
-        return getInt(hue, chroma, lstar, Frame.DEFAULT);
     }
 
     /**

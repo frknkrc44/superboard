@@ -84,36 +84,13 @@ public final class Palette {
 
     private final List<Swatch> mSwatches;
 
-    
-    private final Swatch mDominantSwatch;
-
     Palette(List<Swatch> swatches) {
         mSwatches = swatches;
-        mDominantSwatch = findDominantSwatch();
     }
 
     /** Returns all of the swatches which make up the palette. */
     public List<Swatch> getSwatches() {
         return Collections.unmodifiableList(mSwatches);
-    }
-
-    /** Returns the swatch with the highest population, or null if there are no swatches. */
-    public Swatch getDominantSwatch() {
-        return mDominantSwatch;
-    }
-
-    
-    private Swatch findDominantSwatch() {
-        int maxPop = Integer.MIN_VALUE;
-        Swatch maxSwatch = null;
-        for (int i = 0, count = mSwatches.size(); i < count; i++) {
-            Swatch swatch = mSwatches.get(i);
-            if (swatch.getPopulation() > maxPop) {
-                maxSwatch = swatch;
-                maxPop = swatch.getPopulation();
-            }
-        }
-        return maxSwatch;
     }
 
     /**
@@ -168,6 +145,7 @@ public final class Palette {
     }
 
     /** Builder class for generating {@link Palette} instances. */
+    @SuppressWarnings("unused")
     public static class Builder {
         private final List<Swatch> mSwatches;
         private final Bitmap mBitmap;
@@ -264,39 +242,6 @@ public final class Palette {
             mResizeMaxDimension = -1;
             return this;
         }
-
-        /**
-         * Set a region of the bitmap to be used exclusively when calculating the palette.
-         *
-         * <p>This only works when the original input is a {@link Bitmap}.
-         *
-         * @param left   The left side of the rectangle used for the region.
-         * @param top    The top of the rectangle used for the region.
-         * @param right  The right side of the rectangle used for the region.
-         * @param bottom The bottom of the rectangle used for the region.
-         */
-        
-        public Builder setRegion(int left, int top, int right, int bottom) {
-            if (mBitmap != null) {
-                if (mRegion == null) mRegion = new Rect();
-                // Set the Rect to be initially the whole Bitmap
-                mRegion.set(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-                // Now just get the intersection with the region
-                if (!mRegion.intersect(left, top, right, bottom)) {
-                    throw new IllegalArgumentException(
-                            "The given region must intersect with " + "the Bitmap's dimensions.");
-                }
-            }
-            return this;
-        }
-
-        /** Clear any previously region set via {@link #setRegion(int, int, int, int)}. */
-        
-        public Builder clearRegion() {
-            mRegion = null;
-            return this;
-        }
-
 
         /** Generate and return the {@link Palette} synchronously. */
         
@@ -437,56 +382,5 @@ public final class Palette {
         }
 
     }
-
-    /**
-     * A Filter provides a mechanism for exercising fine-grained control over which colors
-     * are valid within a resulting {@link Palette}.
-     */
-    public interface Filter {
-        /**
-         * Hook to allow clients to be able filter colors from resulting palette.
-         *
-         * @param rgb the color in RGB888.
-         * @param hsl HSL representation of the color.
-         * @return true if the color is allowed, false if not.
-         * see Palette.Builder#addFilter(Palette.Filter)
-         */
-        boolean isAllowed(int rgb, float[] hsl);
-    }
-
-    /**
-     * The default filter.
-     */
-    static final Palette.Filter
-            DEFAULT_FILTER = new Palette.Filter() {
-        private static final float BLACK_MAX_LIGHTNESS = 0.05f;
-        private static final float WHITE_MIN_LIGHTNESS = 0.95f;
-
-        @Override
-        public boolean isAllowed(int rgb, float[] hsl) {
-            return !isWhite(hsl) && !isBlack(hsl) && !isNearRedILine(hsl);
-        }
-
-        /**
-         * @return true if the color represents a color which is close to black.
-         */
-        private boolean isBlack(float[] hslColor) {
-            return hslColor[2] <= BLACK_MAX_LIGHTNESS;
-        }
-
-        /**
-         * @return true if the color represents a color which is close to white.
-         */
-        private boolean isWhite(float[] hslColor) {
-            return hslColor[2] >= WHITE_MIN_LIGHTNESS;
-        }
-
-        /**
-         * @return true if the color lies close to the red side of the I line.
-         */
-        private boolean isNearRedILine(float[] hslColor) {
-            return hslColor[0] >= 10f && hslColor[0] <= 37f && hslColor[1] <= 0.82f;
-        }
-    };
 }
 
