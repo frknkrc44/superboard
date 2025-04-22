@@ -724,8 +724,6 @@ public final class InputService extends InputMethodService implements
                 w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-                keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
-
                 boolean monetEnabled = getMonetColors().isMonetEnabled();
                 int color = monetEnabled
                         ? getMonetColors().getKeyboardColor()
@@ -745,25 +743,21 @@ public final class InputService extends InputMethodService implements
                 else w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 w.setNavigationBarColor(0);
 
-                int navbarHeight = /*SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
-                            ? baseHeight
-                            :*/ baseHeight + navbarH(this);
-                keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, navbarHeight));
+                baseHeight += navbarH(this);
                 keyboardLayoutHolder.addView(createNavbarLayout(this, c));
             } else {
                 w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                 w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 w.setNavigationBarColor(Color.BLACK);
-
-                keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
             }
-        } else {
-            keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
         }
 
-        keyboardLayoutHolder.getLayoutParams().height = keyboardBackground.getLayoutParams().height;
-        boardPopup.setFilterHeight(keyboardLayoutHolder.getLayoutParams().height);
+        if (keyboardBackground.getLayoutParams().height != baseHeight) {
+            keyboardBackground.setLayoutParams(new RelativeLayout.LayoutParams(-1, baseHeight));
+            keyboardLayoutHolder.getLayoutParams().height = keyboardBackground.getLayoutParams().height;
+            boardPopup.setFilterHeight(keyboardLayoutHolder.getLayoutParams().height);
+        }
     }
 
     @Override
