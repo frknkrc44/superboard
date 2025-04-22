@@ -282,8 +282,6 @@ public class FABView extends LinearLayout {
         }
     }
 
-
-
     void toggle(boolean expand) {
         if (expand) {
             expand();
@@ -309,13 +307,14 @@ public class FABView extends LinearLayout {
 
             if(getChildCount() != 1){
                 boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
-                if(collapsed){
-                    sv.setVisibility(VISIBLE);
-                    main.animate().rotation(135);
-                } else {
-                    main.animate().rotation(0);
-                }
-                onStateChangedListener.onStateChanged(collapsed ? 0 : 1, collapsed ? 0 : baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2);
+                if(collapsed) sv.setVisibility(VISIBLE);
+
+                main.animate().rotation(collapsed ? 135 : 0);
+                onStateChangedListener.onStateChanged(
+                        collapsed ? 0 : 1,
+                        collapsed ? 0 : baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2
+                );
+
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
                         continue;
