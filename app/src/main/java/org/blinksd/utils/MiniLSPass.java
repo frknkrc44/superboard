@@ -13,10 +13,9 @@ import java.lang.reflect.Method;
  *
  * Source: <a href="https://github.com/LSPosed/AndroidHiddenApiBypass/blob/01ab3d8d2ef5496a78ff0db15f73cc30e6f5861e/library/src/main/java/org/lsposed/hiddenapibypass/LSPass.java">LSPass</a>
  */
+@SuppressWarnings("rawtypes")
 public final class MiniLSPass {
     private static final String TAG = "MiniLSPass";
-
-    @SuppressWarnings("rawtypes")
     private static final Property<Class, Method[]> methods = Property.of(Class.class, Method[].class, "DeclaredMethods");
 
     /**
@@ -41,7 +40,7 @@ public final class MiniLSPass {
     /**
      * set a restrict field named {@code fieldName} of the given object {@code thiz} to the {@code arg}
      * 
-     * @param thiz       this object, which can be {@code null} if the target method is static
+     * @param thiz       this object, which cannot be {@code null}
      * @param fieldName  the field name
      * @param arg        argument to set the field with name {@code fieldName}
      */
@@ -60,7 +59,7 @@ public final class MiniLSPass {
     }
 
     /**
-     * Allows an app to use the hidden API methods completely.
+     * Allows an app to execute the hidden API methods without restrictions.
      */
     public static void setHiddenApiExemptions(boolean exempted) {
         try {
