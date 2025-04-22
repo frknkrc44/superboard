@@ -125,7 +125,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
             putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR, true);
         }
-        if (SDK_INT >= P && SDK_INT < VANILLA_ICE_CREAM)
+        if (SDK_INT >= P)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
         putPopup(SET_DISABLE_POPUP, SettingType.BOOL);
         putPopup(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
