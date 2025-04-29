@@ -19,10 +19,12 @@ AIDL=$(BUILDTOOLS)/aidl
 space := $(aa) $(aa)
 CLASSPATH=$(AJAR):$(subst $(space),:,$(shell find include/ -name "*.jar"))
 
-AIDLP=app/src/main/aidl/
-SRC=app/src/main/java/
-RES=app/src/main/res/
-ASSETS=app/src/main/assets/
+ASRCM=app/src/main/
+AIDLP=$(ASRCM)aidl/
+
+SRC=$(ASRCM)java/
+RES=$(ASRCM)res/
+ASSETS=$(ASRCM)assets/
 NAME=FBoard
 
 KEYFILE=key.jks
@@ -30,7 +32,7 @@ KEYALIAS=Alias
 STOREPASS=123456
 KEYPASS=123456
 # JAVAC_DEBUG_FLAGS = "-Xlint:unchecked -Xlint:deprecation"
-JAVAC_DEBUG_FLAGS = 
+JAVAC_DEBUG_FLAGS =
 
 all: langpacks emojijson rmdirs optimize keystore
 # all: clear mkdirs langpacks keystore abuild build rmdirs zipalign sign
@@ -48,7 +50,8 @@ all: langpacks emojijson rmdirs optimize keystore
 # 	$(ZIPALIGN) -v -p 4 bin/$(NAME).ap_ bin/$(NAME)-aligned.ap_
 # 	mv bin/$(NAME)-aligned.ap_ bin/$(NAME).ap_
 optimize:
-	optipng -quiet -o7 `find $(RES) -name "*.png"` || true
+#	optipng -quiet -o7 `find $(RES) -name "*.png"` || true
+	pngquant -f --skip-if-larger --speed=1 --strip --ext ".png" -- `find $(ASRCM) -name "*.png"` || true
 # sign:
 # 	$(APKSIGNER) sign --ks $(KEYFILE) --ks-key-alias $(KEYALIAS) --ks-pass pass:$(STOREPASS) --key-pass pass:$(KEYPASS) --out bin/$(NAME)-v`cat keystore.properties | grep VERNAME= | cut -f2 -d=`.apk bin/$(NAME).ap_
 # 	#rm -f bin/$(NAME).ap_

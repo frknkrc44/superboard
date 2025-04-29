@@ -32,7 +32,7 @@ jobs:
     - name: Install requirements
       run: |
         sudo apt-get update -y
-        sudo apt-get install optipng -y
+        sudo apt-get install pngquant -y
 
     - name: Prepare the signature key
       run: |
