@@ -38,6 +38,8 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
+import android.util.Log;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +68,7 @@ import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.keys.KeyRemapper;
 import org.blinksd.utils.superboard.KeyOptions;
 import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.Language;
@@ -92,6 +95,7 @@ public final class InputService extends InputMethodService implements
     private EmojiView emojiView = null;
     private ClipboardView clipboardView = null;
     private BottomKeyboardBarView bottomKeyboardBarView = null;
+    private KeyRemapper keyRemapper;
     private final BroadcastReceiver restartKeyboardReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context p1, Intent p2) {
@@ -481,6 +485,33 @@ public final class InputService extends InputMethodService implements
         setPrefs();
     }
 
+    private void loadKeyRemapper() {
+        if (keyRemapper == null) {
+            keyRemapper = new KeyRemapper();
+        }
+
+        try {
+            String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
+            var processedLangCode = lang.split("_");
+            if (processedLangCode.length > 2) {
+                processedLangCode[2] = processedLangCode[2].substring(0, 1);
+            }
+            var finalLangCode = String.join("_", processedLangCode);
+
+            if (finalLangCode.equals(keyRemapper.currentLang)) {
+                return;
+            }
+
+            keyRemapper.setKeyMapFromIS(getAssets().open(String.format("keymaps/%s.kcm", finalLangCode)));
+            keyRemapper.currentLang = finalLangCode;
+            // Log.d(getClass().getSimpleName(), "Key remapper loaded for " + lang + " " + finalLangCode);
+        } catch (Throwable e) {
+            Log.d(getClass().getSimpleName(), e.getMessage(), e);
+            keyRemapper.setKeyMapFromFileContent(null);
+            keyRemapper.currentLang = null;
+        }
+    }
+
     public void setPrefs() {
         if (superBoardView != null) {
             superBoardView.fixHeight();
@@ -672,6 +703,7 @@ public final class InputService extends InputMethodService implements
         superBoardView.setKeyboardLanguage(language.language);
         setKeyOpts(language, superBoardView);
         currentLanguageCache = language;
+        loadKeyRemapper();
     }
 
     @SuppressLint("ResourceType")
@@ -746,8 +778,35 @@ public final class InputService extends InputMethodService implements
         if (boardPopup != null && boardPopup.isShown()) {
             boardPopup.showPopup(false);
         }
+
+        loadKeyRemapper();
+
+        if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
+            Log.d(getClass().getSimpleName(), "Source = KEYBOARD, " + event.getKeyCode() + " - " + event.getScanCode());
+
+            String replacement = keyRemapper.convertKey(event);
+            Log.d(getClass().getSimpleName(), "Replacement of " + event.getKeyCode() + " - " + event.getScanCode() + ": " + replacement);
+            if (replacement != null) {
+                getCurrentInputConnection().commitText(replacement, replacement.length());
+                return true;
+            }
+        }
+
         // showEmojiView(false);
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        /*
+        if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
+            superBoardView.setCtrlState(event.isCtrlPressed() ? 1 : 0);
+            superBoardView.setAltState(event.isAltPressed() ? 1 : 0);
+            superBoardView.setShiftState(event.isCapsLockOn() ? 2 : event.isShiftPressed() ? 1 : 0);
+        }
+         */
+
+        return super.onKeyUp(keyCode, event);
     }
 
     public void onEmojiText(String text) {

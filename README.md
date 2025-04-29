@@ -10,11 +10,16 @@ A basic keyboard app
 - DVORAK (DE)
 - QWERTY (TR)
 - QWERTY (TR - Mini)
-- QWERTY (TR - Full)
 - F (TR)
 - Old Turkic
 
 You can add your own layout creator to SuperBoardLayoutCreator folder and it'll be generated automatically.
+
+### Remapper supported layouts
+
+- QWERTY (TR)
+- QWERTY (TR - Mini)
+- F (TR)
 
 ### Some key events
 
@@ -36,3 +41,9 @@ feel free to open an issue on GitLab mirror.
 - Create a theme store (it'll be another app)
 - Add new keyboard layouts
 - And more...
+
+### Credits
+
+- [KCM Files](https://github.com/calin-darie/extra-keyboard-layouts)
+- All of contributors
+- And you :)
