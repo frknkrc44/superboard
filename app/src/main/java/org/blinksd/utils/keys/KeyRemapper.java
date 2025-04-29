@@ -45,15 +45,12 @@ public class KeyRemapper {
         }
 
         for (var combination : key.combinations) {
-            if (combination.bitValue() == 0 && event.hasNoModifiers()) {
-                return combination.code();
-            }
-
-            if (combination.ctrl() == event.isCtrlPressed() &&
+            if ((combination.bitValue() == 0 && event.hasNoModifiers()) ||
+                    (combination.ctrl() == event.isCtrlPressed() &&
                     combination.lAlt() == event.hasModifiers(KeyEvent.META_ALT_LEFT_ON) &&
                     combination.rAlt() == event.hasModifiers(KeyEvent.META_ALT_RIGHT_ON) &&
                     combination.capsLock() == event.isCapsLockOn() &&
-                    combination.shift() == event.isShiftPressed()) {
+                    combination.shift() == event.isShiftPressed())) {
                 return combination.code();
             }
         }
