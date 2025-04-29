@@ -23,7 +23,7 @@ public class KeyRemapper {
     public void setKeyMapFromIS(InputStream inputStream) throws IOException {
         var byteArrayOutputStream = new ByteArrayOutputStream();
 
-        try (inputStream) {
+        try (inputStream; byteArrayOutputStream) {
             var buf = new byte[4096];
             int c;
             while ((c = inputStream.read(buf, 0, buf.length)) > 0) {
