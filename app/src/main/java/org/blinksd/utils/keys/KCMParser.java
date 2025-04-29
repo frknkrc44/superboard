@@ -34,8 +34,9 @@ class KCMParser {
     record KeyCombination(int bitValue, String code) {
         private static final int BIT_CTRL  = 0x0001;
         private static final int BIT_RALT  = 0x0002;
-        private static final int BIT_SHIFT = 0x0004;
-        private static final int BIT_CAPS  = 0x0008;
+        private static final int BIT_LALT  = 0x0004;
+        private static final int BIT_SHIFT = 0x0008;
+        private static final int BIT_CAPS  = 0x0010;
 
         public boolean ctrl() {
             return (bitValue & BIT_CTRL) != 0;
@@ -43,6 +44,10 @@ class KCMParser {
 
         public boolean rAlt() {
             return (bitValue & BIT_RALT) != 0;
+        }
+
+        public boolean lAlt() {
+            return (bitValue & BIT_LALT) != 0;
         }
 
         public boolean shift() {
@@ -59,6 +64,7 @@ class KCMParser {
                     "bitValue=" + bitValue +
                     ", ctrl=" + ctrl() +
                     ", rAlt=" + rAlt() +
+                    ", lAlt=" + lAlt() +
                     ", capsLock=" + capsLock() +
                     ", shift=" + shift() +
                     ", code='" + code + '\'' +
@@ -194,6 +200,9 @@ class KCMParser {
 
         if (combSplit.contains("ralt"))
             combFlags |= KeyCombination.BIT_RALT;
+
+        if (combSplit.contains("lalt"))
+            combFlags |= KeyCombination.BIT_LALT;
 
         if (combSplit.contains("capslock"))
             combFlags |= KeyCombination.BIT_CAPS;
