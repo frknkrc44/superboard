@@ -2,6 +2,7 @@ package org.blinksd.utils.keys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -29,7 +30,6 @@ class KCMParser {
     private KCMParser() {}
 
     private final List<Key> keys = new ArrayList<>();
-    private final List<MapKey> keyMaps = new ArrayList<>();
 
     record KeyCombination(int bitValue, String code) {
         private static final int BIT_CTRL  = 0x01;
@@ -73,13 +73,14 @@ class KCMParser {
     }
 
     static class Key {
+        final int keyCode;
         final String name;
-        final String label;
+        String label = null;
         final List<KeyCombination> combinations = new ArrayList<>();
 
-        private Key(String name, String label) {
+        private Key(int keyCode, String name) {
+            this.keyCode = keyCode;
             this.name = name;
-            this.label = label;
         }
 
         @Override
@@ -92,19 +93,9 @@ class KCMParser {
         }
     }
 
-    private record MapKey(int keyCode, String keyName) {
-        @Override
-        public String toString() {
-            return "MapKey{" +
-                    "keyCode=" + keyCode +
-                    ", keyName='" + keyName + '\'' +
-                    '}';
-        }
-    }
-
-    private Key findByKeyName(String keyName) {
+    Key findByKeyCode(int keyCode) {
         for (var item : keys) {
-            if (keyName.equals(item.name)) {
+            if (item.keyCode == keyCode) {
                 return item;
             }
         }
@@ -112,80 +103,86 @@ class KCMParser {
         return null;
     }
 
-    Key findByKeyCode(int keyCode) {
-        for (var item : keyMaps) {
-            if (item.keyCode() == keyCode) {
-                return findByKeyName(item.keyName());
-            }
-        }
-
-        return null;
-    }
-
     static KCMParser parseFileContent(String fileContent) {
-        var keyMapper = new KCMParser();
+        final var keyMapper = new KCMParser();
+        final var keyMap = new LinkedHashMap<Integer, String>();
 
         var beginKeyRead = false;
-        String tempKeyName = null;
         Key tempKey = null;
         for (var line : fileContent.split("\\n")) {
             if (line.startsWith("#")) {
                 continue;
             }
 
-            if (beginKeyRead) {
-                // ralt+capslock+shift: 'i'
-                // capslock, shift: 'V'
-                if (tempKey != null) {
-                    if (line.contains(":")) {
-                        var splitColon = line.split(":");
-                        for (var comb : splitColon[0].split(",")) {
-                            var combSplit = Arrays.asList(comb.trim().split("\\+"));
-
-                            tempKey.combinations.add(new KeyCombination(
-                                    getCombFlags(combSplit),
-                                    unescapeUnicode(splitColon[1].substring(
-                                            splitColon[1].indexOf("'") + 1,
-                                            splitColon[1].lastIndexOf("'")
-                                    ))
-                            ));
-                        }
-                    }
-
-                    if (line.startsWith("}")) {
-                        beginKeyRead = false;
-                        keyMapper.keys.add(tempKey);
-                        tempKey = null;
-                    }
-                }
-
-                // label: 'u'
-                if (line.contains("label:")) {
-                    tempKey = new Key(
-                            tempKeyName,
-                            line.substring(line.indexOf("'") + 1, line.lastIndexOf("'"))
-                    );
-                    tempKeyName = null;
-                }
-            }
-
-            // key I {
-            if (line.startsWith("key")) {
-                beginKeyRead = true;
-                tempKeyName = line.substring(line.indexOf(" "), line.indexOf("{")).trim();
-            }
+            // CRLF -> LF and trim all whitespaces
+            line = line.replaceAll("\r", "").trim();
 
             // map key 95 NUMPAD_COMMA
             if (line.startsWith("map")) {
-                var splitMaps = line.split(" ");
-                var mapKey = new MapKey(
-                        Integer.parseInt(splitMaps[2]),
+                var splitMaps = line.replaceAll("\\s+", " ").split(" ");
+                if (splitMaps.length != 4) {
+                    continue;
+                }
 
-                        // CRLF -> LF to fix my mental health
-                        splitMaps[3].replaceAll("\r", "")
-                );
+                keyMap.put(Integer.parseInt(splitMaps[2]), splitMaps[3]);
+            }
 
-                keyMapper.keyMaps.add(mapKey);
+            // key I {
+            if (line.endsWith("{")) {
+                final var name = line.substring(line.indexOf(" "), line.indexOf("{")).trim();
+
+                Integer keyCode = null;
+                for (var item : keyMap.entrySet()) {
+                    if (item.getValue().equals(name)) {
+                        keyCode = item.getKey();
+                        break;
+                    }
+                }
+
+                beginKeyRead = keyCode != null;
+
+                if (keyCode == null) {
+                    continue;
+                }
+
+                tempKey = new Key(keyCode, name);
+            }
+
+            if (beginKeyRead) {
+                if (line.startsWith("}")) {
+                    beginKeyRead = false;
+                    keyMapper.keys.add(tempKey);
+                    tempKey = null;
+                }
+
+                if (line.contains(":")) {
+                    assert tempKey != null: "The temporary key returned null";
+
+                    var splitColon = line.split(":");
+                    for (var comb : splitColon[0].split(",")) {
+                        var combSplit = Arrays.asList(comb.trim().split("\\+"));
+
+                        // label: 'u'
+                        if (combSplit.contains("label")) {
+                            tempKey.label = unescapeUnicode(splitColon[1].substring(
+                                    splitColon[1].indexOf("'") + 1,
+                                    splitColon[1].lastIndexOf("'")
+                            ));
+
+                            continue;
+                        }
+
+                        // ralt+capslock+shift: 'i'
+                        // capslock, shift: 'V'
+                        tempKey.combinations.add(new KeyCombination(
+                                getCombFlags(combSplit),
+                                unescapeUnicode(splitColon[1].substring(
+                                        splitColon[1].indexOf("'") + 1,
+                                        splitColon[1].lastIndexOf("'")
+                                ))
+                        ));
+                    }
+                }
             }
         }
 
