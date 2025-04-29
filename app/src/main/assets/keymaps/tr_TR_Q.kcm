@@ -242,7 +242,7 @@ key LEFT_BRACKET {
   shift: '\u011e'
   capslock: '\u011e'
   capslock+shift: '\u011f'
-  ralt: '\u0308'
+  ralt: '\u00a8'
 }
 
 key RIGHT_BRACKET {
@@ -251,7 +251,7 @@ key RIGHT_BRACKET {
   shift: '\u00dc'
   capslock: '\u00dc'
   capslock+shift: '\u00fc'
-  ralt: '\u0303'
+  ralt: '\u007e'
 }
 
 key A {
