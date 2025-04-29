@@ -779,12 +779,12 @@ public final class InputService extends InputMethodService implements
         }
 
         if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
-            Log.d(getClass().getSimpleName(), "Source = KEYBOARD, " + event.getScanCode());
+            // Log.d(getClass().getSimpleName(), "Source = KEYBOARD " + event.getScanCode());
 
             loadKeyRemapper();
 
             String replacement = keyRemapper.convertKey(event);
-            Log.d(getClass().getSimpleName(), "Replacement of " + event.getScanCode() + ": " + replacement);
+            // Log.d(getClass().getSimpleName(), "Replacement of " + event.getScanCode() + ": " + replacement);
             if (replacement != null) {
                 getCurrentInputConnection().commitText(replacement, replacement.length());
                 return true;
@@ -793,19 +793,6 @@ public final class InputService extends InputMethodService implements
 
         // showEmojiView(false);
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        /*
-        if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
-            superBoardView.setCtrlState(event.isCtrlPressed() ? 1 : 0);
-            superBoardView.setAltState(event.isAltPressed() ? 1 : 0);
-            superBoardView.setShiftState(event.isCapsLockOn() ? 2 : event.isShiftPressed() ? 1 : 0);
-        }
-         */
-
-        return super.onKeyUp(keyCode, event);
     }
 
     public void onEmojiText(String text) {
