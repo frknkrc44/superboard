@@ -161,26 +161,21 @@ class KCMParser {
                     var splitColon = line.split(":");
                     for (var comb : splitColon[0].split(",")) {
                         var combSplit = Arrays.asList(comb.trim().split("\\+"));
+                        var unescapedValue = unescapeUnicode(splitColon[1].substring(
+                                splitColon[1].indexOf("'") + 1,
+                                splitColon[1].lastIndexOf("'")
+                        ));
 
                         // label: 'u'
                         if (combSplit.contains("label")) {
-                            tempKey.label = unescapeUnicode(splitColon[1].substring(
-                                    splitColon[1].indexOf("'") + 1,
-                                    splitColon[1].lastIndexOf("'")
-                            ));
+                            tempKey.label = unescapedValue;
 
                             continue;
                         }
 
                         // ralt+capslock+shift: 'i'
                         // capslock, shift: 'V'
-                        tempKey.combinations.add(new KeyCombination(
-                                getCombFlags(combSplit),
-                                unescapeUnicode(splitColon[1].substring(
-                                        splitColon[1].indexOf("'") + 1,
-                                        splitColon[1].lastIndexOf("'")
-                                ))
-                        ));
+                        tempKey.combinations.add(new KeyCombination(getCombFlags(combSplit), unescapedValue));
                     }
                 }
             }
