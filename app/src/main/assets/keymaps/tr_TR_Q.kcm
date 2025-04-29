@@ -73,8 +73,7 @@ key 2 {
 key 3 {
   label: '3'
   base: '3'
-  shift: '\u0302'
-  capslock+shift: '\u0302'
+  shift, capslock+shift: '\u005e'
   ralt: '\u0023'
 }
 
@@ -334,19 +333,15 @@ key L {
 
 key SEMICOLON {
   label: '\u015f'
-  base: '\u015f'
-  shift: '\u015e'
-  capslock: '\u015e'
-  capslock+shift: '\u015f'
+  base, capslock+shift: '\u015f'
+  shift, capslock: '\u015e'
   ralt: '\u0301'
 }
 
 key APOSTROPHE {
   label: 'i'
-  base: 'i'
-  shift: '\u0130'
-  capslock: 'I'
-  capslock+shift: 'i'
+  base, capslock+shift: 'i'
+  shift, capslock: '\u0130'
 }
 
 key GRAVE {

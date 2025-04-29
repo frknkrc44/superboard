@@ -32,11 +32,11 @@ class KCMParser {
     private final List<MapKey> keyMaps = new ArrayList<>();
 
     record KeyCombination(int bitValue, String code) {
-        private static final int BIT_CTRL  = 0x0001;
-        private static final int BIT_RALT  = 0x0002;
-        private static final int BIT_LALT  = 0x0004;
-        private static final int BIT_SHIFT = 0x0008;
-        private static final int BIT_CAPS  = 0x0010;
+        private static final int BIT_CTRL  = 0x01;
+        private static final int BIT_RALT  = 0x02;
+        private static final int BIT_LALT  = 0x04;
+        private static final int BIT_CAPS  = 0x08;
+        private static final int BIT_SHIFT = 0x10;
 
         public boolean ctrl() {
             return (bitValue & BIT_CTRL) != 0;
@@ -50,12 +50,12 @@ class KCMParser {
             return (bitValue & BIT_LALT) != 0;
         }
 
-        public boolean shift() {
-            return (bitValue & BIT_SHIFT) != 0;
-        }
-
         public boolean capsLock() {
             return (bitValue & BIT_CAPS) != 0;
+        }
+
+        public boolean shift() {
+            return (bitValue & BIT_SHIFT) != 0;
         }
 
         @Override
