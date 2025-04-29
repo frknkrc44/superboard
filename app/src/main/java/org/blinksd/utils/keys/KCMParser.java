@@ -31,14 +31,36 @@ class KCMParser {
     private final List<Key> keys = new ArrayList<>();
     private final List<MapKey> keyMaps = new ArrayList<>();
 
-    record KeyCombination(boolean ctrl, boolean rAlt, boolean capsLock, boolean shift, String code) {
+    record KeyCombination(int bitValue, String code) {
+        private static final int BIT_CTRL  = 0x0001;
+        private static final int BIT_RALT  = 0x0002;
+        private static final int BIT_SHIFT = 0x0004;
+        private static final int BIT_CAPS  = 0x0008;
+
+        public boolean ctrl() {
+            return (bitValue & BIT_CTRL) != 0;
+        }
+
+        public boolean rAlt() {
+            return (bitValue & BIT_RALT) != 0;
+        }
+
+        public boolean shift() {
+            return (bitValue & BIT_SHIFT) != 0;
+        }
+
+        public boolean capsLock() {
+            return (bitValue & BIT_CAPS) != 0;
+        }
+
         @Override
         public String toString() {
             return "KeyCombination{" +
-                    "ctrl=" + ctrl +
-                    ", rAlt=" + rAlt +
-                    ", capsLock=" + capsLock +
-                    ", shift=" + shift +
+                    "bitValue=" + bitValue +
+                    ", ctrl=" + ctrl() +
+                    ", rAlt=" + rAlt() +
+                    ", capsLock=" + capsLock() +
+                    ", shift=" + shift() +
                     ", code='" + code + '\'' +
                     '}';
         }
@@ -115,10 +137,7 @@ class KCMParser {
                             var combSplit = Arrays.asList(comb.trim().split("\\+"));
 
                             tempKey.combinations.add(new KeyCombination(
-                                    combSplit.contains("ctrl"),
-                                    combSplit.contains("ralt"),
-                                    combSplit.contains("capslock"),
-                                    combSplit.contains("shift"),
+                                    getCombFlags(combSplit),
                                     unescapeUnicode(splitColon[1].substring(
                                             splitColon[1].indexOf("'") + 1,
                                             splitColon[1].lastIndexOf("'")
@@ -165,6 +184,24 @@ class KCMParser {
         }
 
         return keyMapper;
+    }
+
+    private static int getCombFlags(List<String> combSplit) {
+        var combFlags = 0;
+
+        if (combSplit.contains("ctrl"))
+            combFlags |= KeyCombination.BIT_CTRL;
+
+        if (combSplit.contains("ralt"))
+            combFlags |= KeyCombination.BIT_RALT;
+
+        if (combSplit.contains("capslock"))
+            combFlags |= KeyCombination.BIT_CAPS;
+
+        if (combSplit.contains("shift"))
+            combFlags |= KeyCombination.BIT_SHIFT;
+
+        return combFlags;
     }
 
     public static String unescapeUnicode(String unescaped) {
