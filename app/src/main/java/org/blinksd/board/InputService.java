@@ -703,7 +703,6 @@ public final class InputService extends InputMethodService implements
         superBoardView.setKeyboardLanguage(language.language);
         setKeyOpts(language, superBoardView);
         currentLanguageCache = language;
-        loadKeyRemapper();
     }
 
     @SuppressLint("ResourceType")
@@ -779,13 +778,13 @@ public final class InputService extends InputMethodService implements
             boardPopup.showPopup(false);
         }
 
-        loadKeyRemapper();
-
         if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
-            Log.d(getClass().getSimpleName(), "Source = KEYBOARD, " + event.getKeyCode() + " - " + event.getScanCode());
+            Log.d(getClass().getSimpleName(), "Source = KEYBOARD, " + event.getScanCode());
+
+            loadKeyRemapper();
 
             String replacement = keyRemapper.convertKey(event);
-            Log.d(getClass().getSimpleName(), "Replacement of " + event.getKeyCode() + " - " + event.getScanCode() + ": " + replacement);
+            Log.d(getClass().getSimpleName(), "Replacement of " + event.getScanCode() + ": " + replacement);
             if (replacement != null) {
                 getCurrentInputConnection().commitText(replacement, replacement.length());
                 return true;
