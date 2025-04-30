@@ -296,7 +296,7 @@ public class FABView extends LinearLayout {
     }
 
     private class OnButtonClickInternalListener implements OnClickListener {
-        int baseDelay = 25;
+        int baseDelay = 50;
 
         @Override
         public void onClick(View v){
@@ -309,27 +309,34 @@ public class FABView extends LinearLayout {
                 boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
                 if(collapsed) sv.setVisibility(VISIBLE);
 
-                main.animate().rotation(collapsed ? 135 : 0);
+                var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
+                var animDuration = baseDelay * totalAnimatedButtons * 2;
+                main.animate().setDuration(animDuration).rotation(collapsed ? 135 : 0);
                 onStateChangedListener.onStateChanged(
                         collapsed ? 0 : 1,
-                        collapsed ? 0 : baseDelay * (buttonLayouts.getChildCount() - disabledKeycodes.size()) * 2
+                        collapsed ? 0 : animDuration
                 );
 
+                int disabledCount = 0;
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
                     if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
+                        disabledCount++;
                         continue;
                     }
 
-                    final int g = i,d1 = Math.abs((buttonLayouts.getChildCount()-1)-(i+1))*baseDelay,d2 = (i+1)*baseDelay;
+                    final int finalI = i;
+                    final int currentIndex = i - disabledCount;
+                    final int d1 = (totalAnimatedButtons - (currentIndex + 1)) * baseDelay;
+                    final int d2 = (currentIndex + 1) * baseDelay;
                     if(collapsed){
-                        buttonLayouts.getChildAt(i).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
+                        buttonLayouts.getChildAt(finalI).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-                                buttonLayouts.getChildAt(g).setVisibility(View.VISIBLE);
-                                if(g == (REVERSE ? (buttonLayouts.getChildCount()-1) : 0)){
+                                buttonLayouts.getChildAt(finalI).setVisibility(View.VISIBLE);
+                                if(finalI == (REVERSE ? (totalAnimatedButtons - 1) : 0)){
                                     if(REVERSE){
-                                        sv.setScrollX(buttonLayouts.getChildCount()*DensityUtils.mpInt(BUTTON_SIZE));
-                                        sv.setScrollY(buttonLayouts.getChildCount()*DensityUtils.mpInt(BUTTON_SIZE));
+                                        sv.setScrollX(totalAnimatedButtons * DensityUtils.mpInt(BUTTON_SIZE));
+                                        sv.setScrollY(totalAnimatedButtons * DensityUtils.mpInt(BUTTON_SIZE));
                                     } else {
                                         sv.setScrollX(0);
                                         sv.setScrollY(0);
@@ -338,11 +345,11 @@ public class FABView extends LinearLayout {
                             }
                         });
                     } else {
-                        buttonLayouts.getChildAt(i).animate().scaleX(0).scaleY(0).setStartDelay(REVERSE ? d2 : d1).setListener(new SimpleAnimatorListener() {
+                        buttonLayouts.getChildAt(finalI).animate().scaleX(0).scaleY(0).setStartDelay(REVERSE ? d2 : d1).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                buttonLayouts.getChildAt(g).setVisibility(View.GONE);
-                                if(g == (REVERSE ? (buttonLayouts.getChildCount()-1) : 0)){
+                                buttonLayouts.getChildAt(finalI).setVisibility(View.GONE);
+                                if(finalI == (REVERSE ? (totalAnimatedButtons - 1) : 0)){
                                     sv.setVisibility(GONE);
                                 }
                             }
