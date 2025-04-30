@@ -81,6 +81,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">কীবোর্ড ব্যাকগ্রাউন্ড ইমেজ ঝাপসা</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">কী প্রেস কম্পন সময়কাল</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">কীবোর্ডের উচ্চতা</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">দীর্ঘ প্রেস সময়কাল গুণক</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">বাটন প্যাডিং</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">বাটন ব্যাসার্ধ</string>
