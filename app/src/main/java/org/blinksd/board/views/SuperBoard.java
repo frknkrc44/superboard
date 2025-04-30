@@ -173,6 +173,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return getLayoutParams().height;
     }
 
+    public void setRecentConfiguration(Configuration newConfig) {
+        recentConfiguration = newConfig;
+    }
+
     public final void setLandscapeHeightIncreaser(float amount) {
         landSizeIncreaser = amount;
     }

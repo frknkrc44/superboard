@@ -10,6 +10,7 @@ import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getNextLanguage;
+import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.DensityUtils.hp;
@@ -508,6 +509,7 @@ public final class InputService extends InputMethodService implements
         if (superBoardView != null) {
             var heightIncreaser = SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_LANDSCAPE_HEIGHT_INCREASER);
             superBoardView.setLandscapeHeightIncreaser(heightIncreaser);
+            superBoardView.setRecentConfiguration(getResConfiguration());
 
             setKeyOpts(currentLanguageCache, superBoardView);
             IconThemeUtils icons = getIconThemes();

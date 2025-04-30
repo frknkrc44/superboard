@@ -21,7 +21,12 @@ public class BaseActivity extends Activity {
                         WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
                 main.setOnApplyWindowInsetsListener((v, insets) -> {
-                    main.setPadding(0, insets.getSystemWindowInsetTop(), 0, insets.getSystemWindowInsetBottom());
+                    main.setPadding(
+                            insets.getSystemWindowInsetLeft(),
+                            insets.getSystemWindowInsetTop(),
+                            insets.getSystemWindowInsetRight(),
+                            insets.getSystemWindowInsetBottom()
+                    );
                     return insets;
                 });
             } else {
