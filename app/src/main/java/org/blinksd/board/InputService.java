@@ -807,6 +807,7 @@ public final class InputService extends InputMethodService implements
             showClipboardView(false);
             emojiView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
+            suggestionLayout.changeFABKeyState(KeyEvent.KEYCODE_KANA, value);
         }
     }
 
@@ -824,6 +825,7 @@ public final class InputService extends InputMethodService implements
 
             clipboardView.setVisibility(value ? View.VISIBLE : View.GONE);
             superBoardView.setVisibility(value ? View.GONE : View.VISIBLE);
+            suggestionLayout.changeFABKeyState(KeyEvent.KEYCODE_EISU, value);
         }
     }
 
