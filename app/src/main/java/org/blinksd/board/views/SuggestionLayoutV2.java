@@ -58,17 +58,15 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
                 (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha));
         fabView.setLayoutParams(new LayoutParams(-2, -1));
 
+        fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
         if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
         }
-        fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU, true);
-
         fabView.addButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true);
         fabView.addButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN);
         fabView.addButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true);
         fabView.addButton(R.drawable.number, KeyEvent.KEYCODE_NUM);
-
-        fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
+        fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU, true);
         fabView.addButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT);
 
         boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
@@ -103,18 +101,18 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         if (reversed) {
             if (!oldReversed) {
                 fabParams.addRule(ALIGN_PARENT_RIGHT);
-                fabView.setOrientation(FABView.Orientation.TRH);
             }
 
+            fabView.setOrientation(FABView.Orientation.TRH);
             scrollerParams.leftMargin = (int) (childWidth * 0.15f);
-            scrollerParams.rightMargin = (int) (childWidth * 1.15f);
+            scrollerParams.rightMargin = childWidth;
         } else {
             if (oldReversed) {
                 fabParams.removeRule(ALIGN_PARENT_RIGHT);
-                fabView.setOrientation(FABView.Orientation.TLH);
             }
 
-            scrollerParams.leftMargin = (int) (childWidth * 1.15f);
+            fabView.setOrientation(FABView.Orientation.TLH);
+            scrollerParams.leftMargin = childWidth;
             scrollerParams.rightMargin = (int) (childWidth * 0.15f);
         }
 

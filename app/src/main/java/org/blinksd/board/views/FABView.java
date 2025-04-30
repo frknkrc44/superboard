@@ -71,75 +71,77 @@ public class FABView extends LinearLayout {
     }
 
     public void setOrientation(Orientation ori){
-        if(ori != oldOri){
-            EXCEPTION = false;
-            REVERSE = false;
-            switch(ori){
-                case BLV:
-                    setGravity(BOTTOM | LEFT);
-                    setOrientation(VERTICAL);
-                    REVERSE = true;
-                    break;
-                case BLH:
-                    setGravity(BOTTOM | LEFT);
-                    setOrientation(HORIZONTAL);
-                    break;
-                case BRV:
-                    setGravity(BOTTOM | RIGHT);
-                    setOrientation(VERTICAL);
-                    REVERSE = true;
-                    break;
-                case BRH:
-                    setGravity(BOTTOM | RIGHT);
-                    setOrientation(HORIZONTAL);
-                    REVERSE = true;
-                    break;
-                case TLV:
-                    setGravity(TOP | LEFT);
-                    setOrientation(VERTICAL);
-                    break;
-                case TLH:
-                    setGravity(TOP | LEFT);
-                    setOrientation(HORIZONTAL);
-                    break;
-                case TRV:
-                    setGravity(TOP | RIGHT);
-                    setOrientation(VERTICAL);
-                    break;
-                case TRH:
-                    setGravity(TOP | RIGHT);
-                    setOrientation(HORIZONTAL);
-                    REVERSE = true;
-                    break;
-            }
-
-            if(buttonLayouts != null){
-                buttonLayouts.setOrientation(getOrientation());
-                View[] buttonsArray = new View[buttonLayouts.getChildCount()];
-
-                for(int i = 0; i < buttonsArray.length; i++){
-                    buttonsArray[i] = buttonLayouts.getChildAt(i);
-                }
-
-                setScrollView();
-                for (View view : buttonsArray) {
-                    add(buttonLayouts, view, OLD_REVERSE == REVERSE);
-                }
-
-                if(REVERSE){
-                    addView(bugFixLayout);
-                    addView(sv);
-                    addView(main);
-                } else {
-                    addView(main);
-                    addView(sv);
-                    addView(bugFixLayout);
-                }
-            }
-            EXCEPTION = true;
-            OLD_REVERSE = REVERSE;
-            oldOri = ori;
+        if(ori == oldOri){
+            return;
         }
+
+        EXCEPTION = false;
+        REVERSE = false;
+        switch(ori){
+            case BLV:
+                setGravity(BOTTOM | LEFT);
+                setOrientation(VERTICAL);
+                REVERSE = true;
+                break;
+            case BLH:
+                setGravity(BOTTOM | LEFT);
+                setOrientation(HORIZONTAL);
+                break;
+            case BRV:
+                setGravity(BOTTOM | RIGHT);
+                setOrientation(VERTICAL);
+                REVERSE = true;
+                break;
+            case BRH:
+                setGravity(BOTTOM | RIGHT);
+                setOrientation(HORIZONTAL);
+                REVERSE = true;
+                break;
+            case TLV:
+                setGravity(TOP | LEFT);
+                setOrientation(VERTICAL);
+                break;
+            case TLH:
+                setGravity(TOP | LEFT);
+                setOrientation(HORIZONTAL);
+                break;
+            case TRV:
+                setGravity(TOP | RIGHT);
+                setOrientation(VERTICAL);
+                break;
+            case TRH:
+                setGravity(TOP | RIGHT);
+                setOrientation(HORIZONTAL);
+                REVERSE = true;
+                break;
+        }
+
+        if(buttonLayouts != null){
+            buttonLayouts.setOrientation(getOrientation());
+            View[] buttonsArray = new View[buttonLayouts.getChildCount()];
+
+            for(int i = 0; i < buttonsArray.length; i++){
+                buttonsArray[i] = buttonLayouts.getChildAt(i);
+            }
+
+            setScrollView();
+            for (View view : buttonsArray) {
+                add(buttonLayouts, view, OLD_REVERSE);
+            }
+
+            if(REVERSE){
+                addView(bugFixLayout);
+                addView(sv);
+                addView(main);
+            } else {
+                addView(main);
+                addView(sv);
+                addView(bugFixLayout);
+            }
+        }
+        EXCEPTION = true;
+        OLD_REVERSE = REVERSE;
+        oldOri = ori;
     }
 
     public View findButtonByKeyCode(int keyCode) {
@@ -300,7 +302,7 @@ public class FABView extends LinearLayout {
     }
 
     private class OnButtonClickInternalListener implements OnClickListener {
-        int baseDelay = 50;
+        private static final int baseDelay = 50;
 
         @Override
         public void onClick(View v){
@@ -310,12 +312,13 @@ public class FABView extends LinearLayout {
             }
 
             if(getChildCount() != 1){
-                boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
+                final boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
                 if(collapsed) sv.setVisibility(VISIBLE);
 
-                var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
-                var animDuration = baseDelay * totalAnimatedButtons * 2;
-                main.animate().setDuration(animDuration).rotation(collapsed ? REVERSE ? -135 : 135 : 0);
+                final var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
+                final var animDuration = baseDelay * totalAnimatedButtons * 2;
+                final var degree = 225;
+                main.animate().setDuration(animDuration).rotation(collapsed ? REVERSE ? -degree : degree : 0);
                 onStateChangedListener.onStateChanged(
                         collapsed ? 0 : 1,
                         collapsed ? 0 : animDuration
