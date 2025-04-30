@@ -22,6 +22,7 @@
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">השבת תווים חוזרים בלחיצה ארוכה</string>
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">השבת את הסרגל העליון</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">הסתר את לחצני הפונקציה בסרגל העליון</string>
+    <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">הפעל את הלוח</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">השבת הצעות מילים</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">השבת שורת מספרים (ביטא)</string>
@@ -81,7 +82,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
-    <string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
