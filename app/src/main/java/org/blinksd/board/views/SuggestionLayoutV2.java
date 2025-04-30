@@ -57,17 +57,18 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
                 superBoard::sendKeyEvent,
                 (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha));
         fabView.setLayoutParams(new LayoutParams(-2, -1));
-        fabView.setOrientation(FABView.Orientation.TLH);
-        fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
+
         if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
         }
+        fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU, true);
 
         fabView.addButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true);
         fabView.addButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN);
         fabView.addButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true);
         fabView.addButton(R.drawable.number, KeyEvent.KEYCODE_NUM);
-        fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU, true);
+
+        fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
         fabView.addButton(R.drawable.arrow_right, KeyEvent.KEYCODE_DPAD_RIGHT);
 
         boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
@@ -75,17 +76,6 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
 
         scroller = new HorizontalScrollView(getContext());
         var params = new LayoutParams(-1, -1);
-
-        fabView.getChildAt(0).addOnLayoutChangeListener((v, left, top, right, bottom, leftWas, topWas, rightWas, bottomWas) -> {
-            if (oldReversed) {
-                params.leftMargin = 0;
-                params.rightMargin = (int) (v.getMeasuredWidth() * 1.15f);
-            } else {
-                params.leftMargin = (int) (v.getMeasuredWidth() * 1.15f);
-                params.rightMargin = 0;
-            }
-            scroller.setLayoutParams(params);
-        });
 
         scroller.setLayoutParams(params);
         scroller.addView(mCompletionsLayout);
@@ -107,13 +97,25 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
 
     public void setReversed(boolean reversed) {
         var fabParams = (LayoutParams) fabView.getLayoutParams();
+        var scrollerParams = (LayoutParams) scroller.getLayoutParams();
+        var childWidth = FABView.getButtonSize();
 
-        if (reversed && !oldReversed) {
-            fabParams.addRule(ALIGN_PARENT_RIGHT);
-            fabView.setOrientation(FABView.Orientation.TRH);
-        } else if (!reversed && oldReversed) {
-            fabParams.removeRule(ALIGN_PARENT_RIGHT);
-            fabView.setOrientation(FABView.Orientation.TLH);
+        if (reversed) {
+            if (!oldReversed) {
+                fabParams.addRule(ALIGN_PARENT_RIGHT);
+                fabView.setOrientation(FABView.Orientation.TRH);
+            }
+
+            scrollerParams.leftMargin = (int) (childWidth * 0.15f);
+            scrollerParams.rightMargin = (int) (childWidth * 1.15f);
+        } else {
+            if (oldReversed) {
+                fabParams.removeRule(ALIGN_PARENT_RIGHT);
+                fabView.setOrientation(FABView.Orientation.TLH);
+            }
+
+            scrollerParams.leftMargin = (int) (childWidth * 1.15f);
+            scrollerParams.rightMargin = (int) (childWidth * 0.15f);
         }
 
         oldReversed = reversed;

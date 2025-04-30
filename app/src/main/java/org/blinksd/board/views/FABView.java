@@ -54,6 +54,10 @@ public class FABView extends LinearLayout {
         addButton(android.R.drawable.ic_input_add, null);
     }
 
+    public static int getButtonSize() {
+        return DensityUtils.mpInt(BUTTON_SIZE);
+    }
+
     @SuppressLint("WrongConstant")
     @Override
     public int getOrientation(){
@@ -166,7 +170,7 @@ public class FABView extends LinearLayout {
             buttonItem.setScaleX(0);
             buttonItem.setScaleY(0);
         }
-        int btnSize = DensityUtils.mpInt(BUTTON_SIZE);
+        int btnSize = getButtonSize();
         if(buttonLayouts == null){
             addView(main = buttonItem);
             buttonItem.setTag(getChildCount());
