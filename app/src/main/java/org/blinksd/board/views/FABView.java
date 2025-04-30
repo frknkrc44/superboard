@@ -119,7 +119,7 @@ public class FABView extends LinearLayout {
 
                 setScrollView();
                 for (View view : buttonsArray) {
-                    add(buttonLayouts, view, OLD_REVERSE);
+                    add(buttonLayouts, view, OLD_REVERSE == REVERSE);
                 }
 
                 if(REVERSE){
