@@ -81,6 +81,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Gambar latar belakang keyboard kabur</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Durasi getar penekanan tombol</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Tinggi papan ketik</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Pengganda durasi tekan lama</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Bantalan kunci</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Jari-jari kunci</string>
