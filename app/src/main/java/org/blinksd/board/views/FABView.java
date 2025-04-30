@@ -332,6 +332,7 @@ public class FABView extends LinearLayout {
                     final int currentIndex = i - disabledCount;
                     final int d1 = (totalAnimatedButtons - (currentIndex + 1)) * baseDelay;
                     final int d2 = (currentIndex + 1) * baseDelay;
+                    final int btnSize = getButtonSize();
                     if(collapsed){
                         buttonLayouts.getChildAt(finalI).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
                             @Override
@@ -339,8 +340,8 @@ public class FABView extends LinearLayout {
                                 buttonLayouts.getChildAt(finalI).setVisibility(View.VISIBLE);
                                 if(finalI == (REVERSE ? (totalAnimatedButtons - 1) : 0)){
                                     if(REVERSE){
-                                        sv.setScrollX(totalAnimatedButtons * DensityUtils.mpInt(BUTTON_SIZE));
-                                        sv.setScrollY(totalAnimatedButtons * DensityUtils.mpInt(BUTTON_SIZE));
+                                        sv.setScrollX(totalAnimatedButtons * btnSize);
+                                        sv.setScrollY(totalAnimatedButtons * btnSize);
                                     } else {
                                         sv.setScrollX(0);
                                         sv.setScrollY(0);
