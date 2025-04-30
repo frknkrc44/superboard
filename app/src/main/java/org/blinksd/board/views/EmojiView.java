@@ -178,8 +178,7 @@ public class EmojiView extends LinearLayout {
         final GridView gv = new GridView(getContext());
         gv.setOverScrollMode(GridView.OVER_SCROLL_NEVER);
         gv.setLayoutParams(new LayoutParams(-1, -1));
-        int columns = Math.min(6, getTextUtils()
-                .getTextBounds(textSize, emojis[0][0]).width() / 2);
+        int columns = Math.min(6, getTextUtils().getTextBounds(textSize, emojis[0][0]).width() / 2);
         gv.setNumColumns(columns);
         gv.setGravity(Gravity.CENTER);
         gv.setSelector(emptyDrawable);
@@ -216,14 +215,15 @@ public class EmojiView extends LinearLayout {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            int size = getResources().getDisplayMetrics().widthPixels / columns;
             TextView v = new TextView(parent.getContext());
             v.setBackgroundDrawable(Objects.requireNonNull(drw.getConstantState()).newDrawable());
             v.setTextColor(keyTextColor);
             v.setGravity(Gravity.CENTER);
             v.setSingleLine();
             v.setBackgroundDrawable(getTransSelectableItemBg(getContext(), keyTextColor));
-            v.setWidth(getResources().getDisplayMetrics().widthPixels / columns);
-            v.setHeight(getResources().getDisplayMetrics().widthPixels / columns);
+            v.setWidth(size);
+            v.setHeight(size);
             v.setTextSize(mp(100.0f / (columns * columns)));
             v.setText(getItem(position).trim());
             return v;

@@ -3,6 +3,7 @@ package org.blinksd.board.views;
 import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
 import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,7 +21,6 @@ import org.blinksd.board.R;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.Language;
 
 import java.util.ArrayList;
@@ -64,8 +64,8 @@ public class BottomKeyboardBarView extends LinearLayout {
     public void reTheme() {
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
 
-        ViewUtils.setViewBackground(langSelectorKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
-        ViewUtils.setViewBackground(clipboardKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
+        setViewBackground(langSelectorKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
+        setViewBackground(clipboardKey, ResourcesUtils.getTransSelectableItemBg(getContext(), textColor));
 
         boolean clipboardEnabled = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
         clipboardKey.setVisibility(clipboardEnabled ? View.VISIBLE : View.GONE);
@@ -125,7 +125,7 @@ public class BottomKeyboardBarView extends LinearLayout {
             LinearLayout.LayoutParams okButtonParams = new LinearLayout.LayoutParams(-2, -2, 0);
             okButtonParams.gravity = Gravity.END;
             okButton.setLayoutParams(okButtonParams);
-            ViewUtils.setViewBackground(okButton, ResourcesUtils.getTransSelectableItemBg(context, textColor));
+            setViewBackground(okButton, ResourcesUtils.getTransSelectableItemBg(context, textColor));
             okButton.setText(android.R.string.ok);
             okButton.setTextColor(textColor);
             okButton.setOnClickListener(view -> {

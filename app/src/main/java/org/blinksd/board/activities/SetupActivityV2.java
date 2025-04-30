@@ -1,5 +1,7 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.utils.ViewUtils.setViewBackground;
+
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
@@ -275,7 +277,7 @@ public final class SetupActivityV2 extends Activity {
             ViewUtils.setTextAppearance(textView, android.R.style.TextAppearance_Medium);
             textView.setGravity(Gravity.CENTER);
 
-            ViewUtils.setViewBackground(buttonView,
+            setViewBackground(buttonView,
                     ResourcesUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
@@ -289,7 +291,7 @@ public final class SetupActivityV2 extends Activity {
                 buttonParams = new LayoutParams(buttonParams.width, buttonParams.height);
                 buttonParams.topMargin = padding;
                 nextButton.setLayoutParams(buttonParams);
-                ViewUtils.setViewBackground(nextButton, ResourcesUtils.getSelectableItemBg(
+                setViewBackground(nextButton, ResourcesUtils.getSelectableItemBg(
                         context, buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);

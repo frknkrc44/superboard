@@ -1,6 +1,7 @@
 package org.blinksd.board.activities;
 
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
-import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.superboard.TextType;
 
 @SuppressWarnings("deprecation")
@@ -82,7 +82,7 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
-        ViewUtils.setViewBackground(btn, ResourcesUtils.getSelectableItemBg(
+        setViewBackground(btn, ResourcesUtils.getSelectableItemBg(
                 this,
                 textView.getCurrentTextColor(),
                 currentFont == currentIndex

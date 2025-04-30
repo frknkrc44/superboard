@@ -13,8 +13,6 @@ import static org.blinksd.board.SuperBoardApplication.getNextLanguage;
 import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.DensityUtils.hp;
-import static org.blinksd.utils.DensityUtils.hpInt;
-import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.getSpecialCases;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
@@ -32,7 +30,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -633,7 +630,7 @@ public final class InputService extends InputMethodService implements
                     SettingMap.SET_ENABLE_CLIPBOARD);
 
             if (enableClipboard && clipboardView == null) {
-                clipboardView = new ClipboardView(superBoardView);
+                clipboardView = new ClipboardView(superBoardView, v -> showClipboardView(false));
                 clipboardView.setVisibility(View.GONE);
 
                 if (bottomKeyboardBarView == null) {
