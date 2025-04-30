@@ -81,6 +81,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>
