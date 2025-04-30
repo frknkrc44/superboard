@@ -311,7 +311,7 @@ public class FABView extends LinearLayout {
 
                 var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
                 var animDuration = baseDelay * totalAnimatedButtons * 2;
-                main.animate().setDuration(animDuration).rotation(collapsed ? 135 : 0);
+                main.animate().setDuration(animDuration).rotation(collapsed ? REVERSE ? -135 : 135 : 0);
                 onStateChangedListener.onStateChanged(
                         collapsed ? 0 : 1,
                         collapsed ? 0 : animDuration

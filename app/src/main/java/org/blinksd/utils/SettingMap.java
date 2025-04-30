@@ -90,7 +90,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEYBOARD_PADDING = "keyboard_padding",
             SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors",
             SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical",
-            SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser";
+            SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser",
+            SET_SHOW_FAB_RIGHT = "show_fab_right";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -134,6 +135,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_DISABLE_REPEAT, SettingType.BOOL);
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putTopBar(SET_SHOW_FAB_RIGHT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
@@ -331,6 +333,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.DISABLE_TOP_BAR;
             case SET_HIDE_TOP_BAR_FN_BUTTONS:
                 return Defaults.HIDE_TOP_BAR_FN_BUTTONS;
+            case SET_SHOW_FAB_RIGHT:
+                return Defaults.SHOW_FAB_RIGHT;
             case SET_ENABLE_CLIPBOARD:
                 return Defaults.ENABLE_CLIPBOARD;
             case SET_DISABLE_NUMBER_ROW:

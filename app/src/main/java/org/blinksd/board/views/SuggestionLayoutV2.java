@@ -34,12 +34,14 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressLint({"ViewConstructor", "InlinedApi"})
 public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickListener {
+    private final HorizontalScrollView scroller;
     private final LinearLayout mCompletionsLayout;
     private final List<LoadDictTask> mLoadDictTasks = new ArrayList<>();
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
     private final FABView fabView;
+    private boolean oldReversed = false;
 
     public SuggestionLayoutV2(SuperBoard superBoard) {
         super(superBoard.getContext());
@@ -71,18 +73,23 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
         fabView.setVisibility(topBarDisabled ? GONE : VISIBLE);
 
-        HorizontalScrollView scroller = new HorizontalScrollView(getContext());
+        scroller = new HorizontalScrollView(getContext());
         var params = new LayoutParams(-1, -1);
 
         fabView.getChildAt(0).addOnLayoutChangeListener((v, left, top, right, bottom, leftWas, topWas, rightWas, bottomWas) -> {
-            params.leftMargin = (int) (v.getMeasuredWidth() * 1.15f);
+            if (oldReversed) {
+                params.leftMargin = 0;
+                params.rightMargin = (int) (v.getMeasuredWidth() * 1.15f);
+            } else {
+                params.leftMargin = (int) (v.getMeasuredWidth() * 1.15f);
+                params.rightMargin = 0;
+            }
             scroller.setLayoutParams(params);
         });
 
         scroller.setLayoutParams(params);
         scroller.addView(mCompletionsLayout);
         addView(scroller);
-
         addView(fabView);
     }
 
@@ -96,6 +103,20 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
 
     public void setCompletion(SuperBoard superBoard, ExtractedText text, String lang) {
         setCompletionText(superBoard, text == null ? "" : text.text, lang);
+    }
+
+    public void setReversed(boolean reversed) {
+        var fabParams = (LayoutParams) fabView.getLayoutParams();
+
+        if (reversed && !oldReversed) {
+            fabParams.addRule(ALIGN_PARENT_RIGHT);
+            fabView.setOrientation(FABView.Orientation.TRH);
+        } else if (!reversed && oldReversed) {
+            fabParams.removeRule(ALIGN_PARENT_RIGHT);
+            fabView.setOrientation(FABView.Orientation.TLH);
+        }
+
+        oldReversed = reversed;
     }
 
     public void setCompletionText(SuperBoard superBoard, CharSequence text, String lang) {

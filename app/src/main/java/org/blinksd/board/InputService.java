@@ -594,11 +594,13 @@ public final class InputService extends InputMethodService implements
             boolean sugDisabled = topBarDisabled || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
             boolean fnDisabled = topBarDisabled || SuperDBHelper.getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
             boolean numDisabled = !topBarDisabled && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+            boolean showFABRight = !topBarDisabled && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_SHOW_FAB_RIGHT);
             superBoardView.setPressEventForKey(2, 3, 0,
                     fnDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
             superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
+            suggestionLayout.setReversed(showFABRight);
             String lang = SuperDBHelper.getStringOrDefault(SettingMap.SET_KEYBOARD_LANG_SELECT);
             if (!lang.equals(currentLanguageCache.language)) {
                 loadKeyboardLayout();
