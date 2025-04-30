@@ -12,6 +12,7 @@ import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getNextLanguage;
 import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
+import static org.blinksd.utils.DensityUtils.hp;
 import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
@@ -22,6 +23,7 @@ import static org.blinksd.utils.SystemUtils.createNavbarLayout;
 import static org.blinksd.utils.SystemUtils.detectNavbar;
 import static org.blinksd.utils.SystemUtils.disableEdgeToEdge;
 import static org.blinksd.utils.SystemUtils.isColorized;
+import static org.blinksd.utils.SystemUtils.isLand;
 import static org.blinksd.utils.SystemUtils.navbarH;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
 
@@ -102,7 +104,6 @@ public final class InputService extends InputMethodService implements
             setPrefs();
         }
     };
-    private Configuration recentConfiguration;
     private boolean hiddenBySelf = false;
 
     private final View.OnClickListener emojiClick = v -> {
@@ -204,12 +205,6 @@ public final class InputService extends InputMethodService implements
     @Override
     public void setInputView(View view) {
         if (view.getParent() != null) {
-            if (recentConfiguration == null) {
-                recentConfiguration = getResources().getConfiguration();
-            } else if (recentConfiguration.orientation != getResources().getConfiguration().orientation) {
-                System.exit(0);
-            }
-
             ((ViewGroup) view.getParent()).removeView(view);
         }
 
@@ -451,7 +446,7 @@ public final class InputService extends InputMethodService implements
             keyboardLayoutHolder.setOrientation(LinearLayout.VERTICAL);
             suggestionLayout = new SuggestionLayoutV2(superBoardView);
             suggestionLayout.setFocusable(false);
-            suggestionLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, mpInt(12), 0));
+            suggestionLayout.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
             keyboardLayoutHolder.addView(suggestionLayout);
             keyboardLayoutHolder.addView(superBoardView);
             if (emojiView != null) {
@@ -514,7 +509,8 @@ public final class InputService extends InputMethodService implements
 
     public void setPrefs() {
         if (superBoardView != null) {
-            superBoardView.fixHeight();
+            var heightIncreaser = SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_LANDSCAPE_HEIGHT_INCREASER);
+            superBoardView.setLandscapeHeightIncreaser(heightIncreaser);
 
             setKeyOpts(currentLanguageCache, superBoardView);
             IconThemeUtils icons = getIconThemes();
@@ -534,6 +530,7 @@ public final class InputService extends InputMethodService implements
             superBoardView.updateKeyState();
             int kbdHeight = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
             superBoardView.setKeyboardHeight(kbdHeight);
+            superBoardView.fixHeight();
             File img;
             int c = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
             if (getMonetColors().isMonetEnabled()) {
@@ -656,7 +653,7 @@ public final class InputService extends InputMethodService implements
                 SuperDBHelper.removeKey(SettingMap.SET_CLIPBOARD_HISTORY);
             }
 
-            int kbdHeightInPixels = hpInt(kbdHeight);
+            int kbdHeightInPixels = (int) (hp(kbdHeight) * (isLand() ? heightIncreaser : 1));
             int textKbdRowCount = superBoardView.getLayoutRowCount(superBoardView.findTextKeyboardIndex());
             int barHeight = kbdHeightInPixels / textKbdRowCount;
 

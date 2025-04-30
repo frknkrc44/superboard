@@ -82,6 +82,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private final MyHandler mHandler = new MyHandler();
     private final Vibrator vibrator;
     private float textSize = mp(1.25f);
+    private float landSizeIncreaser = 1f;
     protected Drawable keyBackground = null;
     private int selected = 0;
     private float heightPercent = 40;
@@ -118,6 +119,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             "...", "…", "?", "!"
     );
     private final OnModifierChangedListener onModifierChangedListener;
+    private Configuration recentConfiguration;
 
     // key states
     private int ctrl = 0;
@@ -130,6 +132,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public SuperBoard(Context context, OnModifierChangedListener onModifierChangedListener) {
         super(context);
+        this.recentConfiguration = context.getResources().getConfiguration();
         this.onModifierChangedListener = onModifierChangedListener;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
@@ -141,7 +144,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         setLayoutParams(new LayoutParams(-1, -1));
         createEmptyLayout();
-        setKeyboardHeight(heightPercent);
         setForegroundGravity(CENTER);
     }
 
@@ -171,9 +173,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return getLayoutParams().height;
     }
 
+    public final void setLandscapeHeightIncreaser(float amount) {
+        landSizeIncreaser = amount;
+    }
+
     public final void setKeyboardHeight(float percent) {
         heightPercent = percent;
-        getLayoutParams().height = hpInt(percent);
+        getLayoutParams().height = hpInt(percent *
+                (recentConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE ? landSizeIncreaser : 1f));
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
                 getChildAt(i).getLayoutParams().height = getLayoutParams().height;
@@ -195,6 +202,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void fixHeight() {
         setKeyboardHeight(getKeyboardHeightPercent());
+
         for (int i = 0; i < getChildCount(); i++) {
             for (int g = 0; g < getKeyboard(i).getChildCount(); g++) {
                 getRow(i, g).setKeyWidths();
@@ -932,6 +940,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     @Override
     protected final void onConfigurationChanged(Configuration newConfig) {
+        recentConfiguration = newConfig;
         fixHeight();
     }
 

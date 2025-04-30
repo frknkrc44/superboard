@@ -141,7 +141,7 @@ public final class SystemUtils {
         return getResConfiguration().smallestScreenWidthDp >= 600;
     }
 
-    private static boolean isLand() {
+    public static boolean isLand() {
         return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 

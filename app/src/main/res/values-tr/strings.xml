@@ -86,6 +86,7 @@
 	<string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Klavye arkaplan resmi bulanıklığı</string>
 	<string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Tuş titreme süresi</string>
 	<string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Klavye yüksekliği</string>
+	<string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Yatay mod için klavye yüksekliği arttırma oranı</string>
 	<string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Tuşa uzun basma süresi arttırıcı</string>
 	<string name="settings_key_padding" tools:keep="@string/settings_key_padding">Tuş içe girintisi</string>
 	<string name="settings_key_radius" tools:keep="@string/settings_key_radius">Tuş yuvarlaklığı</string>

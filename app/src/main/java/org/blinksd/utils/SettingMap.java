@@ -89,7 +89,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_MONET_COLOR_SCHEME = "monet_color_scheme",
             SET_KEYBOARD_PADDING = "keyboard_padding",
             SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors",
-            SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical";
+            SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical",
+            SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -98,6 +99,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
         putGeneral(SET_DICTIONARY_LIMIT, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
+        putKbdLayout(SET_LANDSCAPE_HEIGHT_INCREASER, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEYBOARD_PADDING, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
@@ -248,6 +250,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.KEY_VIBRATE_DURATION;
             case SET_KEYBOARD_HEIGHT:
                 return Defaults.KEYBOARD_HEIGHT;
+            case SET_LANDSCAPE_HEIGHT_INCREASER:
+                return Defaults.LANDSCAPE_HEIGHT_INCREASER;
             case SET_KEY_LONGPRESS_DURATION:
                 return Defaults.KEY_LONGPRESS_DURATION;
             case SET_KEY_PADDING:
@@ -409,6 +413,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_COMPAT_MONET_MAX_COLORS:
                 minMaxNumbers[0] = Constants.MIN_COMPAT_MONET_COLOR;
                 minMaxNumbers[1] = Constants.MAX_COMPAT_MONET_COLOR;
+                break;
+            case SET_LANDSCAPE_HEIGHT_INCREASER:
+                minMaxNumbers[0] = Constants.MIN_LANDSCAPE_HEIGHT_INCREASER;
+                minMaxNumbers[1] = Constants.MAX_LANDSCAPE_HEIGHT_INCREASER;
                 break;
         }
         return minMaxNumbers;
