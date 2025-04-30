@@ -81,6 +81,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Desfoque de fundo da imagem de teclado</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Duração da vibração do toque</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Altura do teclado</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_keyboard_height">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Multiplicador de duração prolongada</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Preenchimento de tecla</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Raio da chave</string>
