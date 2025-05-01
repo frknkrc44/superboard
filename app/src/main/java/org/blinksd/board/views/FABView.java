@@ -33,7 +33,7 @@ import java.util.List;
 @SuppressLint("ViewConstructor")
 public class FABView extends LinearLayout {
     private static final int BUTTON_SIZE = 10;
-    private static boolean REVERSE = false, EXCEPTION = false, OLD_REVERSE = false;
+    private static boolean REVERSE = false, EXCEPTION = false;
     private LinearLayout buttonLayouts = null;
     private ImageView main = null;
     private ViewGroup sv = null;
@@ -118,16 +118,7 @@ public class FABView extends LinearLayout {
 
         if(buttonLayouts != null){
             buttonLayouts.setOrientation(getOrientation());
-            View[] buttonsArray = new View[buttonLayouts.getChildCount()];
-
-            for(int i = 0; i < buttonsArray.length; i++){
-                buttonsArray[i] = buttonLayouts.getChildAt(i);
-            }
-
             setScrollView();
-            for (View view : buttonsArray) {
-                add(buttonLayouts, view, OLD_REVERSE);
-            }
 
             if(REVERSE){
                 addView(bugFixLayout);
@@ -140,7 +131,6 @@ public class FABView extends LinearLayout {
             }
         }
         EXCEPTION = true;
-        OLD_REVERSE = REVERSE;
         oldOri = ori;
     }
 
@@ -200,16 +190,16 @@ public class FABView extends LinearLayout {
             buttonItem.setLayoutParams(params);
             buttonItem.setTag(buttonLayouts.getChildCount());
             buttonItem.setTag(R.id.key_long_press, stateful);
-            add(buttonLayouts, buttonItem);
+            add(buttonLayouts, buttonItem, false);
         }
     }
 
     private void setScrollView(){
         if(sv != null){
-            buttonLayouts.removeAllViewsInLayout();
-            sv.removeAllViewsInLayout();
-            removeAllViewsInLayout();
+            sv.removeAllViews();
+            removeAllViews();
         }
+
         sv = (buttonLayouts.getOrientation() == VERTICAL)
                 ? new ScrollView(getContext())
                 : new HorizontalScrollView(getContext());
@@ -233,8 +223,8 @@ public class FABView extends LinearLayout {
         add(g,v,REVERSE);
     }
 
-    private void add(ViewGroup g, View v, boolean force){
-        if(force){
+    private void add(ViewGroup g, View v, boolean insertToBeginning){
+        if(insertToBeginning){
             g.addView(v,0);
         } else {
             g.addView(v);
@@ -281,28 +271,19 @@ public class FABView extends LinearLayout {
         }
     }
 
-    /*
-    void expand() {
-        if (main.getRotation() != 135) {
-            onButtonClickInternalListener.onClick(main);
-        }
-    }
-
-    void toggle(boolean expand) {
-        if (expand) {
-            expand();
-        } else {
-            collapse();
-        }
-    }
-     */
-
     public interface OnButtonClickListener {
         void onClick(int keyCode);
     }
 
     private class OnButtonClickInternalListener implements OnClickListener {
         private static final int baseDelay = 50;
+        private static final int degree = 225;
+
+        private int calculateDelay(boolean collapsed, int totalAnimatedButtons, int currentIndex) {
+            return (REVERSE && collapsed) || (!REVERSE && !collapsed)
+                    ? (totalAnimatedButtons - (currentIndex + 1)) * baseDelay
+                    : (currentIndex + 1) * baseDelay;
+        }
 
         @Override
         public void onClick(View v){
@@ -317,8 +298,7 @@ public class FABView extends LinearLayout {
 
                 final var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
                 final var animDuration = baseDelay * totalAnimatedButtons * 2;
-                final var degree = 225;
-                main.animate().setDuration(animDuration).rotation(collapsed ? REVERSE ? -degree : degree : 0);
+                main.animate().setDuration(animDuration).rotation(collapsed ? (REVERSE ? -degree : degree) : 0);
                 onStateChangedListener.onStateChanged(
                         collapsed ? 0 : 1,
                         collapsed ? 0 : animDuration
@@ -326,22 +306,24 @@ public class FABView extends LinearLayout {
 
                 int disabledCount = 0;
                 for(int i = 0; i < buttonLayouts.getChildCount(); i++){
-                    if (disabledKeycodes.contains(buttonLayouts.getChildAt(i).getTag(R.id.key_normal_press))) {
+                    final var child = buttonLayouts.getChildAt(i);
+
+                    if (disabledKeycodes.contains((int) child.getTag(R.id.key_normal_press))) {
                         disabledCount++;
                         continue;
                     }
 
-                    final int finalI = i;
                     final int currentIndex = i - disabledCount;
-                    final int d1 = (totalAnimatedButtons - (currentIndex + 1)) * baseDelay;
-                    final int d2 = (currentIndex + 1) * baseDelay;
+                    final int delay = calculateDelay(collapsed, totalAnimatedButtons, currentIndex);
                     final int btnSize = getButtonSize();
+                    final var isFirstOrLastOneGone = currentIndex == (REVERSE ? (totalAnimatedButtons - 1) : 0);
                     if(collapsed){
-                        buttonLayouts.getChildAt(finalI).animate().scaleX(1).scaleY(1).setStartDelay(REVERSE ? d1 : d2).setListener(new SimpleAnimatorListener() {
+                        child.animate().scaleX(1).scaleY(1).setStartDelay(delay).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationStart(Animator animation) {
-                                buttonLayouts.getChildAt(finalI).setVisibility(View.VISIBLE);
-                                if(finalI == (REVERSE ? (totalAnimatedButtons - 1) : 0)){
+                                child.setVisibility(View.VISIBLE);
+
+                                if(isFirstOrLastOneGone){
                                     if(REVERSE){
                                         sv.setScrollX(totalAnimatedButtons * btnSize);
                                         sv.setScrollY(totalAnimatedButtons * btnSize);
@@ -353,11 +335,12 @@ public class FABView extends LinearLayout {
                             }
                         });
                     } else {
-                        buttonLayouts.getChildAt(finalI).animate().scaleX(0).scaleY(0).setStartDelay(REVERSE ? d2 : d1).setListener(new SimpleAnimatorListener() {
+                        child.animate().scaleX(0).scaleY(0).setStartDelay(delay).setListener(new SimpleAnimatorListener() {
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                buttonLayouts.getChildAt(finalI).setVisibility(View.GONE);
-                                if(finalI == (REVERSE ? (totalAnimatedButtons - 1) : 0)){
+                                child.setVisibility(View.GONE);
+
+                                if(isFirstOrLastOneGone){
                                     sv.setVisibility(GONE);
                                 }
                             }
