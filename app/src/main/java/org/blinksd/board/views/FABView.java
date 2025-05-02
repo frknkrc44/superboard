@@ -42,14 +42,16 @@ public class FABView extends LinearLayout {
     private final OnButtonClickListener onButtonClickListener;
     private final OnButtonClickInternalListener onButtonClickInternalListener;
     private final OnStateChangedListener onStateChangedListener;
+    private final OnLongClickListener onButtonLongClickListener;
     public final List<Integer> disabledKeycodes;
 
-    public FABView(Context context, OnButtonClickListener onButtonClickListener, OnStateChangedListener onStateChangedListener){
+    public FABView(Context context, OnButtonClickListener onButtonClickListener, OnStateChangedListener onStateChangedListener, OnLongClickListener onButtonLongClickListener){
         super(context);
         this.disabledKeycodes = new ArrayList<>();
         this.onButtonClickListener = onButtonClickListener;
         this.onButtonClickInternalListener = new OnButtonClickInternalListener();
         this.onStateChangedListener = onStateChangedListener;
+        this.onButtonLongClickListener = onButtonLongClickListener;
         setOrientation(Orientation.BRV);
         addButton(android.R.drawable.ic_input_add, null);
     }
@@ -165,6 +167,7 @@ public class FABView extends LinearLayout {
         int btnSize = getButtonSize();
         if(buttonLayouts == null){
             addView(main = buttonItem);
+            buttonItem.setOnLongClickListener(onButtonLongClickListener);
             buttonItem.setTag(getChildCount());
             var params = new LayoutParams((int) (btnSize * 0.85f),(int) (btnSize * 0.85f),0);
             params.gravity = CENTER_VERTICAL;
@@ -293,7 +296,7 @@ public class FABView extends LinearLayout {
             }
 
             if(getChildCount() != 1){
-                final boolean collapsed = buttonLayouts.getChildAt(0).getScaleX() == 0;
+                final boolean collapsed = main.getRotation() == 0;
                 if(collapsed) sv.setVisibility(VISIBLE);
 
                 final var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();

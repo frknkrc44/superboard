@@ -1,6 +1,7 @@
 package org.blinksd.board.views;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
@@ -40,7 +41,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
-    private final FABView fabView;
+    private FABView fabView;
     private boolean oldReversed = false;
 
     public SuggestionLayoutV2(SuperBoard superBoard) {
@@ -55,7 +56,14 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView = new FABView(
                 superBoard.getContext(),
                 superBoard::sendKeyEvent,
-                (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha));
+                (alpha, delay) -> mCompletionsLayout.animate().setStartDelay(delay).alpha(alpha),
+                v -> {
+                    fabView.collapse();
+                    getAppDB().putBoolean(SettingMap.SET_SHOW_FAB_RIGHT, !oldReversed, true);
+                    setReversed(!oldReversed);
+                    return true;
+                }
+        );
         fabView.setLayoutParams(new LayoutParams(-2, -1));
 
         fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
