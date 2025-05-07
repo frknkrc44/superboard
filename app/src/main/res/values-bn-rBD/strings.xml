@@ -24,6 +24,7 @@
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">শীর্ষ বার ফাংশন বোতাম লুকান</string>
     <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
     <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
+    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">ক্লিপবোর্ড সক্ষম করুন</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">শব্দ পরামর্শ নিষ্ক্রিয়</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">সংখ্যা সারি অক্ষম করুন (বিটা)</string>
