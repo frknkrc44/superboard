@@ -117,7 +117,7 @@ public final class SuperDBHelper {
         };
     }
 
-    public static void removeKey(String key) {
+    public static void removeKeyFromDB(String key) {
         SuperMiniDB db = getAppDB();
         if (db.isDBContainsKey(key)) {
             db.removeKeyFromDB(key);

@@ -8,6 +8,7 @@ import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
 import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
 
@@ -90,7 +91,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_COMPAT_MONET_MAX_COLORS = "compat_monet_max_colors",
             SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical",
             SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser",
-            SET_SHOW_FAB_RIGHT = "show_fab_right";
+            SET_SHOW_FAB_RIGHT = "show_fab_right",
+            SET_SHOW_FULLSCREEN_KEYBOARD = "show_fs_keyboard";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -133,6 +135,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_SHOW_FAB_RIGHT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD, SettingType.BOOL);
         putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
@@ -368,6 +371,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.INSERT_SPACE_AFTER_PUNC;
             case SET_COMPAT_MONET_MAX_COLORS:
                 return Defaults.COMPAT_MONET_MAX_COLORS;
+            case SET_SHOW_FULLSCREEN_KEYBOARD:
+                return isWatchDevice();
             default:
                 return null;
         }
