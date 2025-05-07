@@ -45,8 +45,6 @@ public final class MiniLSPass {
      * @param arg        argument to set the field with name {@code fieldName}
      */
     public static void setField(Object thiz, String fieldName, Object arg) {
-        setHiddenApiExemptions(true);
-
         try {
             Field field = thiz.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -54,8 +52,6 @@ public final class MiniLSPass {
         } catch (Throwable e) {
             Log.w(TAG, "setField", e);
         }
-
-        setHiddenApiExemptions(false);
     }
 
     /**
