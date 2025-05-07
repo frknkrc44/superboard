@@ -2,7 +2,7 @@ package org.blinksd.board;
 
 import static org.blinksd.utils.LayoutUtils.getKeyListFromLanguageList;
 import static org.blinksd.utils.LayoutUtils.getLanguageList;
-import static org.blinksd.utils.MiniLSPass.setHiddenApiExemptions;
+import static org.blinksd.utils.MiniLSPass.allowHiddenApi;
 import static org.blinksd.utils.ThemeUtils.getThemes;
 
 import android.annotation.SuppressLint;
@@ -266,7 +266,7 @@ public final class SuperBoardApplication extends Application {
         appContext = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            setHiddenApiExemptions(true);
+            allowHiddenApi();
         }
 
         getCustomFont();

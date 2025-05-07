@@ -22,17 +22,17 @@ public final class MiniLSPass {
      * invoke a restrict method named {@code methodName} of the given class {@code clazz} with this object {@code thiz} and arguments {@code args}
      *
      * @param clazz      the class call the method on (this parameter is required because this method cannot call inherit method)
-     * @param thiz       this object, which can be {@code null} if the target method is static
+     * @param thisObj    this object, which can be {@code null} if the target method is static
      * @param methodName the method name
      * @param args       arguments to call the method with name {@code methodName}
      * @return the return value of the method
      * @see Method#invoke(Object, Object...)
      */
-    private static Object invoke(Class<?> clazz, Object thiz, String methodName, Object... args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static Object invoke(Class<?> clazz, Object thisObj, String methodName, Object... args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         for (var method : methods.get(clazz)) {
             if (!method.getName().equals(methodName)) continue;
             method.setAccessible(true);
-            return method.invoke(thiz, args);
+            return method.invoke(thisObj, args);
         }
         throw new NoSuchMethodException("Cannot find matching method");
     }
@@ -40,15 +40,15 @@ public final class MiniLSPass {
     /**
      * set a restrict field named {@code fieldName} of the given object {@code thiz} to the {@code arg}
      * 
-     * @param thiz       this object, which cannot be {@code null}
+     * @param thisObj    this object, which cannot be {@code null}
      * @param fieldName  the field name
      * @param arg        argument to set the field with name {@code fieldName}
      */
-    public static void setField(Object thiz, String fieldName, Object arg) {
+    public static void setField(Object thisObj, String fieldName, Object arg) {
         try {
-            Field field = thiz.getClass().getDeclaredField(fieldName);
+            Field field = thisObj.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
-            field.set(thiz, arg);
+            field.set(thisObj, arg);
         } catch (Throwable e) {
             Log.w(TAG, "setField", e);
         }
@@ -57,13 +57,13 @@ public final class MiniLSPass {
     /**
      * Allows an app to execute the hidden API methods without restrictions.
      */
-    public static void setHiddenApiExemptions(boolean exempted) {
+    public static void allowHiddenApi() {
         try {
             var runtimeClazz = Class.forName("dalvik.system.VMRuntime");
             var runtime = invoke(runtimeClazz, null, "getRuntime");
-            invoke(runtimeClazz, runtime, "setHiddenApiExemptions", (Object) (exempted ? new String[] {"L"} : new String[]{}));
+            invoke(runtimeClazz, runtime, "setHiddenApiExemptions", (Object) new String[] {"L"});
         } catch (Throwable e) {
-            Log.w(TAG, "setHiddenApiExemptions", e);
+            Log.w(TAG, "allowHiddenApi", e);
         }
     }
 }
