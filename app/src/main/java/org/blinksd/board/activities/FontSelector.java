@@ -21,7 +21,7 @@ import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.TextType;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class FontSelector extends BaseActivity implements View.OnClickListener {
     public static final int FONT_SELECTOR_RESULT = 0xFF;
     private String[] fontTypeTranslations;

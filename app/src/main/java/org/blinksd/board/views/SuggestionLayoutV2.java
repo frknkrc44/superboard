@@ -176,9 +176,10 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     }
 
     public void reTheme() {
-        int keyColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-        int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-        for (int i = 0; i < mCompletionsLayout.getChildCount(); i++) {
+        final int keyColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+        final int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        final int childCount = mCompletionsLayout.getChildCount();
+        for (int i = 0; i < childCount; i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(textColor);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
@@ -186,10 +187,10 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             tv.setBackground(getSuggestionItemBackground());
         }
 
-        var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
+        final var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||
                                 !getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
-        var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
-        var numberRowDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+        final var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
+        final var numberRowDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
 
         toggleButtonVisibility(KeyEvent.KEYCODE_EISU, clipboardDisabled);
         toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_CTRL, fnButtonsDisabled);

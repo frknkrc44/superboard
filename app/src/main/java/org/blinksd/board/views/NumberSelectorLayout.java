@@ -12,7 +12,7 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ViewUtils;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class NumberSelectorLayout {
     private NumberSelectorLayout() {}
 

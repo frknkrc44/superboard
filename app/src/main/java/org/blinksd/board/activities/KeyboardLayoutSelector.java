@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,7 +37,7 @@ import org.blinksd.utils.superboard.RowOptions;
 import java.util.Map;
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class KeyboardLayoutSelector extends BaseActivity implements View.OnClickListener {
     public static final int KEYBOARD_LAYOUT_SELECTOR_RESULT = 0xFF;
     private String currentLayout;
@@ -58,25 +59,25 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         scroller.addView(layout);
 
         for (String key : languageList.keySet()) {
-            layout.addView(createItemLayout(Objects.requireNonNull(languageList.get(key))));
-        }
+            final var langItem = Objects.requireNonNull(languageList.get(key));
+            final var langLayout = createItemLayout(langItem);
 
-        // insert the selected layout to the first index
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View child = layout.getChildAt(i);
-            if (currentLayout.equals(child.getTag())) {
-                layout.removeView(child);
-                layout.addView(child, 0);
-                break;
+            // insert the selected layout to the first index
+            if (currentLayout.equals(langItem.language)) {
+                layout.addView(langLayout, 0);
+            } else {
+                layout.addView(langLayout);
             }
         }
 
-        if (Build.VERSION.SDK_INT >= 31) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             scroller.setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
+
+            Window window = getWindow();
+            window.setDecorFitsSystemWindows(true);
+            window.setNavigationBarColor(0);
+            window.setStatusBarColor(0);
+            window.setBackgroundDrawableResource(android.R.color.system_neutral1_900);
         }
 
         setContentView(scroller);

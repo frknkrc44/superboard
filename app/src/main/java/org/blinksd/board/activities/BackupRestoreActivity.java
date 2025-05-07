@@ -49,7 +49,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class BackupRestoreActivity extends BaseActivity {
     private TabHost host;
     private Uri importedZipUri;

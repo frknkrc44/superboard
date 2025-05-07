@@ -26,7 +26,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.util.TypedValue;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public class ResourcesUtils {
     private ResourcesUtils() {}
 

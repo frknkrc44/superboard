@@ -35,7 +35,7 @@ import org.blinksd.utils.ViewUtils;
 import java.util.ArrayList;
 
 /** @noinspection NullableProblems*/
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class SetupActivityV2 extends Activity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();

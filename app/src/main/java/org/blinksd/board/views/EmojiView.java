@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public class EmojiView extends LinearLayout {
 
     private static String[][] emojis;

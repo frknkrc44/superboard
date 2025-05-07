@@ -5,7 +5,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class ResourceParcel implements Parcelable {
     public static final Parcelable.Creator<ResourceParcel> CREATOR
             = new Parcelable.Creator<ResourceParcel>() {

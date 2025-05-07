@@ -193,7 +193,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         return (ViewGroup) mTabsHolder.getChildAt(categoryIndex);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "all"})
     @Override
     public void onBackPressed() {
         if (currentCategory != null) {
@@ -210,8 +210,9 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         // Re-apply switch dependencies
         for (int i = 0; i < categoryList.size(); i++) {
             ViewGroup categoryView = (ViewGroup) getCategoryView(i).getChildAt(0);
+            final int childCount = categoryView.getChildCount();
 
-            for (int g = 0; g < categoryView.getChildCount(); g++) {
+            for (int g = 0; g < childCount; g++) {
                 View item = categoryView.getChildAt(g);
 
                 if (item instanceof Switch) {

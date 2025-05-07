@@ -148,7 +148,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
             });
         }
 
-        @SuppressWarnings("deprecation")
+        @SuppressWarnings({"deprecation", "all"})
         protected Bitmap doInBackground(Object[] p1) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

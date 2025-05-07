@@ -31,7 +31,7 @@ public final class IconThemeParcel implements Parcelable {
         mDeleteImage = readRes(in);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "all"})
     private ResourceParcel readRes(Parcel in) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return in.readParcelable(getClass().getClassLoader(), ResourceParcel.class);

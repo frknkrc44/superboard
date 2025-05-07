@@ -136,7 +136,9 @@ public class BottomKeyboardBarView extends LinearLayout {
         }
 
         private void reTheme(final int textColor) {
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            final int childCount = radioGroup.getChildCount();
+
+            for (int i = 0; i < childCount; i++) {
                 CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
                 customRadioButton.setTextColor(textColor);
             }

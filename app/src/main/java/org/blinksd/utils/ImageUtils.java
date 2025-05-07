@@ -14,7 +14,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class ImageUtils {
     public static final float minSize = 720.0f;
 

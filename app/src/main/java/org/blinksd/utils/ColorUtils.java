@@ -18,7 +18,7 @@ import android.widget.ImageView;
 // Copied from support library
 // Android Open Source Project
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class ColorUtils {
     private static final ThreadLocal<double[]> TEMP_ARRAY = new ThreadLocal<>();
 

@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public class LayoutUtils {
     public static final Language emptyLanguage;
 
@@ -217,7 +217,7 @@ public class LayoutUtils {
         return langs;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "all"})
     public static void setKeyOpts(Language lang, SuperBoard sb) {
         List<RowOptions> langPack = lang.layout;
         for (int i = 0; i < langPack.size(); i++) {

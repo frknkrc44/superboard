@@ -185,8 +185,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         heightPercent = percent;
         getLayoutParams().height = hpInt(percent *
                 (recentConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE ? landSizeIncreaser : 1f));
-        if (getChildCount() > 0) {
-            for (int i = 0; i < getChildCount(); i++) {
+        final int childCount = getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
                 getChildAt(i).getLayoutParams().height = getLayoutParams().height;
             }
         }
@@ -207,8 +208,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void fixHeight() {
         setKeyboardHeight(getKeyboardHeightPercent());
 
-        for (int i = 0; i < getChildCount(); i++) {
-            for (int g = 0; g < getKeyboard(i).getChildCount(); g++) {
+        final int mainChildCount = getChildCount();
+        for (int i = 0; i < mainChildCount; i++) {
+            final int kbdChildCount = getKeyboard(i).getChildCount();
+
+            for (int g = 0; g < kbdChildCount; g++) {
                 getRow(i, g).setKeyWidths();
             }
         }
@@ -270,17 +274,19 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         if (chars != null) {
             if (keyboardIndex < getChildCount() && keyboardIndex >= 0) {
                 ViewGroup v = getKeyboard(keyboardIndex);
+                final int vChildCount = v.getChildCount();
 
-                assert (v.getChildCount() == chars.length)
+                assert (vChildCount == chars.length)
                         : "Row count != Popup row count";
 
-                for (int i = 0; i < v.getChildCount(); i++) {
+                for (int i = 0; i < vChildCount; i++) {
                     Row r = getRow(keyboardIndex, i);
+                    final int rChildCount = r.getChildCount();
 
-                    assert (r.getChildCount() == chars[i].length)
+                    assert (rChildCount == chars[i].length)
                             : "Row key count != Popup row key count";
 
-                    for (int g = 0; g < r.getChildCount(); g++)
+                    for (int g = 0; g < rChildCount; g++)
                         setPopupForKey(keyboardIndex, i, g, chars[i][g]);
                 }
             } else throw new RuntimeException("Invalid keyboard index number");
@@ -360,9 +366,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void applyToAllKeys(ApplyToKeyRunnable runnable) {
-        for (int j = 0; j < getChildCount(); j++) {
-            for (int i = 0; i < getKeyboard(j).getChildCount(); i++) {
-                for (int g = 0; g < getRow(j, i).getChildCount(); g++) {
+        final int mainChildCount = getChildCount();
+        for (int j = 0; j < mainChildCount; j++) {
+            final int kbdChildCount = getKeyboard(j).getChildCount();
+            for (int i = 0; i < kbdChildCount; i++) {
+                final int rowChildCount = getRow(j, i).getChildCount();
+                for (int g = 0; g < rowChildCount; g++) {
                     runnable.run(getKey(j, i, g));
                 }
             }
@@ -376,8 +385,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void setKeyboardWidth(int percent) {
         widthPercent = percent;
         getLayoutParams().width = wpInt(percent);
-        if (getChildCount() > 0) {
-            for (int i = 0; i < getChildCount(); i++) {
+        final int childCount = getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
                 getChildAt(i).getLayoutParams().width = getLayoutParams().width;
             }
         }
@@ -992,9 +1002,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final List<Integer> findKeyboardIndexes(KeyboardType type) {
         List<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < getChildCount(); i++) {
-            if (getChildAt(i).getTag() != null &&
-                    getChildAt(i).getTag().equals(type)) {
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            if (type.equals(getChildAt(i).getTag())) {
                 indexes.add(i);
             }
         }
@@ -1003,9 +1013,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final int findKeyboardIndex(KeyboardType type) {
-        for (int i = 0; i < getChildCount(); i++) {
-            if (getChildAt(i).getTag() != null &&
-                    getChildAt(i).getTag().equals(type)) {
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            if (type.equals(getChildAt(i).getTag())) {
                 return i;
             }
         }
@@ -1291,11 +1301,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         @SuppressLint("ResourceType")
         void setKeyWidths() {
-            for (int i = 0; i < getChildCount(); i++) {
+            final int childCount = getChildCount();
+            for (int i = 0; i < childCount; i++) {
                 Key k = (Key) getChildAt(i);
                 k.setKeyWidthPercent(
                         k.getKeyWidthPercent() < 1
-                                ? 100 / getChildCount()
+                                ? 100 / childCount
                                 : k.getKeyWidthPercent()
                 );
             }

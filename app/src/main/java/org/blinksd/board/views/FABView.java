@@ -136,7 +136,8 @@ public class FABView extends LinearLayout {
     }
 
     public View findButtonByKeyCode(int keyCode) {
-        for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
+        final int childCount = buttonLayouts.getChildCount();
+        for (int i = 0; i < childCount; i++) {
             var child = buttonLayouts.getChildAt(i);
             var np = child.getTag(R.id.key_normal_press);
             if (np != null && (int) np == keyCode) {
@@ -244,7 +245,8 @@ public class FABView extends LinearLayout {
         main.setBackground(getTransSelectableItemBg(getContext(), textColor));
         setColorFilter(main, textColor);
 
-        for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
+        final var childCount = buttonLayouts.getChildCount();
+        for (int i = 0; i < childCount; i++) {
             if (buttonLayouts.getChildAt(i) instanceof StatefulImageView child) {
                 if ((boolean) child.getTag(R.id.key_long_press)) {
                     var stateListDrawable = new StateListDrawable();
@@ -297,7 +299,9 @@ public class FABView extends LinearLayout {
                 final boolean collapsed = main.getRotation() == 0;
                 if(collapsed) sv.setVisibility(VISIBLE);
 
-                final var totalAnimatedButtons = buttonLayouts.getChildCount() - disabledKeycodes.size();
+                final int childCount = buttonLayouts.getChildCount();
+
+                final var totalAnimatedButtons = childCount - disabledKeycodes.size();
                 final var animDuration = baseDelay * totalAnimatedButtons * 2;
                 main.animate().setDuration(animDuration).rotation(collapsed ? (REVERSE ? -degree : degree) : 0);
                 onStateChangedListener.onStateChanged(
@@ -306,7 +310,7 @@ public class FABView extends LinearLayout {
                 );
 
                 int disabledCount = 0;
-                for(int i = 0; i < buttonLayouts.getChildCount(); i++){
+                for(int i = 0; i < childCount; i++){
                     final var child = buttonLayouts.getChildAt(i);
 
                     if (disabledKeycodes.contains((int) child.getTag(R.id.key_normal_press))) {

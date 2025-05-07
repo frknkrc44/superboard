@@ -250,7 +250,8 @@ public final class ClipboardView extends LinearLayout
         setColorFilter(backButton, textColor);
         backButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
 
-        for (int i = 0; i < listView.getChildCount(); i++) {
+        final int childCount = listView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
             View child = listView.getChildAt(i);
 
             TextView textView1 = child.findViewById(android.R.id.text1);

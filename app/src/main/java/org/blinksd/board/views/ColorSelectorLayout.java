@@ -33,7 +33,7 @@ import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
 @SuppressLint("ViewConstructor")
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class ColorSelectorLayout extends LinearLayout {
     private final TextView prev;
     private final CustomSeekBar a;

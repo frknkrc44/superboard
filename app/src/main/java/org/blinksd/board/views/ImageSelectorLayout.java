@@ -47,7 +47,7 @@ import java.io.File;
 import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "all"})
 public final class ImageSelectorLayout extends LinearLayout {
     private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;

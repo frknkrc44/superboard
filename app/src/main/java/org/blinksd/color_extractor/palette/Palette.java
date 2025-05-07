@@ -289,7 +289,7 @@ public final class Palette {
          * href="https://developer.android.com/topic/libraries/architecture/coroutines">Kotlin
          * concurrency utilities</a> to call {@link #generate()} instead.
          */
-        @SuppressWarnings("deprecation")
+        @SuppressWarnings({"deprecation", "all"})
         @SuppressLint("StaticFieldLeak")
         @Deprecated
         public android.os.AsyncTask<Bitmap, Void, Palette> generate(
