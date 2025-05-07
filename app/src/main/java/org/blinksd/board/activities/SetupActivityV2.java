@@ -1,5 +1,6 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
@@ -284,6 +285,10 @@ public final class SetupActivityV2 extends Activity {
             textView.setText(String.format(content.text, getAppName()));
             buttonView.setText(content.buttonText);
             buttonView.setOnClickListener(content.onButtonClick);
+
+            if (isWatch()) {
+                imageView.setVisibility(GONE);
+            }
 
             if (content.extraNextButton) {
                 Button nextButton = new Button(context);

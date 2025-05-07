@@ -2,6 +2,7 @@ package org.blinksd.board.views;
 
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.ViewUtils.setTextAppearance;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
@@ -25,7 +26,9 @@ public class CustomActionBar extends LinearLayout {
 
     public CustomActionBar(Context context, OnClickListener onBackButtonClick) {
         super(context);
-        setLayoutParams(new LinearLayout.LayoutParams(-1, DensityUtils.dpInt(56), 0));
+        final var isWatch = isWatch();
+
+        setLayoutParams(new LinearLayout.LayoutParams(-1, DensityUtils.dpInt(isWatch ? 48 : 56), 0));
         setGravity(Gravity.CENTER_VERTICAL);
 
         mBackButton = new ImageView(context);
@@ -41,11 +44,14 @@ public class CustomActionBar extends LinearLayout {
         toggleBackButton(false);
 
         mTitle = new TextView(context);
-        mTitle.setLayoutParams(new LayoutParams(-1, -2, 1));
-        setTextAppearance(mTitle, android.R.style.TextAppearance_Medium);
+        mTitle.setLayoutParams(new LayoutParams(-1, -1, 1));
+        setTextAppearance(mTitle, isWatch
+                ? android.R.style.TextAppearance_Small
+                : android.R.style.TextAppearance_Medium);
         setColorFilter(mBackButton, mTitle.getCurrentTextColor());
         setViewBackground(mBackButton,
                 getTransSelectableItemBg(context, mTitle.getCurrentTextColor()));
+        mTitle.setGravity(isWatch ? Gravity.CENTER : Gravity.CENTER_VERTICAL);
 
         addView(mTitle);
 
@@ -55,6 +61,8 @@ public class CustomActionBar extends LinearLayout {
     }
 
     public void toggleBackButton(boolean show) {
+        show = !isWatch() && show;
+
         mBackButton.setVisibility(show ? VISIBLE : GONE);
         setPadding(show ? 0 : barPadding, 0, barPadding, 0);
     }

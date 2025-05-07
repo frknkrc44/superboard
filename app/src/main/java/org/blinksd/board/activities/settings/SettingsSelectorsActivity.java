@@ -75,14 +75,12 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         int pad = size / 4;
         img.setPadding(pad, pad, pad, pad);
         TextView btn = LayoutCreator.createTextView(this);
-        btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2, 1));
+        btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -1, 1));
         btn.setPadding(pad, 0, 0, 0);
         btn.setGravity(Gravity.CENTER_VERTICAL);
         btn.setTextColor(Color.WHITE);
-        btn.setMinHeight(size);
         btn.setText(getTranslation(key));
         numSelector.setTag(key);
-        numSelector.setMinimumHeight(size);
         numSelector.setOnClickListener(numberSelectorListener);
         numSelector.addView(btn);
         numSelector.addView(img);
@@ -145,15 +143,12 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         swtch.setMinHeight((int) listItemHeight);
         swtch.setTag(key);
         swtch.setPadding(pad, 0, pad, 0);
+        swtch.setSwitchPadding(pad);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             int minW = DensityUtils.dpInt(32);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                swtch.setSwitchMinWidth(minW);
-            } else {
-                setSwitchMinWidthOldAndroids(swtch, minW);
-            }
+            swtch.setSwitchMinWidth(minW);
         }
 
         return swtch;
@@ -171,16 +166,6 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         View base = createImageSelector(key);
         base.setOnClickListener(redirectListener);
         return base;
-    }
-
-    /** @noinspection JavaReflectionMemberAccess*/
-    @SuppressLint("SoonBlockedPrivateApi")
-    private void setSwitchMinWidthOldAndroids(Switch view, int minW) {
-        try {
-            Field minWidth = Switch.class.getDeclaredField("mSwitchMinWidth");
-            minWidth.setAccessible(true);
-            minWidth.set(view, minW);
-        } catch (Throwable ignored) {}
     }
 
     private final View.OnClickListener redirectListener = p1 -> {

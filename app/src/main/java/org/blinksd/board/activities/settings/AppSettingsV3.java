@@ -12,14 +12,17 @@ import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+import static org.blinksd.utils.SystemUtils.isWatch;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,6 +52,8 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         setContentView(main);
 
         actionBar.setTitle(getTitle());
+
+        mTabsHolder.getChildAt(mTabsHolder.getChildCount() - 1).requestFocus();
     }
 
     private void createPreviewView() {
@@ -71,6 +76,10 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         mPreviewHolder.addView(kbdPreview);
         mainHolder.addView(mPreviewHolder);
         main.addView(mainHolder);
+
+        if (isWatch()) {
+            mainHolder.setVisibility(GONE);
+        }
     }
 
     private void createAppBarView() {

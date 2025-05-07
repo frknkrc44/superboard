@@ -23,6 +23,7 @@ import static org.blinksd.utils.SystemUtils.detectNavbar;
 import static org.blinksd.utils.SystemUtils.disableEdgeToEdge;
 import static org.blinksd.utils.SystemUtils.isColorized;
 import static org.blinksd.utils.SystemUtils.isLand;
+import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.SystemUtils.navbarH;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
 
@@ -68,6 +69,7 @@ import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.keys.KeyRemapper;
 import org.blinksd.utils.superboard.KeyOptions;
 import org.blinksd.utils.superboard.KeyboardType;
@@ -281,10 +283,13 @@ public final class InputService extends InputMethodService implements
 
     @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
     private void setLayout() {
+        final var isWatch = isWatch();
+
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this,
                     (keyCode, modifierValue) -> suggestionLayout.changeFABKeyState(keyCode, modifierValue > 0));
             superBoardView.setFocusable(false);
+
             try {
                 unregisterReceiver(restartKeyboardReceiver);
             } catch (Throwable ignored) {}
@@ -412,17 +417,13 @@ public final class InputService extends InputMethodService implements
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView == null) {
+        if (emojiView == null) {
             emojiView = new EmojiView(superBoardView, emojiClick);
             emojiView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
 
-            if (SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                emojiView.setBackground(superBoardView.getBackground());
-            } else {
-                emojiView.setBackgroundDrawable(superBoardView.getBackground());
-            }
+            ViewUtils.setViewBackground(emojiView, superBoardView.getBackground());
         }
 
         if (bottomKeyboardBarView == null) {
@@ -706,9 +707,9 @@ public final class InputService extends InputMethodService implements
     @SuppressLint("ResourceType")
     private void adjustNavbar(int c) {
         int kbdPadding = SuperDBHelper.getFloatPercentOrDefault(SettingMap.SET_KEYBOARD_PADDING);
-        superBoardView.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
+        superBoardView.setPadding(kbdPadding, 0, kbdPadding, kbdPadding);
 
-        int calculatedHeight = superBoardView.getKeyboardHeight() + (kbdPadding * 2);
+        int calculatedHeight = superBoardView.getKeyboardHeight() + kbdPadding;
         if (suggestionLayout.getVisibility() == View.VISIBLE) {
             calculatedHeight += suggestionLayout.getLayoutParams().height;
         }
@@ -798,9 +799,10 @@ public final class InputService extends InputMethodService implements
     }
 
     private void showEmojiView(boolean value) {
-        if (SDK_INT < 16 || emojiView == null) {
+        if (emojiView == null) {
             return;
         }
+
         if (emojiView.isShown() != value) {
             showClipboardView(false);
             emojiView.setVisibility(value ? View.VISIBLE : View.GONE);
@@ -858,7 +860,7 @@ public final class InputService extends InputMethodService implements
 
         @Override
         public void onKeyboardEvent(View v) {
-            if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown()) {
+            if (emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);
             }
 
@@ -912,7 +914,7 @@ public final class InputService extends InputMethodService implements
         }
 
         private boolean isEmojiViewShown() {
-            return SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && emojiView != null && emojiView.isShown();
+            return emojiView != null && emojiView.isShown();
         }
 
         @Override

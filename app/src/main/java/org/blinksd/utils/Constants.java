@@ -11,6 +11,7 @@ public final class Constants {
     static final int MIN_KEYBOARD_HEIGHT = 10;
     static final int MAX_KEYBOARD_HEIGHT = 80;
     static final int MAX_OTHER_VAL = 40;
+    static final int MAX_KEYBOARD_PADDING = 120;
     static final int MIN_ICON_MULTI = 1;
     static final int MAX_ICON_MULTI = 10;
     static final int MIN_DICT_LIMIT = 3;

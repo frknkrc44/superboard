@@ -16,23 +16,18 @@ public class BaseActivity extends Activity {
             getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
             main.setFitsSystemWindows(false);
 
-            if (Build.VERSION.SDK_INT >= 35 || "Baklava".equals(Build.VERSION.RELEASE_OR_CODENAME)) {
-                getWindow().getAttributes().layoutInDisplayCutoutMode =
-                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+            getWindow().getAttributes().layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
-                main.setOnApplyWindowInsetsListener((v, insets) -> {
-                    main.setPadding(
-                            insets.getSystemWindowInsetLeft(),
-                            insets.getSystemWindowInsetTop(),
-                            insets.getSystemWindowInsetRight(),
-                            insets.getSystemWindowInsetBottom()
-                    );
-                    return insets;
-                });
-            } else {
-                getWindow().setNavigationBarColor(0);
-                getWindow().setStatusBarColor(0);
-            }
+            main.setOnApplyWindowInsetsListener((v, insets) -> {
+                main.setPadding(
+                        insets.getSystemWindowInsetLeft(),
+                        insets.getSystemWindowInsetTop(),
+                        insets.getSystemWindowInsetRight(),
+                        insets.getSystemWindowInsetBottom()
+                );
+                return insets;
+            });
         }
     }
 }

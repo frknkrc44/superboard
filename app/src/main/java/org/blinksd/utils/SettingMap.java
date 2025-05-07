@@ -114,10 +114,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTheming(SET_KEYBOARD_SPACETYPE_SELECT, SettingType.STR_SELECTOR);
         putThemingAdvanced(SET_THEME_PRESET, SettingType.THEME_SELECTOR);
         putTheming(SET_ICON_THEME, SettingType.STR_SELECTOR);
-        if (SDK_INT >= JELLY_BEAN) {
-            putTheming(SET_KEY_BG_TYPE, SettingType.SELECTOR);
-            putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
-        }
+        putTheming(SET_KEY_BG_TYPE, SettingType.SELECTOR);
+        putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
         putThemingAdvanced(SET_KEYBOARD_BGIMG, SettingType.IMAGE);
         putPopup(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
         putKbdLayout(SET_ENABLE_LONG_PRESS_FAST_DELETE, SettingType.BOOL);
@@ -379,10 +377,12 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     public int[] getMinMaxNumbers(final String key) {
         int[] minMaxNumbers = new int[2];
         switch (key) {
+            case SET_KEYBOARD_PADDING:
+                minMaxNumbers[1] = Constants.MAX_KEYBOARD_PADDING;
+                break;
             case SET_KEYBOARD_BGBLUR:
             case SET_KEY_PADDING:
             case SET_KEY_SHADOWSIZE:
-            case SET_KEYBOARD_PADDING:
                 minMaxNumbers[1] = Constants.MAX_OTHER_VAL;
                 break;
             case SET_KEY_VIBRATE_DURATION:

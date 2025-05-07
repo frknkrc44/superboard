@@ -15,6 +15,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -51,8 +53,8 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
         if (currentIndex != newIndex) {
             actionBar.toggleBackButton(currentCategory != null);
 
-            View currentChild = mTabsHolder.getChildAt(currentIndex);
-            View newChild = mTabsHolder.getChildAt(newIndex);
+            final var currentChild = mTabsHolder.getChildAt(currentIndex);
+            final var newChild = mTabsHolder.getChildAt(newIndex);
             final int animSpeed = 200;
             final TimeInterpolator interpolator = new AccelerateInterpolator();
             final SimpleAnimatorListener animatorListener = new SimpleAnimatorListener() {
@@ -66,6 +68,7 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             .setInterpolator(interpolator)
                             .setListener(null)
                             .start();
+                    newChild.requestFocus();
                 }
 
                 @Override
