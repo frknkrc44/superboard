@@ -23,6 +23,7 @@
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">மேல் பட்டையை முடக்கு</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">மேல் பட்டையின் function பொத்தான்களை மறை</string>
     <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">கிளிப்போர்டை பயன்படுத்து</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">சொற்களைப் பரிந்துரைக்க வேண்டாம்</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">எண்கள் வரிசையை முடக்கு (beta)</string>
