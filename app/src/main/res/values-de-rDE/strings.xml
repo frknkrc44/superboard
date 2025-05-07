@@ -24,6 +24,7 @@
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Blende obere Funktionstasten aus</string>
     <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
     <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
+    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Zwischenablage aktivieren</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Wortvorschläge deaktivieren</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nummernzeile deaktivieren (Beta)</string>
