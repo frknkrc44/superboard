@@ -52,6 +52,7 @@ import org.blinksd.utils.ListedMap;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.OnModifierChangedListener;
+import org.blinksd.utils.superboard.TextType;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -1569,7 +1570,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyTextStyle(int style) {
-            TextUtilsCompat.setTypefaceFromTextType(label, style);
+            TextUtilsCompat.setTypefaceFromTextType(label, TextType.getFromIndex(style));
             subLabel.setTypeface(label.getTypeface());
         }
 

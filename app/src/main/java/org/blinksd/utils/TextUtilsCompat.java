@@ -113,10 +113,6 @@ public final class TextUtilsCompat {
         return !rects.first.equals(rects.second);
     }
 
-    public static void setTypefaceFromTextType(TextView label, int style) {
-        setTypefaceFromTextType(label, TextType.getFromIndex(style));
-    }
-
     public static void setTypefaceFromTextType(TextView label, TextType style) {
         if (style == null) {
             style = TextType.regular;
