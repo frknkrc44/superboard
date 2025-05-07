@@ -5,7 +5,6 @@ import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -42,23 +41,19 @@ public final class ImageUtils {
     public static Bitmap getBlur(Bitmap bmp, int radius) {
         try {
             // try blur processing with built-in renderscript
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                Context ctx = getSBApplication();
-                setupDiskCache(ctx);
+            Context ctx = getSBApplication();
+            setupDiskCache(ctx);
 
-                RenderScript rs = RenderScript.create(ctx);
-                ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-                blur.setInput(Allocation.createFromBitmap(rs, bmp));
-                Allocation alloc = Allocation.createFromBitmap(rs, bmp);
-                blur.setRadius((float) radius);
-                blur.forEach(alloc);
-                alloc.copyTo(bmp);
-                blur.destroy();
-                rs.finish();
-                rs.destroy();
-            } else {
-                throw new ClassNotFoundException();
-            }
+            RenderScript rs = RenderScript.create(ctx);
+            ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+            blur.setInput(Allocation.createFromBitmap(rs, bmp));
+            Allocation alloc = Allocation.createFromBitmap(rs, bmp);
+            blur.setRadius((float) radius);
+            blur.forEach(alloc);
+            alloc.copyTo(bmp);
+            blur.destroy();
+            rs.finish();
+            rs.destroy();
 
             return bmp;
         } catch (Throwable t) {

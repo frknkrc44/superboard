@@ -1,16 +1,13 @@
 package org.blinksd.board.views;
 
-import static android.os.Build.VERSION.SDK_INT;
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -67,9 +64,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView.setLayoutParams(new LayoutParams(-2, -1));
 
         fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
-        if (SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
-        }
+        fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
         fabView.addButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true);
         fabView.addButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN);
         fabView.addButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true);
@@ -188,7 +183,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             tv.setTextColor(textColor);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(textSize);
-            setViewBackground(tv, getSuggestionItemBackground());
+            tv.setBackground(getSuggestionItemBackground());
         }
 
         var clipboardDisabled = getBooleanOrDefault(SettingMap.SET_SHOW_BOTTOM_BAR) ||

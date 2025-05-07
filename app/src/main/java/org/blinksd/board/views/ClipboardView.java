@@ -4,7 +4,6 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -246,10 +245,10 @@ public final class ClipboardView extends LinearLayout
         textColor = convertARGBtoRGB(textColor);
 
         setColorFilter(clearAllButton, textColor);
-        setViewBackground(clearAllButton, getTransSelectableItemBg(getContext(), textColor));
+        clearAllButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
 
         setColorFilter(backButton, textColor);
-        setViewBackground(backButton, getTransSelectableItemBg(getContext(), textColor));
+        backButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
 
         for (int i = 0; i < listView.getChildCount(); i++) {
             View child = listView.getChildAt(i);
@@ -262,11 +261,11 @@ public final class ClipboardView extends LinearLayout
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
             setColorFilter(button1, textColor);
-            setViewBackground(button1, getTransSelectableItemBg(getContext(), textColor));
+            button1.setBackground(getTransSelectableItemBg(getContext(), textColor));
 
             ImageButton button2 = child.findViewById(android.R.id.button2);
             setColorFilter(button2, textColor);
-            setViewBackground(button2, getTransSelectableItemBg(getContext(), textColor));
+            button2.setBackground(getTransSelectableItemBg(getContext(), textColor));
         }
     }
 

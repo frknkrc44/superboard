@@ -106,29 +106,27 @@ public abstract class SettingsBaseActivity extends BaseActivity {
 
         dialog.show();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                    ? ResourcesUtils.getColor(android.R.color.system_accent1_200)
-                    : ColorUtils.getAccentColor();
+        int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                ? ResourcesUtils.getColor(android.R.color.system_accent1_200)
+                : ColorUtils.getAccentColor();
 
-            Button btn1 = dialog.findViewById(android.R.id.button1);
-            Button btn2 = dialog.findViewById(android.R.id.button2);
-            Button btn3 = dialog.findViewById(android.R.id.button3);
+        Button btn1 = dialog.findViewById(android.R.id.button1);
+        Button btn2 = dialog.findViewById(android.R.id.button2);
+        Button btn3 = dialog.findViewById(android.R.id.button3);
 
-            if (btn1 != null) {
-                btn1.setTextColor(tint);
-                btn1.setAllCaps(false);
-            }
+        if (btn1 != null) {
+            btn1.setTextColor(tint);
+            btn1.setAllCaps(false);
+        }
 
-            if (btn2 != null) {
-                btn2.setTextColor(tint);
-                btn2.setAllCaps(false);
-            }
+        if (btn2 != null) {
+            btn2.setTextColor(tint);
+            btn2.setAllCaps(false);
+        }
 
-            if (btn3 != null) {
-                btn3.setTextColor(tint);
-                btn3.setAllCaps(false);
-            }
+        if (btn3 != null) {
+            btn3.setTextColor(tint);
+            btn3.setAllCaps(false);
         }
     }
 

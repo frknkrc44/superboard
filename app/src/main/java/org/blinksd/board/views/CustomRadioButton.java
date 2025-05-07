@@ -30,10 +30,6 @@ public final class CustomRadioButton extends RadioButton {
             }
 
             setColorFilter(drw, 0xFFDEDEDE);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                setPadding(i + drw.getIntrinsicWidth(), 0, i, 0);
-            }
         } else {
             setPadding(i, 0, i, 0);
             int color = 0xFFDEDEDE;

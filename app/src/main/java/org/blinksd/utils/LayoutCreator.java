@@ -1,9 +1,6 @@
 package org.blinksd.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,7 +13,6 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 
 public final class LayoutCreator {
 
@@ -105,29 +101,10 @@ public final class LayoutCreator {
         sw.setTextOff("");
         sw.setTextOn("");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            sw.setThumbResource(R.drawable.switch_thumb);
-            sw.setTrackResource(R.drawable.switch_track);
-        } else {
-            setSwitchThumbAPI14(sw);
-        }
+        sw.setThumbResource(R.drawable.switch_thumb);
+        sw.setTrackResource(R.drawable.switch_track);
 
         return sw;
-    }
-
-    /** @noinspection JavaReflectionMemberAccess*/
-    @SuppressWarnings("deprecation")
-    @SuppressLint("DiscouragedPrivateApi")
-    private static void setSwitchThumbAPI14(Switch switchWidget) {
-        try {
-            Field thumbField = Switch.class.getDeclaredField("mThumbDrawable");
-            Drawable thumbDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_thumb);
-            thumbField.set(switchWidget, thumbDrawable);
-
-            Field trackField = Switch.class.getDeclaredField("mTrackDrawable");
-            Drawable trackDrawable = switchWidget.getResources().getDrawable(R.drawable.switch_track);
-            trackField.set(switchWidget, trackDrawable);
-        } catch (Throwable ignored) {}
     }
 
     public static Switch createFilledSwitch(Class<?> rootViewClass, Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {

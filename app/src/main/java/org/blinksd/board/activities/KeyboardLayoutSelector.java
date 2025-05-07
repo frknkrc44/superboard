@@ -6,8 +6,8 @@ import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
 import static org.blinksd.utils.ResourcesUtils.getButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getSelectableItemBg;
 import static org.blinksd.utils.ResourcesUtils.getTintedDrawable;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -28,7 +28,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.Language;
@@ -129,7 +128,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         View view = new View(this);
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
-        setViewBackground(view, ResourcesUtils.getSelectableItemBg(
+        view.setBackground(getSelectableItemBg(
                 this,
                 Color.WHITE,
                 false,
@@ -137,7 +136,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         ));
 
         boolean isSelected = currentLayout.equals(language.language);
-        setViewBackground(btn, ResourcesUtils.getSelectableItemBg(
+        btn.setBackground(getSelectableItemBg(
                 this,
                 Color.WHITE,
                 isSelected
@@ -153,7 +152,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             tick.setLayoutParams(params);
             int p = tickSize / 8;
             tick.setPadding(p, p, p, p);
-            setViewBackground(tick, getButtonBackground(64, 2, false));
+            tick.setBackground(getButtonBackground(64, 2, false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Drawable returnSymbol = getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
             tick.setImageDrawable(returnSymbol);

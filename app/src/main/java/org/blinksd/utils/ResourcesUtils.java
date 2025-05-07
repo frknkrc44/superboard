@@ -12,8 +12,6 @@ import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -99,8 +97,6 @@ public class ResourcesUtils {
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
     }
 
-    @SuppressLint("UseRequiresApi")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void setButtonGradientOrientation(GradientDrawable gd) {
         switch (getIntOrDefault(SettingMap.SET_KEY_GRADIENT_ORIENTATION)) {
             case ThemeUtils.KEY_BG_ORIENTATION_TB:
@@ -133,8 +129,7 @@ public class ResourcesUtils {
     public static Drawable getButtonBackground(int clr, int pressClr, int radius, int stroke, boolean pressEffect) {
         GradientDrawable gd = new GradientDrawable();
 
-        boolean isGrad = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
+        boolean isGrad = getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
         if (isGrad) {
             gd.setColors(new int[]{clr, pressClr});
             setButtonGradientOrientation(gd);

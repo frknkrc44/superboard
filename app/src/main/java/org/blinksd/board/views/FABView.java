@@ -8,7 +8,6 @@ import static android.view.Gravity.TOP;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
@@ -242,7 +241,7 @@ public class FABView extends LinearLayout {
 
     void reTheme(int keyColor, int textColor) {
         collapse();
-        setViewBackground(main, getTransSelectableItemBg(getContext(), textColor));
+        main.setBackground(getTransSelectableItemBg(getContext(), textColor));
         setColorFilter(main, textColor);
 
         for (int i = 0; i < buttonLayouts.getChildCount(); i++) {
@@ -252,8 +251,7 @@ public class FABView extends LinearLayout {
                     stateListDrawable.addState(new int[]{android.R.attr.state_selected}, getCircleButtonBackground(keyColor, textColor, true));
                     stateListDrawable.addState(new int[]{}, getCircleButtonBackground(keyColor, textColor, false));
                     child.setSelected(false);
-
-                    setViewBackground(child, stateListDrawable);
+                    child.setBackground(stateListDrawable);
 
                     var colorStates = new ColorStateList(new int[][]{
                             new int[] {android.R.attr.state_selected},
@@ -261,7 +259,7 @@ public class FABView extends LinearLayout {
                     }, new int[] {keyColor, textColor});
                     child.saveState(colorStates);
                 } else {
-                    setViewBackground(child, getCircleButtonBackground(keyColor, textColor, false));
+                    child.setBackground(getCircleButtonBackground(keyColor, textColor, false));
                     setColorFilter(child, textColor);
                 }
             }

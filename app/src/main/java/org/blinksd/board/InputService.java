@@ -69,7 +69,6 @@ import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.ViewUtils;
 import org.blinksd.utils.keys.KeyRemapper;
 import org.blinksd.utils.superboard.KeyOptions;
 import org.blinksd.utils.superboard.KeyboardType;
@@ -423,7 +422,7 @@ public final class InputService extends InputMethodService implements
             emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
 
-            ViewUtils.setViewBackground(emojiView, superBoardView.getBackground());
+            emojiView.setBackground(superBoardView.getBackground());
         }
 
         if (bottomKeyboardBarView == null) {

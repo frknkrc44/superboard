@@ -7,7 +7,6 @@ import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.ThemeUtils.getThemeNames;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
@@ -173,10 +172,8 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     break;
             }
 
-            setViewBackground(
-                    categoryView.getChildAt(categoryView.getChildCount() - 1),
-                    getTransSelectableItemBg(
-                            categoryView.getContext(), 0xFFDEDEDE, true)
+            categoryView.getChildAt(categoryView.getChildCount() - 1).setBackground(
+                    getTransSelectableItemBg(categoryView.getContext(), 0xFFDEDEDE, true)
             );
         };
 

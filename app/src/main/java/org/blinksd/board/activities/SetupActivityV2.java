@@ -1,7 +1,7 @@
 package org.blinksd.board.activities;
 
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
+import static org.blinksd.utils.ResourcesUtils.getSelectableItemBg;
 
 import android.animation.Animator;
 import android.app.Activity;
@@ -278,8 +278,7 @@ public final class SetupActivityV2 extends Activity {
             ViewUtils.setTextAppearance(textView, android.R.style.TextAppearance_Medium);
             textView.setGravity(Gravity.CENTER);
 
-            setViewBackground(buttonView,
-                    ResourcesUtils.getSelectableItemBg(context, buttonView.getCurrentTextColor()));
+            buttonView.setBackground(getSelectableItemBg(context, buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
             textView.setText(String.format(content.text, getAppName()));
@@ -296,8 +295,7 @@ public final class SetupActivityV2 extends Activity {
                 buttonParams = new LayoutParams(buttonParams.width, buttonParams.height);
                 buttonParams.topMargin = padding;
                 nextButton.setLayoutParams(buttonParams);
-                setViewBackground(nextButton, ResourcesUtils.getSelectableItemBg(
-                        context, buttonView.getCurrentTextColor()));
+                nextButton.setBackground(getSelectableItemBg(context, buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);
                 addView(nextButton);

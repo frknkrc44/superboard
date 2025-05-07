@@ -4,7 +4,6 @@ import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.ViewUtils.setTextAppearance;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -49,8 +48,7 @@ public class CustomActionBar extends LinearLayout {
                 ? android.R.style.TextAppearance_Small
                 : android.R.style.TextAppearance_Medium);
         setColorFilter(mBackButton, mTitle.getCurrentTextColor());
-        setViewBackground(mBackButton,
-                getTransSelectableItemBg(context, mTitle.getCurrentTextColor()));
+        mBackButton.setBackground(getTransSelectableItemBg(context, mTitle.getCurrentTextColor()));
         mTitle.setGravity(isWatch ? Gravity.CENTER : Gravity.CENTER_VERTICAL);
 
         addView(mTitle);
@@ -78,8 +76,7 @@ public class CustomActionBar extends LinearLayout {
         buttonImage.setImageResource(iconResId);
         buttonImage.setOnClickListener(onClick);
         buttonImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        setViewBackground(buttonImage,
-                getTransSelectableItemBg(getContext(), mTitle.getCurrentTextColor()));
+        buttonImage.setBackground(getTransSelectableItemBg(getContext(), mTitle.getCurrentTextColor()));
         setColorFilter(buttonImage, Color.WHITE);
         mActions.addView(buttonImage);
     }

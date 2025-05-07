@@ -1,13 +1,11 @@
 package org.blinksd.board.views;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
-import android.widget.AbsSeekBar;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
@@ -34,21 +32,6 @@ final class CustomSeekBar extends SeekBar {
         } catch (Throwable ignored) {
             setProgressColor(ColorUtils.getAccentColor());
         }
-    }
-
-    /** @noinspection JavaReflectionMemberAccess*/
-    @SuppressLint("DiscouragedPrivateApi")
-    public Drawable getThumb() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            return super.getThumb();
-
-        try {
-            Field thumb = AbsSeekBar.class.getDeclaredField("mThumb");
-            thumb.setAccessible(true);
-            return (Drawable) thumb.get(this);
-        } catch (Throwable ignored) {}
-
-        return null;
     }
 
     public void setProgressColor(int color) {

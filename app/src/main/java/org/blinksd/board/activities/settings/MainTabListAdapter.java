@@ -2,7 +2,6 @@ package org.blinksd.board.activities.settings;
 
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
-import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
@@ -89,7 +88,7 @@ class MainTabListAdapter extends BaseAdapter {
             gradientDrawable.setCornerRadii(new float[]{ squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner, squareCorner });
         }
 
-        setViewBackground(item, gradientDrawable);
+        item.setBackground(gradientDrawable);
 
         TextView title = (TextView) LayoutInflater.from(parent.getContext()).inflate(
                 android.R.layout.simple_list_item_1, item, false);
@@ -109,7 +108,7 @@ class MainTabListAdapter extends BaseAdapter {
         GradientDrawable imageViewBg = new GradientDrawable();
         imageViewBg.setColor(0x44000000);
         imageViewBg.setCornerRadius(96);
-        setViewBackground(arrowView, imageViewBg);
+        arrowView.setBackground(imageViewBg);
         item.addView(arrowView);
 
         return padItem;
