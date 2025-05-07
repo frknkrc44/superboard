@@ -3,7 +3,6 @@ package org.blinksd.board.views;
 import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
 import static org.blinksd.utils.DensityUtils.mpInt;
-import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.annotation.SuppressLint;

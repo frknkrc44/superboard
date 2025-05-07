@@ -33,7 +33,9 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         fontTypeTranslations = getResources().getStringArray(R.array.settings_keyboard_texttype_select);
         currentFont = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT);
-        setContentView(createMainLayout());
+        final var mainLayout = createMainLayout();
+        setContentView(mainLayout);
+        mainLayout.requestFocus();
     }
 
     private View createMainLayout() {
@@ -52,6 +54,7 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
             main.addView(hor);
         }
         scroller.addView(main);
+        scroller.requestFocus();
         return scroller;
     }
 

@@ -1,7 +1,6 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN;
 import static android.os.Build.VERSION_CODES.P;
 import static android.os.Build.VERSION_CODES.S;
 import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;

@@ -8,21 +8,19 @@ import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage
 import static org.blinksd.board.SuperBoardApplication.getCustomFont;
 import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
-import static org.blinksd.utils.SystemUtils.isWatch;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,7 +75,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         mainHolder.addView(mPreviewHolder);
         main.addView(mainHolder);
 
-        if (isWatch()) {
+        if (isWatchDevice()) {
             mainHolder.setVisibility(GONE);
         }
     }

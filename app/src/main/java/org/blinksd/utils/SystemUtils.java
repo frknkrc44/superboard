@@ -145,10 +145,6 @@ public final class SystemUtils {
         return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    public static boolean isWatch() {
-        return (getResConfiguration().uiMode & Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_WATCH;
-    }
-
     public static void disableEdgeToEdge(Window window) {
         MiniLSPass.setField(window, "mEdgeToEdgeEnforced", false);
     }

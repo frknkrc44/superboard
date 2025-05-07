@@ -12,7 +12,6 @@ import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
 import static org.blinksd.utils.SuperDBHelper.setColorsFromBitmap;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -51,7 +50,6 @@ import org.blinksd.utils.ThemeUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "ConstantConditions"})

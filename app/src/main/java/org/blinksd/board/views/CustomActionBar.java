@@ -1,8 +1,8 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
-import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.ViewUtils.setTextAppearance;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
@@ -26,7 +26,7 @@ public class CustomActionBar extends LinearLayout {
 
     public CustomActionBar(Context context, OnClickListener onBackButtonClick) {
         super(context);
-        final var isWatch = isWatch();
+        final var isWatch = isWatchDevice();
 
         setLayoutParams(new LinearLayout.LayoutParams(-1, DensityUtils.dpInt(isWatch ? 48 : 56), 0));
         setGravity(Gravity.CENTER_VERTICAL);
@@ -61,7 +61,7 @@ public class CustomActionBar extends LinearLayout {
     }
 
     public void toggleBackButton(boolean show) {
-        show = !isWatch() && show;
+        show = !isWatchDevice() && show;
 
         mBackButton.setVisibility(show ? VISIBLE : GONE);
         setPadding(show ? 0 : barPadding, 0, barPadding, 0);

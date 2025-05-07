@@ -46,6 +46,7 @@ public final class SuperBoardApplication extends Application {
     private static List<ThemeHolder> themes;
     private static DictionaryDB dictDB;
     private static MonetColors monetColors;
+    private static Boolean isWatchDevice = null;
 
     public synchronized static DictionaryDB getDictDB() {
         if (dictDB == null) {
@@ -65,6 +66,14 @@ public final class SuperBoardApplication extends Application {
 
     public synchronized static Resources getAppResources() {
         return getSBApplication().getResources();
+    }
+
+    public static boolean isWatchDevice() {
+        if (isWatchDevice == null) {
+            isWatchDevice = (getResConfiguration().uiMode & Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_WATCH;
+        }
+
+        return isWatchDevice;
     }
 
     public synchronized static Configuration getResConfiguration() {

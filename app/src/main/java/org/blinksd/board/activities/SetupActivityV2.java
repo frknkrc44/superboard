@@ -1,6 +1,6 @@
 package org.blinksd.board.activities;
 
-import static org.blinksd.utils.SystemUtils.isWatch;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ViewUtils.setViewBackground;
 
 import android.animation.Animator;
@@ -286,7 +286,7 @@ public final class SetupActivityV2 extends Activity {
             buttonView.setText(content.buttonText);
             buttonView.setOnClickListener(content.onButtonClick);
 
-            if (isWatch()) {
+            if (isWatchDevice()) {
                 imageView.setVisibility(GONE);
             }
 

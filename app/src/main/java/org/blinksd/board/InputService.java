@@ -12,6 +12,7 @@ import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getNextLanguage;
 import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.DensityUtils.hp;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
@@ -23,7 +24,6 @@ import static org.blinksd.utils.SystemUtils.detectNavbar;
 import static org.blinksd.utils.SystemUtils.disableEdgeToEdge;
 import static org.blinksd.utils.SystemUtils.isColorized;
 import static org.blinksd.utils.SystemUtils.isLand;
-import static org.blinksd.utils.SystemUtils.isWatch;
 import static org.blinksd.utils.SystemUtils.navbarH;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
 
@@ -126,7 +126,7 @@ public final class InputService extends InputMethodService implements
 
     @Override
     public boolean onEvaluateFullscreenMode() {
-        return false;
+        return isWatchDevice();
     }
 
     @Override
@@ -283,7 +283,7 @@ public final class InputService extends InputMethodService implements
 
     @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
     private void setLayout() {
-        final var isWatch = isWatch();
+        final var isWatch = isWatchDevice();
 
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this,
@@ -875,7 +875,7 @@ public final class InputService extends InputMethodService implements
                 return;
             }
 
-            boolean showPopup = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
+            boolean showPopup = !isWatchDevice() && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP);
             boolean disablePopup = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP);
 
             if (showPopup || !disablePopup)
@@ -902,7 +902,7 @@ public final class InputService extends InputMethodService implements
         public void afterKeyboardEvent() {
             super.afterKeyboardEvent();
 
-            if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)) {
+            if (!isWatchDevice() && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_SHOW_POPUP)) {
                 boardPopup.hideCharacter();
             }
 

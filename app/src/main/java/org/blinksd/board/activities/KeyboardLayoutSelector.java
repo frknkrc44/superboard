@@ -81,6 +81,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         }
 
         setContentView(scroller);
+        scroller.requestFocus();
     }
 
     private View createItemLayout(Language language) {
