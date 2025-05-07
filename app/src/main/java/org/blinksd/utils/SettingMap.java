@@ -170,32 +170,32 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     private void putGeneral(String name, SettingType type) {
         putGeneral(name, type, null, null);
     }
-    private void putGeneral(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putGeneral(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.GENERAL, type, dependency, dependencyEnabled));
     }
 
     private void putKbdLayout(String name, SettingType type) {
         putKbdLayout(name, type, null, null);
     }
-    private void putKbdLayout(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putKbdLayout(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.KBD_LAYOUT, type, dependency, dependencyEnabled));
     }
 
     private void putPopup(String name, SettingType type) {
         putPopup(name, type, null, null);
     }
-    private void putPopup(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putPopup(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.POPUP, type, dependency, dependencyEnabled));
     }
 
-    private void putTopBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putTopBar(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.TOP_BAR, type, dependency, dependencyEnabled));
     }
 
     private void putBottomBar(String name, SettingType type) {
         putBottomBar(name, type, null, null);
     }
-    private void putBottomBar(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putBottomBar(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.BOTTOM_BAR, type, dependency, dependencyEnabled));
     }
 
@@ -203,7 +203,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTheming(name, type, null, null);
     }
 
-    private void putTheming(String name, SettingType type, String dependency, Object dependencyEnabled) {
+    private void putTheming(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.THEMING, type, dependency, dependencyEnabled));
     }
 
@@ -435,23 +435,20 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
 
     public boolean getSwitchEnabledFromDependency(String settingName) {
-        return getSwitchEnabledFromDependency(settingName, false);
-    }
+        final var visitedDependencies = new ArrayList<>();
 
-    public boolean getSwitchEnabledFromDependency(String settingName, boolean fromDependency) {
         SettingItem item = get(settingName);
-        boolean enabled = item == null || item.dependency == null;
+        while (item != null && item.dependency != null && !visitedDependencies.contains(settingName)) {
+            visitedDependencies.add(settingName);
 
-        if (!enabled && !fromDependency) {
-            enabled = !getSwitchEnabledFromDependency(item.dependency, true);
+            if (item.dependencyEnabled != SuperDBHelper.getBooleanOrDefault(item.dependency)) {
+                return false;
+            }
+
+            item = get(item.dependency);
         }
 
-        if (!enabled) {
-            boolean value = SuperDBHelper.getBooleanOrDefault(item.dependency);
-            enabled = (boolean) item.dependencyEnabled == value;
-        }
-
-        return enabled;
+        return true;
     }
 
     public interface ChildIterator {
