@@ -34,6 +34,7 @@ import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.superboard.KeyboardType;
 
 import java.io.File;
 
@@ -63,7 +64,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         kbdPreview.addRow(0, new String[]{"1", "2", "3", "4"});
         kbdPreview.getKey(0, 0, 0).setSubText("½");
         for (int i = 0; i < 4; i++) kbdPreview.getKey(0, 0, i).setId(i);
-        kbdPreview.createEmptyLayout();
+        kbdPreview.createEmptyLayout(KeyboardType.TEXT);
         kbdPreview.setEnabledLayout(0);
         kbdPreview.setKeysPadding(mpInt(1));
         kbdPreview.setKeyboardHeight(12);

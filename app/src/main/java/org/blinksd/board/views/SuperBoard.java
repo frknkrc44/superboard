@@ -143,7 +143,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         setLayoutParams(new LayoutParams(-1, -1));
-        createEmptyLayout();
+        createEmptyLayout(KeyboardType.TEXT);
         setForegroundGravity(CENTER);
     }
 
@@ -232,7 +232,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void clear() {
         removeAllViewsInLayout();
-        createEmptyLayout();
+        createEmptyLayout(KeyboardType.TEXT);
     }
 
     public final void setKeyBackground(int keyboardIndex, int rowIndex, int keyIndex, Drawable background) {
@@ -415,22 +415,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return selected;
     }
 
-    public final void setEnabledLayout(KeyboardType type) {
-        setEnabledLayout(findKeyboardIndex(type));
-    }
-
     public final void setEnabledLayout(int keyboardIndex) {
-        if (keyboardIndex < 0) keyboardIndex += getChildCount();
-        if (keyboardIndex < getChildCount() && keyboardIndex >= 0) {
-            if (getChildCount() == 1 || keyboardIndex == selected) return;
+        final int childCount = getChildCount();
+        if (keyboardIndex < 0) keyboardIndex += childCount;
+        if (keyboardIndex < childCount && keyboardIndex >= 0) {
+            if (childCount == 1 || keyboardIndex == selected) return;
             getChildAt(selected).setVisibility(GONE);
             selected = keyboardIndex;
             getChildAt(selected).setVisibility(VISIBLE);
         } else throw new RuntimeException("Invalid keyboard index number");
-    }
-
-    public final void resetToNormalLayout() {
-        setEnabledLayout(KeyboardType.TEXT);
     }
 
     public final void setLayoutType(int keyboardIndex, KeyboardType type) {
@@ -440,10 +433,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void createLayoutWithRows(String[][] keys, KeyboardType type) {
         createEmptyLayout(type);
         addRows(getChildCount() - 1, keys);
-    }
-
-    public final void createEmptyLayout() {
-        createEmptyLayout(KeyboardType.TEXT);
     }
 
     public final void createEmptyLayout(KeyboardType type) {
