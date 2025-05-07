@@ -23,6 +23,7 @@
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Desactivar la barra superior</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Ocultar botones de función de la barra superior</string>
     <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Habilitar portapapeles</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Deshabilitar palabras sugeridas</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desactivar fila de números (beta)</string>
