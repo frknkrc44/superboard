@@ -23,6 +23,7 @@
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Nonaktifkan bilah atas</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Sembunyikan tombol fungsi bilah atas</string>
     <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Aktifkan papan klip</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Nonaktifkan saran kata</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Nonaktifkan baris nomor (beta)</string>
