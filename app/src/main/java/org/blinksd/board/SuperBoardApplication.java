@@ -70,7 +70,7 @@ public final class SuperBoardApplication extends Application {
         return getSBApplication().getResources();
     }
 
-    public static boolean isWatchDevice() {
+    public synchronized static boolean isWatchDevice() {
         if (isWatchDevice == null) {
             isWatchDevice = (getResConfiguration().uiMode & Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_WATCH;
         }
