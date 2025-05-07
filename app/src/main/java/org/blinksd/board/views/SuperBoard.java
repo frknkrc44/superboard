@@ -53,6 +53,7 @@ import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.OnModifierChangedListener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -698,7 +699,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
         }
 
-        if (modifiersEnabled && TextUtilsCompat.getCharset("US-ASCII").newEncoder().canEncode(text)) {
+        if (modifiersEnabled && StandardCharsets.US_ASCII.newEncoder().canEncode(text)) {
             // Copied from https://stackoverflow.com/a/31625638
             KeyCharacterMap charMap;
             charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);

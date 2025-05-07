@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import org.blinksd.utils.superboard.TextType;
 
-import java.nio.charset.Charset;
-
 public final class TextUtilsCompat {
     // U+DFFFD which is very end of unassigned plane.
     private static final String TOFU_STRING = "\uDB3F\uDFFD";
@@ -113,10 +111,6 @@ public final class TextUtilsCompat {
         paint.getTextBounds(TOFU_STRING, 0, TOFU_STRING.length(), rects.first);
         paint.getTextBounds(string, 0, length, rects.second);
         return !rects.first.equals(rects.second);
-    }
-
-    public static Charset getCharset(String name) {
-        return Charset.forName(name);
     }
 
     public static void setTypefaceFromTextType(TextView label, int style) {
