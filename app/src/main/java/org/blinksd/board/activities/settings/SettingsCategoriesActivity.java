@@ -65,6 +65,8 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             .setInterpolator(interpolator)
                             .setListener(null)
                             .start();
+                    newChild.setScrollX(0);
+                    newChild.setScrollY(0);
                     newChild.requestFocus();
                 }
 

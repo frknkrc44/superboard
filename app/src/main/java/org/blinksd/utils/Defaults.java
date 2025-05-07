@@ -65,4 +65,5 @@ public final class Defaults {
     public static final boolean SHOW_BOTTOM_BAR = false;
     public static final boolean LONG_PRESS_FAST_DELETE = false;
     public static final boolean INSERT_SPACE_AFTER_PUNC = false;
+    public static final boolean SHOW_FULLSCREEN_KEYBOARD = false;
 }

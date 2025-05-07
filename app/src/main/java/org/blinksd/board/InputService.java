@@ -131,7 +131,9 @@ public final class InputService extends InputMethodService implements
 
     @Override
     public boolean onEvaluateFullscreenMode() {
-        return getBooleanOrDefault(SettingMap.SET_SHOW_FULLSCREEN_KEYBOARD);
+        return getBooleanOrDefault(SettingMap.SET_SHOW_FULLSCREEN_KEYBOARD_FORCED) ||
+                (getBooleanOrDefault(SettingMap.SET_SHOW_FULLSCREEN_KEYBOARD) &&
+                        super.onEvaluateFullscreenMode());
     }
 
     @Override
@@ -288,8 +290,6 @@ public final class InputService extends InputMethodService implements
 
     @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
     private void setLayout() {
-        final var isWatch = isWatchDevice();
-
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this,
                     (keyCode, modifierValue) -> suggestionLayout.changeFABKeyState(keyCode, modifierValue > 0));
@@ -685,6 +685,7 @@ public final class InputService extends InputMethodService implements
         }
 
         sendCompletionRequest();
+        updateInputViewShown();
     }
 
     private void loadKeyboardLayout() {

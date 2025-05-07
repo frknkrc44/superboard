@@ -92,7 +92,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_FORCE_SHOW_KEYBOARD_PHYSICAL = "force_show_keyboard_physical",
             SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser",
             SET_SHOW_FAB_RIGHT = "show_fab_right",
-            SET_SHOW_FULLSCREEN_KEYBOARD = "show_fs_keyboard";
+            SET_SHOW_FULLSCREEN_KEYBOARD = "show_fs_keyboard",
+            SET_SHOW_FULLSCREEN_KEYBOARD_FORCED = "show_fs_keyboard_forced";
 
     public SettingMap() {
         putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
@@ -135,7 +136,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_SHOW_FAB_RIGHT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
-        putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD, SettingType.BOOL);
+        putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD, SettingType.BOOL, SET_SHOW_FULLSCREEN_KEYBOARD_FORCED, false);
+        putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD_FORCED, SettingType.BOOL, SET_SHOW_FULLSCREEN_KEYBOARD, false);
         putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
         putTopBar(SET_DISABLE_SUGGESTIONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_DISABLE_NUMBER_ROW, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
@@ -372,6 +374,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_COMPAT_MONET_MAX_COLORS:
                 return Defaults.COMPAT_MONET_MAX_COLORS;
             case SET_SHOW_FULLSCREEN_KEYBOARD:
+                return Defaults.SHOW_FULLSCREEN_KEYBOARD;
+            case SET_SHOW_FULLSCREEN_KEYBOARD_FORCED:
                 return isWatchDevice();
             default:
                 return null;
@@ -431,8 +435,16 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
 
     public boolean getSwitchEnabledFromDependency(String settingName) {
+        return getSwitchEnabledFromDependency(settingName, false);
+    }
+
+    public boolean getSwitchEnabledFromDependency(String settingName, boolean fromDependency) {
         SettingItem item = get(settingName);
         boolean enabled = item == null || item.dependency == null;
+
+        if (!enabled && !fromDependency) {
+            enabled = !getSwitchEnabledFromDependency(item.dependency, true);
+        }
 
         if (!enabled) {
             boolean value = SuperDBHelper.getBooleanOrDefault(item.dependency);
