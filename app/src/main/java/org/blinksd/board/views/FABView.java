@@ -5,6 +5,10 @@ import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
+import static org.blinksd.utils.ColorUtils.calculateContrast;
+import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
+import static org.blinksd.utils.ColorUtils.invertColor;
+import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
@@ -258,7 +262,7 @@ public class FABView extends LinearLayout {
                     var colorStates = new ColorStateList(new int[][]{
                             new int[] {android.R.attr.state_selected},
                             new int[]{},
-                    }, new int[] {keyColor, textColor});
+                    }, new int[] {convertARGBtoRGB(keyColor), textColor});
                     child.saveState(colorStates);
                 } else {
                     child.setBackground(getCircleButtonBackground(keyColor, textColor, false));

@@ -239,6 +239,10 @@ public final class ColorUtils {
         return false;
     }
 
+    public static int invertColor(int color) {
+        return color ^ 0x00FFFFFF;
+    }
+
     public static int getBitmapColor(Bitmap bitmap) {
         if (bitmap == null) return 0xFF000000;
         bitmap = Bitmap.createScaledBitmap(bitmap, 64, 64, false);
