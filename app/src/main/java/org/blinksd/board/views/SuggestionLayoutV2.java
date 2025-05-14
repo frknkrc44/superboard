@@ -49,6 +49,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
 
         mCompletionsLayout = new LinearLayout(getContext());
         mCompletionsLayout.setLayoutParams(new HorizontalScrollView.LayoutParams(-1, -1));
+        mCompletionsLayout.setFocusable(false);
 
         fabView = new FABView(
                 superBoard.getContext(),
@@ -62,6 +63,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
                 }
         );
         fabView.setLayoutParams(new LayoutParams(-2, -1));
+        fabView.setFocusable(false);
 
         fabView.addButton(R.drawable.arrow_left, KeyEvent.KEYCODE_DPAD_LEFT);
         fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
@@ -164,6 +166,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setText(text);
         tv.setOnClickListener(this);
+        tv.setFocusable(false);
         mCompletionsLayout.addView(tv);
     }
 

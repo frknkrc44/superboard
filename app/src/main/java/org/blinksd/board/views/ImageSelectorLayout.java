@@ -2,6 +2,7 @@ package org.blinksd.board.views;
 
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
@@ -211,40 +212,42 @@ public final class ImageSelectorLayout extends LinearLayout {
         s.setOnClickListener(p1 -> onImageSelectPressed.run());
         l.addView(s);
 
-        Button w = LayoutCreator.createButton(ctx);
-        w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
-        params = new LinearLayout.LayoutParams(-1, -2, 0);
-        params.bottomMargin = margin;
-        w.setLayoutParams(params);
-        w.setText(getImageSelectorTranslation("wp"));
-        l.addView(w);
-        w.setOnClickListener(p1 -> {
-            if (isPermGranted(ctx)) {
-                WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
-                Drawable d;
-                if (wm.getWallpaperInfo() != null) {
-                    Toast.makeText(p1.getContext(), getImageSelectorTranslation("warning_live_wallpaper"), Toast.LENGTH_SHORT).show();
-                    d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
-                } else {
-                    d = wm.getDrawable();
-                }
+        if (isDocumentsUiAvailable()) {
+            Button w = LayoutCreator.createButton(ctx);
+            w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
+            params = new LinearLayout.LayoutParams(-1, -2, 0);
+            params.bottomMargin = margin;
+            w.setLayoutParams(params);
+            w.setText(getImageSelectorTranslation("wp"));
+            l.addView(w);
+            w.setOnClickListener(p1 -> {
+                if (isPermGranted(ctx)) {
+                    WallpaperManager wm = (WallpaperManager) ctx.getSystemService(Context.WALLPAPER_SERVICE);
+                    Drawable d;
+                    if (wm.getWallpaperInfo() != null) {
+                        Toast.makeText(p1.getContext(), getImageSelectorTranslation("warning_live_wallpaper"), Toast.LENGTH_SHORT).show();
+                        d = wm.getWallpaperInfo().loadThumbnail(ctx.getPackageManager());
+                    } else {
+                        d = wm.getDrawable();
+                    }
 
-                if (d instanceof BitmapDrawable) {
-                    Bitmap b = ((BitmapDrawable) d).getBitmap();
-                    b = ImageUtils.getMinimizedBitmap(b);
-                    prev.setImageBitmap(b);
+                    if (d instanceof BitmapDrawable) {
+                        Bitmap b = ((BitmapDrawable) d).getBitmap();
+                        b = ImageUtils.getMinimizedBitmap(b);
+                        prev.setImageBitmap(b);
+                    }
+                } else {
+                    Toast.makeText(p1.getContext(),
+                            getImageSelectorTranslation("warning_storage_access"),
+                            Toast.LENGTH_LONG).show();
+                    ctx.startActivity(new Intent(
+                            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                                    ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                    : Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:" + ctx.getPackageName())));
                 }
-            } else {
-                Toast.makeText(p1.getContext(),
-                        getImageSelectorTranslation("warning_storage_access"),
-                        Toast.LENGTH_LONG).show();
-                ctx.startActivity(new Intent(
-                        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
-                                ? Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                : Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                        Uri.parse("package:" + ctx.getPackageName())));
-            }
-        });
+            });
+        }
 
         Button rb = LayoutCreator.createButton(ctx);
         rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));

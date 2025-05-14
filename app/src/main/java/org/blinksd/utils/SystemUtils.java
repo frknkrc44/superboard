@@ -34,8 +34,24 @@ public final class SystemUtils {
             return Environment.isExternalStorageManager();
         }
 
-        return context.checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return context.checkCallingOrSelfPermission(
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
+    }
+
+    @SuppressLint("InlinedApi")
+    public static boolean isDocumentsUiAvailable() {
+        for (var feature : new String[]{
+                PackageManager.FEATURE_AUTOMOTIVE,
+                PackageManager.FEATURE_LEANBACK,
+                PackageManager.FEATURE_WATCH,
+        }) {
+            if (getSBApplication().getPackageManager().hasSystemFeature(feature)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static boolean isNotColorizeNavbar() {

@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.ThemeUtils.getThemeNames;
@@ -14,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.view.RoundedCorner;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -52,6 +54,14 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
 
             final var currentChild = mTabsHolder.getChildAt(currentIndex);
             final var newChild = mTabsHolder.getChildAt(newIndex);
+
+            if (currentCategory != null && isWatchDevice() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                var insets = getWindow().getDecorView().getRootWindowInsets();
+                var topLeft = insets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_LEFT);
+                int pad = (int) (topLeft.getRadius() * Math.sin(Math.toRadians(45))) / 8;
+                newChild.setPadding(pad, 0, pad, pad * 5);
+            }
+
             final int animSpeed = 200;
             final TimeInterpolator interpolator = new AccelerateInterpolator();
             final SimpleAnimatorListener animatorListener = new SimpleAnimatorListener() {

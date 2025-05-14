@@ -9,6 +9,7 @@ import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
+import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
 import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
 
@@ -96,9 +97,12 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_SHOW_FULLSCREEN_KEYBOARD_FORCED = "show_fs_keyboard_forced";
 
     public SettingMap() {
-        putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
+        final var documentsUiAvailable = isDocumentsUiAvailable();
+        if (documentsUiAvailable)
+            putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putKbdLayout(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
-        putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
+        if (documentsUiAvailable)
+            putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
         putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
         putGeneral(SET_DICTIONARY_LIMIT, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
