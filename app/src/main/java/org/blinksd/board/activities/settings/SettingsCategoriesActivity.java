@@ -116,7 +116,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             currentChild.setAlpha(1 - backEvent.getProgress());
                             currentChild.setTranslationX(wp(backEvent.getProgress() * 100));
                             newChild.setTranslationX(-wp(100 - (backEvent.getProgress() * 100)));
-                            OnBackAnimationCallback.super.onBackProgressed(backEvent);
                         }
 
                         @Override
@@ -126,7 +125,6 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             newChild.setVisibility(GONE);
                             newChild.setAlpha(0);
                             currentChild.setAlpha(1);
-                            OnBackAnimationCallback.super.onBackCancelled();
                         }
                     };
                 }
