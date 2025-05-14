@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
+import static org.blinksd.utils.DensityUtils.wp;
 import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.ThemeUtils.getThemeNames;
@@ -24,7 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
+import android.window.BackEvent;
 import android.window.OnBackAnimationCallback;
+import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 
 import org.blinksd.utils.DensityUtils;
@@ -98,7 +101,34 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                 OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
 
                 if (onBackAnimationCallback == null) {
-                    onBackAnimationCallback = (OnBackAnimationCallback) () -> toggleCategory(null);
+                    onBackAnimationCallback = new OnBackAnimationCallback() {
+                        @Override
+                        public void onBackInvoked() {
+                            toggleCategory(null);
+                        }
+
+                        @Override
+                        public void onBackProgressed(BackEvent backEvent) {
+                            var currentChild = mTabsHolder.getChildAt(categoryList.indexOf(currentCategory));
+                            var newChild = mTabsHolder.getChildAt(categoryList.size());
+                            newChild.setVisibility(VISIBLE);
+                            newChild.setAlpha(backEvent.getProgress());
+                            currentChild.setAlpha(1 - backEvent.getProgress());
+                            currentChild.setTranslationX(wp(backEvent.getProgress() * 100));
+                            newChild.setTranslationX(-wp(100 - (backEvent.getProgress() * 100)));
+                            OnBackAnimationCallback.super.onBackProgressed(backEvent);
+                        }
+
+                        @Override
+                        public void onBackCancelled() {
+                            var currentChild = mTabsHolder.getChildAt(categoryList.indexOf(currentCategory));
+                            var newChild = mTabsHolder.getChildAt(categoryList.size());
+                            newChild.setVisibility(GONE);
+                            newChild.setAlpha(0);
+                            currentChild.setAlpha(1);
+                            OnBackAnimationCallback.super.onBackCancelled();
+                        }
+                    };
                 }
 
                 if (newIndex == categoryList.size()) {
