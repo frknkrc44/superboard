@@ -34,19 +34,22 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install pngquant -y
 
-    - name: Prepare the signature key
-      run: |
-        if [ ! -f key.jks ]
-        then
-          echo "No signature key found, generating a random key..."
-          make generate
-        fi
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: temurin
         java-version: 17.X
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Prepare the signature key
+      run: |
+        if [ ! -f key.jks ]
+        then
+          echo "No signature key found, generating a random key..."
+          make generate JAVADIR=$JAVA_HOME/bin
+        fi
 
     - name: Build debug
       run: ./gradlew clean assembleDebug
