@@ -92,7 +92,6 @@ public final class InputService extends InputMethodService implements
     public static final String RESTART_KEYBOARD = "org.blinksd.board.KILL";
     private SuperBoard superBoardView = null;
     private BoardPopup boardPopup = null;
-    private String[][][] predefinedLayouts = null;
     private String appName;
     private LinearLayout keyboardLayoutHolder = null;
     private SuggestionLayoutV2 suggestionLayout = null;
@@ -327,22 +326,27 @@ public final class InputService extends InputMethodService implements
                     {"F1",  "F2",    "F3",    "F4",    "F5",   "F6" },
                     {"F7",  "F8",    "F9",    "F10",   "F11",  "F12"},
                     {abc,   "PREV",  "PLAY",  "PAUSE", "NEXT",      }
-            }, kbdNums = {
-                    {"-", ".", ",", "ABC"},
+            }, kbdNum = {
+                    {"-", ".", ",", abc},
                     {"1", "2", "3", "+"},
                     {"4", "5", "6", ";"},
                     {"7", "8", "9", ""},
                     {"*", "0", "#", ""}
+            }, kbdMath1 = {
+                    {"¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰"},
+                    {"₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₀"},
+                    {"⁺", "⁻", "⁼", "⁽", "⁾"},
+                    {"₊", "₋", "₌", "₍", "₎"},
+                    {abc,      "",        ""}
             };
-
-            predefinedLayouts = new String[][][]{kbdSym1, kbdSym2, kbdSym3, kbdNums};
 
             loadKeyboardLayout();
 
-            superBoardView.createLayoutWithRows(predefinedLayouts[0], KeyboardType.SYMBOL);
-            superBoardView.createLayoutWithRows(predefinedLayouts[1], KeyboardType.SYMBOL);
-            superBoardView.createLayoutWithRows(predefinedLayouts[2], KeyboardType.FN);
-            superBoardView.createLayoutWithRows(predefinedLayouts[3], KeyboardType.NUMBER);
+            superBoardView.createLayoutWithRows(kbdSym1,  KeyboardType.SYMBOL);
+            superBoardView.createLayoutWithRows(kbdSym2,  KeyboardType.SYMBOL);
+            superBoardView.createLayoutWithRows(kbdSym3,  KeyboardType.FN);
+            superBoardView.createLayoutWithRows(kbdMath1, KeyboardType.MATH);
+            superBoardView.createLayoutWithRows(kbdNum,   KeyboardType.NUMBER);
 
             superBoardView.setPressEventForKey(1, 3, 0, Keyboard.KEYCODE_ALT);
 
@@ -350,6 +354,11 @@ public final class InputService extends InputMethodService implements
             superBoardView.setPressEventForKey(-1, -2, -1, Keyboard.KEYCODE_DELETE);
             superBoardView.setKeyRepeat(-1, -2, -1);
             superBoardView.setPressEventForKey(-1, -1, -1, Keyboard.KEYCODE_DONE);
+
+            superBoardView.setPressEventForKey(4, -1, 0, Keyboard.KEYCODE_ALT);
+            superBoardView.setKeyRepeat(4, -1, -2);
+            superBoardView.setPressEventForKey(4, -1, -2, Keyboard.KEYCODE_DELETE);
+            superBoardView.setPressEventForKey(4, -1, -1, Keyboard.KEYCODE_DONE);
 
             superBoardView.setPressEventForKey(3, 0, 0, KeyEvent.KEYCODE_INSERT);
             superBoardView.setPressEventForKey(3, 0, 1, KeyEvent.KEYCODE_MOVE_HOME);
@@ -408,17 +417,17 @@ public final class InputService extends InputMethodService implements
                 superBoardView.setKeyRepeat(i, 3, -1);
                 superBoardView.setKeyRepeat(i, 4, 2);
                 superBoardView.setPressEventForKey(i, 3, -1, Keyboard.KEYCODE_DELETE);
-                superBoardView.setPressEventForKey(i, 4, 0, Keyboard.KEYCODE_MODE_CHANGE);
-                superBoardView.setPressEventForKey(i, 4, 2, KeyEvent.KEYCODE_SPACE);
-                superBoardView.setPressEventForKey(i, 4, -1, Keyboard.KEYCODE_DONE);
-                superBoardView.setLongPressEventForKey(i, 4, 0, SuperBoard.KEYCODE_CLOSE_KEYBOARD);
+                superBoardView.setPressEventForKey(i, -1, 0, Keyboard.KEYCODE_MODE_CHANGE);
+                superBoardView.setPressEventForKey(i, -1, 2, KeyEvent.KEYCODE_SPACE);
+                superBoardView.setPressEventForKey(i, -1, -1, Keyboard.KEYCODE_DONE);
+                superBoardView.setLongPressEventForKey(i, -1, 0, SuperBoard.KEYCODE_CLOSE_KEYBOARD);
                 superBoardView.setKeyWidthPercent(i, 3, 0, 15);
                 superBoardView.setKeyWidthPercent(i, 3, -1, 15);
-                superBoardView.setKeyWidthPercent(i, 4, 0, 20);
-                superBoardView.setKeyWidthPercent(i, 4, 1, 15);
-                superBoardView.setKeyWidthPercent(i, 4, 2, 50);
-                superBoardView.setKeyWidthPercent(i, 4, 3, 15);
-                superBoardView.setKeyWidthPercent(i, 4, -1, 20);
+                superBoardView.setKeyWidthPercent(i, -1, 0, 20);
+                superBoardView.setKeyWidthPercent(i, -1, 1, 15);
+                superBoardView.setKeyWidthPercent(i, -1, 2, 50);
+                superBoardView.setKeyWidthPercent(i, -1, 3, 15);
+                superBoardView.setKeyWidthPercent(i, -1, -1, 20);
             }
         }
 
@@ -519,6 +528,8 @@ public final class InputService extends InputMethodService implements
 
             setKeyOpts(currentLanguageCache, superBoardView);
             IconThemeUtils icons = getIconThemes();
+            superBoardView.setKeyDrawable(4, -1, -2, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
+            superBoardView.setKeyDrawable(4, -1, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
             superBoardView.setKeyDrawable(-1, -2, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
             superBoardView.setKeyDrawable(-1, -1, -1, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
             superBoardView.setKeyDrawable(3, 1, 2, icons.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
@@ -581,7 +592,7 @@ public final class InputService extends InputMethodService implements
             int zp = getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
             Drawable key2Bg = ResourcesUtils.getKeyBg(y, yp, true);
             Drawable enterBg = ResourcesUtils.getKeyBg(z, zp, true);
-            for (int i = 0; i < predefinedLayouts.length; i++) {
+            for (int i = 0; i < superBoardView.getChildCount() - 1; i++) {
                 if (i != 0) {
                     if (i < 3) {
                         superBoardView.setKeyBackground(i, 3, 0, key2Bg);
@@ -943,6 +954,14 @@ public final class InputService extends InputMethodService implements
                 case SuperBoard.KEYCODE_TOGGLE_ALT:
                     toggleAltState();
                     return;
+                case KeyEvent.KEYCODE_KATAKANA_HIRAGANA: // math menu 1
+                    int mathIndex = findMathKeyboardIndex();
+                    setEnabledLayout(
+                            getEnabledLayoutIndex() != mathIndex
+                                    ? mathIndex
+                                    : findTextKeyboardIndex()
+                    );
+                    return;
                 case KeyEvent.KEYCODE_HENKAN:  // symbol menu
                     int fnIndex = findFNKeyboardIndex();
                     setEnabledLayout(
@@ -989,6 +1008,14 @@ public final class InputService extends InputMethodService implements
                 }
 
                 switch (key.getNormalPressEvent().first) {
+                    case KeyEvent.KEYCODE_KATAKANA_HIRAGANA: // math menu 1
+                        int mathIndex = findMathKeyboardIndex();
+                        setEnabledLayout(
+                                getEnabledLayoutIndex() != mathIndex
+                                        ? mathIndex
+                                        : findTextKeyboardIndex()
+                        );
+                        return;
                     case KeyEvent.KEYCODE_HENKAN:  // symbol menu
                         int fnIndex = findFNKeyboardIndex();
                         setEnabledLayout(

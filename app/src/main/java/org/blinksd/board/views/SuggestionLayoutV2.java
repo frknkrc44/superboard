@@ -69,6 +69,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         fabView.addButton(R.drawable.sym_board_emoji, KeyEvent.KEYCODE_KANA, true);
         fabView.addButton(R.drawable.ctrl, SuperBoard.KEYCODE_TOGGLE_CTRL, true);
         fabView.addButton(R.drawable.more_control, KeyEvent.KEYCODE_HENKAN);
+        fabView.addButton(R.drawable.superscript, KeyEvent.KEYCODE_KATAKANA_HIRAGANA);
         fabView.addButton(R.drawable.alt, SuperBoard.KEYCODE_TOGGLE_ALT, true);
         fabView.addButton(R.drawable.number, KeyEvent.KEYCODE_NUM);
         fabView.addButton(R.drawable.clipboard, KeyEvent.KEYCODE_EISU, true);

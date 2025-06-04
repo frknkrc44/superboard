@@ -4,5 +4,6 @@ public enum KeyboardType {
     TEXT,
     SYMBOL,
     NUMBER,
-    FN
+    FN,
+    MATH,
 }

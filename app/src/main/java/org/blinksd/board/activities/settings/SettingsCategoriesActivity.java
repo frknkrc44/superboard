@@ -101,12 +101,13 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                 OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
 
                 if (onBackAnimationCallback == null) {
-                    onBackAnimationCallback = new OnBackAnimationCallback() {
+                    onBackAnimationCallback = new OnBackInvokedCallback() {
                         @Override
                         public void onBackInvoked() {
                             toggleCategory(null);
                         }
 
+                        /*
                         @Override
                         public void onBackProgressed(BackEvent backEvent) {
                             var currentChild = mTabsHolder.getChildAt(categoryList.indexOf(currentCategory));
@@ -126,13 +127,14 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                             newChild.setAlpha(0);
                             currentChild.setAlpha(1);
                         }
+                        */
                     };
                 }
 
                 if (newIndex == categoryList.size()) {
-                    dispatcher.unregisterOnBackInvokedCallback((OnBackAnimationCallback) onBackAnimationCallback);
+                    dispatcher.unregisterOnBackInvokedCallback((OnBackInvokedCallback) onBackAnimationCallback);
                 } else if (currentIndex == categoryList.size()) {
-                    dispatcher.registerOnBackInvokedCallback(1, (OnBackAnimationCallback) onBackAnimationCallback);
+                    dispatcher.registerOnBackInvokedCallback(1, (OnBackInvokedCallback) onBackAnimationCallback);
                 }
             }
         }

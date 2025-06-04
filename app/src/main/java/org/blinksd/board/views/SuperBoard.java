@@ -896,7 +896,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         setCtrlState(0);
         setAltState(0);
 
-        if (isCurrentFNKeyboard() || isCurrentSymbolKeyboard()) {
+        if (isCurrentFNKeyboard() || isCurrentSymbolKeyboard() || isCurrentMathKeyboard()) {
             return;
         }
 
@@ -1021,6 +1021,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         throw new RuntimeException("You must set a normal keyboard for input");
     }
 
+    public final boolean isCurrentMathKeyboard() {
+        return getCurrentKeyboardType() == KeyboardType.MATH;
+    }
+
     public final boolean isCurrentFNKeyboard() {
         return getCurrentKeyboardType() == KeyboardType.FN;
     }
@@ -1038,7 +1042,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final KeyboardType getCurrentKeyboardType() {
-        return (KeyboardType) getKeyboard(selected).getTag();
+        return getKeyboardType(selected);
+    }
+
+    public final KeyboardType getKeyboardType(int index) {
+        return (KeyboardType) getKeyboard(index).getTag();
+    }
+
+    public final int findMathKeyboardIndex() {
+        return findKeyboardIndex(KeyboardType.MATH);
     }
 
     public final int findFNKeyboardIndex() {
