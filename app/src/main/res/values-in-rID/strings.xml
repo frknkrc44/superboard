@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Warna latar belakang tekan tombol kedua</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Warna latar belakang papan ketik</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Warna teks kunci</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Memutar suara saat tombol ditekan</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Mengurangi penggunaan RAM (meningkatkan penundaan init)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Gunakan karakter popup pertama saat ditekan lama (Anda harus mengaktifkan menu popup)</string>
