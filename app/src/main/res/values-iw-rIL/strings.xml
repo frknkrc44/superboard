@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">לחיצת מקש שנייה צבע רקע</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">צבע רקע למקלדת</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">צבע טקסט מפתח</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">השמע צליל באירועי לחיצת מקשים</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">הפחת את השימוש בזיכרון RAM (מגדיל את עיכוב הפתיחה)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">השתמש בתו הקופץ הראשון בלחיצה ארוכה (עליך להפעיל את התפריט הקופץ)</string>
