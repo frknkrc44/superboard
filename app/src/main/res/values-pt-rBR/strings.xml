@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Segunda cor de fundo</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Cor de fundo do teclado</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Cor do texto chave</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Tocar som em eventos de pressionar tecla</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduz o uso de RAM (aumenta o atraso inicial)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use o primeiro caractere pop-up ao pressionar longamente (você deve ativar o menu pop-up)</string>
