@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">لون الخلفية الثانوي للمفتاح المضغوط</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">لون خلفية اللوحة</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">لون النص</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">أصدر صوت عند الضغط</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">قلل من استهلاك الذاكرة العشوائية (يزيد من مدة البَدْء)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
