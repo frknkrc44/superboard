@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">দ্বিতীয় কী ব্যাকগ্রাউন্ড কালার</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">কীবোর্ড ব্যাকগ্রাউন্ড রঙ</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">বাটন টেক্সট রঙ</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">কী প্রেস ইভেন্টে শব্দ চালান</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">র‍্যাম ব্যবহার কমান (init বিলম্ব বাড়ায়)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">দীর্ঘ প্রেসে প্রথম পপআপ অক্ষর ব্যবহার করুন (আপনাকে অবশ্যই পপআপ মেনু সক্ষম করতে হবে)</string>
