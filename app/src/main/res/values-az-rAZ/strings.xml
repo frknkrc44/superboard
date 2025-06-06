@@ -46,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">İkinci düyməni basın fon rəngi</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Klaviatura fon rəngi</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Əsas mətn rəngi</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Düymələrə basma hadisələrində səs çalın</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM istifadəsini azaldın (başlanğıc gecikməsini artırır)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Uzun basaraq ilk pop-up simvolundan istifadə edin (açılan menyunu aktivləşdirməlisiniz)</string>
