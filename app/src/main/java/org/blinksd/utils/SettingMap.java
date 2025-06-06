@@ -57,6 +57,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEY_VIBRATE_DURATION = "key_vibrate_duration",
             SET_KEY_LONGPRESS_DURATION = "key_longpress_duration",
             SET_KEY_TEXTCLR = "key_textclr",
+            SET_KEY2_TEXTCLR = "key2_textclr",
+            SET_ENTER_TEXTCLR = "enter_textclr",
             SET_COLORIZE_NAVBAR = "colorize_navbar",
             SET_COLORIZE_NAVBAR_ALWAYS_TRANS = "colorize_navbar_always_trans",
             SET_COLORIZE_NAVBAR_ALT = "colorize_navbar_alt",
@@ -169,6 +171,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putThemingAdvanced(SET_ENTER_PRESS_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_SHADOWCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_TEXTCLR, SettingType.COLOR_SELECTOR);
+        putThemingAdvanced(SET_KEY2_TEXTCLR, SettingType.COLOR_SELECTOR);
+        putThemingAdvanced(SET_ENTER_TEXTCLR, SettingType.COLOR_SELECTOR);
     }
 
     private void putGeneral(String name, SettingType type) {
@@ -312,6 +316,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_KEY_SHADOWCLR:
                 return Defaults.KEY_TEXT_SHADOW_COLOR;
             case SET_KEY_TEXTCLR:
+            case SET_KEY2_TEXTCLR:
+            case SET_ENTER_TEXTCLR:
                 return Defaults.KEY_TEXT_COLOR;
             case SET_COLORIZE_NAVBAR:
                 return Defaults.COLORIZE_NAVBAR;

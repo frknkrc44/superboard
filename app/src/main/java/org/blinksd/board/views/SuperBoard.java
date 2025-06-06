@@ -237,8 +237,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         createEmptyLayout(KeyboardType.TEXT);
     }
 
+    public final void setKeyItemColor(int keyboardIndex, int rowIndex, int keyIndex, int color) {
+        getKey(keyboardIndex, rowIndex, keyIndex).setKeyItemColor(color);
+    }
+
     public final void setKeyBackground(int keyboardIndex, int rowIndex, int keyIndex, Drawable background) {
         getKey(keyboardIndex, rowIndex, keyIndex).setBackground(background);
+    }
+
+    public final void setKeyBackgroundAndItemColor(int keyboardIndex, int rowIndex, int keyIndex, Drawable background, int itemColor) {
+        Key key = getKey(keyboardIndex, rowIndex, keyIndex);
+        key.setBackground(background);
+        key.setKeyItemColor(itemColor);
     }
 
     public final void setKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex) {

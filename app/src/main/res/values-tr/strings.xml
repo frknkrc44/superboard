@@ -49,6 +49,8 @@
 	<string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">İkincil tuş dokunma arkaplan rengi</string>
 	<string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Klavye arkaplan rengi</string>
 	<string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Tuş metin rengi</string>
+	<string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">İkincil tuş metin rengi</string>
+	<string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter tuşu metin rengi</string>
 	<string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
 	<string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM kullanımını düşür (açılış gecikmesini arttırır)</string>
 	<string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Uzun basıldığında ilk açılır pencere karakterini kullan (açılır pencereleri etkinleştirmelisiniz)</string>

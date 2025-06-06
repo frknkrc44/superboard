@@ -3,6 +3,8 @@ package org.blinksd.utils;
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
+import static org.blinksd.utils.ColorUtils.invertColor;
+import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
 import static org.blinksd.utils.DensityUtils.mpInt;
 
 import android.content.Context;
@@ -112,7 +114,12 @@ public final class SuperDBHelper {
             case SettingMap.SET_KEY2_BGCLR -> monetColors.getKey2Color();
             case SettingMap.SET_KEY2_PRESS_BGCLR -> monetColors.getKey2PressColor();
             case SettingMap.SET_KEYBOARD_BGCLR -> monetColors.getKeyboardColor();
-            case SettingMap.SET_KEY_TEXTCLR -> monetColors.getTextColor();
+            case SettingMap.SET_KEY_TEXTCLR, SettingMap.SET_KEY2_TEXTCLR -> monetColors.getTextColor();
+            case SettingMap.SET_ENTER_TEXTCLR -> satisfiesTextContrast(
+                        monetColors.getEnterColor(),
+                        monetColors.getTextColor())
+                    ? invertColor(monetColors.getTextColor())
+                    : monetColors.getTextColor();
             default -> Integer.parseInt(getStringOrDefault(key));
         };
     }
@@ -146,7 +153,7 @@ public final class SuperDBHelper {
         getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR, keyPressClr);
         getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
         getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
-        boolean isLight = ColorUtils.satisfiesTextContrast(c);
+        boolean isLight = satisfiesTextContrast(c);
         getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, ColorUtils.getDarkerColor(keyPress2Clr));
         keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
         getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, keyClr);

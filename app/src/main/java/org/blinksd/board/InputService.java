@@ -586,22 +586,24 @@ public final class InputService extends InputMethodService implements
             superBoardView.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
             superBoardView.setKeysPopupPreviewEnabled(getBooleanOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));
             superBoardView.setKeyboardIndicatorHeight(DensityUtils.getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_INDICATOR_HEIGHT)));
-            int y = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
-            int yp = getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
-            int z = getIntOrDefault(SettingMap.SET_ENTER_BGCLR);
-            int zp = getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
-            Drawable key2Bg = ResourcesUtils.getKeyBg(y, yp, true);
-            Drawable enterBg = ResourcesUtils.getKeyBg(z, zp, true);
+            int key2BgClr = getIntOrDefault(SettingMap.SET_KEY2_BGCLR);
+            int key2BgPressedClr = getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR);
+            int key2TextClr = getIntOrDefault(SettingMap.SET_KEY2_TEXTCLR);
+            int enterBgClr = getIntOrDefault(SettingMap.SET_ENTER_BGCLR);
+            int enterBgPressClr = getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR);
+            int enterTextClr = getIntOrDefault(SettingMap.SET_ENTER_TEXTCLR);
+            Drawable key2Bg = ResourcesUtils.getKeyBg(key2BgClr, key2BgPressedClr, true);
+            Drawable enterBg = ResourcesUtils.getKeyBg(enterBgClr, enterBgPressClr, true);
             for (int i = 0; i < superBoardView.getChildCount() - 1; i++) {
                 if (i != 0) {
                     if (i < 3) {
-                        superBoardView.setKeyBackground(i, 3, 0, key2Bg);
-                        superBoardView.setKeyBackground(i, 3, -1, key2Bg);
-                        for (int h = 3; h < 5; h++) superBoardView.setKeyBackground(i, h, 0, key2Bg);
-                        superBoardView.setKeyBackground(i, 4, 1, key2Bg);
-                        superBoardView.setKeyBackground(i, 4, 3, key2Bg);
+                        superBoardView.setKeyBackgroundAndItemColor(i, 3, 0, key2Bg, key2TextClr);
+                        superBoardView.setKeyBackgroundAndItemColor(i, 3, -1, key2Bg, key2TextClr);
+                        for (int h = 3; h < 5; h++) superBoardView.setKeyBackgroundAndItemColor(i, h, 0, key2Bg, key2TextClr);
+                        superBoardView.setKeyBackgroundAndItemColor(i, 4, 1, key2Bg, key2TextClr);
+                        superBoardView.setKeyBackgroundAndItemColor(i, 4, 3, key2Bg, key2TextClr);
                     }
-                    if (i != 3) superBoardView.setKeyBackground(i, -1, -1, enterBg);
+                    if (i != 3) superBoardView.setKeyBackgroundAndItemColor(i, -1, -1, enterBg, enterTextClr);
                 }
             }
             superBoardView.setDisablePopup(getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP));
