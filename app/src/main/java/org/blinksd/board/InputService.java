@@ -62,6 +62,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.blinksd.board.activities.SetupActivityV2;
 import org.blinksd.board.views.BoardPopup;
 import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
@@ -109,6 +110,7 @@ public final class InputService extends InputMethodService implements
         }
     };
     private boolean hiddenBySelf = false;
+    Intent settingsActivity = null;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -935,8 +937,7 @@ public final class InputService extends InputMethodService implements
             return emojiView != null && emojiView.isShown();
         }
 
-        @Override
-        public void sendKeyEvent(int code) {
+        private boolean sendKeyEventImpl(int code) {
             if (code != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {
                 showClipboardView(false);
             }
@@ -952,10 +953,10 @@ public final class InputService extends InputMethodService implements
             switch (code) {
                 case SuperBoard.KEYCODE_TOGGLE_CTRL:
                     toggleCtrlState();
-                    return;
+                    return true;
                 case SuperBoard.KEYCODE_TOGGLE_ALT:
                     toggleAltState();
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_KATAKANA_HIRAGANA: // math menu 1
                     int mathIndex = findMathKeyboardIndex();
                     setEnabledLayout(
@@ -963,7 +964,7 @@ public final class InputService extends InputMethodService implements
                                     ? mathIndex
                                     : findTextKeyboardIndex()
                     );
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_HENKAN:  // symbol menu
                     int fnIndex = findFNKeyboardIndex();
                     setEnabledLayout(
@@ -971,7 +972,7 @@ public final class InputService extends InputMethodService implements
                                     ? fnIndex
                                     : findTextKeyboardIndex()
                     );
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_NUM:     // number menu
                     int numIndex = findNumberKeyboardIndex();
                     setEnabledLayout(
@@ -979,16 +980,33 @@ public final class InputService extends InputMethodService implements
                                     ? numIndex
                                     : findTextKeyboardIndex()
                     );
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_EISU:    // clipboard menu
                     showClipboardView(!clipboardView.isShown());
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_KANA:    // emoji menu
                     showEmojiView(!emojiView.isShown());
-                    return;
+                    return true;
                 case KeyEvent.KEYCODE_3D_MODE: // language selector menu
                     showLanguageSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
-                    return;
+                    return true;
+                case SuperBoard.KEYCODE_SETTINGS:
+                    if (settingsActivity == null) {
+                        settingsActivity = new Intent(getContext(), SetupActivityV2.class);
+                        settingsActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+
+                    startActivity(settingsActivity);
+                    return true;
+            }
+
+            return false;
+        }
+
+        @Override
+        public void sendKeyEvent(int code) {
+            if (sendKeyEventImpl(code)) {
+                return;
             }
 
             super.sendKeyEvent(code);
@@ -996,58 +1014,10 @@ public final class InputService extends InputMethodService implements
 
         @Override
         public void sendKeyboardEvent(Key key) {
-            if (key.hasNormalPressEvent()) {
-                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_EISU && isClipboardViewShown()) {
-                    showClipboardView(false);
-                }
-
-                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_KANA && isEmojiViewShown()) {
-                    showEmojiView(false);
-                }
-
-                if (key.getNormalPressEvent().first != KeyEvent.KEYCODE_3D_MODE && isLanguageSelectorViewShown()) {
-                    showLanguageSelectorView(false);
-                }
-
-                switch (key.getNormalPressEvent().first) {
-                    case KeyEvent.KEYCODE_KATAKANA_HIRAGANA: // math menu 1
-                        int mathIndex = findMathKeyboardIndex();
-                        setEnabledLayout(
-                                getEnabledLayoutIndex() != mathIndex
-                                        ? mathIndex
-                                        : findTextKeyboardIndex()
-                        );
-                        return;
-                    case KeyEvent.KEYCODE_HENKAN:  // symbol menu
-                        int fnIndex = findFNKeyboardIndex();
-                        setEnabledLayout(
-                                getEnabledLayoutIndex() != fnIndex
-                                        ? fnIndex
-                                        : findTextKeyboardIndex()
-                        );
-                        return;
-                    case KeyEvent.KEYCODE_NUM:     // number menu
-                        int numIndex = findNumberKeyboardIndex();
-                        setEnabledLayout(
-                                getEnabledLayoutIndex() != numIndex
-                                        ? numIndex
-                                        : findTextKeyboardIndex()
-                        );
-                        return;
-                    case KeyEvent.KEYCODE_EISU:    // clipboard menu
-                        showClipboardView(!clipboardView.isShown());
-                        return;
-                    case KeyEvent.KEYCODE_KANA:    // emoji menu
-                        showEmojiView(!emojiView.isShown());
-                        return;
-                    case KeyEvent.KEYCODE_3D_MODE: // language selector menu
-                        showLanguageSelectorView(!bottomKeyboardBarView.languageSelectorView.isShown());
-                        return;
-                }
+            if (!key.hasNormalPressEvent() || !sendKeyEventImpl(key.getNormalPressEvent().first)) {
+                if (!shown) super.sendKeyboardEvent(key);
+                else shown = false;
             }
-
-            if (!shown) super.sendKeyboardEvent(key);
-            else shown = false;
         }
 
         @Override

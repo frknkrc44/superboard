@@ -203,7 +203,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         final String tag = p1.getTag().toString();
         build.setTitle(getTranslation(tag));
         final int val = SuperDBHelper.getIntOrDefault(tag);
-        dialogView = new ColorSelectorLayout(p1.getContext(), p1.getTag().toString());
+        dialogView = new ColorSelectorLayout(p1.getContext(), val);
         dialogView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
         build.setView(dialogView);
         build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());

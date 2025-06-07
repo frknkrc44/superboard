@@ -1,5 +1,12 @@
 package org.blinksd.utils;
 
+import static android.graphics.Color.alpha;
+import static android.graphics.Color.argb;
+import static android.graphics.Color.blue;
+import static android.graphics.Color.green;
+import static android.graphics.Color.luminance;
+import static android.graphics.Color.red;
+import static android.graphics.Color.rgb;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 
 import android.annotation.SuppressLint;
@@ -8,7 +15,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -41,15 +47,15 @@ public final class ColorUtils {
     }
 
     public static int compositeColors(int foreground, int background) {
-        int bgAlpha = Color.alpha(background);
-        int fgAlpha = Color.alpha(foreground);
+        int bgAlpha = alpha(background);
+        int fgAlpha = alpha(foreground);
         int a = compositeAlpha(fgAlpha, bgAlpha);
-        int r = compositeComponent(Color.red(foreground), fgAlpha,
-                Color.red(background), bgAlpha, a);
-        int g = compositeComponent(Color.green(foreground), fgAlpha,
-                Color.green(background), bgAlpha, a);
-        int b = compositeComponent(Color.blue(foreground), fgAlpha,
-                Color.blue(background), bgAlpha, a);
+        int r = compositeComponent(red(foreground), fgAlpha,
+                red(background), bgAlpha, a);
+        int g = compositeComponent(green(foreground), fgAlpha,
+                green(background), bgAlpha, a);
+        int b = compositeComponent(blue(foreground), fgAlpha,
+                blue(background), bgAlpha, a);
         return argb(a, r, g, b);
     }
 
@@ -64,7 +70,7 @@ public final class ColorUtils {
 
     public static double calculateLuminance(int color) {
         if (Build.VERSION.SDK_INT >= 24)
-            return Color.luminance(color);
+            return luminance(color);
 
         final double[] result = getTempDouble3Array();
         colorToXYZ(color, result);
@@ -110,7 +116,7 @@ public final class ColorUtils {
     }
 
     public static void colorToHSL(int color, float[] outHsl) {
-        RGBToHSL(Color.red(color), Color.green(color), Color.blue(color), outHsl);
+        RGBToHSL(red(color), green(color), blue(color), outHsl);
     }
 
     public static int HSLToColor(float[] hsl) {
@@ -177,11 +183,11 @@ public final class ColorUtils {
     }
 
     public static double calculateContrast(int foreground, int background) {
-        if (Color.alpha(background) != 255) {
+        if (alpha(background) != 255) {
             Log.wtf("ColorUtils", "background can not be translucent: #"
                     + Integer.toHexString(background));
         }
-        if (Color.alpha(foreground) < 255) {
+        if (alpha(foreground) < 255) {
             // If the foreground is translucent, composite the foreground over the background
             foreground = compositeColors(foreground, background);
         }
@@ -194,7 +200,7 @@ public final class ColorUtils {
     }
 
     public static void colorToXYZ(int color, double[] outXyz) {
-        RGBToXYZ(Color.red(color), Color.green(color), Color.blue(color), outXyz);
+        RGBToXYZ(red(color), green(color), blue(color), outXyz);
     }
 
     public static void RGBToXYZ(int r, int g, int b, double[] outXyz) {
@@ -234,7 +240,7 @@ public final class ColorUtils {
     }
 
     public static boolean satisfiesTextContrast(int backgroundColor, int foregroundColor) {
-        if (Color.alpha(backgroundColor) > 0x88)
+        if (alpha(backgroundColor) > 0x88)
             return calculateContrast(foregroundColor, backgroundColor) >= 10;
         return false;
     }
@@ -252,12 +258,12 @@ public final class ColorUtils {
         int color, count = 0, r = 0, g = 0, b = 0, a;
         for (int pixel : pixels) {
             color = pixel;
-            a = Color.alpha(color);
+            a = alpha(color);
             if (a > 0) {
                 color = (a < 255) ? convertARGBtoRGB(color) : color;
-                r += Color.red(color);
-                g += Color.green(color);
-                b += Color.blue(color);
+                r += red(color);
+                g += green(color);
+                b += blue(color);
                 count++;
             }
         }
@@ -275,23 +281,19 @@ public final class ColorUtils {
     }
 
     public static int convertARGBtoRGB(int color) {
-        return rgb(Color.red(color), Color.green(color), Color.blue(color));
+        return setAlphaForColor(0xFF, color);
     }
 
     public static int setAlphaForColor(int alpha, int color) {
-        return argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+        return argb(alpha, red(color), green(color), blue(color));
     }
 
     public static int getDarkerColor(int color) {
-        int[] state = {Color.red(color), Color.green(color), Color.blue(color)};
+        int[] state = {red(color), green(color), blue(color)};
         for (int i = 0; i < state.length; i++) {
             state[i] = (int) (state[i] / 1.2f);
         }
-        return argb(Color.alpha(color), state[0], state[1], state[2]);
-    }
-
-    public static int getColorWithAlpha(int color, int alpha) {
-        return argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+        return argb(alpha(color), state[0], state[1], state[2]);
     }
 
     @SuppressLint("UseRequiresApi")
@@ -319,14 +321,6 @@ public final class ColorUtils {
 
     private static int constrain(int amount) {
         return amount < 0 ? 0 : Math.min(amount, 255);
-    }
-
-    public static int rgb(int red, int green, int blue) {
-        return argb(0xff, red, green, blue);
-    }
-
-    public static int argb(int alpha, int red, int green, int blue) {
-        return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
 
     public static String colorIntToString(int a, int r, int g, int b) {

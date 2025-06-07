@@ -71,6 +71,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public static final int KEYCODE_OPEN_EMOJI_LAYOUT = -102;
     public static final int KEYCODE_TOGGLE_CTRL = -103;
     public static final int KEYCODE_TOGGLE_ALT = -104;
+    public static final int KEYCODE_SETTINGS = -105;
     public static final int SHIFT_OFF = 0;
     public static final int SHIFT_ON = 1;
     public static final int SHIFT_LOCKED = 2;

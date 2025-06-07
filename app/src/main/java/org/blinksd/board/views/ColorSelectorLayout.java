@@ -1,5 +1,7 @@
 package org.blinksd.board.views;
 
+import static android.graphics.Color.argb;
+import static android.graphics.Color.rgb;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 
 import android.annotation.SuppressLint;
@@ -119,10 +121,6 @@ public final class ColorSelectorLayout extends LinearLayout {
         }
     }
 
-    public ColorSelectorLayout(Context context, String key) {
-        this(context, SuperDBHelper.getIntOrDefault(key));
-    }
-
     private View getView(Context ctx, int i) {
         return switch (i) {
             case 0 -> getRGBSelector(ctx);
@@ -142,16 +140,16 @@ public final class ColorSelectorLayout extends LinearLayout {
         g = new CustomSeekBar(ctx);
         b = new CustomSeekBar(ctx);
 
-        r.setProgressColor(ColorUtils.rgb(0xDE, 0, 0));
-        g.setProgressColor(ColorUtils.rgb(0, 0xDE, 0));
-        b.setProgressColor(ColorUtils.rgb(0, 0, 0xDE));
+        r.setProgressColor(rgb(0xDE, 0, 0));
+        g.setProgressColor(rgb(0, 0xDE, 0));
+        b.setProgressColor(rgb(0, 0, 0xDE));
 
         setPreview(prev);
 
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar s, int i, boolean c) {
-                currentColorValue = ColorUtils.argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
+                currentColorValue = argb(a.getProgress(), r.getProgress(), g.getProgress(), b.getProgress());
                 setPreview(prev);
             }
 
@@ -206,7 +204,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             @Override
             public void onProgressChanged(SeekBar z, int i, boolean c) {
                 int color = HSVColorUtils.getColorFromHSVInt(h.getProgress(), s.getProgress(), v.getProgress());
-                color = ColorUtils.argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
+                color = argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
                 currentColorValue = color;
                 setPreview(prev);
             }
