@@ -5,7 +5,6 @@ import static android.view.View.VISIBLE;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
-import static org.blinksd.utils.DensityUtils.wp;
 import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.ThemeUtils.getThemeNames;
@@ -25,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
-import android.window.BackEvent;
-import android.window.OnBackAnimationCallback;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 

@@ -32,7 +32,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.activities.BaseActivity;
 import org.blinksd.board.services.KeyboardThemeApi;
 import org.blinksd.board.views.CustomActionBar;
-import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
@@ -42,15 +41,16 @@ import org.blinksd.utils.SettingCategory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public abstract class SettingsBaseActivity extends BaseActivity {
     LinearLayout main;
-    FrameLayout mPreviewHolder;
+    // FrameLayout mPreviewHolder;
     MainTabListAdapter mTabListAdapter;
     FrameLayout mTabsHolder;
     CustomActionBar actionBar;
-    SuperBoard kbdPreview;
+    // SuperBoard kbdPreview;
     ImageView backgroundImageView;
     View dialogView;
     SettingCategory currentCategory;
@@ -194,8 +194,10 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     }
 
     private class ImageTask {
+        private static final Executor executor = Executors.newSingleThreadExecutor();
+
         public void execute(Object... args) {
-            Executors.newSingleThreadExecutor().execute(() -> {
+            executor.execute(() -> {
                 Bitmap bmp = doInBackground(args);
                 mainHandler.post(() -> onPostExecute(bmp));
             });
@@ -207,11 +209,11 @@ public abstract class SettingsBaseActivity extends BaseActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     ImageDecoder.Source decoder = ImageDecoder.createSource((ContentResolver) p1[0], (Uri) p1[1]);
                     return ImageDecoder.decodeBitmap(decoder);
-                } else {
-                    return MediaStore.Images.Media.getBitmap((ContentResolver) p1[0], (Uri) p1[1]);
                 }
-            } catch (Throwable ignored) {
-            }
+
+                return MediaStore.Images.Media.getBitmap((ContentResolver) p1[0], (Uri) p1[1]);
+            } catch (Throwable ignored) {}
+
             return null;
         }
 

@@ -5,10 +5,7 @@ import static android.view.Gravity.CENTER_VERTICAL;
 import static android.view.Gravity.LEFT;
 import static android.view.Gravity.RIGHT;
 import static android.view.Gravity.TOP;
-import static org.blinksd.utils.ColorUtils.calculateContrast;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
-import static org.blinksd.utils.ColorUtils.invertColor;
-import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
@@ -283,13 +280,15 @@ public class FABView extends LinearLayout {
     }
 
     private class OnButtonClickInternalListener implements OnClickListener {
-        private static final int baseDelay = 50;
+        private static final int baseDelay = 25;
         private static final int degree = 225;
 
         private int calculateDelay(boolean collapsed, int totalAnimatedButtons, int currentIndex) {
+            final int nextIndex = (currentIndex + 1);
+
             return (REVERSE && collapsed) || (!REVERSE && !collapsed)
-                    ? (totalAnimatedButtons - (currentIndex + 1)) * baseDelay
-                    : (currentIndex + 1) * baseDelay;
+                    ? (totalAnimatedButtons - nextIndex) * baseDelay
+                    : nextIndex * baseDelay;
         }
 
         @Override

@@ -2,41 +2,18 @@ package org.blinksd.board.activities.settings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.blinksd.board.SuperBoardApplication.clearCustomFont;
-import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
-import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
-import static org.blinksd.board.SuperBoardApplication.getCustomFont;
-import static org.blinksd.board.SuperBoardApplication.getIconThemes;
-import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
-import static org.blinksd.utils.DensityUtils.mpInt;
-import static org.blinksd.utils.LayoutUtils.setSpaceBarViewPrefs;
-import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
-import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.blinksd.board.R;
 import org.blinksd.board.views.CustomActionBar;
-import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.IconThemeUtils;
-import org.blinksd.utils.ImageUtils;
 import org.blinksd.utils.LayoutCreator;
-import org.blinksd.utils.LocalIconTheme;
-import org.blinksd.utils.ResourcesUtils;
-import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SuperDBHelper;
-import org.blinksd.utils.superboard.KeyboardType;
-
-import java.io.File;
 
 public class AppSettingsV3 extends SettingsCategoriesActivity {
     @Override
@@ -44,7 +21,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         super.onCreate(b);
         main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
         createAppBarView();
-        createPreviewView();
+        // createPreviewView();
         createTabBarView();
 
         setKeyPrefs();
@@ -55,6 +32,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         mTabsHolder.getChildAt(mTabsHolder.getChildCount() - 1).requestFocus();
     }
 
+    /*
     private void createPreviewView() {
         LinearLayout mainHolder = (LinearLayout) LayoutCreator.getHFilledView(LinearLayout.class, LinearLayout.class, this);
         mainHolder.setGravity(Gravity.CENTER);
@@ -80,9 +58,23 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
             mainHolder.setVisibility(GONE);
         }
     }
+     */
 
     private void createAppBarView() {
         actionBar = new CustomActionBar(this, (v) -> toggleCategory(null));
+        if (!isWatchDevice()) {
+            actionBar.addAction(
+                    R.drawable.refresh,
+                    v -> System.exit(0)
+            );
+            actionBar.addAction(
+                    R.drawable.fboard_mono,
+                    v -> {
+                        var imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    }
+            );
+        }
         main.addView(actionBar);
     }
 
@@ -114,6 +106,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
     @Override
     public void setKeyPrefs() {
+        /*
         boolean useMonet = getMonetColors().isMonetEnabled();
 
         File img = getBackgroundImageFile();
@@ -166,5 +159,6 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
             clearCustomFont();
             getCustomFont();
         } catch (Throwable ignored) {}
+        */
     }
 }

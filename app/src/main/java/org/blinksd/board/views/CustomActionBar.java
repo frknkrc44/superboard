@@ -75,7 +75,7 @@ public class CustomActionBar extends LinearLayout {
         buttonImage.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         buttonImage.setImageResource(iconResId);
         buttonImage.setOnClickListener(onClick);
-        buttonImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        buttonImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         buttonImage.setBackground(getTransSelectableItemBg(getContext(), mTitle.getCurrentTextColor()));
         setColorFilter(buttonImage, Color.WHITE);
         mActions.addView(buttonImage);
