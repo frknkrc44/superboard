@@ -5,36 +5,29 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import org.blinksd.utils.SimpleAnimatorListener;
 
 // Inspired from https://stackoverflow.com/a/40197132
 public class ExpandableTextView extends TextView {
-    private static final int MAX_LINES = 3;
+    private static final int MAX_LINES = 1;
+    private static final int ANIM_DURATION = 100;
 
     private int collapsedHeight = 0;
     private int expandedHeight;
+    private int calculatedWidth = 0;
 
     public ExpandableTextView(Context context) {
         super(context);
         setMaxLines(MAX_LINES);
+        setEllipsize(TextUtils.TruncateAt.MIDDLE);
 
         setOnClickListener(v -> {
-            if (getLineCount() < MAX_LINES) {
-                return;
-            }
-
-            if (getMaxLines() == MAX_LINES) {
-                setMaxLines(Integer.MAX_VALUE);
-                measure(
-                        makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED),
-                        makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-                );
-                expandedHeight = getMeasuredHeight();
-                ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", collapsedHeight, expandedHeight);
-                animation.setDuration(250).start();
-            } else {
+            if (getMaxLines() != MAX_LINES) {
                 ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", expandedHeight, collapsedHeight);
                 animation.addListener(new SimpleAnimatorListener() {
                     @Override
@@ -42,7 +35,16 @@ public class ExpandableTextView extends TextView {
                         setMaxLines(MAX_LINES);
                     }
                 });
-                animation.setDuration(250).start();
+                animation.setDuration(ANIM_DURATION).start();
+            } else {
+                setMaxLines(Integer.MAX_VALUE);
+                measure(
+                        makeMeasureSpec(calculatedWidth, MeasureSpec.EXACTLY),
+                        makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+                );
+                expandedHeight = getMeasuredHeight();
+                ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", collapsedHeight, expandedHeight);
+                animation.setDuration(ANIM_DURATION).start();
             }
         });
     }
@@ -53,6 +55,7 @@ public class ExpandableTextView extends TextView {
 
         if (collapsedHeight == 0) {
             collapsedHeight = getMeasuredHeight();
+            calculatedWidth = getMeasuredWidth();
         }
     }
 }
