@@ -11,6 +11,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -322,8 +323,9 @@ public final class ClipboardView extends LinearLayout
         for (int i = 0; i < childCount; i++) {
             View child = listView.getChildAt(i);
 
-            TextView textView1 = child.findViewById(android.R.id.text1);
+            ExpandableTextView textView1 = child.findViewById(android.R.id.text1);
             textView1.setTextColor(textColor);
+            textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, superBoard.getKeysTextSize());
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
             setColorFilter(button1, textColor);

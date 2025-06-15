@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -161,7 +162,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         tv.setTextColor(color);
         float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
         int pad = DensityUtils.dpInt(8);
-        tv.setTextSize(textSize);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
         tv.setLayoutParams(params);
@@ -188,7 +189,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(textColor);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
-            tv.setTextSize(textSize);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             tv.setBackground(getSuggestionItemBackground());
         }
 
