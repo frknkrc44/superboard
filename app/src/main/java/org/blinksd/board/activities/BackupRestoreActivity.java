@@ -6,10 +6,8 @@ import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ThemeUtils.getCurrentThemeJSON;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.util.TypedValue;
@@ -49,7 +47,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-@SuppressWarnings({"deprecation", "all"})
+@SuppressWarnings("deprecation")
 public final class BackupRestoreActivity extends BaseActivity {
     private TabHost host;
     private Uri importedZipUri;
@@ -146,13 +144,11 @@ public final class BackupRestoreActivity extends BaseActivity {
     }
 
     private View getView(int i) {
-        switch (i) {
-            case 0:
-                return getBackupView();
-            case 1:
-                return getRestoreView();
-        }
-        return null;
+        return switch (i) {
+            case 0 -> getBackupView();
+            case 1 -> getRestoreView();
+            default -> throw new RuntimeException("Invalid view index for Backup/Restore: " + i);
+        };
     }
 
     private View getBackupView() {
@@ -258,18 +254,8 @@ public final class BackupRestoreActivity extends BaseActivity {
 
     private void createAndShareZipFile() throws Throwable {
         dataFile = createZipFile();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-            startActivityForResult(intent, REQUEST_BACKUP_SAVE_TO_DIRECTORY);
-        } else {
-            Uri fileUri = Uri.fromFile(dataFile);
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setDataAndType(fileUri, "*/*");
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            startActivity(Intent.createChooser(intent, getString(R.string.app_name)));
-        }
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        startActivityForResult(intent, REQUEST_BACKUP_SAVE_TO_DIRECTORY);
     }
 
     @SuppressLint("ResourceType")
@@ -335,7 +321,7 @@ public final class BackupRestoreActivity extends BaseActivity {
     }
 
     @SuppressLint("UseRequiresApi")
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressWarnings("ConstantConditions")
     private void saveToDirectory(Uri treeUri) {
         String documentId = DocumentsContract.getTreeDocumentId(treeUri);
         if (DocumentsContract.isDocumentUri(this, treeUri)) {

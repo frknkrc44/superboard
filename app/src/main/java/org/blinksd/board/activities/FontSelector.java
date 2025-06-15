@@ -85,7 +85,6 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
         btn.setBackground(getSelectableItemBg(
-                this,
                 textView.getCurrentTextColor(),
                 currentFont == currentIndex
         ));

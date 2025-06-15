@@ -738,7 +738,7 @@ public final class InputService extends InputMethodService implements
             calculatedHeight += bottomKeyboardBarView.getLayoutParams().height;
         }
 
-        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP && detectNavbar(this)) {
+        if (detectNavbar(this)) {
             Window w = getWindow().getWindow();
             assert w != null : "Window returned null";
 

@@ -141,19 +141,15 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
             }
         }
 
-        return Objects.requireNonNull(get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME)).getIconByType(type);
+        // noinspection ConstantConditions
+        return get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME).getIconByType(type);
     }
 
     private Drawable getDrawable(int res) {
-        switch (res) {
-            case SpaceBarThemeUtils.SPACEBAR_HIDE:
-                return new ColorDrawable();
-
-            case SpaceBarThemeUtils.SPACEBAR_TEXT:
-            case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
-                return null;
-        }
-
-        return ResourcesUtils.getTintedDrawable(res, null);
+        return switch (res) {
+            case SpaceBarThemeUtils.SPACEBAR_HIDE -> new ColorDrawable();
+            case SpaceBarThemeUtils.SPACEBAR_TEXT, SpaceBarThemeUtils.SPACEBAR_DEFAULT -> null;
+            default -> ResourcesUtils.getDrawable(res);
+        };
     }
 }

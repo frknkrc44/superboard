@@ -23,9 +23,7 @@ final class CustomSeekBar extends SeekBar {
         setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(75), -2, 0));
         setThumb(ResourcesUtils.getDrawable(R.drawable.seekbar_thumb));
         setProgressDrawable(ResourcesUtils.getDrawable(R.drawable.seekbar));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSplitTrack(false);
-        }
+        setSplitTrack(false);
 
         try {
             setProgressColor(ResourcesUtils.getColor(R.color.seekbar_progress));

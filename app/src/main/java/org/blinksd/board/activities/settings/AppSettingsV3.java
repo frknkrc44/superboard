@@ -60,6 +60,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
     }
      */
 
+    @SuppressWarnings({"deprecation", "all"})
     private void createAppBarView() {
         actionBar = new CustomActionBar(this, (v) -> toggleCategory(null));
         if (!isWatchDevice()) {

@@ -204,7 +204,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
         l.setPadding(margin, margin, margin, margin);
         Button s = LayoutCreator.createButton(ctx);
-        s.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, s.getCurrentTextColor()));
+        s.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(s.getCurrentTextColor()));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         s.setLayoutParams(params);
@@ -214,7 +214,7 @@ public final class ImageSelectorLayout extends LinearLayout {
 
         if (isDocumentsUiAvailable()) {
             Button w = LayoutCreator.createButton(ctx);
-            w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, w.getCurrentTextColor()));
+            w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(w.getCurrentTextColor()));
             params = new LinearLayout.LayoutParams(-1, -2, 0);
             params.bottomMargin = margin;
             w.setLayoutParams(params);
@@ -250,7 +250,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         }
 
         Button rb = LayoutCreator.createButton(ctx);
-        rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(ctx, rb.getCurrentTextColor()));
+        rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(rb.getCurrentTextColor()));
         rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         l.addView(rb);
         rb.setText(getImageSelectorTranslation("rotate"));

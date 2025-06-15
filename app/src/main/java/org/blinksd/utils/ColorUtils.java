@@ -10,7 +10,6 @@ import static android.graphics.Color.rgb;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BlendMode;
@@ -297,7 +296,6 @@ public final class ColorUtils {
     }
 
     @SuppressLint("UseRequiresApi")
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static int getAccentColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             return ResourcesUtils.getColor(android.R.color.system_accent1_700);

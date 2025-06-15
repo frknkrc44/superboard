@@ -130,7 +130,6 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
         view.setBackground(getSelectableItemBg(
-                this,
                 Color.WHITE,
                 false,
                 true
@@ -138,7 +137,6 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
 
         boolean isSelected = currentLayout.equals(language.language);
         btn.setBackground(getSelectableItemBg(
-                this,
                 Color.WHITE,
                 isSelected
         ));

@@ -6,7 +6,6 @@ import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
-import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.mpInt;
@@ -26,10 +25,10 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.util.TypedValue;
 
-@SuppressWarnings({"deprecation", "all"})
 public class ResourcesUtils {
     private ResourcesUtils() {}
 
+    @SuppressWarnings("deprecation")
     public static Drawable getDrawable(int resId) {
         Resources res = getAppResources();
 
@@ -40,19 +39,13 @@ public class ResourcesUtils {
         return res.getDrawable(resId);
     }
 
-    public static Drawable getTintedDrawable(int resId, Integer tintColor) {
+    public static Drawable getTintedDrawable(int resId, int tintColor) {
         Drawable drawable = getDrawable(resId);
-        if (tintColor != null) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                setColorFilter(drawable, tintColor);
-            } else {
-                drawable.setTint(tintColor);
-            }
-        }
-
+        drawable.setTint(tintColor);
         return drawable;
     }
 
+    @SuppressWarnings("deprecation")
     public static int getColor(int resId) {
         Resources res = getSBApplication().getResources();
 
@@ -83,12 +76,10 @@ public class ResourcesUtils {
         source.setColor(buttonClr);
         source.setCornerRadius(64);
         source.setStroke(2, 0);
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                ? new RippleDrawable(
-                    ColorStateList.valueOf(keyClr),
-                    source,
-                    new ShapeDrawable(new OvalShape()))
-                : source;
+        return new RippleDrawable(
+            ColorStateList.valueOf(keyClr),
+            source,
+            new ShapeDrawable(new OvalShape()));
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, boolean pressEffect) {
@@ -162,12 +153,12 @@ public class ResourcesUtils {
         return gd;
     }
 
-    public static Drawable getSelectableItemBg(Context context, int textColor) {
-        return getSelectableItemBg(context, textColor, false);
+    public static Drawable getSelectableItemBg(int textColor) {
+        return getSelectableItemBg(textColor, false);
     }
 
-    public static Drawable getSelectableItemBg(Context context, int textColor, boolean darker) {
-        return getSelectableItemBg(context, textColor, darker, false);
+    public static Drawable getSelectableItemBg(int textColor, boolean darker) {
+        return getSelectableItemBg(textColor, darker, false);
     }
 
     public static Drawable getTransSelectableItemBg(Context context, int textColor) {
@@ -175,7 +166,7 @@ public class ResourcesUtils {
     }
 
     public static Drawable getTransSelectableItemBg(Context context, int textColor, boolean forceSquare) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceSquare) {
+        if (!forceSquare) {
             return new RippleDrawable(
                     ColorStateList.valueOf(setAlphaForColor(0x88, textColor)),
                     null,
@@ -196,11 +187,7 @@ public class ResourcesUtils {
         return d;
     }
 
-    public static Drawable getSelectableItemBg(
-            Context context, int textColor, boolean darker, boolean transparent) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return getTransSelectableItemBg(context, textColor);
-        }
+    public static Drawable getSelectableItemBg(int textColor, boolean darker, boolean transparent) {
 
         GradientDrawable content = new GradientDrawable();
         int accent = transparent ? 0 : getAccentColor();

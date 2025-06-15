@@ -3,6 +3,7 @@ package org.blinksd.board.views;
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.annotation.SuppressLint;
@@ -12,7 +13,6 @@ import android.content.Context;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -22,16 +22,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.ViewUtils;
 import org.frknkrc44.minidb.SuperMiniDB;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 @SuppressLint("ViewConstructor")
@@ -39,8 +36,6 @@ public final class ClipboardView extends LinearLayout
         implements ClipboardManager.OnPrimaryClipChangedListener {
     private LinearLayout listView;
     private ClipboardManager clipboardManager;
-    private final SimpleDateFormat dateFormat =
-            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
 
     private final List<String> clipboardHistory = new ArrayList<>();
 
@@ -69,7 +64,7 @@ public final class ClipboardView extends LinearLayout
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         setGravity(Gravity.CENTER_HORIZONTAL);
 
-        int buttonSize = DensityUtils.dpInt(48);
+        int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
 
         backButton = new ImageButton(getContext());
@@ -123,27 +118,20 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void addClipView(String text, boolean addToHistory) {
-        int buttonSize = DensityUtils.dpInt(48);
+        int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
 
         LinearLayout clipLayout = new LinearLayout(getContext());
         LinearLayout.LayoutParams clipLayoutParams =
                 new LinearLayout.LayoutParams(-1, -2);
         clipLayoutParams.rightMargin = buttonPadding;
+        clipLayoutParams.bottomMargin = buttonPadding;
         clipLayout.setLayoutParams(clipLayoutParams);
         clipLayout.setTag(text);
+        clipLayout.setGravity(Gravity.CENTER_VERTICAL);
         listView.addView(clipLayout, 0);
 
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View textHolder = inflater.inflate(android.R.layout.simple_list_item_2, clipLayout, false);
-        textHolder.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
-        clipLayout.addView(textHolder);
-
-        TextView textView1 = textHolder.findViewById(android.R.id.text1);
-        textView1.setText(text);
-
-        TextView textView2 = textHolder.findViewById(android.R.id.text2);
-        textView2.setText(dateFormat.format(Calendar.getInstance().getTime()));
+        clipLayout.addView(createClipLayoutView(text));
 
         addClipLayoutButton(
                 clipLayout,
@@ -167,14 +155,28 @@ public final class ClipboardView extends LinearLayout
         }
     }
 
-    void addClipLayoutButton(
+    private View createClipLayoutView(String text) {
+        final int pad = dpInt(8);
+
+        ExpandableTextView mainTextView = new ExpandableTextView(getContext());
+        mainTextView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1));
+        ViewUtils.setTextAppearance(mainTextView, android.R.style.TextAppearance_Small);
+
+        mainTextView.setPaddingRelative(pad, 0, pad, 0);
+        mainTextView.setId(android.R.id.text1);
+        mainTextView.setText(text);
+
+        return mainTextView;
+    }
+
+    private void addClipLayoutButton(
             ViewGroup clipLayout,
             int id,
             int iconId,
             View.OnClickListener onClickListener,
             View.OnLongClickListener onLongClickListener
     ) {
-        int buttonSize = DensityUtils.dpInt(48);
+        int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
 
         ImageButton clButton = new ImageButton(getContext());
@@ -272,9 +274,6 @@ public final class ClipboardView extends LinearLayout
 
             TextView textView1 = child.findViewById(android.R.id.text1);
             textView1.setTextColor(textColor);
-
-            TextView textView2 = child.findViewById(android.R.id.text2);
-            textView2.setTextColor(textColor);
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
             setColorFilter(button1, textColor);

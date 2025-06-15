@@ -143,12 +143,6 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         swtch.setPadding(pad, 0, pad, 0);
         swtch.setSwitchPadding(pad);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            int minW = DensityUtils.dpInt(32);
-
-            swtch.setSwitchMinWidth(minW);
-        }
-
         return swtch;
     }
 
