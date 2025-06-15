@@ -289,25 +289,27 @@ public final class InputService extends InputMethodService implements
         if (text != null && !sugDisabled) suggestionLayout.setCompletionText(superBoardView, text, currentLanguageCache.language);
     }
 
-    @SuppressLint({"ResourceType", "UnspecifiedRegisterReceiverFlag"})
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        try {
+            if (SDK_INT >= Build.VERSION_CODES.O) {
+                registerReceiver(restartKeyboardReceiver,
+                        new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
+            }
+        } catch (Throwable ignored) {}
+    }
+
+    @SuppressLint("ResourceType")
     private void setLayout() {
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this,
                     (keyCode, modifierValue) -> suggestionLayout.changeFABKeyState(keyCode, modifierValue > 0));
             superBoardView.setFocusable(false);
-
-            try {
-                unregisterReceiver(restartKeyboardReceiver);
-            } catch (Throwable ignored) {}
-
-            try {
-                if (SDK_INT >= Build.VERSION_CODES.O) {
-                    registerReceiver(restartKeyboardReceiver,
-                            new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
-                } else {
-                    registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
-                }
-            } catch (Throwable ignored) {}
 
             superBoardView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             appName = getString(R.string.app_name);
