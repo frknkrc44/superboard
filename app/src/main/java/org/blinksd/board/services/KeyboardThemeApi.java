@@ -6,18 +6,15 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguage;
-import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.utils.LayoutUtils.createLanguage;
 import static org.blinksd.utils.LayoutUtils.getUserLanguageFilesDir;
 import static org.blinksd.utils.ThemeUtils.getUserThemeFromCodeName;
 import static org.blinksd.utils.ThemeUtils.getUserThemesDir;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 
-import org.blinksd.board.InputService;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
@@ -143,9 +140,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
 
     public static void restartKeyboard() {
         try {
-            getSBApplication()
-                    .sendBroadcast(new Intent(InputService.RESTART_KEYBOARD)
-                            .setPackage(getSBApplication().getPackageName()));
+            getAppDB().triggerApplyListeners();
         } catch (Throwable e) {
             // do nothing
         }

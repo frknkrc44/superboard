@@ -152,7 +152,7 @@ public final class Palette {
                 throw new IllegalArgumentException("Bitmap is not valid");
             }
 
-            assert quantizer == null : "Quantizer cannot be null";
+            assert quantizer != null : "Quantizer cannot be null";
             mSwatches = null;
             mBitmap = bitmap;
             mQuantizer = quantizer;

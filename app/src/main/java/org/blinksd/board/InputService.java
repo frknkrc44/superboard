@@ -35,10 +35,8 @@ import static org.blinksd.utils.SystemUtils.navbarH;
 import static org.blinksd.utils.WindowManagerServiceUtils.navbarAndroid9ModeEnabled;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -90,7 +88,6 @@ import java.util.List;
 public final class InputService extends InputMethodService implements
         SuggestionLayoutV2.OnSuggestionSelectedListener {
 
-    public static final String RESTART_KEYBOARD = "org.blinksd.board.KILL";
     private SuperBoard superBoardView = null;
     private BoardPopup boardPopup = null;
     private String appName;
@@ -103,14 +100,9 @@ public final class InputService extends InputMethodService implements
     private ClipboardView clipboardView = null;
     private BottomKeyboardBarView bottomKeyboardBarView = null;
     private KeyRemapper keyRemapper;
-    private final BroadcastReceiver restartKeyboardReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context p1, Intent p2) {
-            setPrefs();
-        }
-    };
     private boolean hiddenBySelf = false;
     Intent settingsActivity = null;
+    final Runnable onColorsLoadedListener = this::setPrefs;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -205,6 +197,20 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+
+        getAppDB().setOnSettingsApplyListener(this::setPrefs);
+        getMonetColors().registerOnColorsExtractedListener(onColorsLoadedListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        getMonetColors().unregisterOnColorsExtractedListener(onColorsLoadedListener);
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateInputView() {
         setLayout();
         return keyboardBackgroundHolder;
@@ -287,21 +293,6 @@ public final class InputService extends InputMethodService implements
         if (ic == null) return;
         CharSequence text = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0);
         if (text != null && !sugDisabled) suggestionLayout.setCompletionText(superBoardView, text, currentLanguageCache.language);
-    }
-
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        try {
-            if (SDK_INT >= Build.VERSION_CODES.O) {
-                registerReceiver(restartKeyboardReceiver,
-                        new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
-            } else {
-                registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
-            }
-        } catch (Throwable ignored) {}
     }
 
     @SuppressLint("ResourceType")
@@ -603,16 +594,14 @@ public final class InputService extends InputMethodService implements
             Drawable key2Bg = ResourcesUtils.getKeyBg(key2BgClr, key2BgPressedClr, true);
             Drawable enterBg = ResourcesUtils.getKeyBg(enterBgClr, enterBgPressClr, true);
             for (int i = 0; i < superBoardView.getChildCount() - 1; i++) {
-                if (i != 0) {
-                    if (i < 3) {
-                        superBoardView.setKeyBackgroundAndItemColor(i, 3, 0, key2Bg, key2TextClr);
-                        superBoardView.setKeyBackgroundAndItemColor(i, 3, -1, key2Bg, key2TextClr);
-                        for (int h = 3; h < 5; h++) superBoardView.setKeyBackgroundAndItemColor(i, h, 0, key2Bg, key2TextClr);
-                        superBoardView.setKeyBackgroundAndItemColor(i, 4, 1, key2Bg, key2TextClr);
-                        superBoardView.setKeyBackgroundAndItemColor(i, 4, 3, key2Bg, key2TextClr);
-                    }
-                    if (i != 3) superBoardView.setKeyBackgroundAndItemColor(i, -1, -1, enterBg, enterTextClr);
+                if (i < 3) {
+                    superBoardView.setKeyBackgroundAndItemColor(i, 3, 0, key2Bg, key2TextClr);
+                    superBoardView.setKeyBackgroundAndItemColor(i, 3, -1, key2Bg, key2TextClr);
+                    for (int h = 3; h < 5; h++) superBoardView.setKeyBackgroundAndItemColor(i, h, 0, key2Bg, key2TextClr);
+                    superBoardView.setKeyBackgroundAndItemColor(i, 4, 1, key2Bg, key2TextClr);
+                    superBoardView.setKeyBackgroundAndItemColor(i, 4, 3, key2Bg, key2TextClr);
                 }
+                if (i != 3) superBoardView.setKeyBackgroundAndItemColor(i, -1, -1, enterBg, enterTextClr);
             }
             superBoardView.setDisablePopup(getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP));
             boolean isDBEmpty = getDictDB()

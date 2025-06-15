@@ -21,10 +21,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
+import org.blinksd.board.SuperBoardApplication;
 import org.blinksd.board.services.KeyboardThemeApi;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @SuppressLint({"InlinedApi"})
 public class MonetColors extends LinkedHashMap<String, int[][]> {
@@ -32,6 +37,8 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     static final String COLOR_SCHEME_AMOLED = "amoled";
     static final String COLOR_SCHEME_MD3 = "md3";
     private WallpaperManager wallpaperManager;
+    private final Executor colorExtractExecutor = Executors.newSingleThreadExecutor();
+    private final List<Runnable> onColorsExtractedListeners = new ArrayList<>();
 
     private static final int[] LIGHT_DEF_MONET_SCHEME = {
             android.R.color.system_neutral1_900,  /* Key text color */
@@ -83,6 +90,14 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         put(COLOR_SCHEME_DEFAULT, new int[][]{LIGHT_DEF_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
         put(COLOR_SCHEME_AMOLED, new int[][]{LIGHT_DEF_MONET_SCHEME, AMOLED_MONET_SCHEME});
         put(COLOR_SCHEME_MD3, new int[][]{LIGHT_MD3_MONET_SCHEME, DARK_DEF_MONET_SCHEME});
+    }
+
+    public final void registerOnColorsExtractedListener(Runnable runnable) {
+        onColorsExtractedListeners.add(runnable);
+    }
+
+    public final void unregisterOnColorsExtractedListener(Runnable runnable) {
+        onColorsExtractedListeners.remove(runnable);
     }
 
     public boolean isMonetEnabled() {
@@ -225,23 +240,29 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     public void reloadColors(Context context) {
         try {
             if (isPermGranted(context)) {
-                Drawable wallpaperDrawable;
-                if (wallpaperManager.getWallpaperInfo() != null) {
-                    wallpaperDrawable = wallpaperManager.getWallpaperInfo().loadThumbnail(context.getPackageManager());
-                } else {
-                    wallpaperDrawable = wallpaperManager.getDrawable();
-                }
-                wallpaperManager.forgetLoadedWallpaper();
+                colorExtractExecutor.execute(() -> {
+                    Drawable wallpaperDrawable;
+                    if (wallpaperManager.getWallpaperInfo() != null) {
+                        wallpaperDrawable = wallpaperManager.getWallpaperInfo().loadThumbnail(context.getPackageManager());
+                    } else {
+                        wallpaperDrawable = wallpaperManager.getDrawable();
+                    }
+                    wallpaperManager.forgetLoadedWallpaper();
 
-                if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
-                    colorExtractor = ColorExtractor.extractFromBitmap(
-                            bitmapDrawable.getBitmap(),
-                            getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
-                            15
-                    );
-                }
+                    if (wallpaperDrawable instanceof BitmapDrawable bitmapDrawable) {
+                        colorExtractor = ColorExtractor.extractFromBitmap(
+                                bitmapDrawable.getBitmap(),
+                                getIntOrDefault(SettingMap.SET_COMPAT_MONET_MAX_COLORS),
+                                15
+                        );
+
+                        for (var runnable : onColorsExtractedListeners) {
+                            SuperBoardApplication.mainHandler.post(runnable);
+                        }
+                    }
+                });
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignore) {}
     }
 
     /** @noinspection ConstantConditions */
