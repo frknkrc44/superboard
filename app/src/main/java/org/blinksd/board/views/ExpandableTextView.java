@@ -16,7 +16,7 @@ public class ExpandableTextView extends TextView {
     private static final int ANIM_DURATION = 100;
 
     private int collapsedHeight = 0;
-    private int expandedHeight;
+    private int expandedHeight = 0;
     private int calculatedWidth = 0;
 
     public ExpandableTextView(Context context) {
@@ -34,11 +34,16 @@ public class ExpandableTextView extends TextView {
                 });
             } else {
                 setMaxLines(Integer.MAX_VALUE);
-                measure(
-                        makeMeasureSpec(calculatedWidth, MeasureSpec.EXACTLY),
-                        makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-                );
-                expandedHeight = getMeasuredHeight();
+
+                if (expandedHeight == 0) {
+                    measure(
+                            makeMeasureSpec(calculatedWidth, MeasureSpec.EXACTLY),
+                            makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+                    );
+
+                    expandedHeight = getMeasuredHeight();
+                }
+
                 createAndStartAnimation(collapsedHeight, expandedHeight, null);
             }
         });
