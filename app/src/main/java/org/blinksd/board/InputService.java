@@ -299,12 +299,16 @@ public final class InputService extends InputMethodService implements
             try {
                 unregisterReceiver(restartKeyboardReceiver);
             } catch (Throwable ignored) {}
-            if (SDK_INT >= Build.VERSION_CODES.O) {
-                registerReceiver(restartKeyboardReceiver,
-                        new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
-            } else {
-                registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
-            }
+
+            try {
+                if (SDK_INT >= Build.VERSION_CODES.O) {
+                    registerReceiver(restartKeyboardReceiver,
+                            new IntentFilter(RESTART_KEYBOARD), Context.RECEIVER_NOT_EXPORTED);
+                } else {
+                    registerReceiver(restartKeyboardReceiver, new IntentFilter(RESTART_KEYBOARD));
+                }
+            } catch (Throwable ignored) {}
+
             superBoardView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             appName = getString(R.string.app_name);
             String abc = "ABC";
