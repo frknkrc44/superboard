@@ -118,6 +118,10 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void addClipView(String text, boolean addToHistory) {
+        if (isViewAvailableByText(text)) {
+            return;
+        }
+
         int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
 
@@ -127,7 +131,6 @@ public final class ClipboardView extends LinearLayout
         clipLayoutParams.rightMargin = buttonPadding;
         clipLayoutParams.bottomMargin = buttonPadding;
         clipLayout.setLayoutParams(clipLayoutParams);
-        clipLayout.setTag(text);
         clipLayout.setGravity(Gravity.CENTER_VERTICAL);
         listView.addView(clipLayout, 0);
 
@@ -145,7 +148,7 @@ public final class ClipboardView extends LinearLayout
                 clipLayout,
                 android.R.id.button2,
                 R.drawable.delete,
-                v -> removeClipView(v, true),
+                v -> removeClipView(clipLayout, true),
                 null
         );
 
@@ -203,7 +206,8 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void selectClipItem(View view) {
-        String item = (String) ((View) view.getParent()).getTag();
+        final var parentView = (View) view.getParent();
+        String item = ((TextView) parentView.findViewById(android.R.id.text1)).getText().toString();
 
         List<String> texts = getLastPrimaryClipTexts();
         if (texts.isEmpty() || texts.contains(item)) {
@@ -211,7 +215,7 @@ public final class ClipboardView extends LinearLayout
         }
 
         clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
-        removeClipView(view, false);
+        removeClipView(parentView, false);
         addClipView(item, true);
     }
 
@@ -233,8 +237,9 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void removeClipView(View view, boolean sync) {
-        listView.removeView((View) view.getParent());
-        clipboardHistory.remove((String) ((View) view.getParent()).getTag());
+        listView.removeView(view);
+        String item = ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
+        clipboardHistory.remove(item);
         if (sync) syncClipboardCache();
     }
 
@@ -254,6 +259,51 @@ public final class ClipboardView extends LinearLayout
                     true
             );
         }
+    }
+
+    private List<String> getLastPrimaryClipTexts() {
+        final var texts = new ArrayList<String>();
+
+        if (clipboardManager.hasPrimaryClip()) {
+            final var data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
+            final var itemCount = data.getItemCount();
+
+            for (int i = 0; i < itemCount; i++) {
+                final var text = data.getItemAt(i).getText();
+                if (text instanceof String) {
+                    texts.add((String) text);
+                } else if (text != null) {
+                    texts.add(text.toString());
+                }
+            }
+        }
+
+        return texts;
+    }
+
+    @Override
+    public void onPrimaryClipChanged() {
+        final var texts = getLastPrimaryClipTexts();
+        final var textsSize = texts.size();
+        for (int i = 0; i < textsSize; i++) {
+            final var primaryText = texts.get(i);
+
+            addClipView(primaryText, true);
+        }
+    }
+
+    private boolean isViewAvailableByText(String text) {
+        final int childCount = listView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = listView.getChildAt(i);
+
+            TextView textView1 = child.findViewById(android.R.id.text1);
+            if (text.contentEquals(textView1.getText())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void reTheme() {
@@ -282,38 +332,6 @@ public final class ClipboardView extends LinearLayout
             ImageButton button2 = child.findViewById(android.R.id.button2);
             setColorFilter(button2, textColor);
             button2.setBackground(getTransSelectableItemBg(getContext(), textColor));
-        }
-    }
-
-    private List<String> getLastPrimaryClipTexts() {
-        List<String> texts = new ArrayList<>();
-
-        if (clipboardManager.hasPrimaryClip()) {
-            ClipData data = Objects.requireNonNull(clipboardManager.getPrimaryClip());
-
-            for (int i = 0; i < data.getItemCount(); i++) {
-                CharSequence text = data.getItemAt(i).getText();
-                if (text instanceof String) {
-                    texts.add((String) text);
-                } else {
-                    texts.add(text.toString());
-                }
-            }
-        }
-
-        return texts;
-    }
-
-    @Override
-    public void onPrimaryClipChanged() {
-        List<String> texts = getLastPrimaryClipTexts();
-
-        for (int i = 0; i < texts.size(); i++) {
-            String primaryText = texts.get(i);
-
-            if (listView.findViewWithTag(primaryText) == null) {
-                addClipView(primaryText, true);
-            }
         }
     }
 }

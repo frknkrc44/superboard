@@ -49,7 +49,7 @@ public class ExpandableTextView extends TextView {
         });
     }
 
-    void createAndStartAnimation(int sourceHeight, int targetHeight, SimpleAnimatorListener listener) {
+    private void createAndStartAnimation(int sourceHeight, int targetHeight, SimpleAnimatorListener listener) {
         ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", sourceHeight, targetHeight);
         if (listener != null) animation.addListener(listener);
         animation.setDuration(ANIM_DURATION).start();
