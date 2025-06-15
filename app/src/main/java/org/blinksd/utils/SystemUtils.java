@@ -158,6 +158,10 @@ public final class SystemUtils {
         return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    public static float getMultipliedTextSize(float size) {
+        return 1.5f * size;
+    }
+
     public static void disableEdgeToEdge(Window window) {
         MiniLSPass.setField(window, "mEdgeToEdgeEnforced", false);
     }

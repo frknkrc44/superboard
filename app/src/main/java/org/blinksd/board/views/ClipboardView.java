@@ -5,6 +5,7 @@ import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+import static org.blinksd.utils.SystemUtils.getMultipliedTextSize;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -325,7 +326,7 @@ public final class ClipboardView extends LinearLayout
 
             ExpandableTextView textView1 = child.findViewById(android.R.id.text1);
             textView1.setTextColor(textColor);
-            textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, superBoard.getKeysTextSize());
+            textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(superBoard.getKeysTextSize()) * 0.75f);
 
             ImageButton button1 = child.findViewById(android.R.id.button1);
             setColorFilter(button1, textColor);

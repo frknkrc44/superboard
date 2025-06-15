@@ -14,6 +14,7 @@ import static org.blinksd.utils.DensityUtils.hpInt;
 import static org.blinksd.utils.DensityUtils.mp;
 import static org.blinksd.utils.DensityUtils.mpInt;
 import static org.blinksd.utils.DensityUtils.wpInt;
+import static org.blinksd.utils.SystemUtils.getMultipliedTextSize;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -1577,15 +1578,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyTextSize(float size) {
-            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-            subLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, size / 1.5f);
+            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(size));
+            subLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(size / 1.5f));
             applyIconMultiply();
         }
 
         private void applyIconMultiply() {
             ViewGroup.LayoutParams vp = icon.getLayoutParams();
             vp.width = -1;
-            vp.height = (int) (textSize * iconSizeMultiplier);
+            vp.height = (int) (getMultipliedTextSize(textSize) * iconSizeMultiplier * 0.75f);
         }
 
         public void setKeyShadow(int radius, int color) {

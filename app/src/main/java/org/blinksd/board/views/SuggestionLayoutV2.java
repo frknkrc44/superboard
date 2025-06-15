@@ -4,6 +4,7 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
+import static org.blinksd.utils.SystemUtils.getMultipliedTextSize;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -162,7 +163,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         tv.setTextColor(color);
         float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
         int pad = DensityUtils.dpInt(8);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(textSize));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
         params.rightMargin = params.topMargin = params.bottomMargin = pad;
         tv.setLayoutParams(params);
@@ -189,7 +190,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(textColor);
             float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(textSize));
             tv.setBackground(getSuggestionItemBackground());
         }
 
