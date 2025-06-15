@@ -8,53 +8,71 @@ import android.widget.TextView;
 public class ExpandableTextView extends TextView {
     private static final int MAX_LINES = 1;
 
-    /*
+/*
     private static final int ANIM_DURATION = 100;
 
     private int collapsedHeight = 0;
     private int expandedHeight = 0;
-    private int calculatedWidth = 0;
-     */
+    private StaticLayout staticLayout;
+*/
 
     public ExpandableTextView(Context context) {
         super(context);
         setMaxLines(MAX_LINES);
-        setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        setEllipsize(TextUtils.TruncateAt.END);
 
         setOnClickListener(v -> {
-            setMaxLines(getMaxLines() != MAX_LINES ? MAX_LINES : Integer.MAX_VALUE);
+            toggleNonAnimated();
 
-            /*
-            if (getMaxLines() != MAX_LINES) {
-                createAndStartAnimation(expandedHeight, collapsedHeight, new SimpleAnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        setMaxLines(MAX_LINES);
-                    }
-                });
-            } else {
-                setMaxLines(Integer.MAX_VALUE);
-
-                if (expandedHeight == 0) {
-                    measure(
-                            makeMeasureSpec(calculatedWidth, MeasureSpec.EXACTLY),
-                            makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-                    );
-
-                    expandedHeight = getMeasuredHeight();
-                }
-
-                createAndStartAnimation(collapsedHeight, expandedHeight, null);
-            }
-             */
+            // toggleAnimated();
         });
     }
 
-    /*
+    private void toggleNonAnimated() {
+        setMaxLines(getMaxLines() != MAX_LINES ? MAX_LINES : Integer.MAX_VALUE);
+    }
+
+/*
+    private void toggleAnimated() {
+        generateStaticLayout();
+
+        if (calculateLineCount() <= MAX_LINES) {
+            return;
+        }
+
+        if (getMaxLines() != MAX_LINES) {
+            createAndStartAnimation(expandedHeight, collapsedHeight, new SimpleAnimatorListener() {
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    setMaxLines(MAX_LINES);
+                }
+            });
+        } else {
+            setMaxLines(Integer.MAX_VALUE);
+            expandedHeight = calculateHeight();
+            createAndStartAnimation(collapsedHeight, expandedHeight, null);
+        }
+    }
+
     private void createAndStartAnimation(int sourceHeight, int targetHeight, SimpleAnimatorListener listener) {
         ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", sourceHeight, targetHeight);
         if (listener != null) animation.addListener(listener);
         animation.setDuration(ANIM_DURATION).start();
+    }
+
+    @SuppressWarnings({"deprecation", "all"})
+    private void generateStaticLayout() {
+        staticLayout = new StaticLayout(getText(), getPaint(), getMeasuredWidth(),
+                Layout.Alignment.ALIGN_CENTER, getLineSpacingMultiplier(), getLineSpacingExtra(),
+                getIncludeFontPadding());
+    }
+
+    private int calculateHeight() {
+        return staticLayout.getHeight() + (staticLayout.getHeight() / staticLayout.getLineCount());
+    }
+
+    private int calculateLineCount() {
+        return staticLayout.getLineCount();
     }
 
     @Override
@@ -63,8 +81,9 @@ public class ExpandableTextView extends TextView {
 
         if (collapsedHeight == 0) {
             collapsedHeight = getMeasuredHeight();
-            calculatedWidth = getMeasuredWidth();
         }
+
+        staticLayout = null;
     }
-     */
+ */
 }
