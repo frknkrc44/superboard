@@ -32,6 +32,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -1576,8 +1577,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void setKeyTextSize(float size) {
-            label.setTextSize(size);
-            subLabel.setTextSize(size / 1.5f);
+            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            subLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, size / 1.5f);
             applyIconMultiply();
         }
 

@@ -254,9 +254,11 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 getMonetColors().reloadColors(p1.getContext());
             }
             restartKeyboard();
+            /*
             if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
                 recreate();
             }
+             */
             d1.dismiss();
         });
 
@@ -272,9 +274,11 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                     getMonetColors().reloadColors(p1.getContext());
                 }
                 restartKeyboard();
+                /*
                 if (SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER.equals(tag)) {
                     recreate();
                 }
+                 */
             }
             d1.dismiss();
         });
@@ -299,7 +303,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 } catch (Throwable ignored) {
                 }
                 restartKeyboard();
-                recreate();
+                // recreate();
             }
             p112.dismiss();
         });
@@ -380,7 +384,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                             List<ThemeUtils.ThemeHolder> themes = getThemesCache();
                             ThemeUtils.ThemeHolder theme = themes.get(tagVal);
                             theme.applyTheme();
-                            recreate();
+                            // recreate();
                             break;
                     }
                 } else getAppDB().putInteger(tag, tagVal, true);

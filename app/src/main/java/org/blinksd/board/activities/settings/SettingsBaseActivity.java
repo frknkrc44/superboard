@@ -188,9 +188,9 @@ public abstract class SettingsBaseActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             new ImageTask().execute(getContentResolver(), data.getData());
-        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+        } /* else if (requestCode == 2 && resultCode == RESULT_OK) {
             recreate();
-        }
+        } */
     }
 
     private class ImageTask {
