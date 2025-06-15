@@ -182,10 +182,6 @@ public final class ColorUtils {
     }
 
     public static double calculateContrast(int foreground, int background) {
-        if (alpha(background) != 255) {
-            Log.wtf("ColorUtils", "background can not be translucent: #"
-                    + Integer.toHexString(background));
-        }
         if (alpha(foreground) < 255) {
             // If the foreground is translucent, composite the foreground over the background
             foreground = compositeColors(foreground, background);

@@ -36,7 +36,7 @@
 	<string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
 	<string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
 	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
-	<string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
+	<string name="settings_use_compat_monet" tools:keep="@string/settings_use_compat_monet">Use compat monet colors (beta)</string>
 	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
 	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
 	<string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
@@ -62,7 +62,7 @@
 	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
 	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
 	<string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
-	<string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+	<string name="settings_insert_space_after_punc" tools:keep="@string/settings_insert_space_after_punc">Insert space after punctuation</string>
 	<string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
 	<string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
 	<string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
