@@ -10,7 +10,6 @@ import static org.blinksd.utils.DensityUtils.mpInt;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import org.frknkrc44.minidb.SuperMiniDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,12 +45,12 @@ public final class SuperDBHelper {
 
     private SuperDBHelper() {}
 
-    public static SuperMiniDB getDefault(Context c) {
-        return new SuperMiniDB(c.getPackageName(), c.getFilesDir(), false);
+    public static SuperDBExt getDefault(Context c) {
+        return new SuperDBExt(c.getPackageName(), c.getFilesDir(), false);
     }
 
     public static String getStringOrDefault(String key) {
-        SuperMiniDB db = getAppDB();
+        SuperDBExt db = getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
             return getSettings().getDefaults(key).toString();
@@ -125,7 +124,7 @@ public final class SuperDBHelper {
     }
 
     public static void removeKeyFromDB(String key) {
-        SuperMiniDB db = getAppDB();
+        SuperDBExt db = getAppDB();
         if (db.isDBContainsKey(key)) {
             db.removeKeyFromDB(key);
         }

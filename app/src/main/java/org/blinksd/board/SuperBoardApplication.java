@@ -20,11 +20,11 @@ import org.blinksd.utils.LayoutUtils;
 import org.blinksd.utils.MonetColors;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SpaceBarThemeUtils;
+import org.blinksd.utils.SuperDBExt;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.ThemeUtils.ThemeHolder;
 import org.blinksd.utils.superboard.Language;
-import org.frknkrc44.minidb.SuperMiniDB;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public final class SuperBoardApplication extends Application {
     public static final Handler mainHandler = new Handler(Looper.getMainLooper());
     private static HashMap<String, Language> languageCache;
-    private static SuperMiniDB appDB;
+    private static SuperDBExt appDB;
     private static SuperBoardApplication appContext;
     private static SettingMap settingMap;
     private static Typeface customFont;
@@ -82,7 +82,7 @@ public final class SuperBoardApplication extends Application {
         return getAppResources().getConfiguration();
     }
 
-    public synchronized static SuperMiniDB getAppDB() {
+    public synchronized static SuperDBExt getAppDB() {
         if (appDB == null) {
             appDB = SuperDBHelper.getDefault(getSBApplication());
         }

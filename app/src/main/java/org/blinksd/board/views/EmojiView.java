@@ -8,6 +8,7 @@ import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,7 +148,7 @@ public class EmojiView extends LinearLayout {
             tv.setTextColor(keyTextColor);
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
-            tv.setTextSize(textSize);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             ts.setIndicator(tv);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
             setColorFilter(tv.getBackground(), keyTextColor);

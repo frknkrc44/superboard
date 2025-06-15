@@ -42,11 +42,12 @@ if status_code == 200:
         if not len(recent_group):
             continue
 
-        if not line.startswith('#') and ';' in line and 'qualified' in line and 'E' in line:
-            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
-                recent_approved_line = line
-            else:
-                continue
+        if not line.startswith('#') and ';' in line and 'fully-qualified' in line and 'E' in line:
+            # if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+            #     recent_approved_line = line
+            # else:
+            #     continue
+            recent_approved_line = line
 
             first = line[line.find('#') + 2:]
             sec = first[:first.find('E') - 1]
