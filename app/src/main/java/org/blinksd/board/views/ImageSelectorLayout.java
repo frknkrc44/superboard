@@ -171,18 +171,18 @@ public final class ImageSelectorLayout extends LinearLayout {
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
             ts.setIndicator(tv);
-            final View v = getView(win, onImageSelectPressed, onRestartKeyboard, i);
-            ts.setContent(p1 -> v);
+
+            switch (i) {
+                case 0:
+                    ts.setContent(p -> getPhotoSelector(win, onImageSelectPressed, onRestartKeyboard));
+                    break;
+                case 1:
+                    ts.setContent(p -> getGradientSelector(win.getContext()));
+                    break;
+            }
+
             host.addTab(ts);
         }
-    }
-
-    private View getView(Dialog win, Runnable onImageSelectPressed, Runnable onRestartKeyboard, int index) {
-        return switch (index) {
-            case 0 -> getPhotoSelector(win, onImageSelectPressed, onRestartKeyboard);
-            case 1 -> getGradientSelector(win.getContext());
-            default -> null;
-        };
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
@@ -318,10 +318,6 @@ public final class ImageSelectorLayout extends LinearLayout {
         Canvas drw = new Canvas(out);
         gd.draw(drw);
         return out;
-    }
-
-    private void openColorPresetSelector() {
-
     }
 
     private final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
