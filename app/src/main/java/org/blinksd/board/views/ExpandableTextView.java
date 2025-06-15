@@ -5,8 +5,6 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextUtils;
 import android.widget.TextView;
 
@@ -28,14 +26,12 @@ public class ExpandableTextView extends TextView {
 
         setOnClickListener(v -> {
             if (getMaxLines() != MAX_LINES) {
-                ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", expandedHeight, collapsedHeight);
-                animation.addListener(new SimpleAnimatorListener() {
+                createAndStartAnimation(expandedHeight, collapsedHeight, new SimpleAnimatorListener() {
                     @Override
                     public void onAnimationEnd(Animator animator) {
                         setMaxLines(MAX_LINES);
                     }
                 });
-                animation.setDuration(ANIM_DURATION).start();
             } else {
                 setMaxLines(Integer.MAX_VALUE);
                 measure(
@@ -43,10 +39,15 @@ public class ExpandableTextView extends TextView {
                         makeMeasureSpec(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
                 );
                 expandedHeight = getMeasuredHeight();
-                ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", collapsedHeight, expandedHeight);
-                animation.setDuration(ANIM_DURATION).start();
+                createAndStartAnimation(collapsedHeight, expandedHeight, null);
             }
         });
+    }
+
+    void createAndStartAnimation(int sourceHeight, int targetHeight, SimpleAnimatorListener listener) {
+        ObjectAnimator animation = ObjectAnimator.ofInt(this, "height", sourceHeight, targetHeight);
+        if (listener != null) animation.addListener(listener);
+        animation.setDuration(ANIM_DURATION).start();
     }
 
     @Override
