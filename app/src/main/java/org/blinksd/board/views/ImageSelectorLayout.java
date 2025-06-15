@@ -48,11 +48,9 @@ import java.io.File;
 import java.util.TreeMap;
 
 @SuppressLint("ViewConstructor")
-@SuppressWarnings({"deprecation", "all"})
 public final class ImageSelectorLayout extends LinearLayout {
     private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;
-    private Bitmap temp;
     private TreeMap<Integer, Integer> colorList;
     GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
@@ -103,6 +101,7 @@ public final class ImageSelectorLayout extends LinearLayout {
 
     };
 
+    @SuppressWarnings("deprecation")
     public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard) {
         super(win.getContext());
         setOrientation(VERTICAL);
@@ -118,13 +117,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         LinearLayout holder = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, win.getContext());
         holder.setGravity(Gravity.CENTER);
         holder.addView(widget);
-        prev = new ImageView(win.getContext()) {
-            @Override
-            public void setImageBitmap(Bitmap b) {
-                super.setImageBitmap(b);
-                temp = b;
-            }
-        };
+        prev = new ImageView(win.getContext());
         prev.setId(R.id.dialog_image_preview);
         int gradientPadding = DensityUtils.dpInt(2);
         int frameMargin = DensityUtils.dpInt(8);
@@ -135,7 +128,6 @@ public final class ImageSelectorLayout extends LinearLayout {
         imagePreviewParams.setMargins(frameMargin, frameMargin, frameMargin, frameMargin);
         prev.setLayoutParams(imagePreviewParams);
         prev.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        // prev.setAdjustViewBounds(true);
         holder.addView(prev);
         holder.addView(fl);
         host.addView(holder);
@@ -186,13 +178,11 @@ public final class ImageSelectorLayout extends LinearLayout {
     }
 
     private View getView(Dialog win, Runnable onImageSelectPressed, Runnable onRestartKeyboard, int index) {
-        switch (index) {
-            case 0:
-                return getPhotoSelector(win, onImageSelectPressed, onRestartKeyboard);
-            case 1:
-                return getGradientSelector(win.getContext());
-        }
-        return null;
+        return switch (index) {
+            case 0 -> getPhotoSelector(win, onImageSelectPressed, onRestartKeyboard);
+            case 1 -> getGradientSelector(win.getContext());
+            default -> null;
+        };
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
@@ -204,7 +194,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
         l.setPadding(margin, margin, margin, margin);
         Button s = LayoutCreator.createButton(ctx);
-        s.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(s.getCurrentTextColor()));
+        s.setBackground(ResourcesUtils.getSelectableItemBg(s.getCurrentTextColor()));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
         s.setLayoutParams(params);
@@ -214,7 +204,7 @@ public final class ImageSelectorLayout extends LinearLayout {
 
         if (isDocumentsUiAvailable()) {
             Button w = LayoutCreator.createButton(ctx);
-            w.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(w.getCurrentTextColor()));
+            w.setBackground(ResourcesUtils.getSelectableItemBg(w.getCurrentTextColor()));
             params = new LinearLayout.LayoutParams(-1, -2, 0);
             params.bottomMargin = margin;
             w.setLayoutParams(params);
@@ -250,21 +240,21 @@ public final class ImageSelectorLayout extends LinearLayout {
         }
 
         Button rb = LayoutCreator.createButton(ctx);
-        rb.setBackgroundDrawable(ResourcesUtils.getSelectableItemBg(rb.getCurrentTextColor()));
+        rb.setBackground(ResourcesUtils.getSelectableItemBg(rb.getCurrentTextColor()));
         rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         l.addView(rb);
         rb.setText(getImageSelectorTranslation("rotate"));
         rb.setOnClickListener(p1 -> {
-            if (temp == null) {
-                return;
+            if (prev.getDrawable() instanceof BitmapDrawable bmpDrawable) {
+                var bitmap = bmpDrawable.getBitmap();
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                if (!bitmap.isMutable()) {
+                    bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                }
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                prev.setImageBitmap(bitmap);
             }
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            if (!temp.isMutable()) {
-                temp = temp.copy(Bitmap.Config.ARGB_8888, true);
-            }
-            temp = Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true);
-            prev.setImageBitmap(temp);
         });
         s.setOnLongClickListener(p1 -> {
             getBackgroundImageFile().delete();
@@ -328,6 +318,10 @@ public final class ImageSelectorLayout extends LinearLayout {
         Canvas drw = new Canvas(out);
         gd.draw(drw);
         return out;
+    }
+
+    private void openColorPresetSelector() {
+
     }
 
     private final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {
