@@ -4,6 +4,7 @@ import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
@@ -24,7 +25,8 @@ import org.blinksd.utils.SettingMap;
 
 import java.util.Map;
 
-/** @noinspection ViewConstructor, ValidFragment, deprecation */
+@SuppressWarnings("deprecation")
+@SuppressLint("ViewConstructor")
 public class EmojiViewV2 extends LinearLayout {
     private final Map<String, EmojiList> emojiListMap;
     private final String[] emojiListKeyArray;
