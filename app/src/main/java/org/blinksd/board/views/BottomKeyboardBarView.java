@@ -2,7 +2,7 @@ package org.blinksd.board.views;
 
 import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
-import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.annotation.SuppressLint;
@@ -36,7 +36,7 @@ public class BottomKeyboardBarView extends LinearLayout {
         languageSelectorView = new LanguageSelectorView(superBoard.getContext(), listener);
         languageSelectorView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
 
-        final int keyWidth = mpInt(12);
+        final int keyWidth = minPInt(12);
         final int padding = keyWidth / 2;
 
         setPadding(padding, 0, padding, 0);

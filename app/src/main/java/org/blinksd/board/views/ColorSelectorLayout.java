@@ -296,7 +296,7 @@ public final class ColorSelectorLayout extends LinearLayout {
                 });
         sb.setKeyboardHeight(20);
         sb.setKeysTextSize(20);
-        sb.setKeysPadding(DensityUtils.mpInt(0.5f));
+        sb.setKeysPadding(DensityUtils.minPInt(0.5f));
         sb.setKeyDrawable(0, 1, -1, R.drawable.sym_keyboard_delete);
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
         sb.setKeyDrawable(0, 0, -1, R.drawable.delete);

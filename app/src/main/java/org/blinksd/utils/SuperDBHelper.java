@@ -5,7 +5,7 @@ import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.utils.ColorUtils.invertColor;
 import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
-import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.minPInt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -60,7 +60,7 @@ public final class SuperDBHelper {
     }
 
     public static int getFloatPercentOrDefault(String key) {
-        return mpInt(getFloatedIntOrDefault(key));
+        return minPInt(getFloatedIntOrDefault(key));
     }
 
     public static float getFloatedIntOrDefault(String key) {

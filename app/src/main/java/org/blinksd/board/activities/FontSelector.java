@@ -73,14 +73,14 @@ public final class FontSelector extends BaseActivity implements View.OnClickList
         textView.setGravity(Gravity.CENTER);
         TextUtilsCompat.setTypefaceFromTextType(textView, value);
         textView.setText("A1#");
-        textView.setTextSize(DensityUtils.mp(4));
+        textView.setTextSize(DensityUtils.minP(4));
         btn.setGravity(Gravity.CENTER);
         btn.addView(textView);
         TextView description = new TextView(this);
         description.setGravity(Gravity.CENTER);
         description.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         description.setText(fontTypeTranslations[currentIndex]);
-        description.setTextSize(DensityUtils.mp(1.5f));
+        description.setTextSize(DensityUtils.minP(1.5f));
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);

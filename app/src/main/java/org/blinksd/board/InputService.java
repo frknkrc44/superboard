@@ -64,9 +64,9 @@ import org.blinksd.board.activities.SetupActivityV2;
 import org.blinksd.board.views.BoardPopup;
 import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
-import org.blinksd.board.views.EmojiView;
 import org.blinksd.board.views.SuggestionLayoutV2;
 import org.blinksd.board.views.SuperBoard;
+import org.blinksd.board.views.emoji.EmojiViewV2;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.IconThemeUtils;
@@ -96,7 +96,7 @@ public final class InputService extends InputMethodService implements
     private RelativeLayout keyboardBackgroundHolder = null;
     private ImageView keyboardBackground = null;
     private Language currentLanguageCache;
-    private EmojiView emojiView = null;
+    private EmojiViewV2 emojiView = null;
     private ClipboardView clipboardView = null;
     private BottomKeyboardBarView bottomKeyboardBarView = null;
     private KeyRemapper keyRemapper;
@@ -431,7 +431,7 @@ public final class InputService extends InputMethodService implements
         }
 
         if (emojiView == null) {
-            emojiView = new EmojiView(superBoardView, emojiClick);
+            emojiView = new EmojiViewV2(this, emoji -> superBoardView.commitText(emoji), emojiClick);
             emojiView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
@@ -937,7 +937,7 @@ public final class InputService extends InputMethodService implements
                 showClipboardView(false);
             }
 
-            if (code != KeyEvent.KEYCODE_KANA && isEmojiViewShown()) {
+            if (code != KeyEvent.KEYCODE_KANA && code != KeyEvent.KEYCODE_DEL && isEmojiViewShown()) {
                 showEmojiView(false);
             }
 

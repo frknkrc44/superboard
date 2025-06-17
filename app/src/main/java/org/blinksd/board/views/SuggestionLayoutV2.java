@@ -161,7 +161,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         tv.setGravity(Gravity.CENTER);
         int color = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         tv.setTextColor(color);
-        float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+        float textSize = DensityUtils.minPInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
         int pad = DensityUtils.dpInt(8);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(textSize));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -1);
@@ -189,7 +189,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         for (int i = 0; i < childCount; i++) {
             TextView tv = (TextView) mCompletionsLayout.getChildAt(i);
             tv.setTextColor(textColor);
-            float textSize = DensityUtils.mpInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
+            float textSize = DensityUtils.minPInt(SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEY_TEXTSIZE));
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(textSize));
             tv.setBackground(getSuggestionItemBackground());
         }

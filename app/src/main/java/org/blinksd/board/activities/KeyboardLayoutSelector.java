@@ -2,7 +2,7 @@ package org.blinksd.board.activities;
 
 import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
-import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
 import static org.blinksd.utils.ResourcesUtils.getButtonBackground;
@@ -121,7 +121,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         description.setGravity(Gravity.CENTER);
         description.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
         description.setText(String.format("%s - %s", language.label, language.author));
-        description.setTextSize(DensityUtils.mp(1.5f));
+        description.setTextSize(DensityUtils.minP(1.5f));
         description.setSingleLine();
         description.setEllipsize(TextUtils.TruncateAt.END);
         btn.addView(description);
@@ -143,7 +143,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
 
         if (isSelected) {
             ImageView tick = new ImageView(this);
-            int tickSize = DensityUtils.mpInt(16);
+            int tickSize = DensityUtils.minPInt(16);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     tickSize, tickSize, Gravity.CENTER);
             params.bottomMargin = DensityUtils.dpInt(8);
@@ -177,7 +177,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             setFocusable(false);
             setEnabled(false);
             setBackgroundColor(0);
-            setKeysTextSize(mpInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
+            setKeysTextSize(minPInt(DensityUtils.getFloatNumberFromInt(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTSIZE))));
             setKeysTextType(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
             setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
             setKeysPopupPreviewEnabled(SuperDBHelper.getBooleanOrDefault(SettingMap.SET_ENABLE_POPUP_PREVIEW));

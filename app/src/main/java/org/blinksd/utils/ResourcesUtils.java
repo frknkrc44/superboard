@@ -8,7 +8,7 @@ import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
-import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
 import android.content.Context;
@@ -63,8 +63,8 @@ public class ResourcesUtils {
     }
 
     public static Drawable getKeyBg(int clr, int pressClr, boolean pressEffect) {
-        int radius = mpInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
-        int stroke = mpInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING)));
+        int radius = minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
+        int stroke = minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING)));
         return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
     }
 

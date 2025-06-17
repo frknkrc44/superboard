@@ -11,8 +11,8 @@ import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.hpInt;
-import static org.blinksd.utils.DensityUtils.mp;
-import static org.blinksd.utils.DensityUtils.mpInt;
+import static org.blinksd.utils.DensityUtils.minP;
+import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.DensityUtils.wpInt;
 import static org.blinksd.utils.SystemUtils.getMultipliedTextSize;
 
@@ -86,7 +86,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private static Locale caseLocale = new Locale("tr", "TR");
     private final MyHandler mHandler = new MyHandler();
     private final Vibrator vibrator;
-    private float textSize = mp(1.25f);
+    private float textSize = minP(1.25f);
     private float landSizeIncreaser = 1f;
     protected Drawable keyBackground = null;
     private int selected = 0;
@@ -333,7 +333,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         extraKeyViews.add(key);
     }
 
-    protected final float getKeysTextSize() {
+    public final float getKeysTextSize() {
         return textSize;
     }
 
@@ -1377,7 +1377,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             LayoutParams subParams = new LayoutParams(-1, -1);
             subParams.addRule(ALIGN_PARENT_TOP, TRUE);
             subParams.addRule(CENTER_HORIZONTAL, TRUE);
-            subParams.topMargin = mpInt(0.5f);
+            subParams.topMargin = minPInt(0.5f);
             subLabel.setLayoutParams(subParams);
             subLabel.setGravity(Gravity.CENTER_HORIZONTAL);
             subLabel.setTextColor(setAlphaForColor(0x66, keyTextColor));
@@ -1442,8 +1442,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             if (state == null) {
                 RelativeLayout.LayoutParams stateParams =
                         new RelativeLayout.LayoutParams(
-                                mpInt(4), mpInt(keyIndicatorHeight));
-                stateParams.bottomMargin = mpInt(2);
+                                minPInt(4), minPInt(keyIndicatorHeight));
+                stateParams.bottomMargin = minPInt(2);
                 stateParams.addRule(ALIGN_PARENT_BOTTOM, TRUE);
                 stateParams.addRule(CENTER_HORIZONTAL, TRUE);
                 state = new View(getContext());
@@ -1465,7 +1465,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void applyIndicatorHeight() {
             if (state != null) {
-                state.getLayoutParams().height = mpInt(keyIndicatorHeight);
+                state.getLayoutParams().height = minPInt(keyIndicatorHeight);
             }
         }
 

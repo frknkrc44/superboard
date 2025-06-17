@@ -44,7 +44,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         for (int i = 0; i < 4; i++) kbdPreview.getKey(0, 0, i).setId(i);
         kbdPreview.createEmptyLayout(KeyboardType.TEXT);
         kbdPreview.setEnabledLayout(0);
-        kbdPreview.setKeysPadding(mpInt(1));
+        kbdPreview.setKeysPadding(minPInt(1));
         kbdPreview.setKeyboardHeight(12);
         backgroundImageView = new ImageView(this);
         backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -153,7 +153,7 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         kbdPreview.setKeyboardHeight(kbdHeightPercent - kbdPadPercent);
         kbdPreview.getLayoutParams().height = -1;
 
-        int kbdPadding = mpInt(kbdPadPercent);
+        int kbdPadding = minPInt(kbdPadPercent);
         kbdPreview.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
 
         try {

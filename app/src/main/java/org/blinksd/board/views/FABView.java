@@ -57,7 +57,7 @@ public class FABView extends LinearLayout {
     }
 
     public static int getButtonSize() {
-        return DensityUtils.mpInt(BUTTON_SIZE);
+        return DensityUtils.minPInt(BUTTON_SIZE);
     }
 
     @SuppressLint("WrongConstant")
@@ -156,7 +156,7 @@ public class FABView extends LinearLayout {
     public void addButton(int resource, Integer keyCode, boolean stateful) {
         StatefulImageView buttonItem = new StatefulImageView(getContext());
         buttonItem.setImageResource(resource);
-        int p = DensityUtils.mpInt(2);
+        int p = DensityUtils.minPInt(2);
         buttonItem.setPadding(p,p,p,p);
         buttonItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
         buttonItem.setTag(R.id.key_normal_press, keyCode);

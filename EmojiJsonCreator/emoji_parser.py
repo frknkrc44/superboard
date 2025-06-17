@@ -36,18 +36,18 @@ if status_code == 200:
     for line in text.splitlines():
         if line.startswith('# group: '):
             recent_group = line[line.find(':') + 2:]
-            category: list[str] = []
-            categories[recent_group] = category
+            if recent_group != 'Component':
+                category: list[str] = []
+                categories[recent_group] = category
 
-        if not len(recent_group):
+        if not len(recent_group) or recent_group == 'Component':
             continue
 
-        if not line.startswith('#') and ';' in line and 'fully-qualified' in line and 'E' in line:
-            # if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
-            #     recent_approved_line = line
-            # else:
-            #     continue
-            recent_approved_line = line
+        if not line.startswith('#') and ';' in line and 'E' in line:
+            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+                recent_approved_line = line
+            else:
+                continue
 
             first = line[line.find('#') + 2:]
             sec = first[:first.find('E') - 1]

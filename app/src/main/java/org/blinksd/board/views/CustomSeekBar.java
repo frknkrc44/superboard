@@ -20,7 +20,7 @@ final class CustomSeekBar extends SeekBar {
 
     CustomSeekBar(Context c) {
         super(c);
-        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.mpInt(75), -2, 0));
+        setLayoutParams(new LinearLayout.LayoutParams(DensityUtils.minPInt(75), -2, 0));
         setThumb(ResourcesUtils.getDrawable(R.drawable.seekbar_thumb));
         setProgressDrawable(ResourcesUtils.getDrawable(R.drawable.seekbar));
         setSplitTrack(false);

@@ -30,12 +30,20 @@ public final class DensityUtils {
         return (int) hp(px);
     }
 
-    public static float mp(float px) {
+    public static float minP(float px) {
         return (Math.min(getScreenWidth(), getScreenHeight()) / 100f) * px;
     }
 
-    public static int mpInt(float percent) {
-        return (int) mp(percent);
+    public static int minPInt(float percent) {
+        return (int) minP(percent);
+    }
+
+    public static float maxP(float px) {
+        return (Math.max(getScreenWidth(), getScreenHeight()) / 100f) * px;
+    }
+
+    public static int maxPInt(float percent) {
+        return (int) minP(percent);
     }
 
     public static DisplayMetrics getDisplayMetrics() {
