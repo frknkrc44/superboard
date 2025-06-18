@@ -22,6 +22,9 @@
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">দীর্ঘ প্রেসে অক্ষর পুনরাবৃত্তি অক্ষম করুন</string>
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">শীর্ষ বার অক্ষম করুন</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">শীর্ষ বার ফাংশন বোতাম লুকান</string>
+    <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
+    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">ক্লিপবোর্ড সক্ষম করুন</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">শব্দ পরামর্শ নিষ্ক্রিয়</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">সংখ্যা সারি অক্ষম করুন (বিটা)</string>
@@ -43,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">দ্বিতীয় কী ব্যাকগ্রাউন্ড কালার</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">কীবোর্ড ব্যাকগ্রাউন্ড রঙ</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">বাটন টেক্সট রঙ</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">কী প্রেস ইভেন্টে শব্দ চালান</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">র‍্যাম ব্যবহার কমান (init বিলম্ব বাড়ায়)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">দীর্ঘ প্রেসে প্রথম পপআপ অক্ষর ব্যবহার করুন (আপনাকে অবশ্যই পপআপ মেনু সক্ষম করতে হবে)</string>
@@ -81,6 +86,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">কীবোর্ড ব্যাকগ্রাউন্ড ইমেজ ঝাপসা</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">কী প্রেস কম্পন সময়কাল</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">কীবোর্ডের উচ্চতা</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">দীর্ঘ প্রেস সময়কাল গুণক</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">বাটন প্যাডিং</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">বাটন ব্যাসার্ধ</string>

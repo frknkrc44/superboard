@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Setup wizard resources -->
-    <string name="wizard_welcome">Welcome to %s setup wizard!</string>
-    <string name="wizard_nextbtn">Next</string>
-    <string name="wizard_enable">Enable keyboard from settings</string>
-    <string name="wizard_enablebtn">Open system settings</string>
-    <string name="wizard_select">Select %s as your default keyboard</string>
-    <string name="wizard_selectbtn">Open keyboard selection popup</string>
-    <string name="wizard_settings">Customize your keyboard</string>
-    <string name="wizard_settingsbtn">Open keyboard settings</string>
-    <string name="wizard_finish">Congratulations, you are completed setup wizard!</string>
-    <string name="wizard_finishbtn">Finish</string>
+    <string name="wizard_welcome">Witaj w kreatorze konfiguracji %s!</string>
+    <string name="wizard_nextbtn">Dalej</string>
+    <string name="wizard_enable">Włącz klawiaturę w ustawieniach</string>
+    <string name="wizard_enablebtn">Otwórz ustawienia systemowe</string>
+    <string name="wizard_select">Wybierz %s jako domyślną klawiaturę</string>
+    <string name="wizard_selectbtn">Otwórz okno wyboru klawiatury</string>
+    <string name="wizard_settings">Dostosuj swoją klawiaturę</string>
+    <string name="wizard_settingsbtn">Otwiera ustawienia klawiatury</string>
+    <string name="wizard_finish">Gratulacje, ukończyłeś proces początkowej konfiguracji!</string>
+    <string name="wizard_finishbtn">Zakończ</string>
     <!-- Settings resources -->
-    <string name="settings_activity">Settings</string>
-    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Keyboard background image</string>
-    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Show character while typing</string>
-    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Use transparent background at navbar</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
-    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Apply color to navbar (Android 9+)</string>
-    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Disable popup menu</string>
-    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Disable character repeating on long press</string>
-    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Disable top bar</string>
-    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Hide top bar function buttons</string>
-    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Enable clipboard</string>
-    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Disable word suggestions</string>
-    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Disable number row (beta)</string>
+    <string name="settings_activity">Ustawienia</string>
+    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Obraz tła klawiatury</string>
+    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Pokaż znak podczas pisania</string>
+    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Użyj przezroczystego tła na pasku nawigacji</string>
+    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Ustawy pasek nawigacyjny jako całkowicie przezroczysty</string>
+    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Zastosuj kolor na pasku nawigacji (Android 9+)</string>
+    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Wyłącz wyskakujące okienka</string>
+    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Wyłącz powtarzanie znaków po długim naciśnięciu</string>
+    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Wyłącz górny pasek</string>
+    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Ukryj przyciski funkcji górnego paska</string>
+    <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Pokaż przyciski górnego paska po prawej</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Pokaż klawiaturę pełnoekranową, jeśli jest dostępna</string>
+    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Zawsze pokazuj klawiaturę pełnoekranową</string>
+    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Włącz schowek</string>
+    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Wyłącz sugestie słów</string>
+    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Wyłącz wiersz numeryczny (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Show long press action or popup first character on key</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Use monet colors (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Use compat monet colors (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_compat_monet">Use compat monet colors (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detect capslock status automatically</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Force-detect capslock status automatically</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Enforce editor action (fixes some apps\' enter key issues but can cause bugs)</string>
@@ -43,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Second key press background color</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Keyboard background color</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Key text color</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Play sound on key press events</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Reduce RAM usage (increases init delay)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Use first popup character at long press (you must enable the popup menu)</string>
@@ -51,7 +56,7 @@
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Key indicator height</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Show bottom bar</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Increase delete speed after long pressed for a moment</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insert space after punctuation</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/settings_insert_space_after_punc">Insert space after punctuation</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Monet color scheme</string>
     <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Keyboard padding</string>
     <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
@@ -81,6 +86,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Keyboard background image blur</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Key press vibrate duration</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Keyboard height</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Longpress duration multiplier</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Key padding</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Key radius</string>

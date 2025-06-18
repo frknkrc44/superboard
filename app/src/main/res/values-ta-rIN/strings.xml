@@ -22,6 +22,9 @@
     <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">அழுத்திப் பிடித்தால் எழுத்தைப் பலமுறை உள்ளிட வேண்டாம்</string>
     <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">மேல் பட்டையை முடக்கு</string>
     <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">மேல் பட்டையின் function பொத்தான்களை மறை</string>
+    <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
+    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
     <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">கிளிப்போர்டை பயன்படுத்து</string>
     <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">சொற்களைப் பரிந்துரைக்க வேண்டாம்</string>
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">எண்கள் வரிசையை முடக்கு (beta)</string>
@@ -43,6 +46,8 @@
     <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">அழுத்திய இரண்டாம் விசையின் பின்னணி நிறம்</string>
     <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">விசைப்பலகை பின்னணி நிறம்</string>
     <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">விசையின் எழுத்து நிறம்</string>
+    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
     <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">விசையை அழுத்தினால் ஒலி எழுப்பு</string>
     <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM பயன்பாட்டைக் குறை (தொடக்க நேரத்தை அதிகரிக்கும்)</string>
     <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">அழுத்திப் பிடித்தால் முதல் பாப்பப் எழுத்தை உள்ளிடு (பாப்பப் திறை தேவை)</string>
@@ -81,6 +86,7 @@
     <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">விசைப்பலகை பின்னணி புகைப்படம் தெளிவின்மை அளவு</string>
     <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">விசை அழுத்தல் அதிர்வுறு நேரம்</string>
     <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">விசைப்பலகை உயரம்</string>
+    <string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
     <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">அழுத்திப் பிடித்திருக்கும் அவகாசப் பெருக்கி</string>
     <string name="settings_key_padding" tools:keep="@string/settings_key_padding">விசை இடைவெளி</string>
     <string name="settings_key_radius" tools:keep="@string/settings_key_radius">விசை ஆரம்</string>
