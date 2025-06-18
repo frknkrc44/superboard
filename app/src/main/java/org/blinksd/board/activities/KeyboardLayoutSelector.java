@@ -36,6 +36,8 @@ import org.blinksd.utils.superboard.RowOptions;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @SuppressWarnings({"deprecation", "all"})
 public final class KeyboardLayoutSelector extends BaseActivity implements View.OnClickListener {
@@ -58,7 +60,8 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         layout.setLayoutParams(LayoutCreator.createLayoutParams(ViewGroup.class, -1, -1));
         scroller.addView(layout);
 
-        for (String key : languageList.keySet()) {
+        final var languageKeySet = new TreeSet<>(languageList.keySet());
+        for (String key : languageKeySet) {
             final var langItem = Objects.requireNonNull(languageList.get(key));
             final var langLayout = createItemLayout(langItem);
 

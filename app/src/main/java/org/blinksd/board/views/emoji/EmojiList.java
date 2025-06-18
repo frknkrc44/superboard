@@ -1,5 +1,7 @@
 package org.blinksd.board.views.emoji;
 
+import static org.blinksd.board.SuperBoardApplication.getTextUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -56,6 +58,11 @@ public class EmojiList extends ArrayList<Emoji> {
      * @param emojiStr Emoji string to process
      * */
     public void addEmoji(String emojiStr) {
+        // Don't add unsupported emojis
+        if (!getTextUtils().hasGlyph(emojiStr)) {
+            return;
+        }
+
         // there's only 5 skin tones, so i can hardcode it
         for (int i = 0; i < 5; i++) {
             if (emojiStr.contains(skinTones[i])) {

@@ -593,7 +593,7 @@ public final class InputService extends InputMethodService implements
             int enterTextClr = getIntOrDefault(SettingMap.SET_ENTER_TEXTCLR);
             Drawable key2Bg = ResourcesUtils.getKeyBg(key2BgClr, key2BgPressedClr, true);
             Drawable enterBg = ResourcesUtils.getKeyBg(enterBgClr, enterBgPressClr, true);
-            for (int i = 0; i < superBoardView.getChildCount() - 1; i++) {
+            for (int i = 1; i < superBoardView.getChildCount() - 1; i++) {
                 if (i < 3) {
                     superBoardView.setKeyBackgroundAndItemColor(i, 3, 0, key2Bg, key2TextClr);
                     superBoardView.setKeyBackgroundAndItemColor(i, 3, -1, key2Bg, key2TextClr);
@@ -627,11 +627,11 @@ public final class InputService extends InputMethodService implements
                 for (int g = 0; g < subKOpt.keys.size(); g++) {
                     KeyOptions ko = subKOpt.keys.get(g);
                     if (ko.darkerKeyTint) {
-                        superBoardView.setKeyBackground(0, i, g, key2Bg);
+                        superBoardView.setKeyBackgroundAndItemColor(0, i, g, key2Bg, key2TextClr);
                     }
 
                     if (ko.pressKeyCode == Keyboard.KEYCODE_DONE) {
-                        superBoardView.setKeyBackground(0, i, g, enterBg);
+                        superBoardView.setKeyBackgroundAndItemColor(0, i, g, enterBg, enterTextClr);
                     }
                 }
             }

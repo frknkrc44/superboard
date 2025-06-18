@@ -51,9 +51,12 @@ final class CustomSeekBar extends SeekBar {
             progress = (GradientDrawable) progressClip.getDrawable();
         } else {
             try {
+                @SuppressWarnings("all")
                 Field clipStateField = ClipDrawable.class.getDeclaredField("mClipState");
                 clipStateField.setAccessible(true);
                 Object clipState = clipStateField.get(progressClip);
+
+                // noinspection ConstantConditions
                 Field clipMDrawableField = clipState.getClass().getDeclaredField("mDrawable");
                 clipMDrawableField.setAccessible(true);
                 progress = (GradientDrawable) clipMDrawableField.get(clipState);
@@ -66,7 +69,9 @@ final class CustomSeekBar extends SeekBar {
     }
 
     private Drawable findProgressLayerById(LayerDrawable layers) {
-        for (int i = 0; i < layers.getNumberOfLayers(); i++) {
+        final var layerLength = layers.getNumberOfLayers();
+
+        for (int i = 0; i < layerLength; i++) {
             if (layers.getId(i) == android.R.id.progress) {
                 return layers.getDrawable(i);
             }

@@ -53,6 +53,7 @@ public final class SuperBoardApplication extends Application {
     public synchronized static DictionaryDB getDictDB() {
         if (dictDB == null) {
             dictDB = new DictionaryDB(getSBApplication());
+            dictDB.onKeyboardInit();
         }
 
         return dictDB;

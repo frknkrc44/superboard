@@ -69,6 +69,11 @@ public final class DictionaryDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase p1) {
+        onKeyboardInit();
+    }
+
+    public void onKeyboardInit() {
+        SQLiteDatabase p1 = getWritableDatabase();
         List<String> types = getLanguageTypes();
         StringBuilder sb = new StringBuilder();
         isReady = false;
