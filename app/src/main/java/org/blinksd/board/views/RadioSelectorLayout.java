@@ -12,18 +12,19 @@ import java.util.List;
 public final class RadioSelectorLayout extends RadioGroup {
     public RadioSelectorLayout(Context context, int selection, List<String> items) {
         super(context);
-        int i = DensityUtils.dpInt(8);
-        setPadding(i, i, i, i);
+
+        int padding = DensityUtils.dpInt(8);
+        setPadding(padding, padding, padding, padding);
         setTag(selection);
         setOnCheckedChangeListener((group, checkedId) -> setTag(checkedId));
-        i = 0;
-        for (String key : items) {
+
+        final var itemsSize = items.size();
+        for (int i = 0; i < itemsSize; i++) {
             CustomRadioButton rb = new CustomRadioButton(context);
             rb.setId(i);
             rb.setChecked(i == selection);
-            rb.setText(key);
+            rb.setText(items.get(i));
             addView(rb);
-            i++;
         }
     }
     

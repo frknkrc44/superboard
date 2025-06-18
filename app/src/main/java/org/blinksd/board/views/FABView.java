@@ -72,6 +72,7 @@ public class FABView extends LinearLayout {
         return super.getOrientation();
     }
 
+    // noinspection RtlHardcoded
     public void setOrientation(Orientation ori){
         if(ori == oldOri){
             return;

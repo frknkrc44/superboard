@@ -91,7 +91,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             }
 
             // get delete button's parent's parent
-            // ImageView del > ColorSelectorItemLayout > color selector item layouts parent
+            // ImageView del > ColorSelectorItemLayout > color selector item layout's parent
             ViewGroup gradientSel = (ViewGroup) ((View) p1.getParent()).getParent();
             int num = p1.getId();
             colorList.remove(num);
