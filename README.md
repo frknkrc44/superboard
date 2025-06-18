@@ -45,5 +45,7 @@ feel free to open an issue on GitLab mirror.
 ### Credits
 
 - [KCM Files](https://github.com/calin-darie/extra-keyboard-layouts)
+- [TwoWayGridView](https://github.com/jess-anders/two-way-gridview)
 - All of contributors
+- All of translators
 - And you :)
