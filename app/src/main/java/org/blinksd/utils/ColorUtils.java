@@ -14,6 +14,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -42,6 +43,29 @@ public final class ColorUtils {
         } else {
             view.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
+    }
+
+    public static int getColorFromHSV(float hue, float sat, float val) {
+        if (hue > 360f) {
+            hue = 360f;
+        } else if (hue < 0f) {
+            hue = 0f;
+        }
+
+        return Color.HSVToColor(new float[]{hue, 1f - (sat / 100f), val / 100f});
+    }
+
+    public static int[] getHSVFromColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+
+        int[] out = new int[3];
+
+        out[0] = (int) hsv[0];
+        out[1] = (int) ((1f - hsv[1]) * 100);
+        out[2] = (int) (hsv[2] * 100);
+
+        return out;
     }
 
     public static int compositeColors(int foreground, int background) {

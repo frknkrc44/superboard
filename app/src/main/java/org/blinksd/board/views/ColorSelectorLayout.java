@@ -2,6 +2,8 @@ package org.blinksd.board.views;
 
 import static android.graphics.Color.argb;
 import static android.graphics.Color.rgb;
+import static org.blinksd.utils.ColorUtils.getColorFromHSV;
+import static org.blinksd.utils.ColorUtils.getHSVFromColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 
 import android.annotation.SuppressLint;
@@ -28,7 +30,6 @@ import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
-import org.blinksd.utils.HSVColorUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
@@ -83,7 +84,7 @@ public final class ColorSelectorLayout extends LinearLayout {
                     b.setProgress(Color.blue(currentColorValue));
                     break;
                 case 1:
-                    int[] hsv = getHSV(currentColorValue);
+                    int[] hsv = getHSVFromColor(currentColorValue);
                     h.setProgress(hsv[0]);
                     s.setProgress(hsv[1]);
                     v.setProgress(hsv[2]);
@@ -195,7 +196,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         s.setMax(100);
         v.setMax(100);
 
-        int[] hsv = getHSV(currentColorValue);
+        int[] hsv = getHSVFromColor(currentColorValue);
         h.setProgress(hsv[0]);
         s.setProgress(hsv[1]);
         v.setProgress(hsv[2]);
@@ -203,7 +204,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         SeekBar.OnSeekBarChangeListener opc = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar z, int i, boolean c) {
-                int color = HSVColorUtils.getColorFromHSVInt(h.getProgress(), s.getProgress(), v.getProgress());
+                int color = getColorFromHSV(h.getProgress(), s.getProgress(), v.getProgress());
                 color = argb(a.getProgress(), Color.red(color), Color.green(color), Color.blue(color));
                 currentColorValue = color;
                 setPreview(prev);
@@ -234,7 +235,6 @@ public final class ColorSelectorLayout extends LinearLayout {
         hexIn.setGravity(Gravity.CENTER);
         hexIn.setText(getColorString(false));
         hexIn.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence p1, int start, int count, int after) {
             }
@@ -250,7 +250,6 @@ public final class ColorSelectorLayout extends LinearLayout {
                     setPreview(prev);
                 } catch (Throwable ignored) {}
             }
-
         });
 
         SuperBoard sb = new SuperBoard(ctx) {
@@ -308,18 +307,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         return ll;
     }
 
-    private int[] getHSV(int color) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
 
-        int[] out = new int[3];
-
-        out[0] = (int) hsv[0];
-        out[1] = (int) ((1f - hsv[1]) * 100);
-        out[2] = (int) (hsv[2] * 100);
-
-        return out;
-    }
 
     private void setPreview(TextView x) {
         x.setText(getColorString(true));

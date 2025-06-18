@@ -1,6 +1,6 @@
 package org.blinksd.utils;
 
-import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.LocalIconTheme.SYM_TYPE_SPACE;
@@ -120,7 +120,7 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
 
         try (FileInputStream stream = new FileInputStream(file)) {
             return new BitmapDrawable(
-                    getSBApplication().getResources(),
+                    getAppResources(),
                     BitmapFactory.decodeStream(stream)
             );
         } catch (IOException ignored) {

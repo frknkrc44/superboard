@@ -223,14 +223,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
-    public final void setBackground(Drawable background) {
-        setBackgroundDrawable(background);
-    }
-
-    public final void setBackgroundDrawable(Drawable background) {
-        super.setBackgroundDrawable(Objects.requireNonNull(background.getConstantState()).newDrawable());
-    }
-
     public final void setKeyVibrateDuration(int dur) {
         vibrateDuration = dur;
     }
@@ -238,10 +230,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public void clear() {
         removeAllViewsInLayout();
         createEmptyLayout(KeyboardType.TEXT);
-    }
-
-    public final void setKeyItemColor(int keyboardIndex, int rowIndex, int keyIndex, int color) {
-        getKey(keyboardIndex, rowIndex, keyIndex).setKeyItemColor(color);
     }
 
     public final void setKeyBackground(int keyboardIndex, int rowIndex, int keyIndex, Drawable background) {
@@ -1614,7 +1602,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 k.getLayoutParams().height = getMeasuredHeight();
             }
             k.setBackgroundDrawable(getBackground());
-            k.setKeyWidthPercent(getKeyWidthPercent());
+            k.getLayoutParams().width = getLayoutParams().width;
             k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);

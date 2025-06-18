@@ -47,7 +47,7 @@ public class ResourcesUtils {
 
     @SuppressWarnings("deprecation")
     public static int getColor(int resId) {
-        Resources res = getSBApplication().getResources();
+        Resources res = getAppResources();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return res.getColor(resId, getSBApplication().getTheme());
@@ -188,7 +188,6 @@ public class ResourcesUtils {
     }
 
     public static Drawable getSelectableItemBg(int textColor, boolean darker, boolean transparent) {
-
         GradientDrawable content = new GradientDrawable();
         int accent = transparent ? 0 : getAccentColor();
         if (darker && !transparent) {
