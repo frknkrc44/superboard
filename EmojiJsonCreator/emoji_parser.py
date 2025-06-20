@@ -44,14 +44,20 @@ if status_code == 200:
             continue
 
         if not line.startswith('#') and ';' in line and 'E' in line:
-            if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
-                recent_approved_line = line
-            else:
-                continue
+            # if not len(recent_approved_line) or not compare_emoji_desc(line, recent_approved_line):
+            #     recent_approved_line = line
+            # else:
+            #     continue
+            recent_approved_line = line
 
             first = line[line.find('#') + 2:]
             sec = first[:first.find('E') - 1]
-            categories[recent_group].append(sec)
+            character = sec.strip()
+
+            if '\uFE0F' in character:
+                continue
+
+            categories[recent_group].append(character)
 else:
     exit(1)
 
