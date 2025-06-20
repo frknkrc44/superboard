@@ -98,7 +98,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     protected int textStyle = 0;
     private int vibrateDuration = 0;
     private int longPressMultiplier = 1;
-    private int currentMotionEventAction = MotionEvent.ACTION_UP;
     protected int iconSizeMultiplier = 1;
     private int currentEditorAction = 0;
     private float keyIndicatorHeight = 0.5f;
@@ -1111,7 +1110,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
             switch (m.getAction()) {
                 case MotionEvent.ACTION_UP:
-                    currentMotionEventAction = MotionEvent.ACTION_UP;
+                    key.currentMotionEventAction = MotionEvent.ACTION_UP;
                     if (mHandler.hasMessages(1)) {
                         mHandler.removeMessages(1);
                         sendKeyboardEvent((Key) v);
@@ -1119,7 +1118,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     mHandler.removeAndSendEmptyMessage(0);
                     break;
                 case MotionEvent.ACTION_DOWN:
-                    currentMotionEventAction = MotionEvent.ACTION_DOWN;
+                    key.currentMotionEventAction = MotionEvent.ACTION_DOWN;
                     onKeyboardEvent(v);
                     mHandler.removeAndSendMessageDelayed(1, v, 250L * longPressMultiplier);
                     break;
@@ -1222,6 +1221,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
             switch (what) {
                 case 0: // after
+                    if (v != null) {
+                        v.currentMotionEventAction = MotionEvent.ACTION_UP;
+                    }
+
                     longPressed = false;
                     longPressEventCounter = 0;
                     removeMessages(0);
@@ -1229,12 +1232,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case 1: // long continue
                     removeMessages(1);
-                    switch (currentMotionEventAction) {
+                    if (v == null) {
+                        removeAndSendEmptyMessage(0);
+                        return;
+                    }
+
+                    switch (v.currentMotionEventAction) {
                         case MotionEvent.ACTION_UP:
                             removeAndSendEmptyMessage(0);
                             break;
                         case MotionEvent.ACTION_DOWN:
-                            if (v != null && v.hasLongPressEvent()) {
+                            if (v.hasLongPressEvent()) {
                                 Pair<Integer, Boolean> a = v.getLongPressEvent();
                                 if (a.second) {
                                     sendKeyEvent(a.first);
@@ -1243,13 +1251,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                 }
                                 playSound(a.first);
                                 removeAndSendEmptyMessage(0);
-                            } else if (v != null && v.hasPopup()) {
+                            } else if (v.hasPopup()) {
                                 onPopupEvent();
                                 removeAndSendEmptyMessage(0);
                             } else {
                                 if (getContext() instanceof InputMethodService &&
                                         !((InputMethodService) getContext()).isInputViewShown()) {
-                                    currentMotionEventAction = MotionEvent.ACTION_UP;
+                                    v.currentMotionEventAction = MotionEvent.ACTION_UP;
                                 }
                                 removeAndSendMessage(2, v);
                             }
@@ -1257,8 +1265,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case 2: // normal or long start
-                    if (currentMotionEventAction == MotionEvent.ACTION_UP) {
-                        if (longPressFastDelete && v != null && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
+                    if (v == null) {
+                        removeAndSendEmptyMessage(0);
+                    } else if (v.currentMotionEventAction == MotionEvent.ACTION_UP) {
+                        if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
                             setCtrlState(0);
                             sendCtrl(false);
                         }
@@ -1271,7 +1281,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             removeAndSendMessageDelayed(1, v, delay);
                             if (!longPressed) longPressed = true;
                             else {
-                                if (longPressFastDelete && v != null && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
+                                if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
                                     setCtrlState(0);
                                     sendCtrl(false);
 
@@ -1323,6 +1333,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         private View state;
         private int stateCount = 1, currentState = 0;
         private CharSequence[] popupCharacters;
+        private int currentMotionEventAction = MotionEvent.ACTION_UP;
 
         Key(Context context) {
             super(context);
