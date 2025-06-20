@@ -15,13 +15,10 @@ import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.superboard.KeyboardType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressLint("ViewConstructor")
 public class BoardPopup extends SuperBoard {
-    private static final int[] pos = new int[]{0, 0};
-    private static int khp = 0;
+    private static final int[] keyPosition = new int[]{0, 0};
+    private static int mainKeyboardHeightPercent = 0;
     private final Key mKey;
     private final View mPopupFilter;
 
@@ -48,26 +45,23 @@ public class BoardPopup extends SuperBoard {
 
     private void setKeyboardPrefs(SuperBoard board) {
         setIconSizeMultiplier(board.iconSizeMultiplier);
-        khp = board.getKeyboardHeight();
+        mainKeyboardHeightPercent = board.getKeyboardHeight();
         int keyboardColor = setAlphaForColor(0xCC, getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
         int ap = setAlphaForColor(0xCC, getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR));
         setBackground(ResourcesUtils.getKeyBg(keyboardColor, ap, true));
         mPopupFilter.setBackgroundColor(setAlphaForColor(0x33, keyboardColor));
         mKey.setVisibility(GONE);
-        int keyHeight = mKey.getLayoutParams().height;
-        setKeyLeftTop(pos[0], pos[1] - (pos[1] >= keyHeight ? keyHeight : 0));
-    }
+        final var keyHeight = mKey.getLayoutParams().height;
 
-    private void setKeyLeftTop(int left, int top) {
-        var params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
-        params.leftMargin = left;
-        params.topMargin = top;
+        final var params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
+        params.leftMargin = keyPosition[0];
+        params.topMargin = keyPosition[1] - (keyPosition[1] >= keyHeight ? keyHeight : 0);
     }
 
     public void setKey(SuperBoard board, Key key) {
         setShiftState(board.getShiftState());
-        key.clone(mKey, true);
-        key.getLocationInWindow(pos);
+        key.clone(mKey);
+        key.getLocationInWindow(keyPosition);
         setKeysTextType(board.textStyle);
         setKeysShadow(board.shadowRadius, board.shadowColor);
         setKeysTextColor(board.getKeysTextColor());
@@ -118,39 +112,46 @@ public class BoardPopup extends SuperBoard {
     private void setCharacters(CharSequence[] chars) {
         clear();
 
-        List<CharSequence> uppercaseCharacters = new ArrayList<>();
-        for (CharSequence c : chars) {
-            uppercaseCharacters.add(getCase(c, getShiftState() != SHIFT_OFF));
+        final var output = new CharSequence[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            output[i] = getCase(chars[i], getShiftState() != SHIFT_OFF);
         }
 
-        createPopup(uppercaseCharacters.toArray(chars));
+        createPopup(output);
     }
 
-    private void createPopup(CharSequence[] a) {
-        int h, c = 6;
-        setKeyboardWidth(a.length < c ? 11 * a.length : 11 * c);
-        h = a.length / c;
-        h = h > 0 ? h : 1;
-        h += ((a.length > (c - 1)) && (a.length) % c > 0) ? 1 : 0;
-        setKeyboardHeight(10 * h);
+    private void createPopup(CharSequence[] input) {
+        if (input.length < 1) {
+            return;
+        }
+
+        final int charactersPerRow = 6;
+        setKeyboardWidth(11 * Math.min(input.length, charactersPerRow));
+
+        int rowCount = Math.max(1, input.length / charactersPerRow);
+        if (input.length >= charactersPerRow && input.length % charactersPerRow > 0) {
+            rowCount += 1;
+        }
+
+        setKeyboardHeight(10 * rowCount);
         setX(DensityUtils.wpInt(50 - (getKeyboardWidthPercent() / 2f)));
-        setY(DensityUtils.hpInt((khp - getKeyboardHeightPercent()) / 2f));
-        CharSequence[] x;
-        for (int i = 0, k = 0; i < h; i++) {
-            x = new CharSequence[Math.min(a.length, c)];
-            x[0] = "";
-            for (int g = 0; g < c; g++) {
+        setY(DensityUtils.hpInt((mainKeyboardHeightPercent - getKeyboardHeightPercent()) / 2f));
+
+        for (int i = 0, k = 0; i < rowCount; i++) {
+            final var charsPerRow = new CharSequence[Math.min(input.length, charactersPerRow)];
+
+            for (int g = 0; g < charactersPerRow; g++) {
                 k++;
-                int j = (i * c) + g;
-                if (j < a.length) {
-                    x[g] = a[j];
+                int j = (i * charactersPerRow) + g;
+                if (j < input.length) {
+                    charsPerRow[g] = input[j];
                     continue;
                 }
                 break;
             }
 
             // noinspection all
-            if (x[0].length() > 0 && k > 1) addRow(0, x);
+            if (k > 1 && charsPerRow[0] != null) addRow(0, charsPerRow);
         }
 
         fixHeight();

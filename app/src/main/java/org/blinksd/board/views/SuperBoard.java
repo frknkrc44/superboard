@@ -1603,11 +1603,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         public void clone(Key k) {
-            clone(k, false);
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        public void clone(Key k, boolean disableTouchEvent) {
             if (getBackground() != null) {
                 Rect r = getBackground().getBounds();
                 k.getLayoutParams().width = r.right;
@@ -1616,6 +1611,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 k.getLayoutParams().width = getMeasuredWidth();
                 k.getLayoutParams().height = getMeasuredHeight();
             }
+
             k.setBackgroundDrawable(getBackground());
             k.getLayoutParams().width = getLayoutParams().width;
             k.setPopupCharacters(getPopupCharacters());
@@ -1629,10 +1625,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
             k.setKeyIcon(getKeyIcon());
             k.setKeyImageVisible(isKeyIconSet());
-
-            if (disableTouchEvent) {
-                k.setOnTouchListener(null);
-            }
         }
     }
 }
