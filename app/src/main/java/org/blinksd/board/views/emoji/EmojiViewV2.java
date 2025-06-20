@@ -131,6 +131,11 @@ public class EmojiViewV2 extends LinearLayout {
             var emojiList = emojiListMap.get(emojiItem);
 
             // noinspection ConstantConditions
+            if (emojiList.isEmpty()) {
+                continue;
+            }
+
+            // noinspection ConstantConditions
             var tabSpec = tabHost.newTabSpec(emojiList.get(0).emoji);
 
             var indicatorView = (TextView) LayoutInflater.from(getContext())
