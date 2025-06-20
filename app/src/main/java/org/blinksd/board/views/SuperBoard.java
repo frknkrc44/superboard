@@ -1218,6 +1218,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         private void handleMessage(int what) {
             Key v = (Key) messageIds.get(what);
+            if (v == null && what != 0) {
+                removeAndSendEmptyMessage(0);
+                return;
+            }
 
             switch (what) {
                 case 0: // after
@@ -1232,10 +1236,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case 1: // long continue
                     removeMessages(1);
-                    if (v == null) {
-                        removeAndSendEmptyMessage(0);
-                        return;
-                    }
 
                     switch (v.currentMotionEventAction) {
                         case MotionEvent.ACTION_UP:
@@ -1265,9 +1265,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case 2: // normal or long start
-                    if (v == null) {
-                        removeAndSendEmptyMessage(0);
-                    } else if (v.currentMotionEventAction == MotionEvent.ACTION_UP) {
+                    if (v.currentMotionEventAction == MotionEvent.ACTION_UP) {
                         if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
                             setCtrlState(0);
                             sendCtrl(false);
