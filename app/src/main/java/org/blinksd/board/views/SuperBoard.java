@@ -1176,11 +1176,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
                 for (int i = 0; i < lenThreads; i++) {
                     try {
-                        threads.get(0).interrupt();
+                        threads.get(i).interrupt();
                     } catch (Throwable ignored) {}
-
-                    threads.remove(0);
                 }
+
+                threads.clear();
             }
         }
 
