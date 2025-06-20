@@ -230,6 +230,11 @@ public final class InputService extends InputMethodService implements
         if (getBooleanOrDefault(SettingMap.SET_KILL_BACKGROUND)) {
             System.exit(0);
         }
+
+        if (superBoardView != null) {
+            superBoardView.stopAllKeyEvents();
+        }
+
         onFinishInput();
         super.onWindowHidden();
 

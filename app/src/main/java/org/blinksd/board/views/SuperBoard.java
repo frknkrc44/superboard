@@ -101,7 +101,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     protected int iconSizeMultiplier = 1;
     private int currentEditorAction = 0;
     private float keyIndicatorHeight = 0.5f;
-    private boolean longPressed = false;
     private boolean disablePopup = false;
     private boolean popupPreview = false;
     private boolean isRepeat = true;
@@ -161,7 +160,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public void onPopupEvent() {}
 
     public void afterPopupEvent() {
-        mHandler.removeAndSendEmptyMessage(0);
+        stopAllKeyEvents();
     }
 
     public void switchLanguage() {}
@@ -1113,9 +1112,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     key.currentMotionEventAction = MotionEvent.ACTION_UP;
                     if (mHandler.hasMessages(1)) {
                         mHandler.removeMessages(1);
-                        sendKeyboardEvent((Key) v);
+                        sendKeyboardEvent(key);
                     }
-                    mHandler.removeAndSendEmptyMessage(0);
+                    mHandler.removeAndSendMessage(0, key);
                     break;
                 case MotionEvent.ACTION_DOWN:
                     key.currentMotionEventAction = MotionEvent.ACTION_DOWN;
@@ -1132,12 +1131,20 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private void normalPress(View v, MotionEvent m) {
         switch (m.getAction()) {
             case MotionEvent.ACTION_UP:
-                mHandler.removeAndSendEmptyMessage(0);
+                mHandler.removeAndSendMessage(0, v);
                 break;
             case MotionEvent.ACTION_DOWN:
                 sendKeyboardEvent((Key) v);
                 break;
         }
+    }
+
+    public void stopAllKeyEvents() {
+        applyToAllKeys(key -> {
+            key.longPressed = false;
+            key.longPressEventCounter = 0;
+            key.currentMotionEventAction = KeyEvent.ACTION_UP;
+        });
     }
 
     public interface ApplyToKeyRunnable {
@@ -1147,7 +1154,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     private final class MyHandler {
         private final ListedMap<Integer, View> messageIds = new ListedMap<>();
         private final List<Thread> threads = new ArrayList<>();
-        private int longPressEventCounter = 0;
 
         private MyHandler() {}
 
@@ -1226,11 +1232,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             switch (what) {
                 case 0: // after
                     if (v != null) {
+                        v.longPressed = false;
+                        v.longPressEventCounter = 0;
                         v.currentMotionEventAction = MotionEvent.ACTION_UP;
                     }
 
-                    longPressed = false;
-                    longPressEventCounter = 0;
                     removeMessages(0);
                     afterKeyboardEvent();
                     break;
@@ -1275,14 +1281,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     } else {
                         sendKeyboardEvent(v);
                         if (isRepeat) {
-                            long delay = (20L * longPressMultiplier) * (longPressed ? 1 : 20);
+                            long delay = (20L * longPressMultiplier) * (v.longPressed ? 1 : 20);
                             removeAndSendMessageDelayed(1, v, delay);
-                            if (!longPressed) longPressed = true;
+                            if (!v.longPressed) v.longPressed = true;
                             else if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
                                 setCtrlState(0);
                                 sendCtrl(false);
 
-                                if (longPressEventCounter++ > 10) {
+                                if (v.longPressEventCounter++ > 10) {
                                     setCtrlState(1);
                                     sendCtrl(true);
                                 }
@@ -1330,6 +1336,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         private int stateCount = 1, currentState = 0;
         private CharSequence[] popupCharacters;
         private int currentMotionEventAction = MotionEvent.ACTION_UP;
+        private int longPressEventCounter = 0;
+        private boolean longPressed = false;
 
         Key(Context context) {
             super(context);
