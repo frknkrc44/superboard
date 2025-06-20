@@ -1278,15 +1278,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             long delay = (20L * longPressMultiplier) * (longPressed ? 1 : 20);
                             removeAndSendMessageDelayed(1, v, delay);
                             if (!longPressed) longPressed = true;
-                            else {
-                                if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
-                                    setCtrlState(0);
-                                    sendCtrl(false);
+                            else if (longPressFastDelete && v.getNormalPressEvent().first == Keyboard.KEYCODE_DELETE) {
+                                setCtrlState(0);
+                                sendCtrl(false);
 
-                                    if (longPressEventCounter++ > 10) {
-                                        setCtrlState(1);
-                                        sendCtrl(true);
-                                    }
+                                if (longPressEventCounter++ > 10) {
+                                    setCtrlState(1);
+                                    sendCtrl(true);
                                 }
                             }
                         } else {
