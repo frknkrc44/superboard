@@ -1239,7 +1239,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
                     switch (v.currentMotionEventAction) {
                         case MotionEvent.ACTION_UP:
-                            removeAndSendEmptyMessage(0);
+                            removeAndSendMessage(0, v);
                             break;
                         case MotionEvent.ACTION_DOWN:
                             if (v.hasLongPressEvent()) {
@@ -1250,10 +1250,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                     commitText(String.valueOf((char) a.first.intValue()));
                                 }
                                 playSound(a.first);
-                                removeAndSendEmptyMessage(0);
+                                removeAndSendMessage(0, v);
                             } else if (v.hasPopup()) {
                                 onPopupEvent();
-                                removeAndSendEmptyMessage(0);
+                                removeAndSendMessage(0, v);
                             } else {
                                 if (getContext() instanceof InputMethodService &&
                                         !((InputMethodService) getContext()).isInputViewShown()) {
@@ -1273,7 +1273,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             sendCtrl(false);
                         }
 
-                        removeAndSendEmptyMessage(0);
+                        removeAndSendMessage(0, v);
                     } else {
                         sendKeyboardEvent(v);
                         if (isRepeat) {
@@ -1292,7 +1292,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                 }
                             }
                         } else {
-                            removeAndSendEmptyMessage(0);
+                            removeAndSendMessage(0, v);
                         }
                     }
                     break;
