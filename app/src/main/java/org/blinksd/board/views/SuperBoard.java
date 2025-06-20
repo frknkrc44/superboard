@@ -230,10 +230,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         createEmptyLayout(KeyboardType.TEXT);
     }
 
-    public final void setKeyBackground(int keyboardIndex, int rowIndex, int keyIndex, Drawable background) {
-        getKey(keyboardIndex, rowIndex, keyIndex).setBackground(background);
-    }
-
     public final void setKeyBackgroundAndItemColor(int keyboardIndex, int rowIndex, int keyIndex, Drawable background, int itemColor) {
         Key key = getKey(keyboardIndex, rowIndex, keyIndex);
         key.setBackground(background);
@@ -1176,12 +1172,15 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             messageIds.remove(what);
 
             if (what == 1) {
-                for (int i = 0; i < threads.size(); i++) {
+                final int lenThreads = threads.size();
+
+                for (int i = 0; i < lenThreads; i++) {
                     try {
-                        threads.get(i).interrupt();
+                        threads.get(0).interrupt();
                     } catch (Throwable ignored) {}
+
+                    threads.remove(0);
                 }
-                threads.clear();
             }
         }
 
@@ -1201,7 +1200,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             messageIds.put(what, v);
 
             try {
-                threads.add(new Thread() {
+                final var thread = new Thread() {
                     @Override
                     public void run() {
                         try {
@@ -1213,8 +1212,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                             threads.remove(this);
                         } catch (Throwable ignored) {}
                     }
-                });
-                threads.get(threads.size() - 1).start();
+                };
+                threads.add(thread);
+                thread.start();
             } catch (Throwable ignored) {}
         }
 
