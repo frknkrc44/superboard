@@ -35,6 +35,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -658,7 +659,18 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     private void sendKeyAction(int code, int action, int metaState) {
-        KeyEvent event = new KeyEvent(0, 0, action, code, 0, metaState);
+        KeyEvent event = new KeyEvent(
+                0,
+                0,
+                action,
+                code,
+                0,
+                metaState,
+                0,
+                0,
+                KeyEvent.FLAG_CANCELED | KeyEvent.FLAG_KEEP_TOUCH_MODE | KeyEvent.FLAG_TRACKING,
+                InputDevice.SOURCE_TOUCHSCREEN
+        );
         getCurrentInputConnection().sendKeyEvent(event);
     }
 
