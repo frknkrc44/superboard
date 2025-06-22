@@ -269,7 +269,9 @@ public final class InputService extends InputMethodService implements
         super.onFinishInput();
         if (superBoardView != null) {
             superBoardView.updateKeyState();
-            superBoardView.setEnabledLayout(0);
+            if (!superBoardView.isCurrentFNKeyboard()) {
+                superBoardView.setEnabledLayout(0);
+            }
         }
 
         if (boardPopup != null) {
