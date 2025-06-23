@@ -1244,10 +1244,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             switch (what) {
                 case 0: // after
                     if (v != null) {
-                        if (v.longPressed) {
-                            sendKeyEvent(0);
-                        }
-
                         v.longPressed = false;
                         v.longPressEventCounter = 0;
                         v.currentMotionEventAction = MotionEvent.ACTION_UP;
