@@ -43,12 +43,15 @@ Easy way to create themes and language packs for FBoard
 | enterPressClr | Enter key press color                         | hex color string |
 | tShdwClr      | Text shadow color                             | hex color string |
 | txtClr        | Text and icon color                           | hex color string |
+| txtClr2**     | Text and icon color (second key)              | hex color string |
+| txtClrE**     | Text and icon color (enter key)               | hex color string |
 | keyPad        | Padding between keys                          | float            |
 | keyRad        | Key radius                                    | float            |
 | txtSize       | Text and icon size                            | float            |
 | txtShadow     | Text shadow                                   | float            |
 
-\* You must implement these lines
+- \*   You must implement these lines
+- \*\* If you don't declare txtClr2 or txtClrE, txtClr will be used as fallback color
 
 ### Font Types
 | Key                         |                 Human-readable name |
