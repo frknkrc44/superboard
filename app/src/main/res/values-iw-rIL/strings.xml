@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">הגדרות</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">תמונת רקע של מקלדת</string>
+    <string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">הצג דמות בזמן ההקלדה</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">השתמש ברקע שקוף בסרגל הניווט</string>
     <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">הפוך את סרגל הניווט לשקוף לחלוטין</string>
@@ -30,7 +31,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">השבת שורת מספרים (ביטא)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">הצג פעולת לחיצה ארוכה או תו ראשון קופץ על המקש</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">השתמש בצבעי המערכת (ביטא)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">השתמש בצבע תואם (בטא)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_compat_monet">השתמש בצבע תואם (בטא)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">זיהוי מצב Capslock באופן אוטומטי</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">זיהוי אוטומטי של מצב Capslock באופן אוטומטי</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">לאכוף פעולת עורך (מתקן בעיות מפתח של אפליקציות מסוימות אך עלול לגרום לבאגים)</string>
@@ -56,7 +57,7 @@
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">גובה מחוון מפתח</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">הצג סרגל תחתון</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">הגבר את מהירות המחיקה לאחר לחיצה ארוכה לרגע</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">הכנס רווח לאחר סימני פיסוק</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/settings_insert_space_after_punc">הכנס רווח לאחר סימני פיסוק</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">ערכת צבעים של Monet</string>
     <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">ריפוד מקלדת</string>
     <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">ספירת צבעים מקסימלית מחושבת עבור compat monet</string>
