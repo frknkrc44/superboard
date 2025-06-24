@@ -46,7 +46,6 @@ public final class ImageUtils {
         try {
             // try blur processing with built-in renderscript
             Context ctx = getSBApplication();
-            setupDiskCache(ctx);
 
             RenderScript rs = RenderScript.create(ctx);
             ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
@@ -64,17 +63,6 @@ public final class ImageUtils {
             // switch to old method on exception
             return fastBlur(bmp, radius);
         }
-    }
-
-    @SuppressLint("PrivateApi")
-    private static void setupDiskCache(Context ctx) throws Throwable {
-        try {
-            // Reflection is lifesaver ^-^
-            Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
-            Method mt = clazz.getMethod("setupDiskCache", File.class);
-            mt.setAccessible(true);
-            mt.invoke(null, ctx.getCacheDir());
-        } catch (Throwable ignore) {}
     }
 
     private static Bitmap fastBlur(Bitmap sentBitmap, int radius) {
