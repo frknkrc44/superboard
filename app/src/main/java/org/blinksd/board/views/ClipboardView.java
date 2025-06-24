@@ -197,18 +197,17 @@ public final class ClipboardView extends LinearLayout
 
     private boolean selectAndUseClipItem(View view, boolean useCommitToPaste) {
         final var parentView = (View) view.getParent();
-
-        String item = getTextFromView(parentView);
+        String itemText = getTextFromView(parentView);
 
         List<String> texts = getLastPrimaryClipTexts();
-        if (!(texts.isEmpty() || texts.contains(item))) {
-            clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
+        if (!(texts.isEmpty() || texts.contains(itemText))) {
+            clipboardManager.setPrimaryClip(ClipData.newPlainText(itemText, itemText));
             removeClipView(parentView, false);
-            addClipView(item, true);
+            addClipView(itemText, true);
         }
 
         if (useCommitToPaste) {
-            superBoard.commitText(item);
+            superBoard.commitText(itemText);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
