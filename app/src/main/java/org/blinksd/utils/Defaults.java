@@ -23,12 +23,12 @@ public final class Defaults {
     public static final int KEY_PADDING = 10;
     public static final int KEY_RADIUS = 24;
 
-    public static final int KEY_TEXT_SIZE = 20;
+    public static final int KEY_TEXT_SIZE = 23;
     public static final int KEY_TEXT_SHADOW_SIZE = 0;
     public static final int KEY_LONGPRESS_DURATION = 1;
     public static final int KEY_VIBRATE_DURATION = 0;
     public static final int KEY_FONT_TYPE = 0;
-    public static final int ICON_SIZE_MULTIPLIER = 3;
+    public static final int ICON_SIZE_MULTIPLIER = 2;
     public static final int DICTIONARY_ALGORITHM = 0;
     public static final int DICTIONARY_LIMIT = 10;
     public static final int KEY_INDICATOR_HEIGHT = 5;
