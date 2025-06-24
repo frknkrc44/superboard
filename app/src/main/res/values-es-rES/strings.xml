@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Ajustes</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Imagen de fondo del teclado</string>
+    <string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Mostrar caracter mientras escribe</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Usar un fondo transparente para la barra de navegación</string>
     <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Hacer la barra de navegación completamente transparente</string>
@@ -30,7 +31,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Desactivar fila de números (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Mostrar simbolos en las teclas</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Usar colores del monet (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Usar colores compactos del monet (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_compat_monet">Usar colores compactos del monet (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Detectar automáticamente el estado del capslock</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Forzar a detectar automáticamente el estado del capslock</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Forzar editor action (arregla algunos problemas clave de algunas aplicaciones pero puede causar errores)</string>
@@ -56,7 +57,7 @@
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Altura del indicador de teclas</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Mostrar barra inferior</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Aumenta la velocidad de borrado después de un momento presionando</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Insertar espacio después de la puntuación</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/settings_insert_space_after_punc">Insertar espacio después de la puntuación</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Esquema de color Monet</string>
     <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Relleno de teclas</string>
     <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
