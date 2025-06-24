@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -141,14 +142,16 @@ public final class ClipboardView extends LinearLayout
                 clipLayout,
                 android.R.id.button1,
                 R.drawable.clipboard,
-                this::selectAndUseClipItem
+                v -> selectAndUseClipItem(v, false),
+                v -> selectAndUseClipItem(v, true)
         );
 
         addClipLayoutButton(
                 clipLayout,
                 android.R.id.button2,
                 R.drawable.delete,
-                v -> removeClipView(clipLayout, true)
+                v -> removeClipView(clipLayout, true),
+                null
         );
 
         if (addToHistory) {
@@ -175,7 +178,8 @@ public final class ClipboardView extends LinearLayout
             ViewGroup clipLayout,
             int id,
             int iconId,
-            View.OnClickListener onClickListener
+            View.OnClickListener onClickListener,
+            View.OnLongClickListener onLongClickListener
     ) {
         int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
@@ -186,11 +190,12 @@ public final class ClipboardView extends LinearLayout
         clButton.setId(id);
         clButton.setImageResource(iconId);
         clButton.setOnClickListener(onClickListener);
+        clButton.setOnLongClickListener(onLongClickListener);
         clButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(clButton);
     }
 
-    private void selectAndUseClipItem(View view) {
+    private boolean selectAndUseClipItem(View view, boolean useCommitToPaste) {
         final var parentView = (View) view.getParent();
 
         String item = getTextFromView(parentView);
@@ -202,7 +207,17 @@ public final class ClipboardView extends LinearLayout
             addClipView(item, true);
         }
 
-        superBoard.commitText(item);
+        if (useCommitToPaste) {
+            superBoard.commitText(item);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
+            } else {
+                superBoard.setCtrlState(1);
+                superBoard.sendKeyEvent(KeyEvent.KEYCODE_V);
+            }
+        }
+        return true;
     }
 
     private String getTextFromView(View view) {
