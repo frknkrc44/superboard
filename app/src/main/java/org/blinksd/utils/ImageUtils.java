@@ -2,7 +2,6 @@ package org.blinksd.utils;
 
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.renderscript.Allocation;
@@ -10,8 +9,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
-import java.io.File;
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 @SuppressWarnings({"deprecation", "all"})

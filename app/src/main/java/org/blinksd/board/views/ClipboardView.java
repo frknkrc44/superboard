@@ -14,7 +14,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -142,16 +141,14 @@ public final class ClipboardView extends LinearLayout
                 clipLayout,
                 android.R.id.button1,
                 R.drawable.clipboard,
-                v -> selectAndUseClipItem(v, false),
-                v -> selectAndUseClipItem(v, true)
+                this::selectAndUseClipItem
         );
 
         addClipLayoutButton(
                 clipLayout,
                 android.R.id.button2,
                 R.drawable.delete,
-                v -> removeClipView(clipLayout, true),
-                null
+                v -> removeClipView(clipLayout, true)
         );
 
         if (addToHistory) {
@@ -178,8 +175,7 @@ public final class ClipboardView extends LinearLayout
             ViewGroup clipLayout,
             int id,
             int iconId,
-            View.OnClickListener onClickListener,
-            View.OnLongClickListener onLongClickListener
+            View.OnClickListener onClickListener
     ) {
         int buttonSize = dpInt(48);
         int buttonPadding = buttonSize / 4;
@@ -190,26 +186,22 @@ public final class ClipboardView extends LinearLayout
         clButton.setId(id);
         clButton.setImageResource(iconId);
         clButton.setOnClickListener(onClickListener);
-        clButton.setOnLongClickListener(onLongClickListener);
         clButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
         clipLayout.addView(clButton);
     }
 
-    /** @noinspection SameReturnValue*/
-    private boolean selectAndUseClipItem(View view, boolean useCtrlToPaste) {
+    private void selectAndUseClipItem(View view) {
         selectClipItem(view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !useCtrlToPaste) {
-            superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
-        } else {
-            superBoard.setCtrlState(1);
-            superBoard.sendKeyEvent(KeyEvent.KEYCODE_V);
-        }
-        return true;
+        superBoard.commitText(getTextFromView((View) view.getParent()));
+    }
+
+    private String getTextFromView(View view) {
+        return ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
     }
 
     private void selectClipItem(View view) {
         final var parentView = (View) view.getParent();
-        String item = ((TextView) parentView.findViewById(android.R.id.text1)).getText().toString();
+        String item = getTextFromView(parentView);
 
         List<String> texts = getLastPrimaryClipTexts();
         if (texts.isEmpty() || texts.contains(item)) {
@@ -240,7 +232,7 @@ public final class ClipboardView extends LinearLayout
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView(view);
-        String item = ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
+        String item = getTextFromView(view);
         clipboardHistory.remove(item);
         if (sync) syncClipboardCache();
     }
