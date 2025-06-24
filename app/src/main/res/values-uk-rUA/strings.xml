@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Налаштування</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Фонове зображення клавіатури</string>
+    <string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Збільшувати символи під час введення</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Використовувати прозорий фон для панелі навігації</string>
     <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Зробити панель навігації повністю прозорим</string>
@@ -30,7 +31,7 @@
     <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Вимкнути рядок цифр (beta)</string>
     <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Показувати дію при довгому натисканні або спливаючий перший символ на клавіші</string>
     <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Використовувати monet кольори (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Використовувати сумісні monet кольори (beta)</string>
+    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_compat_monet">Використовувати сумісні monet кольори (beta)</string>
     <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Автоматично виявляти стан CapsLock</string>
     <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Автоматичне примусове виявлення стану CapsLock</string>
     <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Примусити редактор діяти (виправляє проблеми з клавішею Enter у деяких програмах, але може спричинити помилки)</string>
@@ -56,7 +57,7 @@
     <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Висота індикатора клавіш</string>
     <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Показати нижню панель</string>
     <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Збільшення швидкості видалення при довгому натисканні</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
+    <string name="settings_insert_space_after_punc" tools:keep="@string/settings_insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
     <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Кольорова схема Monet</string>
     <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Відступ клавіатури</string>
     <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
