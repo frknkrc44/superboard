@@ -39,6 +39,10 @@ public final class ImageUtils {
     }
 
     public static Bitmap getBlur(Bitmap bmp, int radius) {
+        if (SuperDBHelper.getBooleanOrDefault(SettingMap.SET_KEYBOARD_BGBLUR_USE_ALT)) {
+            return fastBlur(bmp, radius);
+        }
+
         try {
             // try blur processing with built-in renderscript
             Context ctx = getSBApplication();

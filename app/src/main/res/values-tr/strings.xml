@@ -17,6 +17,7 @@
 	<!-- Settings resources -->
 	<string name="settings_activity">Ayarlar</string>
 	<string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Klavye arkaplan resmi</string>
+	<string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Bulanıklık için alternatif metodu kullan</string>
 	<string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Yazarken basılan karakteri göster</string>
 	<string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Gezinme çubuğunu şeffaflaştır</string>
 	<string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Gezinme çubuğunu tamamen şeffaflaştır</string>

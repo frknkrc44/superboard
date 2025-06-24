@@ -35,6 +35,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEYBOARD_SPACETYPE_SELECT = "keyboard_spacetype_select",
             SET_KEYBOARD_BGIMG = "keyboard_bgimg",
             SET_KEYBOARD_BGBLUR = "keyboard_bgblur",
+            SET_KEYBOARD_BGBLUR_USE_ALT = "keyboard_bgblur_use_alt",
             SET_KEYBOARD_HEIGHT = "keyboard_height",
             SET_KEYBOARD_BGCLR = "keyboard_bgclr",
             SET_KEYBOARD_SHOW_POPUP = "keyboard_show_popup",
@@ -162,6 +163,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putGeneral(SET_FORCE_SHOW_KEYBOARD_PHYSICAL, SettingType.BOOL);
         putGeneral(SET_KILL_BACKGROUND, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGBLUR, SettingType.DECIMAL_NUMBER);
+        putThemingAdvanced(SET_KEYBOARD_BGBLUR_USE_ALT, SettingType.BOOL);
         putThemingAdvanced(SET_KEYBOARD_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY_BGCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY2_BGCLR, SettingType.COLOR_SELECTOR);
@@ -256,6 +258,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         switch (key) {
             case SET_KEYBOARD_BGBLUR:
                 return Defaults.KEYBOARD_BACKGROUND_BLUR;
+            case SET_KEYBOARD_BGBLUR_USE_ALT:
+                return Defaults.KEYBOARD_BGBLUR_USE_ALT;
             case SET_KEYBOARD_PADDING:
                 return Defaults.KEYBOARD_PADDING;
             case SET_KEY_VIBRATE_DURATION:

@@ -39,6 +39,7 @@ public final class Defaults {
     public static final String ICON_THEME = "theme_default";
     public static final String THEME_PRESET = MonetColors.COLOR_SCHEME_DEFAULT;
 
+    public static final boolean KEYBOARD_BGBLUR_USE_ALT = false;
     public static final boolean KEYBOARD_SHOW_POPUP = true;
     public static final boolean KEYBOARD_LC_ON_EMOJI = false;
     public static final boolean KEYBOARD_TOUCH_SOUND = true;
