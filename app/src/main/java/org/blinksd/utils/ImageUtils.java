@@ -68,11 +68,13 @@ public final class ImageUtils {
 
     @SuppressLint("PrivateApi")
     private static void setupDiskCache(Context ctx) throws Throwable {
-        // Reflection is lifesaver ^-^
-        Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
-        Method mt = clazz.getMethod("setupDiskCache", File.class);
-        mt.setAccessible(true);
-        mt.invoke(null, ctx.getCacheDir());
+        try {
+            // Reflection is lifesaver ^-^
+            Class<?> clazz = Class.forName("android.renderscript.RenderScriptCacheDir");
+            Method mt = clazz.getMethod("setupDiskCache", File.class);
+            mt.setAccessible(true);
+            mt.invoke(null, ctx.getCacheDir());
+        } catch (Throwable ignore) {}
     }
 
     private static Bitmap fastBlur(Bitmap sentBitmap, int radius) {
