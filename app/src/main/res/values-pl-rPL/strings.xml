@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Ustawienia</string>
     <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Obraz tła klawiatury</string>
+    <string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Pokaż znak podczas pisania</string>
     <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Użyj przezroczystego tła na pasku nawigacji</string>
     <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Ustawy pasek nawigacyjny jako całkowicie przezroczysty</string>
