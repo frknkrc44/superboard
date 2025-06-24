@@ -196,13 +196,11 @@ public final class ClipboardView extends LinearLayout
         String item = getTextFromView(parentView);
 
         List<String> texts = getLastPrimaryClipTexts();
-        if (texts.isEmpty() || texts.contains(item)) {
-            return;
+        if (!(texts.isEmpty() || texts.contains(item))) {
+            clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
+            removeClipView(parentView, false);
+            addClipView(item, true);
         }
-
-        clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
-        removeClipView(parentView, false);
-        addClipView(item, true);
 
         superBoard.commitText(item);
     }
