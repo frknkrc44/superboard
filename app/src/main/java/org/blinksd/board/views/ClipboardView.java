@@ -191,16 +191,8 @@ public final class ClipboardView extends LinearLayout
     }
 
     private void selectAndUseClipItem(View view) {
-        selectClipItem(view);
-        superBoard.commitText(getTextFromView((View) view.getParent()));
-    }
-
-    private String getTextFromView(View view) {
-        return ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
-    }
-
-    private void selectClipItem(View view) {
         final var parentView = (View) view.getParent();
+
         String item = getTextFromView(parentView);
 
         List<String> texts = getLastPrimaryClipTexts();
@@ -211,6 +203,12 @@ public final class ClipboardView extends LinearLayout
         clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
         removeClipView(parentView, false);
         addClipView(item, true);
+
+        superBoard.commitText(item);
+    }
+
+    private String getTextFromView(View view) {
+        return ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
     }
 
     /** @noinspection SameReturnValue*/
