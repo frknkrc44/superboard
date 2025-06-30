@@ -320,11 +320,11 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return textSize;
     }
 
-    public final void setKeysTextSize(final int size) {
+    public final void setKeysTextSize(final float size) {
         setKeysTextSize(size, false);
     }
 
-    public final void setKeysTextSize(final int size, boolean force) {
+    public final void setKeysTextSize(final float size, boolean force) {
         if (textSize != size || force)
             applyToAllKeys(key -> key.setKeyTextSize(size));
         textSize = size;
