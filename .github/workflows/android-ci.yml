@@ -33,7 +33,7 @@ jobs:
 
     - name: Install requirements
       run: |
-        curl -L https://pngquant.org/pngquant-linux.tar.bz2 | sudo tar xjf - -C /bin pngquant
+        wget -O- https://pngquant.org/pngquant-linux.tar.bz2 | sudo tar xjf - -C /bin pngquant
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
