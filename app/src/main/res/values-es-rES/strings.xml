@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">¡Le damos la bienvenida al asistente de configuración de %s!</string>
     <string name="wizard_nextbtn">Siguiente</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Ajustes</string>
     <string name="settings_keyboard_bgimg">Imagen de fondo del teclado</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">Mostrar caracter mientras escribe</string>
     <string name="settings_colorize_navbar">Usar un fondo transparente para la barra de navegación</string>
     <string name="settings_colorize_navbar_always_trans">Hacer la barra de navegación completamente transparente</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">Color del texto en las teclas</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">Reproducir sonido al pulsar la tecla eventos</string>
     <string name="settings_keyboard_kill_background">Reduce el uso de la RAM (aumenta el tiempo de espera al inicio)</string>
     <string name="settings_use_first_popup_character">Usa el primer carácter emergente con pulsación larga (debes habilitar el menú emergente)</string>

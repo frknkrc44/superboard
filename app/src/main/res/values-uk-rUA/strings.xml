@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">Ласкаво просимо до майстра налаштування %s!</string>
     <string name="wizard_nextbtn">Далі</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Налаштування</string>
     <string name="settings_keyboard_bgimg">Фонове зображення клавіатури</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">Збільшувати символи під час введення</string>
     <string name="settings_colorize_navbar">Використовувати прозорий фон для панелі навігації</string>
     <string name="settings_colorize_navbar_always_trans">Зробити панель навігації повністю прозорим</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">Колір клавіші тексту</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">Звуковий сигнал при натисканні клавіш</string>
     <string name="settings_keyboard_kill_background">Знизити споживання ОЗП (збільшує затримку відкриття клавіатури)</string>
     <string name="settings_use_first_popup_character">Використовувати перший спливаючий символ при довгому натисканні (ви повинні увімкнути спливаюче меню)</string>

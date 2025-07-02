@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">%s அமைவு வழிகாட்டிக்கு வரவேற்கிறோம்!</string>
     <string name="wizard_nextbtn">அடுத்து</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">அமைப்புகள்</string>
     <string name="settings_keyboard_bgimg">விசைப்பலகை பின்னணி புகைப்படம்</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">தட்டச்சு செய்யும்போது எழுத்தைக் காண்பி</string>
     <string name="settings_colorize_navbar">Navbarல் வெளிப்படையான பின்னணியைப் பயன்படுத்து</string>
     <string name="settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">விசையின் எழுத்து நிறம்</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">விசையை அழுத்தினால் ஒலி எழுப்பு</string>
     <string name="settings_keyboard_kill_background">RAM பயன்பாட்டைக் குறை (தொடக்க நேரத்தை அதிகரிக்கும்)</string>
     <string name="settings_use_first_popup_character">அழுத்திப் பிடித்தால் முதல் பாப்பப் எழுத்தை உள்ளிடு (பாப்பப் திறை தேவை)</string>

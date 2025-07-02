@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">%sবাংলা সেটআপ উইজার্ডে স্বাগতম!</string>
     <string name="wizard_nextbtn">পরবর্তী</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">সেটিংস</string>
     <string name="settings_keyboard_bgimg">কীবোর্ড ব্যাকগ্রাউন্ড ছবি</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">টাইপ করার সময় অক্ষর দেখান</string>
     <string name="settings_colorize_navbar">নেভবারে স্বচ্ছ ব্যাকগ্রাউন্ড ব্যবহার করুন</string>
     <string name="settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">বাটন টেক্সট রঙ</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">কী প্রেস ইভেন্টে শব্দ চালান</string>
     <string name="settings_keyboard_kill_background">র‍্যাম ব্যবহার কমান (init বিলম্ব বাড়ায়)</string>
     <string name="settings_use_first_popup_character">দীর্ঘ প্রেসে প্রথম পপআপ অক্ষর ব্যবহার করুন (আপনাকে অবশ্যই পপআপ মেনু সক্ষম করতে হবে)</string>

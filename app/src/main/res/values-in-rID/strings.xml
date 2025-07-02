@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">Selamat datang di panduan pengaturan %s!</string>
     <string name="wizard_nextbtn">Berikutnya</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Pengaturan</string>
     <string name="settings_keyboard_bgimg">Gambar latar belakang papan ketik</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">Tampilkan karakter saat mengetik</string>
     <string name="settings_colorize_navbar">Gunakan latar belakang transparan di navbar</string>
     <string name="settings_colorize_navbar_always_trans">Make navigation bar fully transparent</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">Warna teks kunci</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">Memutar suara saat tombol ditekan</string>
     <string name="settings_keyboard_kill_background">Mengurangi penggunaan RAM (meningkatkan penundaan init)</string>
     <string name="settings_use_first_popup_character">Gunakan karakter popup pertama saat ditekan lama (Anda harus mengaktifkan menu popup)</string>

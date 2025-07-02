@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Setup wizard resources -->
     <string name="wizard_welcome">ברוך הבא לאשף ההגדרה של %s!</string>
     <string name="wizard_nextbtn">הבא</string>
@@ -14,6 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">הגדרות</string>
     <string name="settings_keyboard_bgimg">תמונת רקע של מקלדת</string>
+    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
     <string name="settings_keyboard_show_popup">הצג דמות בזמן ההקלדה</string>
     <string name="settings_colorize_navbar">השתמש ברקע שקוף בסרגל הניווט</string>
     <string name="settings_colorize_navbar_always_trans">הפוך את סרגל הניווט לשקוף לחלוטין</string>
@@ -48,6 +49,8 @@
     <string name="settings_key_textclr">צבע טקסט מפתח</string>
     <string name="settings_key2_textclr">Secondary key text color</string>
     <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_key_stroke_width">Key stroke width</string>
+    <string name="settings_key_strokeclr">Key stroke color</string>
     <string name="settings_play_snd_press">השמע צליל באירועי לחיצת מקשים</string>
     <string name="settings_keyboard_kill_background">הפחת את השימוש בזיכרון RAM (מגדיל את עיכוב הפתיחה)</string>
     <string name="settings_use_first_popup_character">השתמש בתו הקופץ הראשון בלחיצה ארוכה (עליך להפעיל את התפריט הקופץ)</string>
