@@ -69,7 +69,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase p1) {
-        onKeyboardInit();
+        // do nothing
     }
 
     public void onKeyboardInit() {

@@ -16,101 +16,101 @@
 
 	<!-- Settings resources -->
 	<string name="settings_activity">Ayarlar</string>
-	<string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Klavye arkaplan resmi</string>
-	<string name="settings_keyboard_bgblur_use_alt" tools:keep="@string/settings_keyboard_bgblur_use_alt">Bulanıklık için alternatif metodu kullan</string>
-	<string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Yazarken basılan karakteri göster</string>
-	<string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Gezinme çubuğunu şeffaflaştır</string>
-	<string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Gezinme çubuğunu tamamen şeffaflaştır</string>
-	<string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Gezinme çubuğuna renk uygula (Android 9+)</string>
-	<string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Açılır pencereleri kapat</string>
-	<string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Basılı tutunca karakter tekrarlamayı kapat</string>
-    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Numara satırını devre dışı bırak (beta)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
-	<string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Üst barı devre dışı bırak</string>
-	<string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Üst bar fonksiyon tuşlarını gizle</string>
-	<string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Üst bar tuşlarını sağda göster</string>
-	<string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Mümkün olduğunda tam ekran klavyeyi kullan</string>
-	<string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Zorla tam ekran klavyeyi kullan</string>
-	<string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Kopyalama panosunu etkinleştir</string>
-	<string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
-	<string name="settings_use_monet" tools:keep="@string/settings_use_monet">Sistem renklerini kullan (beta)</string>
-	<string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Duvar kağıdından sistem renklerini algıla (beta)</string>
-	<string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
-	<string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Büyük karakter durumunu otomatik algılamaya zorla</string>
-	<string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Editör eylemine zorla (bazı uygulamalarda enter tuşunu düzeltir ancak sorun da yapabilir)</string>
-	<string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Klavyenin sistem tarafından kapatılmasını önle (!?# tuşuna uzun basarak kapatabilirsiniz)</string>
-	<string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Fiziksel klavye bağlandığında klavyeyi zorla göster</string>
-	<string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Gülücük tuşuna basılı tutunca klavye dilini değiştir</string>
-	<string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Enter tuşu arkaplan rengi</string>
-	<string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Enter tuşu dokunma arkaplan rengi</string>
-	<string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Tuş metni gölgesi rengi</string>
-	<string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Birincil tuş arkaplan rengi</string>
-	<string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">İkincil tuş arkaplan rengi</string>
-	<string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Birincil tuş dokunma arkaplan rengi</string>
-	<string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">İkincil tuş dokunma arkaplan rengi</string>
-	<string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Klavye arkaplan rengi</string>
-	<string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Tuş metin rengi</string>
-	<string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">İkincil tuş metin rengi</string>
-	<string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter tuşu metin rengi</string>
-	<string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
-	<string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">RAM kullanımını düşür (açılış gecikmesini arttırır)</string>
-	<string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Uzun basıldığında ilk açılır pencere karakterini kullan (açılır pencereleri etkinleştirmelisiniz)</string>
-	<string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Sözlük sorgu yöntemi</string>
-	<string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Sözlük sorgu limiti</string>
-	<string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Tuş göstergesi yüksekliği</string>
-	<string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Alt barı göster</string>
-	<string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Uzun basıldığında bir süre sonra silmeyi daha da hızlandır</string>
-	<string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Noktalama işaretinden sonra boşluk bırak</string>
-	<string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Sistem rengi şeması</string>
-	<string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Klavye içe girintisi</string>
-	<string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
+	<string name="settings_keyboard_bgimg">Klavye arkaplan resmi</string>
+	<string name="settings_keyboard_bgblur_use_alt">Bulanıklık için alternatif metodu kullan</string>
+	<string name="settings_keyboard_show_popup">Yazarken basılan karakteri göster</string>
+	<string name="settings_colorize_navbar">Gezinme çubuğunu şeffaflaştır</string>
+	<string name="settings_colorize_navbar_always_trans">Gezinme çubuğunu tamamen şeffaflaştır</string>
+	<string name="settings_colorize_navbar_alt">Gezinme çubuğuna renk uygula (Android 9+)</string>
+	<string name="settings_disable_popup">Açılır pencereleri kapat</string>
+	<string name="settings_disable_repeat">Basılı tutunca karakter tekrarlamayı kapat</string>
+    <string name="settings_disable_number_row">Numara satırını devre dışı bırak (beta)</string>
+    <string name="settings_enable_popup_preview">Tuş üzerinde uzun basma eylemini veya açılır pencere ilk karakterini göster</string>
+	<string name="settings_disable_top_bar">Üst barı devre dışı bırak</string>
+	<string name="settings_hide_top_bar_fn_buttons">Üst bar fonksiyon tuşlarını gizle</string>
+	<string name="settings_show_fab_right">Üst bar tuşlarını sağda göster</string>
+	<string name="settings_show_fs_keyboard">Mümkün olduğunda tam ekran klavyeyi kullan</string>
+	<string name="settings_show_fs_keyboard_forced">Zorla tam ekran klavyeyi kullan</string>
+	<string name="settings_enable_clipboard">Kopyalama panosunu etkinleştir</string>
+	<string name="settings_disable_suggestions">Kelime önerilerini devre dışı bırak</string>
+	<string name="settings_use_monet">Sistem renklerini kullan (beta)</string>
+	<string name="settings_use_compat_monet">Duvar kağıdından sistem renklerini algıla (beta)</string>
+	<string name="settings_detect_capslock">Büyük karakter durumunu otomatik algıla</string>
+	<string name="settings_enforce_detect_capslock">Büyük karakter durumunu otomatik algılamaya zorla</string>
+	<string name="settings_enforce_editor_action">Editör eylemine zorla (bazı uygulamalarda enter tuşunu düzeltir ancak sorun da yapabilir)</string>
+	<string name="settings_prevent_keyboard_close">Klavyenin sistem tarafından kapatılmasını önle (!?# tuşuna uzun basarak kapatabilirsiniz)</string>
+	<string name="settings_force_show_keyboard_physical">Fiziksel klavye bağlandığında klavyeyi zorla göster</string>
+	<string name="settings_keyboard_lc_on_emoji">Gülücük tuşuna basılı tutunca klavye dilini değiştir</string>
+	<string name="settings_enter_bgclr">Enter tuşu arkaplan rengi</string>
+	<string name="settings_enter_press_bgclr">Enter tuşu dokunma arkaplan rengi</string>
+	<string name="settings_key_shadowclr">Tuş metni gölgesi rengi</string>
+	<string name="settings_key_bgclr">Birincil tuş arkaplan rengi</string>
+	<string name="settings_key2_bgclr">İkincil tuş arkaplan rengi</string>
+	<string name="settings_key_press_bgclr">Birincil tuş dokunma arkaplan rengi</string>
+	<string name="settings_key2_press_bgclr">İkincil tuş dokunma arkaplan rengi</string>
+	<string name="settings_keyboard_bgclr">Klavye arkaplan rengi</string>
+	<string name="settings_key_textclr">Tuş metin rengi</string>
+	<string name="settings_key2_textclr">İkincil tuş metin rengi</string>
+	<string name="settings_enter_textclr">Enter tuşu metin rengi</string>
+	<string name="settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
+	<string name="settings_keyboard_kill_background">RAM kullanımını düşür (açılış gecikmesini arttırır)</string>
+	<string name="settings_use_first_popup_character">Uzun basıldığında ilk açılır pencere karakterini kullan (açılır pencereleri etkinleştirmelisiniz)</string>
+	<string name="settings_dictionary_algorithm">Sözlük sorgu yöntemi</string>
+	<string name="settings_dictionary_limit">Sözlük sorgu limiti</string>
+	<string name="settings_key_indicator_height">Tuş göstergesi yüksekliği</string>
+	<string name="settings_show_bottom_bar">Alt barı göster</string>
+	<string name="settings_long_press_fast_delete">Uzun basıldığında bir süre sonra silmeyi daha da hızlandır</string>
+	<string name="settings_insert_space_after_punc">Noktalama işaretinden sonra boşluk bırak</string>
+	<string name="settings_monet_color_scheme">Sistem rengi şeması</string>
+	<string name="settings_keyboard_padding">Klavye içe girintisi</string>
+	<string name="settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
 
 	<!-- Image selector resources -->
-	<string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Fotoğraf</string>
-	<string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Gradyan</string>
-	<string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Renk</string>
-	<string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Renk ekle</string>
-	<string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Hoopp! En yüksek sınır %s</string>
-	<string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Hoopp! En az sınır %s</string>
-	<string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Yön değiştir</string>
-	<string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Resim seç</string>
-	<string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Duvar kağıdını getir</string>
-	<string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Döndür</string>
-	<string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Sistem duvar kağıdını getirmek için depolama izni sağlayın</string>
-	<string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">Bir canlı duvar kağıdı kullanıyorsunuz, önizleme yükleniyor…</string>
+	<string name="settings_image_selector_photo">Fotoğraf</string>
+	<string name="settings_image_selector_gradient">Gradyan</string>
+	<string name="settings_image_selector_gradient_item">Renk</string>
+	<string name="settings_image_selector_gradient_add_item">Renk ekle</string>
+	<string name="settings_image_selector_gradient_add_item_error">Hoopp! En yüksek sınır %s</string>
+	<string name="settings_image_selector_gradient_remove_item_error">Hoopp! En az sınır %s</string>
+	<string name="settings_image_selector_gradient_change_orientation">Yön değiştir</string>
+	<string name="settings_image_selector_select">Resim seç</string>
+	<string name="settings_image_selector_wp">Duvar kağıdını getir</string>
+	<string name="settings_image_selector_rotate">Döndür</string>
+	<string name="settings_image_selector_warning_storage_access">Sistem duvar kağıdını getirmek için depolama izni sağlayın</string>
+	<string name="settings_image_selector_warning_live_wallpaper">Bir canlı duvar kağıdı kullanıyorsunuz, önizleme yükleniyor…</string>
 	
 	<!-- Radio selector resources -->
-	<string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Klavye dili</string>
-	<string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Klavye yazı tipi</string>
-	<string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Klavye teması</string>
-	<string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Simge teması</string>
-	<string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Boşluk tuşu stili</string>
-	<string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Tuş arkaplan tipi</string>
-	<string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Tuş arkaplan gradyanı yönü</string>
+	<string name="settings_keyboard_lang_select">Klavye dili</string>
+	<string name="settings_keyboard_texttype_select">Klavye yazı tipi</string>
+	<string name="settings_keyboard_theme_preset">Klavye teması</string>
+	<string name="settings_keyboard_icon_theme">Simge teması</string>
+	<string name="settings_keyboard_spacetype_select">Boşluk tuşu stili</string>
+	<string name="settings_key_bg_type">Tuş arkaplan tipi</string>
+	<string name="settings_key_gradient_orientation">Tuş arkaplan gradyanı yönü</string>
 
 	<!-- Number selector resources -->
-	<string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Klavye arkaplan resmi bulanıklığı</string>
-	<string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Tuş titreme süresi</string>
-	<string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Klavye yüksekliği</string>
-	<string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Yatay mod için klavye yüksekliği arttırma oranı</string>
-	<string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Tuşa uzun basma süresi arttırıcı</string>
-	<string name="settings_key_padding" tools:keep="@string/settings_key_padding">Tuş içe girintisi</string>
-	<string name="settings_key_radius" tools:keep="@string/settings_key_radius">Tuş yuvarlaklığı</string>
-	<string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Tuş metin boyutu</string>
-	<string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
-	<string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Tuş resmi boyutu çarpanı</string>
+	<string name="settings_keyboard_bgblur">Klavye arkaplan resmi bulanıklığı</string>
+	<string name="settings_key_vibrate_duration">Tuş titreme süresi</string>
+	<string name="settings_keyboard_height">Klavye yüksekliği</string>
+	<string name="settings_land_height_increaser">Yatay mod için klavye yüksekliği arttırma oranı</string>
+	<string name="settings_key_longpress_duration">Tuşa uzun basma süresi arttırıcı</string>
+	<string name="settings_key_padding">Tuş içe girintisi</string>
+	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
+	<string name="settings_key_textsize">Tuş metin boyutu</string>
+	<string name="settings_key_shadowsize">Tuş metni gölgesi boyutu</string>
+	<string name="settings_key_icon_size_multi">Tuş resmi boyutu çarpanı</string>
 
 	<!-- Backup/Restore options -->
-	<string name="settings_backup_menu" tools:keep="@string/backup_menu">Yedekle ve geri yükle</string>
-	<string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Yedekle</string>
-	<string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Geri yükle</string>
-	<string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Bütün öğeler</string>
-	<string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, …)</string>
-	<string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Diğerleri</string>
-	<string name="settings_select_file" tools:keep="@string/settings_select_file">Dosya seç</string>
+	<string name="settings_backup_menu">Yedekle ve geri yükle</string>
+	<string name="settings_backup_menu_backup">Yedekle</string>
+	<string name="settings_backup_menu_restore">Geri yükle</string>
+	<string name="settings_backup_type_all">Bütün öğeler</string>
+	<string name="settings_backup_type_theme">Tema (simge teması, arkaplan resmi, renkler, …)</string>
+	<string name="settings_backup_type_other">Diğerleri</string>
+	<string name="settings_select_file">Dosya seç</string>
 	
 	<!-- Dictionary importer resources -->
-	<string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Sözlük paketini içe aktar (.fbd/combined.gz)</string>
+	<string name="settings_import_dict_pack">Sözlük paketini içe aktar (.fbd/combined.gz)</string>
 	<string name="settings_dict_importing">İçe aktarılıyor, lütfen bu uygulamayı kapatmayın</string>
 	<string name="settings_dict_import_count">%s kelime içe aktarıldı</string>
 	<string name="settings_dict_import_delete_duplicates">Fazlalıklar siliniyor</string>

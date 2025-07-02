@@ -131,7 +131,9 @@ public final class ThemeUtils {
         String secondaryColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_BGCLR));
         String enterColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_BGCLR));
         String textShadowColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-        String textColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+        String keyTextColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
+        String key2TextColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_TEXTCLR));
+        String enterTextColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_TEXTCLR));
         String primaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR));
         String secondaryPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR));
         String enterPressColor = colorIntToString(getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR));
@@ -163,7 +165,9 @@ public final class ThemeUtils {
             export.put("enterClr", enterColor);
             export.put("enterPressClr", enterPressColor);
             export.put("tShdwClr", textShadowColor);
-            export.put("txtClr", textColor);
+            export.put("txtClr", keyTextColor);
+            export.put("txtClr2", key2TextColor);
+            export.put("txtClrE", enterTextColor);
             export.put("keyPad", keyPadding);
             export.put("keyRad", keyRadius);
             export.put("txtSize", textSize);
@@ -178,7 +182,8 @@ public final class ThemeUtils {
     public static class ThemeHolder {
         public final String name, codeName, fontType, iconTheme,
                 backgroundColor, primaryColor, secondaryColor,
-                enterColor, textShadowColor, textColor,
+                enterColor, textShadowColor, keyTextColor,
+                key2TextColor, enterTextColor,
                 primaryPressColor, secondaryPressColor, enterPressColor;
         public final int keyPadding, keyRadius, textSize, textShadow,
                 keyBgType, keyBgGradientOrientation;
@@ -210,7 +215,20 @@ public final class ThemeUtils {
             this.enterColor = getString(json, "enterClr");
             this.enterPressColor = getString(json, "enterPressClr");
             this.textShadowColor = getString(json, "tShdwClr");
-            this.textColor = getString(json, "txtClr");
+            this.keyTextColor = getString(json, "txtClr");
+
+            if (json.has("txtClr2")) {
+                this.key2TextColor = getString(json, "txtClr2");
+            } else {
+                this.key2TextColor = this.keyTextColor;
+            }
+
+            if (json.has("txtClrE")) {
+                this.enterTextColor = getString(json, "txtClrE");
+            } else {
+                this.enterTextColor = this.keyTextColor;
+            }
+
             this.keyPadding = getInt(json, "keyPad");
             this.keyRadius = getInt(json, "keyRad");
             this.textSize = getInt(json, "txtSize");
@@ -257,33 +275,30 @@ public final class ThemeUtils {
         }
 
         private void putControlledColor(String key, String color) {
-            SuperMiniDB smdb = getAppDB();
-            SettingMap sMap = getSettings();
+            SuperMiniDB db = getAppDB();
             if (color.trim().isEmpty()) {
-                smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
+                db.putString(key, String.valueOf(getSettings().getDefaults(key)), true);
                 return;
             }
-            smdb.putInteger(key, Color.parseColor(color), true);
+            db.putInteger(key, Color.parseColor(color), true);
         }
 
         private void putControlledString(String key, String value) {
-            SuperMiniDB smdb = getAppDB();
-            SettingMap sMap = getSettings();
+            SuperMiniDB db = getAppDB();
             if (value.trim().isEmpty()) {
-                smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
+                db.putString(key, String.valueOf(getSettings().getDefaults(key)), true);
                 return;
             }
-            smdb.putString(key, value, true);
+            db.putString(key, value, true);
         }
 
         private void putControlledInt(String key, int value) {
-            SuperMiniDB smdb = getAppDB();
-            SettingMap sMap = getSettings();
+            SuperMiniDB db = getAppDB();
             if (value < 0) {
-                smdb.putString(key, String.valueOf(sMap.getDefaults(key)), true);
+                db.putString(key, String.valueOf(getSettings().getDefaults(key)), true);
                 return;
             }
-            smdb.putInteger(key, value, true);
+            db.putInteger(key, value, true);
         }
 
         public void applyTheme() {
@@ -298,7 +313,7 @@ public final class ThemeUtils {
             try {
                 putControlledString(SettingMap.SET_ICON_THEME, iconTheme);
             } catch (Throwable t) {
-                putControlledInt(SettingMap.SET_ICON_THEME, -1);
+                putControlledString(SettingMap.SET_ICON_THEME, "");
             }
             putControlledColor(SettingMap.SET_KEYBOARD_BGCLR, backgroundColor);
             putControlledColor(SettingMap.SET_KEY_BGCLR, primaryColor);
@@ -308,7 +323,9 @@ public final class ThemeUtils {
             putControlledColor(SettingMap.SET_ENTER_BGCLR, enterColor);
             putControlledColor(SettingMap.SET_ENTER_PRESS_BGCLR, enterPressColor);
             putControlledColor(SettingMap.SET_KEY_SHADOWCLR, textShadowColor);
-            putControlledColor(SettingMap.SET_KEY_TEXTCLR, textColor);
+            putControlledColor(SettingMap.SET_KEY_TEXTCLR, keyTextColor);
+            putControlledColor(SettingMap.SET_KEY2_TEXTCLR, key2TextColor);
+            putControlledColor(SettingMap.SET_ENTER_TEXTCLR, enterTextColor);
             putControlledInt(SettingMap.SET_KEY_PADDING, keyPadding);
             putControlledInt(SettingMap.SET_KEY_RADIUS, keyRadius);
             putControlledInt(SettingMap.SET_KEY_TEXTSIZE, textSize);

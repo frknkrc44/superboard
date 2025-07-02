@@ -195,30 +195,32 @@ public final class ClipboardView extends LinearLayout
         clipLayout.addView(clButton);
     }
 
-    /** @noinspection SameReturnValue*/
-    private boolean selectAndUseClipItem(View view, boolean useCtrlToPaste) {
-        selectClipItem(view);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !useCtrlToPaste) {
-            superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
+    private boolean selectAndUseClipItem(View view, boolean useCommitToPaste) {
+        final var parentView = (View) view.getParent();
+        String itemText = getTextFromView(parentView);
+
+        List<String> texts = getLastPrimaryClipTexts();
+        if (!(texts.isEmpty() || texts.contains(itemText))) {
+            clipboardManager.setPrimaryClip(ClipData.newPlainText(itemText, itemText));
+            removeClipView(parentView, false);
+            addClipView(itemText, true);
+        }
+
+        if (useCommitToPaste) {
+            superBoard.commitText(itemText);
         } else {
-            superBoard.setCtrlState(1);
-            superBoard.sendKeyEvent(KeyEvent.KEYCODE_V);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                superBoard.sendKeyEvent(KeyEvent.KEYCODE_PASTE);
+            } else {
+                superBoard.setCtrlState(1);
+                superBoard.sendKeyEvent(KeyEvent.KEYCODE_V);
+            }
         }
         return true;
     }
 
-    private void selectClipItem(View view) {
-        final var parentView = (View) view.getParent();
-        String item = ((TextView) parentView.findViewById(android.R.id.text1)).getText().toString();
-
-        List<String> texts = getLastPrimaryClipTexts();
-        if (texts.isEmpty() || texts.contains(item)) {
-            return;
-        }
-
-        clipboardManager.setPrimaryClip(ClipData.newPlainText(item, item));
-        removeClipView(parentView, false);
-        addClipView(item, true);
+    private String getTextFromView(View view) {
+        return ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
     }
 
     /** @noinspection SameReturnValue*/
@@ -240,7 +242,7 @@ public final class ClipboardView extends LinearLayout
 
     private void removeClipView(View view, boolean sync) {
         listView.removeView(view);
-        String item = ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
+        String item = getTextFromView(view);
         clipboardHistory.remove(item);
         if (sync) syncClipboardCache();
     }

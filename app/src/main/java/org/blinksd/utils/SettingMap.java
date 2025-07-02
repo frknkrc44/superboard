@@ -97,7 +97,9 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_LANDSCAPE_HEIGHT_INCREASER = "land_height_increaser",
             SET_SHOW_FAB_RIGHT = "show_fab_right",
             SET_SHOW_FULLSCREEN_KEYBOARD = "show_fs_keyboard",
-            SET_SHOW_FULLSCREEN_KEYBOARD_FORCED = "show_fs_keyboard_forced";
+            SET_SHOW_FULLSCREEN_KEYBOARD_FORCED = "show_fs_keyboard_forced",
+            SET_KEY_STROKE_WIDTH = "key_stroke_width",
+            SET_KEY_STROKE_COLOR = "key_strokeclr";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -175,6 +177,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putThemingAdvanced(SET_KEY_TEXTCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY2_TEXTCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_ENTER_TEXTCLR, SettingType.COLOR_SELECTOR);
+        putThemingAdvanced(SET_KEY_STROKE_WIDTH, SettingType.FLOAT_NUMBER);
+        putThemingAdvanced(SET_KEY_STROKE_COLOR, SettingType.COLOR_SELECTOR);
     }
 
     private void putGeneral(String name, SettingType type) {
@@ -391,6 +395,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.SHOW_FULLSCREEN_KEYBOARD;
             case SET_SHOW_FULLSCREEN_KEYBOARD_FORCED:
                 return isWatchDevice();
+            case SET_KEY_STROKE_WIDTH:
+                return Defaults.KEY_STROKE_WIDTH;
+            case SET_KEY_STROKE_COLOR:
+                return Defaults.KEY_STROKE_COLOR;
             default:
                 return null;
         }
@@ -400,50 +408,52 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         int[] minMaxNumbers = new int[2];
         switch (key) {
             case SET_KEYBOARD_PADDING:
-                minMaxNumbers[1] = Constants.MAX_KEYBOARD_PADDING;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_KEYBOARD_PADDING;
                 break;
             case SET_KEYBOARD_BGBLUR:
             case SET_KEY_PADDING:
             case SET_KEY_SHADOWSIZE:
-                minMaxNumbers[1] = Constants.MAX_OTHER_VAL;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_OTHER_VAL;
                 break;
             case SET_KEY_VIBRATE_DURATION:
-                minMaxNumbers[1] = Constants.MAX_VIBRATION_DURATION;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_VIBRATION_DURATION;
                 break;
             case SET_DICTIONARY_LIMIT:
-                minMaxNumbers[0] = Constants.MIN_DICT_LIMIT;
-                minMaxNumbers[1] = Constants.MAX_DICT_LIMIT;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_DICT_LIMIT;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_DICT_LIMIT;
                 break;
             case SET_KEYBOARD_HEIGHT:
-                minMaxNumbers[0] = Constants.MIN_KEYBOARD_HEIGHT;
-                minMaxNumbers[1] = Constants.MAX_KEYBOARD_HEIGHT;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_KEYBOARD_HEIGHT;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_KEYBOARD_HEIGHT;
                 break;
             case SET_KEY_LONGPRESS_DURATION:
-                minMaxNumbers[0] = Constants.MIN_LONG_PRESS_DURATION;
-                minMaxNumbers[1] = Constants.MAX_LONG_PRESS_DURATION;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_LONG_PRESS_DURATION;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_LONG_PRESS_DURATION;
                 break;
             case SET_KEY_ICON_SIZE_MULTIPLIER:
-                minMaxNumbers[0] = Constants.MIN_ICON_MULTI;
-                minMaxNumbers[1] = Constants.MAX_ICON_MULTI;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_ICON_MULTI;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_ICON_MULTI;
                 break;
             case SET_KEY_RADIUS:
-                minMaxNumbers[1] = Constants.MAX_RADIUS;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_RADIUS;
                 break;
             case SET_KEY_TEXTSIZE:
-                minMaxNumbers[0] = Constants.MIN_TEXT_SIZE;
-                minMaxNumbers[1] = Constants.MAX_TEXT_SIZE;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_TEXT_SIZE;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_TEXT_SIZE;
                 break;
             case SET_KEY_INDICATOR_HEIGHT:
-                minMaxNumbers[1] = Constants.MAX_INDICATOR_HEIGHT;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_INDICATOR_HEIGHT;
                 break;
             case SET_COMPAT_MONET_MAX_COLORS:
-                minMaxNumbers[0] = Constants.MIN_COMPAT_MONET_COLOR;
-                minMaxNumbers[1] = Constants.MAX_COMPAT_MONET_COLOR;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_COMPAT_MONET_COLOR;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_COMPAT_MONET_COLOR;
                 break;
             case SET_LANDSCAPE_HEIGHT_INCREASER:
-                minMaxNumbers[0] = Constants.MIN_LANDSCAPE_HEIGHT_INCREASER;
-                minMaxNumbers[1] = Constants.MAX_LANDSCAPE_HEIGHT_INCREASER;
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_LANDSCAPE_HEIGHT_INCREASER;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_LANDSCAPE_HEIGHT_INCREASER;
                 break;
+            case SET_KEY_STROKE_WIDTH:
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_STROKE_WIDTH;
         }
         return minMaxNumbers;
     }

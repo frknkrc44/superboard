@@ -28,7 +28,6 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.ColorUtils;
-import org.blinksd.utils.Defaults;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
@@ -300,7 +299,7 @@ public final class ColorSelectorLayout extends LinearLayout {
         sb.setPressEventForKey(0, 1, -1, Keyboard.KEYCODE_DELETE);
         sb.setKeyDrawable(0, 0, -1, R.drawable.delete);
         sb.setPressEventForKey(0, 0, -1, Keyboard.KEYCODE_CANCEL);
-        sb.setKeysBackground(ResourcesUtils.getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, true));
+        sb.setKeysBackground(ResourcesUtils.getDefaultKeyBg(true));
         sb.setIconSizeMultiplier(SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         ll.addView(hexIn);
         ll.addView(sb);
