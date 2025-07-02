@@ -62,10 +62,15 @@ public class ResourcesUtils {
         return complexToDimension(value.data, context.getResources().getDisplayMetrics());
     }
 
+    public static Drawable getDefaultKeyBg(boolean pressEffect) {
+        return getKeyBg(Defaults.KEY_BACKGROUND_COLOR, Defaults.KEY_PRESS_BACKGROUND_COLOR, pressEffect);
+    }
+
     public static Drawable getKeyBg(int clr, int pressClr, boolean pressEffect) {
         int radius = minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_RADIUS)));
-        int stroke = minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING)));
-        return getButtonBackground(clr, pressClr, radius, stroke, pressEffect);
+        int strokeWidth = minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_STROKE_WIDTH)));
+        int strokeColor = getIntOrDefault(SettingMap.SET_KEY_STROKE_COLOR);
+        return getButtonBackground(clr, pressClr, radius, strokeWidth, strokeColor, pressEffect);
     }
 
     public static Drawable getCircleButtonBackground(int keyColor, int iconColor, boolean pressEffect) {
@@ -83,9 +88,13 @@ public class ResourcesUtils {
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, boolean pressEffect) {
+        return getButtonBackground(radius, stroke, 0, pressEffect);
+    }
+
+    public static Drawable getButtonBackground(int radius, int stroke, int strokeColor, boolean pressEffect) {
         int keyClr = getAccentColor();
         int keyPressClr = getDarkerColor(keyClr);
-        return getButtonBackground(keyClr, keyPressClr, radius, stroke, pressEffect);
+        return getButtonBackground(keyClr, keyPressClr, radius, stroke, strokeColor, pressEffect);
     }
 
     private static void setButtonGradientOrientation(GradientDrawable gd) {
@@ -117,8 +126,9 @@ public class ResourcesUtils {
         }
     }
 
-    public static Drawable getButtonBackground(int clr, int pressClr, int radius, int stroke, boolean pressEffect) {
+    public static Drawable getButtonBackground(int clr, int pressClr, int radius, int stroke, int strokeColor, boolean pressEffect) {
         GradientDrawable gd = new GradientDrawable();
+        gd.setCornerRadius(radius);
 
         boolean isGrad = getIntOrDefault(SettingMap.SET_KEY_BG_TYPE) != ThemeUtils.KEY_BG_TYPE_FLAT;
         if (isGrad) {
@@ -128,12 +138,14 @@ public class ResourcesUtils {
             gd.setColor(clr);
         }
 
-        gd.setCornerRadius(radius);
-        gd.setStroke(stroke, 0);
+        if (stroke > 0) {
+            gd.setStroke(stroke, strokeColor);
+        }
 
         if (pressEffect) {
             StateListDrawable d = new StateListDrawable();
             GradientDrawable pd = new GradientDrawable();
+            pd.setCornerRadius(radius);
 
             if (isGrad) {
                 pd.setColors(new int[]{pressClr, clr});
@@ -142,8 +154,10 @@ public class ResourcesUtils {
                 pd.setColor(pressClr);
             }
 
-            pd.setCornerRadius(radius);
-            pd.setStroke(stroke, 0);
+            if (stroke > 0) {
+                pd.setStroke(stroke, strokeColor);
+            }
+
             d.addState(new int[]{android.R.attr.state_selected}, pd);
             d.addState(new int[]{android.R.attr.state_pressed}, pd);
             d.addState(new int[]{}, gd);

@@ -94,7 +94,7 @@ public final class SuperDBHelper {
 
         while (item != null && item.dependency != null && !checkedKeys.contains(item.dependency)) {
             boolean depValue = getBooleanOrDefault(item.dependency);
-            if ((boolean) item.dependencyEnabled != depValue) return false;
+            if (item.dependencyEnabled != depValue) return false;
 
             checkedKeys.add(item.dependency);
             item = getSettings().get(item.dependency);
@@ -106,6 +106,7 @@ public final class SuperDBHelper {
     private static int getMonetColorValue(String key) {
         MonetColors monetColors = getMonetColors();
         return switch (key) {
+            case SettingMap.SET_KEY_STROKE_COLOR -> 0; // TODO: Add monet stroke color
             case SettingMap.SET_ENTER_BGCLR -> monetColors.getEnterColor();
             case SettingMap.SET_ENTER_PRESS_BGCLR -> monetColors.getEnterPressColor();
             case SettingMap.SET_KEY_BGCLR -> monetColors.getKeyColor();

@@ -14,7 +14,9 @@ import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.isDictDBReady;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
+import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.hp;
+import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.getSpecialCases;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
@@ -553,6 +555,7 @@ public final class InputService extends InputMethodService implements
             int kbdHeight = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
             superBoardView.setKeyboardHeight(kbdHeight);
             superBoardView.fixHeight();
+            superBoardView.setKeysPadding(minPInt(getFloatNumberFromInt(getIntOrDefault(SettingMap.SET_KEY_PADDING))));
             File img;
             int c = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
             if (getMonetColors().isMonetEnabled()) {

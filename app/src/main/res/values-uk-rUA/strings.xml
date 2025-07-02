@@ -13,96 +13,96 @@
     <string name="wizard_finishbtn">Готово</string>
     <!-- Settings resources -->
     <string name="settings_activity">Налаштування</string>
-    <string name="settings_keyboard_bgimg" tools:keep="@string/settings_keyboard_bgimg">Фонове зображення клавіатури</string>
-    <string name="settings_keyboard_show_popup" tools:keep="@string/settings_keyboard_show_popup">Збільшувати символи під час введення</string>
-    <string name="settings_colorize_navbar" tools:keep="@string/settings_colorize_navbar">Використовувати прозорий фон для панелі навігації</string>
-    <string name="settings_colorize_navbar_always_trans" tools:keep="@string/settings_colorize_navbar_always_trans">Зробити панель навігації повністю прозорим</string>
-    <string name="settings_colorize_navbar_alt" tools:keep="@string/settings_colorize_navbar_alt">Застосувати колір до панелі навігації (Android 9+)</string>
-    <string name="settings_disable_popup" tools:keep="@string/settings_disable_popup">Вимкнути спливаюче меню</string>
-    <string name="settings_disable_repeat" tools:keep="@string/settings_disable_repeat">Вимкнути повторення символу при довгому натисканні</string>
-    <string name="settings_disable_top_bar" tools:keep="@string/settings_disable_top_bar">Вимкнути верхню панель</string>
-    <string name="settings_hide_top_bar_fn_buttons" tools:keep="@string/settings_hide_top_bar_fn_buttons">Сховати функціональні кнопки верхньої панелі</string>
-    <string name="settings_show_fab_right" tools:keep="@string/settings_show_fab_right">Show top bar buttons at right</string>
-    <string name="settings_show_fs_keyboard" tools:keep="@string/settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
-    <string name="settings_show_fs_keyboard_forced" tools:keep="@string/settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
-    <string name="settings_enable_clipboard" tools:keep="@string/settings_enable_clipboard">Увімкнути буфер обміну</string>
-    <string name="settings_disable_suggestions" tools:keep="@string/settings_disable_suggestions">Вимкнути пропозиції слів</string>
-    <string name="settings_disable_number_row" tools:keep="@string/settings_disable_number_row">Вимкнути рядок цифр (beta)</string>
-    <string name="settings_enable_popup_preview" tools:keep="@string/settings_enable_popup_preview">Показувати дію при довгому натисканні або спливаючий перший символ на клавіші</string>
-    <string name="settings_use_monet" tools:keep="@string/settings_use_monet">Використовувати monet кольори (beta)</string>
-    <string name="settings_use_compat_monet" tools:keep="@string/settings_use_monet">Використовувати сумісні monet кольори (beta)</string>
-    <string name="settings_detect_capslock" tools:keep="@string/settings_detect_capslock">Автоматично виявляти стан CapsLock</string>
-    <string name="settings_enforce_detect_capslock" tools:keep="@string/settings_enforce_detect_capslock">Автоматичне примусове виявлення стану CapsLock</string>
-    <string name="settings_enforce_editor_action" tools:keep="@string/settings_enforce_editor_action">Примусити редактор діяти (виправляє проблеми з клавішею Enter у деяких програмах, але може спричинити помилки)</string>
-    <string name="settings_prevent_keyboard_close" tools:keep="@string/settings_prevent_keyboard_close">Запобігати закриття клавіатури системою (можна вимкнути довгим натисканням кнопки \"!?#\")</string>
-    <string name="settings_force_show_keyboard_physical" tools:keep="@string/settings_force_show_keyboard_physical">Примусово показувати клавіатуру, коли фізична клавіатура підключена</string>
-    <string name="settings_keyboard_lc_on_emoji" tools:keep="@string/settings_keyboard_lc_on_emoji">Перемикати мови клавіатури при довгому натисканні кнопки \"емодзі\"</string>
-    <string name="settings_enter_bgclr" tools:keep="@string/settings_enter_bgclr">Фоновий колір кнопки \"Enter\"</string>
-    <string name="settings_enter_press_bgclr" tools:keep="@string/settings_enter_press_bgclr">Фоновий колір натиснутої кнопки \"Enter\"</string>
-    <string name="settings_key_shadowclr" tools:keep="@string/settings_key_shadowclr">Колір тіні клавіші тексту</string>
-    <string name="settings_key_bgclr" tools:keep="@string/settings_key_bgclr">Фоновий колір першої клавіші</string>
-    <string name="settings_key2_bgclr" tools:keep="@string/settings_key2_bgclr">Фоновий колір другої клавіші</string>
-    <string name="settings_key_press_bgclr" tools:keep="@string/settings_key_press_bgclr">Фоновий колір натиснутої першої клавіші</string>
-    <string name="settings_key2_press_bgclr" tools:keep="@string/settings_key2_press_bgclr">Фоновий колір натиснутої другої клавіші</string>
-    <string name="settings_keyboard_bgclr" tools:keep="@string/settings_keyboard_bgclr">Колір фону клавіатури</string>
-    <string name="settings_key_textclr" tools:keep="@string/settings_key_textclr">Колір клавіші тексту</string>
-    <string name="settings_key2_textclr" tools:keep="@string/settings_key2_textclr">Secondary key text color</string>
-    <string name="settings_enter_textclr" tools:keep="@string/settings_enter_textclr">Enter key text color</string>
-    <string name="settings_play_snd_press" tools:keep="@string/settings_play_snd_press">Звуковий сигнал при натисканні клавіш</string>
-    <string name="settings_keyboard_kill_background" tools:keep="@string/settings_keyboard_kill_background">Знизити споживання ОЗП (збільшує затримку відкриття клавіатури)</string>
-    <string name="settings_use_first_popup_character" tools:keep="@string/settings_use_first_popup_character">Використовувати перший спливаючий символ при довгому натисканні (ви повинні увімкнути спливаюче меню)</string>
-    <string name="settings_dictionary_algorithm" tools:keep="@string/settings_dictionary_algorithm">Алгоритм запитів до словника</string>
-    <string name="settings_dictionary_limit" tools:keep="@string/settings_dictionary_limit">Ліміт запитів до словника</string>
-    <string name="settings_key_indicator_height" tools:keep="@string/settings_key_indicator_height">Висота індикатора клавіш</string>
-    <string name="settings_show_bottom_bar" tools:keep="@string/settings_show_bottom_bar">Показати нижню панель</string>
-    <string name="settings_long_press_fast_delete" tools:keep="@string/settings_long_press_fast_delete">Збільшення швидкості видалення при довгому натисканні</string>
-    <string name="settings_insert_space_after_punc" tools:keep="@string/insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
-    <string name="settings_monet_color_scheme" tools:keep="@string/settings_monet_color_scheme">Кольорова схема Monet</string>
-    <string name="settings_keyboard_padding" tools:keep="@string/settings_keyboard_padding">Відступ клавіатури</string>
-    <string name="settings_compat_monet_max_colors" tools:keep="@string/settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
+    <string name="settings_keyboard_bgimg">Фонове зображення клавіатури</string>
+    <string name="settings_keyboard_show_popup">Збільшувати символи під час введення</string>
+    <string name="settings_colorize_navbar">Використовувати прозорий фон для панелі навігації</string>
+    <string name="settings_colorize_navbar_always_trans">Зробити панель навігації повністю прозорим</string>
+    <string name="settings_colorize_navbar_alt">Застосувати колір до панелі навігації (Android 9+)</string>
+    <string name="settings_disable_popup">Вимкнути спливаюче меню</string>
+    <string name="settings_disable_repeat">Вимкнути повторення символу при довгому натисканні</string>
+    <string name="settings_disable_top_bar">Вимкнути верхню панель</string>
+    <string name="settings_hide_top_bar_fn_buttons">Сховати функціональні кнопки верхньої панелі</string>
+    <string name="settings_show_fab_right">Show top bar buttons at right</string>
+    <string name="settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
+    <string name="settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
+    <string name="settings_enable_clipboard">Увімкнути буфер обміну</string>
+    <string name="settings_disable_suggestions">Вимкнути пропозиції слів</string>
+    <string name="settings_disable_number_row">Вимкнути рядок цифр (beta)</string>
+    <string name="settings_enable_popup_preview">Показувати дію при довгому натисканні або спливаючий перший символ на клавіші</string>
+    <string name="settings_use_monet">Використовувати monet кольори (beta)</string>
+    <string name="settings_use_compat_monet">Використовувати сумісні monet кольори (beta)</string>
+    <string name="settings_detect_capslock">Автоматично виявляти стан CapsLock</string>
+    <string name="settings_enforce_detect_capslock">Автоматичне примусове виявлення стану CapsLock</string>
+    <string name="settings_enforce_editor_action">Примусити редактор діяти (виправляє проблеми з клавішею Enter у деяких програмах, але може спричинити помилки)</string>
+    <string name="settings_prevent_keyboard_close">Запобігати закриття клавіатури системою (можна вимкнути довгим натисканням кнопки \"!?#\")</string>
+    <string name="settings_force_show_keyboard_physical">Примусово показувати клавіатуру, коли фізична клавіатура підключена</string>
+    <string name="settings_keyboard_lc_on_emoji">Перемикати мови клавіатури при довгому натисканні кнопки \"емодзі\"</string>
+    <string name="settings_enter_bgclr">Фоновий колір кнопки \"Enter\"</string>
+    <string name="settings_enter_press_bgclr">Фоновий колір натиснутої кнопки \"Enter\"</string>
+    <string name="settings_key_shadowclr">Колір тіні клавіші тексту</string>
+    <string name="settings_key_bgclr">Фоновий колір першої клавіші</string>
+    <string name="settings_key2_bgclr">Фоновий колір другої клавіші</string>
+    <string name="settings_key_press_bgclr">Фоновий колір натиснутої першої клавіші</string>
+    <string name="settings_key2_press_bgclr">Фоновий колір натиснутої другої клавіші</string>
+    <string name="settings_keyboard_bgclr">Колір фону клавіатури</string>
+    <string name="settings_key_textclr">Колір клавіші тексту</string>
+    <string name="settings_key2_textclr">Secondary key text color</string>
+    <string name="settings_enter_textclr">Enter key text color</string>
+    <string name="settings_play_snd_press">Звуковий сигнал при натисканні клавіш</string>
+    <string name="settings_keyboard_kill_background">Знизити споживання ОЗП (збільшує затримку відкриття клавіатури)</string>
+    <string name="settings_use_first_popup_character">Використовувати перший спливаючий символ при довгому натисканні (ви повинні увімкнути спливаюче меню)</string>
+    <string name="settings_dictionary_algorithm">Алгоритм запитів до словника</string>
+    <string name="settings_dictionary_limit">Ліміт запитів до словника</string>
+    <string name="settings_key_indicator_height">Висота індикатора клавіш</string>
+    <string name="settings_show_bottom_bar">Показати нижню панель</string>
+    <string name="settings_long_press_fast_delete">Збільшення швидкості видалення при довгому натисканні</string>
+    <string name="settings_insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
+    <string name="settings_monet_color_scheme">Кольорова схема Monet</string>
+    <string name="settings_keyboard_padding">Відступ клавіатури</string>
+    <string name="settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
-    <string name="settings_image_selector_photo" tools:keep="@string/settings_image_selector_photo">Фото</string>
-    <string name="settings_image_selector_gradient" tools:keep="@string/settings_image_selector_gradient">Градієнт</string>
-    <string name="settings_image_selector_gradient_item" tools:keep="@string/settings_image_selector_gradient_item">Колір</string>
-    <string name="settings_image_selector_gradient_add_item" tools:keep="@string/settings_image_selector_gradient_add_item">Додати колір</string>
-    <string name="settings_image_selector_gradient_add_item_error" tools:keep="@string/settings_image_selector_gradient_add_item_error">Ой! Максимальний ліміт - %s</string>
-    <string name="settings_image_selector_gradient_remove_item_error" tools:keep="@string/settings_image_selector_gradient_remove_item_error">Ой! Мінімальний ліміт - %s</string>
-    <string name="settings_image_selector_gradient_change_orientation" tools:keep="@string/settings_image_selector_gradient_change_orientation">Змінити орієнтацію</string>
-    <string name="settings_image_selector_select" tools:keep="@string/settings_image_selector_select">Обрати зображення</string>
-    <string name="settings_image_selector_wp" tools:keep="@string/settings_image_selector_wp">Отримати шпалеру</string>
-    <string name="settings_image_selector_rotate" tools:keep="@string/settings_image_selector_rotate">Повернути</string>
-    <string name="settings_image_selector_warning_storage_access" tools:keep="@string/settings_image_selector_warning_storage_access">Надати доступ до сховища для отримання шпалер системи</string>
-    <string name="settings_image_selector_warning_live_wallpaper" tools:keep="@string/settings_image_selector_warning_live_wallpaper">Ви використовуєте живі шпалери, завантаження ескізу…</string>
+    <string name="settings_image_selector_photo">Фото</string>
+    <string name="settings_image_selector_gradient">Градієнт</string>
+    <string name="settings_image_selector_gradient_item">Колір</string>
+    <string name="settings_image_selector_gradient_add_item">Додати колір</string>
+    <string name="settings_image_selector_gradient_add_item_error">Ой! Максимальний ліміт - %s</string>
+    <string name="settings_image_selector_gradient_remove_item_error">Ой! Мінімальний ліміт - %s</string>
+    <string name="settings_image_selector_gradient_change_orientation">Змінити орієнтацію</string>
+    <string name="settings_image_selector_select">Обрати зображення</string>
+    <string name="settings_image_selector_wp">Отримати шпалеру</string>
+    <string name="settings_image_selector_rotate">Повернути</string>
+    <string name="settings_image_selector_warning_storage_access">Надати доступ до сховища для отримання шпалер системи</string>
+    <string name="settings_image_selector_warning_live_wallpaper">Ви використовуєте живі шпалери, завантаження ескізу…</string>
     <!-- Radio selector resources -->
-    <string name="settings_keyboard_lang_select" tools:keep="@string/settings_keyboard_lang_select">Мова клавіатури</string>
-    <string name="settings_keyboard_texttype_select" tools:keep="@string/settings_keyboard_texttype_select">Шрифт клавіатури</string>
-    <string name="settings_keyboard_theme_preset" tools:keep="@string/settings_keyboard_theme_preset">Тема клавіатури</string>
-    <string name="settings_keyboard_icon_theme" tools:keep="@string/settings_keyboard_icon_theme">Тема піктограми</string>
-    <string name="settings_keyboard_spacetype_select" tools:keep="@string/settings_keyboard_spacetype_select">Стиль пробілу</string>
-    <string name="settings_key_bg_type" tools:keep="@string/settings_key_bg_type">Тип фону клавіш</string>
-    <string name="settings_key_gradient_orientation" tools:keep="@string/settings_key_gradient_orientation">Орієнтація фонового градієнта клавіш</string>
+    <string name="settings_keyboard_lang_select">Мова клавіатури</string>
+    <string name="settings_keyboard_texttype_select">Шрифт клавіатури</string>
+    <string name="settings_keyboard_theme_preset">Тема клавіатури</string>
+    <string name="settings_keyboard_icon_theme">Тема піктограми</string>
+    <string name="settings_keyboard_spacetype_select">Стиль пробілу</string>
+    <string name="settings_key_bg_type">Тип фону клавіш</string>
+    <string name="settings_key_gradient_orientation">Орієнтація фонового градієнта клавіш</string>
     <!-- Number selector resources -->
-    <string name="settings_keyboard_bgblur" tools:keep="@string/settings_keyboard_bgblur">Розмиття фонового зображення клавіатури</string>
-    <string name="settings_key_vibrate_duration" tools:keep="@string/settings_key_vibrate_duration">Тривалість вібрації при натисканні клавіш</string>
-    <string name="settings_keyboard_height" tools:keep="@string/settings_keyboard_height">Висота клавіатури</string>
-    <string name="settings_land_height_increaser" tools:keep="@string/settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
-    <string name="settings_key_longpress_duration" tools:keep="@string/settings_key_longpress_duration">Множник тривалості довгого натискання</string>
-    <string name="settings_key_padding" tools:keep="@string/settings_key_padding">Відступ клавіш</string>
-    <string name="settings_key_radius" tools:keep="@string/settings_key_radius">Радіус клавіш</string>
-    <string name="settings_key_textsize" tools:keep="@string/settings_key_textsize">Розмір тексту клавіш</string>
-    <string name="settings_key_shadowsize" tools:keep="@string/settings_key_shadowsize">Розмір тіні клавіш</string>
-    <string name="settings_key_icon_size_multi" tools:keep="@string/settings_key_icon_size_multi">Множник розміру піктограми клавіш</string>
+    <string name="settings_keyboard_bgblur">Розмиття фонового зображення клавіатури</string>
+    <string name="settings_key_vibrate_duration">Тривалість вібрації при натисканні клавіш</string>
+    <string name="settings_keyboard_height">Висота клавіатури</string>
+    <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_key_longpress_duration">Множник тривалості довгого натискання</string>
+    <string name="settings_key_padding">Відступ клавіш</string>
+    <string name="settings_key_radius">Радіус клавіш</string>
+    <string name="settings_key_textsize">Розмір тексту клавіш</string>
+    <string name="settings_key_shadowsize">Розмір тіні клавіш</string>
+    <string name="settings_key_icon_size_multi">Множник розміру піктограми клавіш</string>
     <!-- Backup/Restore options -->
-    <string name="settings_backup_menu" tools:keep="@string/backup_menu">Резервне копіювання і відновлення</string>
-    <string name="settings_backup_menu_backup" tools:keep="@string/settings_backup_menu_backup">Резервне копіювання</string>
-    <string name="settings_backup_menu_restore" tools:keep="@string/settings_backup_menu_restore">Відновлення</string>
-    <string name="settings_backup_type_all" tools:keep="@string/settings_backup_type_all">Усі елементи</string>
-    <string name="settings_backup_type_theme" tools:keep="@string/settings_backup_type_theme">Тема (іконки, фонове зображення, кольори, …)</string>
-    <string name="settings_backup_type_other" tools:keep="@string/settings_backup_type_other">Інші</string>
-    <string name="settings_select_file" tools:keep="@string/settings_select_file">Обрати файл</string>
+    <string name="settings_backup_menu">Резервне копіювання і відновлення</string>
+    <string name="settings_backup_menu_backup">Резервне копіювання</string>
+    <string name="settings_backup_menu_restore">Відновлення</string>
+    <string name="settings_backup_type_all">Усі елементи</string>
+    <string name="settings_backup_type_theme">Тема (іконки, фонове зображення, кольори, …)</string>
+    <string name="settings_backup_type_other">Інші</string>
+    <string name="settings_select_file">Обрати файл</string>
     <!-- Dictionary importer resources -->
-    <string name="settings_import_dict_pack" tools:keep="@string/settings_import_dict_pack">Імпорт словника (.fbd/combined.gz)</string>
+    <string name="settings_import_dict_pack">Імпорт словника (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Імпортування. Будь ласка, не закривайте програму</string>
     <string name="settings_dict_import_count">%s слів імпортовано</string>
     <string name="settings_dict_import_delete_duplicates">Видалення дублікатів</string>
@@ -141,23 +141,23 @@
         <item>Serif Monospace Bold Italic</item>
         <item>Власна (в теці \"data\" додатка)</item>
     </string-array>
-    <string-array name="settings_keyboard_icon_theme" tools:keep="@array/settings_keyboard_icon_theme">
+    <string-array name="settings_keyboard_icon_theme">
         <item>За замовчуванням</item>
         <item>Material</item>
         <item>Apricot</item>
     </string-array>
-    <string-array name="settings_keyboard_spacetype_select" tools:keep="@array/settings_keyboard_spacetype_select">
+    <string-array name="settings_keyboard_spacetype_select">
         <item>Типова тема</item>
         <item>Обрана мова</item>
         <item>Daisy</item>
         <item>Пробіл</item>
         <item>Пусто</item>
     </string-array>
-    <string-array name="settings_key_bg_type" tools:keep="@array/settings_key_bg_type">
+    <string-array name="settings_key_bg_type">
         <item>Плоский</item>
         <item>Градієнт</item>
     </string-array>
-    <string-array name="settings_key_gradient_orientation" tools:keep="@array/settings_key_gradient_orientation">
+    <string-array name="settings_key_gradient_orientation">
         <item>Top → bottom</item>
         <item>Bottom → top</item>
         <item>Left → right</item>
@@ -167,7 +167,7 @@
         <item>Bottom left → top right</item>
         <item>Bottom right → top left</item>
     </string-array>
-    <string-array name="settings_dictionary_algorithms" tools:keep="@array/settings_dictionary_algorithms">
+    <string-array name="settings_dictionary_algorithms">
         <item>First check for word length, then usage count</item>
         <item>First check for usage count, then word length</item>
         <item>Only check for word length</item>
