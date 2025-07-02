@@ -52,6 +52,7 @@ import android.widget.TextView;
 
 import org.blinksd.board.R;
 import org.blinksd.utils.ListedMap;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.superboard.KeyboardType;
 import org.blinksd.utils.superboard.OnModifierChangedListener;
@@ -395,7 +396,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, int resId) {
-        setKeyDrawable(keyboardIndex, rowIndex, keyIndex, getResources().getDrawable(resId));
+        setKeyDrawable(keyboardIndex, rowIndex, keyIndex, ResourcesUtils.getDrawable(resId));
     }
 
     public final void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, Drawable d) {
@@ -1542,12 +1543,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         public void setKeyIcon(Drawable dr) {
             icon.setImageDrawable(dr);
-            setKeyImageVisible(true);
+            setKeyImageVisible(dr != null);
             setKeyItemColor(keyTextColor);
         }
 
         public void setKeyIcon(int iconRes) {
-            setKeyIcon(getContext().getResources().getDrawable(iconRes));
+            setKeyIcon(ResourcesUtils.getDrawable(iconRes));
         }
 
         public int getKeyWidthPercent() {

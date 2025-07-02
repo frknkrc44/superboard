@@ -280,11 +280,8 @@ public class LayoutUtils {
         if (icons == null) icons = getIconThemes();
 
         Drawable drawable = icons.getIconResource(LocalIconTheme.SYM_TYPE_SPACE);
-        if (drawable == null) {
-            space.setText(label);
-        } else {
-            space.setKeyIcon(drawable);
-        }
+        space.setText(drawable != null ? null : label);
+        space.setKeyIcon(drawable);
     }
 
     public static ArrayList<String> getKeyListFromLanguageList() {
