@@ -27,6 +27,8 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
           key.jks
+          ~/.android
+          ~/Android
         key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
     - name: Install requirements
@@ -41,6 +43,9 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        packages: ''
+        log-accepted-android-sdk-licenses: 'false'
 
     - name: Prepare the signature key
       run: |
