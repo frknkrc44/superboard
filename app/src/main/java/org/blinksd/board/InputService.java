@@ -916,7 +916,6 @@ public final class InputService extends InputMethodService implements
         @Override
         public void afterPopupEvent() {
             super.afterPopupEvent();
-            vibrate();
             setShiftState(boardPopup.getShiftState());
         }
 

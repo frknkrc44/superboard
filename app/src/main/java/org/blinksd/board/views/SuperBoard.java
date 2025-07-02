@@ -163,6 +163,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public void afterPopupEvent() {
         stopAllKeyEvents();
+        vibrate();
     }
 
     public void switchLanguage() {}
