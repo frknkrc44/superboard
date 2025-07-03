@@ -63,6 +63,8 @@
     <string name="settings_monet_color_scheme">ערכת צבעים של Monet</string>
     <string name="settings_keyboard_padding">ריפוד מקלדת</string>
     <string name="settings_compat_monet_max_colors">ספירת צבעים מקסימלית מחושבת עבור compat monet</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">תמונה</string>
@@ -113,6 +115,7 @@
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Theming</string>
     <string name="settings_category_theming_adv">Advanced Theming</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Keyboard Layout</string>
     <string name="settings_category_popup">Popup</string>
     <string name="settings_category_top_bar">Top Bar</string>
