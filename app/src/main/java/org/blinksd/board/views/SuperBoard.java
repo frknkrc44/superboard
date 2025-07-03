@@ -1627,17 +1627,16 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
 
             k.setBackgroundDrawable(getBackground());
-            k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);
-            k.setKeyTextSize(label.getTextSize() / 2.5f);
             k.setKeyTextStyle(textStyle);
             k.setText(getText());
             k.setSubText(getSubText());
             k.setPopupCharacters(popupCharacters);
 
-            k.setKeyIcon(getKeyIcon());
-            k.setKeyImageVisible(isKeyIconSet());
+            if (isKeyIconSet()) {
+                k.setKeyIcon(getKeyIcon());
+            }
         }
     }
 }
