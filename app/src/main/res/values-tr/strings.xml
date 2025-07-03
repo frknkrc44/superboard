@@ -66,6 +66,8 @@
 	<string name="settings_monet_color_scheme">Sistem rengi şeması</string>
 	<string name="settings_keyboard_padding">Klavye içe girintisi</string>
 	<string name="settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
+	<string name="settings_emoji_use_vertical_scroll_portrait">Dikey modda dikey kaydırma kullan</string>
+	<string name="settings_emoji_use_vertical_scroll_landscape">Yatay modda dikey kaydırma kullan</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo">Fotoğraf</string>
@@ -121,6 +123,7 @@
 	<string name="settings_category_general">Genel</string>
 	<string name="settings_category_theming">Temalama</string>
 	<string name="settings_category_theming_adv">Gelişmiş Temalama</string>
+	<string name="settings_category_emoji">Emoji Düzeni</string>
 	<string name="settings_category_layout">Klavye Düzeni</string>
 	<string name="settings_category_popup">Açılır Pencere</string>
 	<string name="settings_category_top_bar">Üst Çubuk</string>

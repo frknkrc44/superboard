@@ -2188,9 +2188,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
         mScrollVerticallyPortrait = (direction == SCROLL_AXIS_VERTICAL);
         if (tempDirection != mScrollVerticallyPortrait) {
             setupScrollInfo();
-            //TODO or requestLayoutIfNecessary()?
-            resetList();
-            mRecycler.clear();
+            requestLayout();
         }
     }
 
@@ -2216,9 +2214,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
         mScrollVerticallyLandscape = (direction == SCROLL_AXIS_VERTICAL);
         if (tempDirection != mScrollVerticallyLandscape) {
             setupScrollInfo();
-            //TODO or requestLayoutIfNecessary()?
-            resetList();
-            mRecycler.clear();
+            requestLayout();
         }
     }
 

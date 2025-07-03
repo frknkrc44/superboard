@@ -99,7 +99,9 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_SHOW_FULLSCREEN_KEYBOARD = "show_fs_keyboard",
             SET_SHOW_FULLSCREEN_KEYBOARD_FORCED = "show_fs_keyboard_forced",
             SET_KEY_STROKE_WIDTH = "key_stroke_width",
-            SET_KEY_STROKE_COLOR = "key_strokeclr";
+            SET_KEY_STROKE_COLOR = "key_strokeclr",
+            SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT = "emoji_use_vertical_scroll_portrait",
+            SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -130,6 +132,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTheming(SET_KEY_GRADIENT_ORIENTATION, SettingType.SELECTOR);
         putThemingAdvanced(SET_KEYBOARD_BGIMG, SettingType.IMAGE);
         putPopup(SET_KEYBOARD_SHOW_POPUP, SettingType.BOOL);
+        putEmojiLayout(SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT, SettingType.BOOL);
+        putEmojiLayout(SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE, SettingType.BOOL);
         putKbdLayout(SET_ENABLE_LONG_PRESS_FAST_DELETE, SettingType.BOOL);
         putKbdLayout(SET_INSERT_SPACE_AFTER_PUNC, SettingType.BOOL);
         putKbdLayout(SET_PLAY_SND_PRESS, SettingType.BOOL);
@@ -186,6 +190,13 @@ public class SettingMap extends ListedMap<String, SettingItem> {
     }
     private void putGeneral(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
         put(name, new SettingItem(SettingCategory.GENERAL, type, dependency, dependencyEnabled));
+    }
+
+    private void putEmojiLayout(String name, SettingType type) {
+        putEmojiLayout(name, type, null, null);
+    }
+    private void putEmojiLayout(String name, SettingType type, String dependency, Boolean dependencyEnabled) {
+        put(name, new SettingItem(SettingCategory.EMOJI_LAYOUT, type, dependency, dependencyEnabled));
     }
 
     private void putKbdLayout(String name, SettingType type) {
@@ -396,6 +407,10 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.KEY_STROKE_WIDTH;
             case SET_KEY_STROKE_COLOR:
                 return Defaults.KEY_STROKE_COLOR;
+            case SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT:
+                return Defaults.EMOJI_USE_VERTICAL_SCROLL_PORTRAIT;
+            case SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE:
+                return Defaults.EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE;
             default:
                 return null;
         }

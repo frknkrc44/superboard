@@ -2,6 +2,7 @@ package org.blinksd.board.views.emoji;
 
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
+import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getFloatPercentOrDefault;
 
 import android.annotation.SuppressLint;
@@ -84,6 +85,11 @@ public class EmojiViewV2 extends LinearLayout {
             setColorFilter(indicatorView.getBackground(), keyTextColor);
 
             final var emojiCategoryView = (EmojiCategoryViewV2) tabHost.getCurrentView();
+            final var scrollVerticalPortrait = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT);
+            final var scrollVerticalLandscape = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE);
+            emojiCategoryView.setScrollDirectionPortrait(scrollVerticalPortrait ? SCROLL_AXIS_VERTICAL : SCROLL_AXIS_HORIZONTAL);
+            emojiCategoryView.setScrollDirectionLandscape(scrollVerticalLandscape ? SCROLL_AXIS_VERTICAL : SCROLL_AXIS_HORIZONTAL);
+
             final var emojiChildCount = emojiCategoryView.getChildCount();
             for (int j = 0; j < emojiChildCount; j++) {
                 final var itemView = (TextView) emojiCategoryView.getChildAt(j);

@@ -61,6 +61,8 @@ class MainTabListAdapter extends BaseAdapter {
 
         LinearLayout padItem = LayoutCreator.createFilledHorizontalLayout(
                 parent.getClass(), parent.getContext());
+        padItem.setFocusable(false);
+        padItem.setClickable(false);
         LinearLayout item = LayoutCreator.createFilledHorizontalLayout(
                 parent.getClass(), parent.getContext());
         padItem.addView(item);

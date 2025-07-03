@@ -29,7 +29,6 @@ public class EmojiCategoryViewV2 extends TwoWayGridView {
         this.listener = listener;
         setNumColumns(8);
         setNumRows(4);
-        setScrollDirectionPortrait(SCROLL_AXIS_VERTICAL);
 
         // TODO: Prepare the skin tone selector (similar to BoardPopup)
         /*
