@@ -43,8 +43,26 @@ public class BoardPopup extends SuperBoard {
         mPopupFilter.getLayoutParams().height = h;
     }
 
-    public void setKeyboardPrefs() {
+    private void setKeyLeftTop(int left, int top) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
+        params.leftMargin = left;
+        params.topMargin = top;
+    }
+
+    public void setKey(SuperBoard board, Key key) {
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
+        key.getLocationInWindow(keyPosition);
+        int keyHeight = mKey.getLayoutParams().height;
+        setKeyLeftTop(keyPosition[0], keyPosition[1] - (keyPosition[1] >= keyHeight ? keyHeight : 0));
+
+        setShiftState(board.getShiftState());
+        key.clone(mKey);
+        setKeysTextType(board.textStyle);
+        setKeysShadow(board.shadowRadius, board.shadowColor);
+        setKeysTextColor(board.getKeysTextColor());
+        setKeysTextSize(board.getKeysTextSize());
+        mKey.setKeyTextSize(board.getKeysTextSize());
+
         mainKeyboardHeightPercent = getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT);
         int a = getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR);
         int ap = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
@@ -53,26 +71,6 @@ public class BoardPopup extends SuperBoard {
         setBackground(ResourcesUtils.getKeyBg(a, ap, true));
         mPopupFilter.setBackgroundColor(setAlphaForColor(0x33, a));
         mKey.setVisibility(GONE);
-        int keyHeight = mKey.getLayoutParams().height;
-        setKeyLeftTop(keyPosition[0], keyPosition[1] - (keyPosition[1] >= keyHeight ? keyHeight : 0));
-    }
-
-    private void setKeyLeftTop(int left, int top) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mKey.getLayoutParams();
-        params.leftMargin = left;
-        params.topMargin = top;
-    }
-
-    public void setKey(SuperBoard board, Key key) {
-        setShiftState(board.getShiftState());
-        key.clone(mKey);
-        key.getLocationInWindow(keyPosition);
-        setKeysTextType(board.textStyle);
-        setKeysShadow(board.shadowRadius, board.shadowColor);
-        setKeysTextColor(board.getKeysTextColor());
-        setKeysTextSize(board.getKeysTextSize());
-        mKey.setKeyTextSize(board.getKeysTextSize());
-        setKeyboardPrefs();
     }
 
     public void showCharacter() {

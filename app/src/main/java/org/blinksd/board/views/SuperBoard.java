@@ -1281,7 +1281,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                                 removeAndSendMessage(0, v);
                             } else {
                                 if (getContext() instanceof InputMethodService imService) {
-                                    if (imService.isInputViewShown()) {
+                                    if (!imService.isInputViewShown()) {
                                         v.currentMotionEventAction = MotionEvent.ACTION_UP;
                                     }
                                 }
@@ -1641,9 +1641,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             k.setSubText(getSubText());
             k.setPopupCharacters(popupCharacters);
 
-            if (isKeyIconSet()) {
-                k.setKeyIcon(getKeyIcon());
-            }
+            k.setKeyIcon(getKeyIcon());
+            k.setKeyImageVisible(isKeyIconSet());
         }
     }
 }
