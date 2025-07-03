@@ -274,8 +274,8 @@ public final class ClipboardView extends LinearLayout
 
             for (int i = 0; i < itemCount; i++) {
                 final var text = data.getItemAt(i).getText();
-                if (text instanceof String) {
-                    texts.add((String) text);
+                if (text instanceof String textStr) {
+                    texts.add(textStr);
                 } else if (text != null) {
                     texts.add(text.toString());
                 }

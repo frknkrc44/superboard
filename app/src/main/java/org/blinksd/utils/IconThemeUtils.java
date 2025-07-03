@@ -106,8 +106,8 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
 
     private void writeIconToFile(File file, Drawable drawable) {
         try (FileOutputStream stream = new FileOutputStream(file)) {
-            if (drawable instanceof BitmapDrawable) {
-                Bitmap bmp = ((BitmapDrawable) drawable).getBitmap();
+            if (drawable instanceof BitmapDrawable bitmapDrawable) {
+                Bitmap bmp = bitmapDrawable.getBitmap();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             }
         } catch (Throwable ignored) {}

@@ -1383,12 +1383,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
             final boolean longClickable = isLongClickable();
             Drawable d = selector.getCurrent();
-            if (d instanceof TransitionDrawable) {
+            if (d instanceof TransitionDrawable transitionDrawable) {
                 if (longClickable) {
-                    ((TransitionDrawable) d).startTransition(
+                    transitionDrawable.startTransition(
                             ViewConfiguration.getLongPressTimeout());
                 } else {
-                    ((TransitionDrawable) d).resetTransition();
+                    transitionDrawable.resetTransition();
                 }
             }
             if (longClickable && !mDataChanged) {
@@ -3214,8 +3214,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                                         setPressed(true);
                                         if (mSelector != null) {
                                             Drawable d = mSelector.getCurrent();
-                                            if (d instanceof TransitionDrawable) {
-                                                ((TransitionDrawable) d).resetTransition();
+                                            if (d instanceof TransitionDrawable transitionDrawable) {
+                                                transitionDrawable.resetTransition();
                                             }
                                         }
                                         postDelayed(() -> {
@@ -4133,8 +4133,8 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                                         setPressed(true);
                                         if (mSelector != null) {
                                             Drawable d = mSelector.getCurrent();
-                                            if (d instanceof TransitionDrawable) {
-                                                ((TransitionDrawable) d).resetTransition();
+                                            if (d instanceof TransitionDrawable transitionDrawable) {
+                                                transitionDrawable.resetTransition();
                                             }
                                         }
                                         postDelayed(() -> {

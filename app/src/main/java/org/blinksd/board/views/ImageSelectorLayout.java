@@ -221,8 +221,8 @@ public final class ImageSelectorLayout extends LinearLayout {
                         d = wm.getDrawable();
                     }
 
-                    if (d instanceof BitmapDrawable) {
-                        Bitmap b = ((BitmapDrawable) d).getBitmap();
+                    if (d instanceof BitmapDrawable bd) {
+                        Bitmap b = bd.getBitmap();
                         b = ImageUtils.getMinimizedBitmap(b);
                         prev.setImageBitmap(b);
                     }

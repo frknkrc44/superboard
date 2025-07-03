@@ -227,16 +227,15 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
             for (int g = 0; g < childCount; g++) {
                 View item = categoryView.getChildAt(g);
 
-                if (item instanceof Switch) {
-                    Switch swtch = (Switch) item;
-                    String key = (String) swtch.getTag();
+                if (item instanceof Switch switchItem) {
+                    String key = (String) switchItem.getTag();
 
                     boolean enabled = getSettings().getSwitchEnabledFromDependency(key);
                     boolean val = enabled && SuperDBHelper.getBooleanOrDefault(key);
-                    swtch.setEnabled(enabled);
-                    swtch.setOnCheckedChangeListener(null);
-                    swtch.setChecked(val);
-                    swtch.setOnCheckedChangeListener(switchListener);
+                    switchItem.setEnabled(enabled);
+                    switchItem.setOnCheckedChangeListener(null);
+                    switchItem.setChecked(val);
+                    switchItem.setOnCheckedChangeListener(switchListener);
                 }
             }
         }
