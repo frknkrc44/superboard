@@ -116,6 +116,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_PADDING, SettingType.FLOAT_NUMBER);
+        putKbdLayout(SET_KEY_STROKE_WIDTH, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_RADIUS, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_TEXTSIZE, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEY_SHADOWSIZE, SettingType.FLOAT_NUMBER);
@@ -177,7 +178,6 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putThemingAdvanced(SET_KEY_TEXTCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_KEY2_TEXTCLR, SettingType.COLOR_SELECTOR);
         putThemingAdvanced(SET_ENTER_TEXTCLR, SettingType.COLOR_SELECTOR);
-        putThemingAdvanced(SET_KEY_STROKE_WIDTH, SettingType.FLOAT_NUMBER);
         putThemingAdvanced(SET_KEY_STROKE_COLOR, SettingType.COLOR_SELECTOR);
     }
 
@@ -304,9 +304,6 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
             case SET_ENTER_BGCLR:
             case SET_ENTER_PRESS_BGCLR:
-                if (SDK_INT < 21) {
-                    return key.equals(SET_ENTER_BGCLR) ? Defaults.ENTER_BACKGROUND_COLOR : Defaults.ENTER_PRESS_BACKGROUND_COLOR;
-                }
                 TypedArray arr = getSBApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
                 int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
                 int pressColor = ColorUtils.getDarkerColor(color);

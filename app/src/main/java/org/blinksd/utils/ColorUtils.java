@@ -91,7 +91,7 @@ public final class ColorUtils {
     }
 
     public static double calculateLuminance(int color) {
-        if (Build.VERSION.SDK_INT >= 24)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             return luminance(color);
 
         final double[] result = getTempDouble3Array();

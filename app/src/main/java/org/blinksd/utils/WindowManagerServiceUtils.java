@@ -4,6 +4,7 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
@@ -42,7 +43,7 @@ public final class WindowManagerServiceUtils {
         try {
             Class<?> wmClass = windowManagerService.getClass();
 
-            if (SDK_INT < 29) {
+            if (SDK_INT < Build.VERSION_CODES.Q) {
                 Method hasNavigationBar = wmClass.getMethod("hasNavigationBar");
                 return (boolean) hasNavigationBar.invoke(windowManagerService);
             }

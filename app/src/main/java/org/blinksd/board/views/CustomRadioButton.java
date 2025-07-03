@@ -22,25 +22,15 @@ public final class CustomRadioButton extends RadioButton {
         super(c);
         int i = DensityUtils.dpInt(8);
         setPadding(i, 0, i, 0);
-        if (Build.VERSION.SDK_INT < 21) {
-            Drawable drw = getButtonDrawable();
-
-            if (drw == null) {
-                return;
-            }
-
-            setColorFilter(drw, 0xFFDEDEDE);
-        } else {
-            setPadding(i, 0, i, 0);
-            int color = 0xFFDEDEDE;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                color = ResourcesUtils.getColor(android.R.color.system_accent1_200);
-            }
-            setButtonTintList(ColorStateList.valueOf(color));
-            setButtonTintMode(PorterDuff.Mode.SRC_IN);
-
-            setBackground(null);
+        setPadding(i, 0, i, 0);
+        int color = 0xFFDEDEDE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            color = ResourcesUtils.getColor(android.R.color.system_accent1_200);
         }
+        setButtonTintList(ColorStateList.valueOf(color));
+        setButtonTintMode(PorterDuff.Mode.SRC_IN);
+
+        setBackground(null);
     }
 
     /** @noinspection JavaReflectionMemberAccess*/

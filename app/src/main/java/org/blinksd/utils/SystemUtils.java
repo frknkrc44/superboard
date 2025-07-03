@@ -83,7 +83,7 @@ public final class SystemUtils {
         if (isForcedTrans) {
             color = Color.TRANSPARENT;
         } else {
-            boolean isLight = Build.VERSION.SDK_INT < 31 && satisfiesTextContrast(convertARGBtoRGB(color));
+            boolean isLight = Build.VERSION.SDK_INT < Build.VERSION_CODES.S && satisfiesTextContrast(convertARGBtoRGB(color));
             if (isLight)
                 color = getDarkerColor(color);
         }
@@ -94,18 +94,18 @@ public final class SystemUtils {
 
     private static int findGestureHeight(Context ctx) {
         try {
-            if (SDK_INT >= 29) {
-                if (SDK_INT > 30) {
-                    WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-                    boolean gesturesEnabled = isGesturesEnabled();
+            if (SDK_INT > Build.VERSION_CODES.R) {
+                WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+                boolean gesturesEnabled = isGesturesEnabled();
 
-                    // TODO: Detect Android 12L+ Taskbar
-                    int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
-                    return (int) (wm.getCurrentWindowMetrics()
-                            .getWindowInsets()
-                            .getInsets(type)
-                            .bottom * (gesturesEnabled ? 1.5 : 1));
-                }
+                // TODO: Detect Android 12L+ Taskbar
+                int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
+                return (int) (wm.getCurrentWindowMetrics()
+                        .getWindowInsets()
+                        .getInsets(type)
+                        .bottom * (gesturesEnabled ? 1.5 : 1));
+            } else if (SDK_INT == Build.VERSION_CODES.Q) {
+
 
                 // For SDK 30 or below, use old method
                 // Because new method reports wrong size

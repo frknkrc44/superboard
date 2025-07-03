@@ -51,7 +51,7 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     FrameLayout mTabsHolder;
     CustomActionBar actionBar;
     // SuperBoard kbdPreview;
-    ImageView backgroundImageView;
+    // ImageView backgroundImageView;
     View dialogView;
     SettingCategory currentCategory;
     static final List<SettingCategory> categoryList = Arrays.asList(SettingCategory.values());
