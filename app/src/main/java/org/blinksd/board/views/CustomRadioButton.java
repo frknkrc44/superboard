@@ -1,7 +1,5 @@
 package org.blinksd.board.views;
 
-import static org.blinksd.utils.ColorUtils.setColorFilter;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;

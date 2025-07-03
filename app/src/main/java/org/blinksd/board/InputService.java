@@ -884,7 +884,7 @@ public final class InputService extends InputMethodService implements
         }
 
         @Override
-        public void onKeyboardEvent(View v) {
+        public void onKeyboardEvent(Key key) {
             if (emojiView != null && emojiView.isShown()) {
                 showEmojiView(false);
             }
@@ -904,12 +904,13 @@ public final class InputService extends InputMethodService implements
             boolean disablePopup = getBooleanOrDefault(SettingMap.SET_DISABLE_POPUP);
 
             if (showPopup || !disablePopup)
-                boardPopup.setKey(superBoardView, (SuperBoard.Key) v);
+                boardPopup.setKey(superBoardView, key);
 
             if (showPopup)
                 boardPopup.showCharacter();
         }
 
+        @Override
         public void onPopupEvent() {
             boardPopup.setShiftState(getShiftState());
             boardPopup.showPopup(true);

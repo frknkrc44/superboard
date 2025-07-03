@@ -86,7 +86,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             TAG_DISABLE_MODIFIER = R.id.disable_type_modifier,
             TAG_KEY_REPEAT = R.id.key_repeat;
     private static Locale caseLocale = new Locale("tr", "TR");
-    private final MyHandler mHandler = new MyHandler();
+    private final KeyStateHandler mHandler = new KeyStateHandler();
     private final Vibrator vibrator;
     private float textSize = minP(1.25f);
     private float landSizeIncreaser = 1f;
@@ -155,7 +155,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     /** @noinspection EmptyMethod*/
     public final void beforeKeyboardEvent() {}
 
-    public void onKeyboardEvent(View view) {}
+    public void onKeyboardEvent(Key key) {}
 
     public void afterKeyboardEvent() {}
 
@@ -563,7 +563,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 updateKeyState();
             }
         } else {
-            commitText(v.getText().toString());
+            commitText(v.getText());
             updateKeyState();
 
             playSound(0);
@@ -692,7 +692,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         return performedAction;
     }
 
-    public final void commitText(String text) {
+    public final void commitText(CharSequence text) {
         if (text == null) return;
         boolean modifierDisabledForKeyboard = isDisabledModifierForKeyboard(selected);
         boolean modifiersEnabled = false;
@@ -714,7 +714,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             KeyCharacterMap charMap;
             charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
 
-            KeyEvent[] events = charMap.getEvents(text.toCharArray());
+            char[] chars = new char[text.length()];
+            for (int i = 0; i < chars.length; i++) {
+                chars[i] = text.charAt(i);
+            }
+
+            KeyEvent[] events = charMap.getEvents(chars);
             for (KeyEvent event : events) {
                 sendKeyAction(event.getKeyCode(), event.getAction());
             }
@@ -733,10 +738,10 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
     }
 
-    private void sendText(String text) {
+    private void sendText(CharSequence text) {
         if (insertSpaceAfterPunc &&
                 !TextUtils.isEmpty(text) &&
-                SUPPORTED_PUNCTUATION_TYPES.contains(text.substring(text.length() - 1))) {
+                SUPPORTED_PUNCTUATION_TYPES.contains(text.subSequence(text.length() - 1, text.length()))) {
             text += " ";
         }
 
@@ -1097,24 +1102,24 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     @Override
-    public final boolean onTouch(View v, MotionEvent m) {
-        Key key = (Key) v;
+    public final boolean onTouch(View view, MotionEvent m) {
+        Key key = (Key) view;
 
-        v.setSelected(m.getAction() != MotionEvent.ACTION_UP);
+        key.setSelected(m.getAction() != MotionEvent.ACTION_UP);
 
         switch (m.getAction()) {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_SCROLL:
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_OUTSIDE:
-                v.setSelected(false);
+                key.setSelected(false);
                 mHandler.removeMessages(0);
                 break;
         }
 
         if (key.isKeyRepeat() || key.hasPopup() || key.hasLongPressEvent()) {
             if (key.hasPopup() && disablePopup) {
-                normalPress(v, m);
+                normalPress(key, m);
                 return true;
             }
             switch (m.getAction()) {
@@ -1128,17 +1133,17 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                     break;
                 case MotionEvent.ACTION_DOWN:
                     key.currentMotionEventAction = MotionEvent.ACTION_DOWN;
-                    onKeyboardEvent(v);
-                    mHandler.removeAndSendMessageDelayed(1, v, 250L * longPressMultiplier);
+                    onKeyboardEvent(key);
+                    mHandler.removeAndSendMessageDelayed(1, key, 250L * longPressMultiplier);
                     break;
             }
         } else {
-            normalPress(v, m);
+            normalPress(key, m);
         }
         return true;
     }
 
-    private void normalPress(View v, MotionEvent m) {
+    private void normalPress(Key v, MotionEvent m) {
         switch (m.getAction()) {
             case MotionEvent.ACTION_UP:
                 mHandler.removeAndSendMessage(0, v);
@@ -1161,23 +1166,23 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         void run(Key key);
     }
 
-    private final class MyHandler {
-        private final ListedMap<Integer, View> messageIds = new ListedMap<>();
+    private final class KeyStateHandler {
+        private final ListedMap<Integer, Key> messageIds = new ListedMap<>();
         private final List<Thread> threads = new ArrayList<>();
 
-        private MyHandler() {}
+        private KeyStateHandler() {}
 
         public void removeAndSendEmptyMessage(int what) {
             removeMessages(what);
             sendEmptyMessage(what);
         }
 
-        public void removeAndSendMessage(int what, View v) {
+        public void removeAndSendMessage(int what, Key v) {
             removeMessages(what);
             sendMessage(what, v);
         }
 
-        public void removeAndSendMessageDelayed(int what, View v, long delay) {
+        public void removeAndSendMessageDelayed(int what, Key v, long delay) {
             removeMessages(what);
             sendMessageDelayed(what, v, delay);
         }
@@ -1202,7 +1207,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             sendMessage(what, null);
         }
 
-        public void sendMessage(int what, View v) {
+        public void sendMessage(int what, Key v) {
             if (!messageIds.containsKey(what)) {
                 messageIds.put(what, v);
             }
@@ -1210,7 +1215,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             handleMessage(what);
         }
 
-        public void sendMessageDelayed(int what, View v, long time) {
+        public void sendMessageDelayed(int what, Key v, long time) {
             messageIds.put(what, v);
 
             try {
