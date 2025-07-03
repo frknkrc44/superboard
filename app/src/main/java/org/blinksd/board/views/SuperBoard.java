@@ -1627,7 +1627,6 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
 
             k.setBackgroundDrawable(getBackground());
-            k.getLayoutParams().width = getLayoutParams().width;
             k.setPopupCharacters(getPopupCharacters());
             k.setKeyShadow(shadowRadius, shadowColor);
             k.setKeyItemColor(keyTextColor);
