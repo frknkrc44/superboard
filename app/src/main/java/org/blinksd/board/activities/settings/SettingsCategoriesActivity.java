@@ -94,38 +94,11 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     .setInterpolator(interpolator)
                     .start();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
 
                 if (onBackAnimationCallback == null) {
-                    onBackAnimationCallback = new OnBackInvokedCallback() {
-                        @Override
-                        public void onBackInvoked() {
-                            toggleCategory(null);
-                        }
-
-                        /*
-                        @Override
-                        public void onBackProgressed(BackEvent backEvent) {
-                            var currentChild = mTabsHolder.getChildAt(categoryList.indexOf(currentCategory));
-                            var newChild = mTabsHolder.getChildAt(categoryList.size());
-                            newChild.setVisibility(VISIBLE);
-                            newChild.setAlpha(backEvent.getProgress());
-                            currentChild.setAlpha(1 - backEvent.getProgress());
-                            currentChild.setTranslationX(wp(backEvent.getProgress() * 100));
-                            newChild.setTranslationX(-wp(100 - (backEvent.getProgress() * 100)));
-                        }
-
-                        @Override
-                        public void onBackCancelled() {
-                            var currentChild = mTabsHolder.getChildAt(categoryList.indexOf(currentCategory));
-                            var newChild = mTabsHolder.getChildAt(categoryList.size());
-                            newChild.setVisibility(GONE);
-                            newChild.setAlpha(0);
-                            currentChild.setAlpha(1);
-                        }
-                        */
-                    };
+                    onBackAnimationCallback = (OnBackInvokedCallback) () -> toggleCategory(null);
                 }
 
                 if (newIndex == categoryList.size()) {
