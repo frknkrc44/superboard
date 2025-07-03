@@ -63,6 +63,8 @@
     <string name="settings_monet_color_scheme">Кольорова схема Monet</string>
     <string name="settings_keyboard_padding">Відступ клавіатури</string>
     <string name="settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Фото</string>
@@ -113,6 +115,7 @@
     <string name="settings_category_general">Загальні</string>
     <string name="settings_category_theming">Вигляд</string>
     <string name="settings_category_theming_adv">Розширене оформлення</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Розкладка клавіатури</string>
     <string name="settings_category_popup">Спливаючі меню</string>
     <string name="settings_category_top_bar">Верхня панель</string>
