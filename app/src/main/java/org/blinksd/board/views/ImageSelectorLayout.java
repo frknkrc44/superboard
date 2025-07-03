@@ -242,7 +242,9 @@ public final class ImageSelectorLayout extends LinearLayout {
 
         Button rb = LayoutCreator.createButton(ctx);
         rb.setBackground(ResourcesUtils.getSelectableItemBg(rb.getCurrentTextColor()));
-        rb.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 0));
+        params = new LinearLayout.LayoutParams(-1, -2, 0);
+        params.bottomMargin = margin * 2;
+        rb.setLayoutParams(params);
         l.addView(rb);
         rb.setText(getImageSelectorTranslation("rotate"));
         rb.setOnClickListener(p1 -> {
