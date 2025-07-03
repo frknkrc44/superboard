@@ -75,6 +75,15 @@ public class ResourcesUtils {
         return getButtonBackground(clr, pressClr, radius, strokeWidth, strokeColor, pressEffect);
     }
 
+    public static Drawable getCircleBackground(int keyColor) {
+        GradientDrawable source = new GradientDrawable();
+        source.setColor(keyColor);
+        source.setCornerRadius(64);
+        source.setStroke(2, 0);
+
+        return source;
+    }
+
     public static Drawable getCircleButtonBackground(int keyColor, int iconColor, boolean pressEffect) {
         int buttonClr = pressEffect ? iconColor : keyColor;
         int keyClr = setAlphaForColor(0x88, pressEffect ? keyColor : iconColor);

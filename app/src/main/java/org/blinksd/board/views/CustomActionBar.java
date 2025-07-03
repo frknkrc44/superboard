@@ -7,7 +7,6 @@ import static org.blinksd.utils.ViewUtils.setTextAppearance;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

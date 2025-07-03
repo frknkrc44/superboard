@@ -1,14 +1,11 @@
 package org.blinksd.board.activities.settings;
 
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
-import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getDefaultButtonColor;
-import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +17,6 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
-import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;

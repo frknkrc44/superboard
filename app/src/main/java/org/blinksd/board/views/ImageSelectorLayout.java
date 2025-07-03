@@ -3,7 +3,6 @@ package org.blinksd.board.views;
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
-import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
@@ -303,7 +302,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         Object[] ar = colorList.values().toArray();
         int size = ar.length == 1 ? 2 : ar.length;
         int[] out = new int[size];
-        for (int i = 0; i < ar.length; i++) {
+        for (int i = 0; i < size; i++) {
             out[i] = (int) ar[i];
         }
         if (ar.length == 1) {

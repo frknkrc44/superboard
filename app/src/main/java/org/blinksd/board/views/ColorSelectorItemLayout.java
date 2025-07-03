@@ -1,12 +1,12 @@
 package org.blinksd.board.views;
 
 import static org.blinksd.utils.ColorUtils.setColorFilter;
-import static org.blinksd.utils.ResourcesUtils.getCircleButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getCircleBackground;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +27,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
 
     public ColorSelectorItemLayout(Context ctx, int index, TreeMap<Integer, Integer> colors, View.OnClickListener gradientAddColorListener, View.OnClickListener gradientDelColorListener, View.OnClickListener colorSelectorListener) {
         super(ctx);
+        int textColor = getDefaultTextColor();
         setLayoutParams(new LayoutParams(-1, -2));
         img = LayoutCreator.createImageView(ctx);
         int size = (int) getListPreferredItemHeight(ctx);
@@ -39,7 +40,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         btn.setLayoutParams(lp);
         btn.setId(android.R.id.text1);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(Color.WHITE);
+        btn.setTextColor(textColor);
         btn.setMinHeight(size);
         addView(img);
         addView(btn);
@@ -48,13 +49,13 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         switch (index) {
             case -1:
                 img.setImageResource(android.R.drawable.ic_input_add);
-                setColorFilter(img, Color.WHITE);
+                setColorFilter(img, textColor);
                 btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_add_item"));
                 setOnClickListener(gradientAddColorListener);
                 return;
             case -2:
                 img.setImageResource(android.R.drawable.ic_media_next);
-                setColorFilter(img, Color.WHITE);
+                setColorFilter(img, textColor);
                 btn.setText(SettingsBaseActivity.getTranslation("image_selector_gradient_change_orientation"));
                 setOnClickListener(gradientAddColorListener);
                 return;
@@ -68,7 +69,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
         del.setLayoutParams(lp);
         del.setScaleType(img.getScaleType());
         del.setImageResource(R.drawable.delete);
-        setColorFilter(del, Color.WHITE);
+        setColorFilter(del, textColor);
         pad = (int) (pad * 1.5f);
         del.setPadding(pad, pad, pad, pad);
         del.setOnClickListener(gradientDelColorListener);
@@ -79,7 +80,7 @@ public final class ColorSelectorItemLayout extends LinearLayout {
     }
 
     private void updateColorView(int color) {
-        img.setImageDrawable(getCircleButtonBackground(color, 0xFFDEDEDE, false));
+        img.setImageDrawable(getCircleBackground(color));
     }
 
     @Override
