@@ -3,6 +3,7 @@ package org.blinksd.board.activities.settings;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ResourcesUtils.getDefaultButtonColor;
 import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 
 import android.annotation.SuppressLint;
@@ -77,7 +78,7 @@ class MainTabListAdapter extends BaseAdapter {
                 (int) ResourcesUtils.getListPreferredItemHeight(parent.getContext());
 
         GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setColor(setAlphaForColor(0x21, getDefaultTextColor()));
+        gradientDrawable.setColor(getDefaultButtonColor());
 
         float softCorner = DensityUtils.dp(24);
         float squareCorner = DensityUtils.dp(8);

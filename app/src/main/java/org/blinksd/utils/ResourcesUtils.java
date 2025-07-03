@@ -3,12 +3,14 @@ package org.blinksd.utils;
 import static android.util.TypedValue.complexToDimension;
 import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
+import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -92,7 +94,7 @@ public class ResourcesUtils {
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, int strokeColor, boolean pressEffect) {
-        int keyClr = setAlphaForColor(0x21, getDefaultTextColor());
+        int keyClr = getDefaultButtonColor();
         int keyPressClr = getDarkerColor(keyClr);
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, strokeColor, pressEffect);
     }
@@ -201,7 +203,27 @@ public class ResourcesUtils {
         return d;
     }
 
+    public static int getDefaultButtonColor() {
+        final var darkTheme = isDarkThemeEnabled();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return getColor(darkTheme
+                    ? android.R.color.system_accent1_700
+                    : android.R.color.system_neutral1_100
+            );
+        }
+
+        return darkTheme
+                ? getAccentColor()
+                : setAlphaForColor(0x21, getDefaultTextColor());
+    }
+
     public static int getDefaultTextColor() {
+        final var darkTheme = isDarkThemeEnabled();
+        if (darkTheme) {
+            return Color.WHITE;
+        }
+
         try (TypedArray array = getSBApplication().getTheme().obtainStyledAttributes(new int[]{
                 android.R.attr.textColorPrimary
         })) {
@@ -213,7 +235,7 @@ public class ResourcesUtils {
         GradientDrawable content = new GradientDrawable();
         int accent = transparent
                 ? 0
-                : setAlphaForColor(0x21, getDefaultTextColor());
+                : getDefaultButtonColor();
         if (darker && !transparent) {
             accent = getDarkerColor(accent);
         }
