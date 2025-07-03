@@ -63,6 +63,8 @@
     <string name="settings_monet_color_scheme">Esquema de color Monet</string>
     <string name="settings_keyboard_padding">Relleno de teclas</string>
     <string name="settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Foto</string>
@@ -113,6 +115,7 @@
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Temas</string>
     <string name="settings_category_theming_adv">Temas Avanzados</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Diseño del Teclado</string>
     <string name="settings_category_popup">Emergente</string>
     <string name="settings_category_top_bar">Barra Superior</string>
