@@ -93,25 +93,22 @@ public final class SystemUtils {
     }
 
     private static int findGestureHeight(Context ctx) {
-        try {
-            if (SDK_INT > Build.VERSION_CODES.R) {
-                WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-                boolean gesturesEnabled = isGesturesEnabled();
+        if (SDK_INT == Build.VERSION_CODES.Q) {
+            // For SDK 30 or below, use old method
+            // Because new method reports wrong size
+            return DensityUtils.dpInt(48);
+        } else if (SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+            boolean gesturesEnabled = isGesturesEnabled();
 
-                // TODO: Detect Android 12L+ Taskbar
-                int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
-                return (int) (wm.getCurrentWindowMetrics()
-                        .getWindowInsets()
-                        .getInsets(type)
-                        .bottom * (gesturesEnabled ? 1.5 : 1));
-            } else if (SDK_INT == Build.VERSION_CODES.Q) {
+            // TODO: Detect Android 12L+ Taskbar
+            int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
+            return (int) (wm.getCurrentWindowMetrics()
+                    .getWindowInsets()
+                    .getInsets(type)
+                    .bottom * (gesturesEnabled ? 1.5 : 1));
+        }
 
-
-                // For SDK 30 or below, use old method
-                // Because new method reports wrong size
-                return DensityUtils.dpInt(48);
-            }
-        } catch (Throwable ignored) {}
         return 0;
     }
 
