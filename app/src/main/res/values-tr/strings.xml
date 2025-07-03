@@ -52,6 +52,8 @@
 	<string name="settings_key_textclr">Tuş metin rengi</string>
 	<string name="settings_key2_textclr">İkincil tuş metin rengi</string>
 	<string name="settings_enter_textclr">Enter tuşu metin rengi</string>
+	<string name="settings_key_stroke_width">Tuş çizgi genişliği</string>
+	<string name="settings_key_strokeclr">Tuş çizgi rengi</string>
 	<string name="settings_play_snd_press">Tuşa basıldığında ses çıkar</string>
 	<string name="settings_keyboard_kill_background">RAM kullanımını düşür (açılış gecikmesini arttırır)</string>
 	<string name="settings_use_first_popup_character">Uzun basıldığında ilk açılır pencere karakterini kullan (açılır pencereleri etkinleştirmelisiniz)</string>
