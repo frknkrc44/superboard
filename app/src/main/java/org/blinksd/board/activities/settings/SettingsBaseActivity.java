@@ -6,6 +6,7 @@ import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 import static org.blinksd.utils.DensityUtils.dp;
 import static org.blinksd.utils.DensityUtils.dpInt;
+import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -97,9 +98,14 @@ public abstract class SettingsBaseActivity extends BaseActivity {
     }
 
     public static void doHacksAndShow(AlertDialog dialog) {
+        final var darkTheme = isDarkThemeEnabled();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             GradientDrawable gradientDrawable = new GradientDrawable();
-            int color = ResourcesUtils.getColor(android.R.color.system_neutral1_900);
+            int color = ResourcesUtils.getColor(
+                    darkTheme
+                            ? android.R.color.system_neutral1_900
+                            : android.R.color.system_neutral1_50);
             gradientDrawable.setColor(color);
             gradientDrawable.setCornerRadius(dpInt(16));
             gradientDrawable.setTint(color);
@@ -112,8 +118,10 @@ public abstract class SettingsBaseActivity extends BaseActivity {
         dialog.show();
 
         int tint = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                ? ResourcesUtils.getColor(android.R.color.system_accent1_200)
-                : ColorUtils.getAccentColor();
+                ? ResourcesUtils.getColor(darkTheme
+                ? android.R.color.system_accent1_200
+                : android.R.color.system_accent1_600
+        ) : ColorUtils.getAccentColor();
 
         Button btn1 = dialog.findViewById(android.R.id.button1);
         Button btn2 = dialog.findViewById(android.R.id.button2);

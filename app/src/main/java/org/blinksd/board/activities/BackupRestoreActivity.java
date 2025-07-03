@@ -3,6 +3,7 @@ package org.blinksd.board.activities;
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.ThemeUtils.getCurrentThemeJSON;
 
 import android.annotation.SuppressLint;
@@ -30,6 +31,7 @@ import org.blinksd.board.views.CustomActionBar;
 import org.blinksd.board.views.CustomRadioButton;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.json.JSONException;
@@ -107,7 +109,7 @@ public final class BackupRestoreActivity extends BaseActivity {
             tv.setLayoutParams(pr);
             tv.setText(tabTitles[i]);
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
+            setColorFilter(tv.getBackground(), getDefaultTextColor());
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -190,6 +192,8 @@ public final class BackupRestoreActivity extends BaseActivity {
 
         Button button = LayoutCreator.createButton(this);
         button.setText(R.string.settings_select_file);
+        button.setBackground(ResourcesUtils.getSelectableItemBg(button.getCurrentTextColor()));
+        button.setAllCaps(false);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);

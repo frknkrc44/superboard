@@ -2,6 +2,8 @@ package org.blinksd.board.views;
 
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
+import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
@@ -166,7 +168,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             tv.setLayoutParams(pr);
             tv.setText(getImageSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
+            setColorFilter(tv.getBackground(), getDefaultTextColor());
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);

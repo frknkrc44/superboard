@@ -5,6 +5,7 @@ import static android.graphics.Color.rgb;
 import static org.blinksd.utils.ColorUtils.getColorFromHSV;
 import static org.blinksd.utils.ColorUtils.getHSVFromColor;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -110,7 +111,7 @@ public final class ColorSelectorLayout extends LinearLayout {
             tv.setLayoutParams(pr);
             tv.setText(getColorSelectorTranslation(tabTitles[i]));
             tv.setBackgroundResource(R.drawable.tab_indicator_material);
-            setColorFilter(tv.getBackground(), 0xFFDEDEDE);
+            setColorFilter(tv.getBackground(), getDefaultTextColor());
             tv.setGravity(Gravity.CENTER);
             tv.setPadding(0, 0, 0, 0);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);

@@ -6,10 +6,12 @@ import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
 import static org.blinksd.utils.ResourcesUtils.getButtonBackground;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.ResourcesUtils.getSelectableItemBg;
 import static org.blinksd.utils.ResourcesUtils.getTintedDrawable;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -72,16 +74,6 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            scroller.setFitsSystemWindows(false);
-
-            Window window = getWindow();
-            window.setDecorFitsSystemWindows(true);
-            window.setNavigationBarColor(0);
-            window.setStatusBarColor(0);
-            window.setBackgroundDrawableResource(android.R.color.system_neutral1_900);
-        }
-
         setContentView(scroller);
         scroller.requestFocus();
     }
@@ -107,6 +99,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         setKeyOpts(language, preview);
         preview.setId(android.R.id.primary);
         preview.setKeyboardHeight(30);
+        preview.setKeysTextColor(getDefaultTextColor());
         // preview.setLayoutPopup(0, getLayoutKeys(language.popup));
 
         for (int i = 0; i < language.layout.size(); i++) {
@@ -132,7 +125,7 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
         view.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         view.setOnClickListener(this);
         view.setBackground(getSelectableItemBg(
-                Color.WHITE,
+                getDefaultTextColor(),
                 false,
                 true
         ));
@@ -156,7 +149,8 @@ public final class KeyboardLayoutSelector extends BaseActivity implements View.O
             tick.setBackground(getButtonBackground(64, 2, false));
             tick.setScaleType(ImageView.ScaleType.FIT_CENTER);
             Drawable returnSymbol = getTintedDrawable(R.drawable.sym_board_return, Color.WHITE);
-            tick.setImageDrawable(returnSymbol);
+            tick.setImageDrawable(returnSymbol.getConstantState().newDrawable());
+            tick.setColorFilter(Color.WHITE);
             layers.addView(tick);
         }
 

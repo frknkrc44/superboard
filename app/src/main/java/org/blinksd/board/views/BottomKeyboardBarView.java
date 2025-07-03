@@ -7,6 +7,7 @@ import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -141,6 +142,7 @@ public class BottomKeyboardBarView extends LinearLayout {
             for (int i = 0; i < childCount; i++) {
                 CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
                 customRadioButton.setTextColor(textColor);
+                customRadioButton.setButtonTintList(ColorStateList.valueOf(textColor));
             }
 
             okButton.setTextColor(textColor);

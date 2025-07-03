@@ -8,6 +8,7 @@ import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.utils.LayoutUtils.getKeyListFromLanguageList;
+import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;
 import static org.blinksd.utils.SuperDBHelper.setColorsFromBitmap;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
@@ -57,6 +58,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     private static final int TAG1 = R.id.key_normal_press, TAG2 = R.id.key_long_press;
 
     View createNumberSelector(String key, boolean isFloat) {
+        int textColor = getDefaultTextColor();
         int num = SuperDBHelper.getIntOrDefault(key);
         LinearLayout numSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class, this);
         numSelector.getLayoutParams().height = -2;
@@ -64,7 +66,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         img.setId(android.R.id.text1);
         final int size = (int) getListPreferredItemHeight(this);
         img.setGravity(Gravity.CENTER);
-        img.setTextColor(Color.WHITE);
+        img.setTextColor(textColor);
         // img.setTextSize(DensityUtils.dpInt(12));
         img.setText(isFloat
                 ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
@@ -76,7 +78,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -1, 1));
         btn.setPadding(pad, 0, 0, 0);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(Color.WHITE);
+        btn.setTextColor(textColor);
         btn.setText(getTranslation(key));
         numSelector.setTag(key);
         numSelector.setOnClickListener(numberSelectorListener);
@@ -86,6 +88,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     }
 
     View createColorSelector(String key) {
+        int textColor = getDefaultTextColor();
         int color = SuperDBHelper.getIntOrDefault(key);
         LinearLayout colSelector = LayoutCreator.createFilledHorizontalLayout(AbsListView.class, this);
         colSelector.getLayoutParams().height = -2;
@@ -104,7 +107,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         btn.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2, 1));
         btn.setPadding(pad, 0, 0, 0);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(Color.WHITE);
+        btn.setTextColor(textColor);
         btn.setMinHeight(size);
         btn.setText(getTranslation(key));
         colSelector.setTag(key);
@@ -116,10 +119,11 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
     }
 
     View createImageSelector(String key) {
+        int textColor = getDefaultTextColor();
         final float listItemHeight = getListPreferredItemHeight(this);
         TextView btn = LayoutCreator.createTextView(this);
         btn.setGravity(Gravity.CENTER_VERTICAL);
-        btn.setTextColor(Color.WHITE);
+        btn.setTextColor(textColor);
         btn.setMinHeight((int) listItemHeight);
         btn.setText(getTranslation(key));
         btn.setTag(key);

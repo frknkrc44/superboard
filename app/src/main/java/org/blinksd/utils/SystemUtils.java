@@ -155,6 +155,10 @@ public final class SystemUtils {
         return getResConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    public static boolean isDarkThemeEnabled() {
+        return (getResConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    }
+
     public static float getMultipliedTextSize(float size) {
         return 1.5f * size;
     }

@@ -3,7 +3,6 @@ package org.blinksd.utils;
 import static android.util.TypedValue.complexToDimension;
 import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
-import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.setAlphaForColor;
 import static org.blinksd.utils.DensityUtils.dpInt;
@@ -15,6 +14,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -92,7 +92,7 @@ public class ResourcesUtils {
     }
 
     public static Drawable getButtonBackground(int radius, int stroke, int strokeColor, boolean pressEffect) {
-        int keyClr = getAccentColor();
+        int keyClr = setAlphaForColor(0x21, getDefaultTextColor());
         int keyPressClr = getDarkerColor(keyClr);
         return getButtonBackground(keyClr, keyPressClr, radius, stroke, strokeColor, pressEffect);
     }
@@ -201,9 +201,19 @@ public class ResourcesUtils {
         return d;
     }
 
+    public static int getDefaultTextColor() {
+        try (TypedArray array = getSBApplication().getTheme().obtainStyledAttributes(new int[]{
+                android.R.attr.textColorPrimary
+        })) {
+            return array.getColor(0, Color.WHITE);
+        }
+    }
+
     public static Drawable getSelectableItemBg(int textColor, boolean darker, boolean transparent) {
         GradientDrawable content = new GradientDrawable();
-        int accent = transparent ? 0 : getAccentColor();
+        int accent = transparent
+                ? 0
+                : setAlphaForColor(0x21, getDefaultTextColor());
         if (darker && !transparent) {
             accent = getDarkerColor(accent);
         }

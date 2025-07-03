@@ -32,7 +32,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".SuperBoardApplication"
-        android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+        android:theme="@style/FBoard"
         android:resizeableActivity="true"
         tools:targetApi="tiramisu">
 
