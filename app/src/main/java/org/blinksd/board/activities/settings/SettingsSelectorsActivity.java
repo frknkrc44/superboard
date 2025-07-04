@@ -296,10 +296,10 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         build.setPositiveButton(android.R.string.ok, (p112, p2) -> {
             ImageView img = dialogView.findViewById(R.id.dialog_image_preview);
             Drawable d = img.getDrawable();
-            if (d != null) {
+            if (d instanceof BitmapDrawable bitmapDrawable) {
                 try {
                     File bgFile = getBackgroundImageFile();
-                    Bitmap bmp = ((BitmapDrawable) d).getBitmap();
+                    Bitmap bmp = bitmapDrawable.getBitmap();
                     setColorsFromBitmap(bmp);
                     FileOutputStream fos = new FileOutputStream(bgFile);
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);

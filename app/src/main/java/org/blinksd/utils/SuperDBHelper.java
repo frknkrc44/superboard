@@ -144,20 +144,24 @@ public final class SuperDBHelper {
 
     public static void setColorsFromBitmap(Bitmap b) {
         if (b == null) return;
-        int c = ColorUtils.getBitmapColor(b);
+        final int c = ColorUtils.getBitmapColor(b);
         getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, c - 0xAA000000);
-        int keyClr = c - 0xAA000000;
-        int keyPressClr = ColorUtils.getDarkerColor(keyClr);
-        int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+        final int keyClr = c - 0xAA000000;
+        final int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+        final int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+        final int enterPressClr = ColorUtils.getDarkerColor(keyPress2Clr);
         getAppDB().putInteger(SettingMap.SET_KEY_BGCLR, keyClr);
         getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR, keyPressClr);
         getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
         getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
-        boolean isLight = satisfiesTextContrast(c);
-        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, ColorUtils.getDarkerColor(keyPress2Clr));
-        keyClr = isLight ? 0xFF212121 : 0xFFDEDEDE;
-        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, keyClr);
-        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, keyClr ^ 0x00FFFFFF);
+        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, keyPress2Clr);
+        getAppDB().putInteger(SettingMap.SET_ENTER_PRESS_BGCLR, enterPressClr);
+
+        final int textClr = satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
+        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, textClr);
+        getAppDB().putInteger(SettingMap.SET_KEY2_TEXTCLR, textClr);
+        getAppDB().putInteger(SettingMap.SET_ENTER_TEXTCLR, textClr);
+        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, invertColor(textClr));
         getAppDB().writeAll();
     }
 

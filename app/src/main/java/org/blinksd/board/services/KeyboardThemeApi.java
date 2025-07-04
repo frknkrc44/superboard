@@ -9,6 +9,7 @@ import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
 import static org.blinksd.utils.LayoutUtils.createLanguage;
 import static org.blinksd.utils.LayoutUtils.getUserLanguageFilesDir;
+import static org.blinksd.utils.SuperDBHelper.setColorsFromBitmap;
 import static org.blinksd.utils.ThemeUtils.getUserThemeFromCodeName;
 import static org.blinksd.utils.ThemeUtils.getUserThemesDir;
 
@@ -18,7 +19,6 @@ import android.os.Build;
 import org.blinksd.board.services.parcelables.IconThemeParcel;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
-import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.ThemeUtils;
 import org.blinksd.utils.superboard.Language;
 import org.json.JSONException;
@@ -119,7 +119,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             File file = getBackgroundImageFile();
             outputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            SuperDBHelper.setColorsFromBitmap(bmp);
+            setColorsFromBitmap(bmp);
 
             // disable monet because we're imported a background image
             // and pulled colors from it
