@@ -57,20 +57,18 @@ public final class ImageSelectorLayout extends LinearLayout {
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
 
         @Override
-        public void onClick(final View p1) {
-            Context ctx = p1.getContext();
-            int tag = (int) p1.getTag();
+        public void onClick(final View view) {
+            Context ctx = view.getContext();
+            int tag = (int) view.getTag();
             final ColorSelectorLayout px = new ColorSelectorLayout(ctx, tag);
             px.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-            AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-            build.setTitle(((TextView) p1.findViewById(android.R.id.text1)).getText());
+            AlertDialog.Builder build = new AlertDialog.Builder(view.getContext());
+            build.setTitle(((TextView) view.findViewById(android.R.id.text1)).getText());
             build.setView(px);
-            build.setOnCancelListener(p11 -> {
-                prev.setImageBitmap(convertGradientToBitmap());
-            });
-            build.setNegativeButton(android.R.string.cancel, (p112, p2) -> p112.dismiss());
-            build.setPositiveButton(android.R.string.ok, (p0, p2) -> {
-                p1.setTag(px.currentColorValue);
+            build.setOnCancelListener(p -> prev.setImageBitmap(convertGradientToBitmap()));
+            build.setNegativeButton(android.R.string.cancel, (p0, p1) -> p0.dismiss());
+            build.setPositiveButton(android.R.string.ok, (p0, p1) -> {
+                view.setTag(px.currentColorValue);
                 prev.setImageBitmap(convertGradientToBitmap());
                 p0.dismiss();
             });
