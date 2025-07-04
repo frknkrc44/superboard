@@ -132,16 +132,6 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
-
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-    }
-
-    @Override
     public void onUpdateSelection(int oldSelStart, int oldSelEnd, int newSelStart, int newSelEnd, int candidatesStart, int candidatesEnd) {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
         sendCompletionRequest();
@@ -212,8 +202,7 @@ public final class InputService extends InputMethodService implements
 
     @Override
     public View onCreateInputView() {
-        setLayout();
-        return keyboardBackgroundHolder;
+        return setLayout();
     }
 
     @Override
@@ -233,7 +222,12 @@ public final class InputService extends InputMethodService implements
 
         if (superBoardView != null) {
             superBoardView.stopAllKeyEvents();
+            superBoardView.setEnabledLayout(0);
         }
+
+        showEmojiView(false);
+        showClipboardView(false);
+        showLanguageSelectorView(false);
 
         onFinishInput();
         super.onWindowHidden();
@@ -269,9 +263,6 @@ public final class InputService extends InputMethodService implements
         super.onFinishInput();
         if (superBoardView != null) {
             superBoardView.updateKeyState();
-            if (!superBoardView.isCurrentFNKeyboard()) {
-                superBoardView.setEnabledLayout(0);
-            }
         }
 
         if (boardPopup != null) {
@@ -279,12 +270,10 @@ public final class InputService extends InputMethodService implements
             boardPopup.clear();
         }
 
-        showEmojiView(false);
-        showClipboardView(false);
-        showLanguageSelectorView(false);
-
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(superBoardView, null, null);
+
+        System.gc();
     }
 
     public void sendCompletionRequest() {
@@ -301,7 +290,7 @@ public final class InputService extends InputMethodService implements
     }
 
     @SuppressLint("ResourceType")
-    private void setLayout() {
+    private View setLayout() {
         if (superBoardView == null) {
             superBoardView = new SuperBoardImpl(this,
                     (keyCode, modifierValue) -> suggestionLayout.changeFABKeyState(keyCode, modifierValue > 0));
@@ -495,6 +484,7 @@ public final class InputService extends InputMethodService implements
         }
 
         setPrefs();
+        return keyboardBackgroundHolder;
     }
 
     private void loadKeyRemapper() {
