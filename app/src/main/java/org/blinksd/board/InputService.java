@@ -133,13 +133,11 @@ public final class InputService extends InputMethodService implements
 
     @Override
     public void onLowMemory() {
-        System.gc();
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
-        System.gc();
         super.onTrimMemory(level);
     }
 
@@ -287,8 +285,6 @@ public final class InputService extends InputMethodService implements
 
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(superBoardView, null, null);
-
-        System.gc();
     }
 
     public void sendCompletionRequest() {
@@ -673,7 +669,6 @@ public final class InputService extends InputMethodService implements
                     clipboardView.deInit();
                     keyboardLayoutHolder.removeView(clipboardView);
                     clipboardView = null;
-                    System.gc();
                 }
 
                 removeKeyFromDB(SettingMap.SET_CLIPBOARD_HISTORY);

@@ -153,7 +153,6 @@ public class BoardPopup extends SuperBoard {
         super.sendKeyboardEvent(v);
         showPopup(false);
         clear();
-        System.gc();
     }
 
     @Override

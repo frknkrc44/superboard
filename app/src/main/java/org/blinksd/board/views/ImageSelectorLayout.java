@@ -67,13 +67,11 @@ public final class ImageSelectorLayout extends LinearLayout {
             build.setView(px);
             build.setOnCancelListener(p11 -> {
                 prev.setImageBitmap(convertGradientToBitmap());
-                System.gc();
             });
             build.setNegativeButton(android.R.string.cancel, (p112, p2) -> p112.dismiss());
             build.setPositiveButton(android.R.string.ok, (p0, p2) -> {
                 p1.setTag(px.currentColorValue);
                 prev.setImageBitmap(convertGradientToBitmap());
-                System.gc();
                 p0.dismiss();
             });
             AppSettingsV3.doHacksAndShow(build.create());
@@ -347,7 +345,6 @@ public final class ImageSelectorLayout extends LinearLayout {
                 colorSelectorListener.onClick(v);
             }
             prev.setImageBitmap(convertGradientToBitmap());
-            System.gc();
         }
 
     };

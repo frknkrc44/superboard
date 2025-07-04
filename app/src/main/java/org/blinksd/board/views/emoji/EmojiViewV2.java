@@ -97,8 +97,6 @@ public class EmojiViewV2 extends LinearLayout {
                 itemView.setBackground(getTransSelectableItemBg(getContext(), keyTextColor));
             }
         }
-
-        System.gc();
     }
 
     private void setupTabs() {
