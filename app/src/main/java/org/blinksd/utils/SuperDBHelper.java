@@ -145,8 +145,9 @@ public final class SuperDBHelper {
     public static void setColorsFromBitmap(Bitmap b) {
         if (b == null) return;
         final int c = ColorUtils.getBitmapColor(b);
-        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, c - 0xAA000000);
         final int keyClr = c - 0xAA000000;
+        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, keyClr);
+
         final int keyPressClr = ColorUtils.getDarkerColor(keyClr);
         final int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
         final int enterPressClr = ColorUtils.getDarkerColor(keyPress2Clr);
