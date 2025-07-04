@@ -240,6 +240,8 @@ public final class InputService extends InputMethodService implements
         if (getBooleanOrDefault(SettingMap.SET_PREVENT_KBD_CLOSE)) {
             requestShowSelf(InputMethodManager.SHOW_IMPLICIT);
         }
+
+        System.gc();
     }
 
     @Override
@@ -272,8 +274,6 @@ public final class InputService extends InputMethodService implements
 
         if (suggestionLayout != null)
             suggestionLayout.setCompletion(superBoardView, null, null);
-
-        System.gc();
     }
 
     public void sendCompletionRequest() {
