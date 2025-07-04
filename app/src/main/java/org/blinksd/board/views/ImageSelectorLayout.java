@@ -302,7 +302,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         Object[] ar = colorList.values().toArray();
         int size = ar.length == 1 ? 2 : ar.length;
         int[] out = new int[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < ar.length; i++) {
             out[i] = (int) ar[i];
         }
         if (ar.length == 1) {

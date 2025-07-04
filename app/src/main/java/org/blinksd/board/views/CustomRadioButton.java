@@ -1,5 +1,6 @@
 package org.blinksd.board.views;
 
+import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 
 import android.annotation.SuppressLint;
@@ -24,12 +25,11 @@ public final class CustomRadioButton extends RadioButton {
         setPadding(i, 0, i, 0);
         setPadding(i, 0, i, 0);
         final var darkTheme = isDarkThemeEnabled();
-        int color = darkTheme ? 0xFFDEDEDE : 0xFF212121;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            color = ResourcesUtils.getColor(darkTheme
+        int color = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                ? ResourcesUtils.getColor(darkTheme
                     ? android.R.color.system_accent1_200
-                    : android.R.color.system_accent1_600);
-        }
+                    : android.R.color.system_accent1_600)
+                : getAccentColor();
         setButtonTintList(ColorStateList.valueOf(color));
         setButtonTintMode(PorterDuff.Mode.SRC_IN);
 
