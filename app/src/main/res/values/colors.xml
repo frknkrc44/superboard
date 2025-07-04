@@ -2,5 +2,5 @@
 <resources>
     <color name="ic_launcher_background">#e0ddf6</color>
     <color name="seekbar_progress">?android:attr/colorAccent</color>
-    <color name="seekbar_shadow">#2E3133</color>
+    <color name="seekbar_shadow">#d1cecc</color>
 </resources>
