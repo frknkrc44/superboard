@@ -65,6 +65,7 @@
     <string name="settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
     <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
     <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
+    <string name="settings_show_math_layout">Show mathematical layout</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Foto</string>
