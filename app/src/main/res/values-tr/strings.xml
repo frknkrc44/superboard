@@ -68,6 +68,7 @@
 	<string name="settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
 	<string name="settings_emoji_use_vertical_scroll_portrait">Dikey modda dikey kaydırma kullan</string>
 	<string name="settings_emoji_use_vertical_scroll_landscape">Yatay modda dikey kaydırma kullan</string>
+	<string name="settings_show_math_layout">Matematik düzenini göster</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo">Fotoğraf</string>

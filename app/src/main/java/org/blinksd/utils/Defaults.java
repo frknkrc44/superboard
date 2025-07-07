@@ -71,6 +71,7 @@ public final class Defaults {
     static final boolean SHOW_FULLSCREEN_KEYBOARD = false;
     static final boolean EMOJI_USE_VERTICAL_SCROLL_PORTRAIT = true;
     static final boolean EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = false;
+    static final boolean SHOW_MATH_LAYOUT = false;
 
     static final class MinMaxValues {
         static final int MIN_LONG_PRESS_DURATION = 1;

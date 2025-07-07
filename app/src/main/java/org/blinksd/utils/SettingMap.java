@@ -9,6 +9,7 @@ import static org.blinksd.board.SuperBoardApplication.getIconThemes;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
+import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
 import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
@@ -101,7 +102,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEY_STROKE_WIDTH = "key_stroke_width",
             SET_KEY_STROKE_COLOR = "key_strokeclr",
             SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT = "emoji_use_vertical_scroll_portrait",
-            SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape";
+            SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape",
+            SET_SHOW_MATH_LAYOUT = "show_math_layout";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -148,6 +150,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putPopup(SET_USE_FIRST_POPUP_CHARACTER, SettingType.BOOL, SET_DISABLE_POPUP, false);
         putKbdLayout(SET_DISABLE_REPEAT, SettingType.BOOL);
         putTopBar(SET_DISABLE_TOP_BAR, SettingType.BOOL, SET_DISABLE_NUMBER_ROW, false);
+        putTopBar(SET_SHOW_MATH_LAYOUT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_SHOW_FAB_RIGHT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD, SettingType.BOOL, SET_SHOW_FULLSCREEN_KEYBOARD_FORCED, false);
@@ -314,17 +317,9 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             case SET_KEY2_PRESS_BGCLR:
                 return Defaults.KEY2_PRESS_BACKGROUND_COLOR;
             case SET_ENTER_BGCLR:
+                return Defaults.ENTER_BACKGROUND_COLOR;
             case SET_ENTER_PRESS_BGCLR:
-                TypedArray arr = getSBApplication().obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
-                int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
-                int pressColor = ColorUtils.getDarkerColor(color);
-                arr.recycle();
-                try {
-                    if (SDK_INT >= S) {
-                        arr.close();
-                    }
-                } catch (Throwable ignored) {}
-                return key.equals(SET_ENTER_BGCLR) ? color : pressColor;
+                return Defaults.ENTER_PRESS_BACKGROUND_COLOR;
             case SET_KEY_BG_TYPE:
                 return Defaults.KEY_BACKGROUND_TYPE;
             case SET_KEY_GRADIENT_ORIENTATION:
@@ -411,6 +406,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.EMOJI_USE_VERTICAL_SCROLL_PORTRAIT;
             case SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE:
                 return Defaults.EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE;
+            case SET_SHOW_MATH_LAYOUT:
+                return Defaults.SHOW_MATH_LAYOUT;
             default:
                 return null;
         }

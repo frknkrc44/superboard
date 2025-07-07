@@ -198,12 +198,14 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
                                 !getBooleanOrDefault(SettingMap.SET_ENABLE_CLIPBOARD);
         final var fnButtonsDisabled = getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
         final var numberRowDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
+        final var mathLayoutShown = getBooleanOrDefault(SettingMap.SET_SHOW_MATH_LAYOUT);
 
         toggleButtonVisibility(KeyEvent.KEYCODE_EISU, clipboardDisabled);
         toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_CTRL, fnButtonsDisabled);
         toggleButtonVisibility(SuperBoard.KEYCODE_TOGGLE_ALT, fnButtonsDisabled);
         toggleButtonVisibility(KeyEvent.KEYCODE_HENKAN, fnButtonsDisabled);
         toggleButtonVisibility(KeyEvent.KEYCODE_NUM, !numberRowDisabled);
+        toggleButtonVisibility(KeyEvent.KEYCODE_KATAKANA_HIRAGANA, !mathLayoutShown);
 
         fabView.reTheme(keyColor, textColor);
     }

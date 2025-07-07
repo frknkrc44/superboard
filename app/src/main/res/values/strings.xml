@@ -71,6 +71,7 @@
 	<string name="settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
 	<string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
 	<string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
+	<string name="settings_show_math_layout">Show mathematical layout</string>
 
 	<string name="settings_return_defaults" translatable="false">(↻)</string>
 	
