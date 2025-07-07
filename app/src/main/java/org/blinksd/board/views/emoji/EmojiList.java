@@ -66,11 +66,14 @@ public class EmojiList extends ArrayList<Emoji> {
         // there's only 5 skin tones, so i can hardcode it
         for (int i = 0; i < 5; i++) {
             if (emojiStr.contains(skinTones[i])) {
+                return;
+                /*
                 final var emoji = findEmoji(emojiStr);
                 if (emoji != null) {
                     emoji.skinTones.add(emojiStr);
                     return;
                 }
+                 */
             }
         }
 

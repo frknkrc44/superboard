@@ -20,8 +20,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +46,9 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import thirdparty.android.widget.TabHost;
+import thirdparty.android.widget.TabWidget;
 
 @SuppressWarnings("deprecation")
 public final class BackupRestoreActivity extends BaseActivity {

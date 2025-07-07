@@ -46,6 +46,7 @@ public class EmojiCategoryViewV2 extends TwoWayGridView {
 
     public interface OnEmojiClickListener {
         void onEmojiClick(String emoji);
+        // boolean onEmojiLongClick(Emoji emoji);
     }
 
     private class EmojiListAdapter extends BaseAdapter {
@@ -67,7 +68,8 @@ public class EmojiCategoryViewV2 extends TwoWayGridView {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final var keyTextColor = getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
-            final var emoji = getItem(position).emoji;
+            final var emoji = getItem(position);
+            final var emojiStr = emoji.emoji;
             final var itemView = new TextView(parent.getContext()) {
                 @Override
                 protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -75,7 +77,7 @@ public class EmojiCategoryViewV2 extends TwoWayGridView {
                     super.onMeasure(max, max);
                 }
             };
-            itemView.setText(emoji);
+            itemView.setText(emojiStr);
             itemView.setGravity(Gravity.CENTER);
             itemView.setBackground(getTransSelectableItemBg(getContext(), keyTextColor));
             itemView.setTextSize(
@@ -83,7 +85,8 @@ public class EmojiCategoryViewV2 extends TwoWayGridView {
                     getMultipliedTextSize(
                             maxP(getIntOrDefault(SettingMap.SET_KEYBOARD_HEIGHT) / (getNumRows() * 3f))));
             itemView.setTextColor(keyTextColor);
-            itemView.setOnClickListener(v -> listener.onEmojiClick(emoji));
+            itemView.setOnClickListener(v -> listener.onEmojiClick(emojiStr));
+            // itemView.setOnLongClickListener(v -> listener.onEmojiLongClick(emoji));
             return itemView;
         }
     }

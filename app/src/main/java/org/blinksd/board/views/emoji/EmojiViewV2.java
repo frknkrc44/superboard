@@ -16,8 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
@@ -25,6 +23,9 @@ import org.blinksd.board.views.SuperBoard;
 import org.blinksd.utils.SettingMap;
 
 import java.util.Map;
+
+import thirdparty.android.widget.TabHost;
+import thirdparty.android.widget.TabWidget;
 
 @SuppressWarnings("deprecation")
 @SuppressLint("ViewConstructor")
@@ -84,11 +85,12 @@ public class EmojiViewV2 extends LinearLayout {
             indicatorView.setTextColor(keyTextColor);
             setColorFilter(indicatorView.getBackground(), keyTextColor);
 
-            final var emojiCategoryView = (EmojiCategoryViewV2) tabHost.getCurrentView();
+            final var emojiCategoryView = (EmojiCategoryViewV2) tabHost.getTabView(i);
             final var scrollVerticalPortrait = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT);
             final var scrollVerticalLandscape = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE);
             emojiCategoryView.setScrollDirectionPortrait(scrollVerticalPortrait ? SCROLL_AXIS_VERTICAL : SCROLL_AXIS_HORIZONTAL);
             emojiCategoryView.setScrollDirectionLandscape(scrollVerticalLandscape ? SCROLL_AXIS_VERTICAL : SCROLL_AXIS_HORIZONTAL);
+            emojiCategoryView.setVisibility(i == tabHost.getCurrentTab() ? View.VISIBLE : View.GONE);
 
             final var emojiChildCount = emojiCategoryView.getChildCount();
             for (int j = 0; j < emojiChildCount; j++) {

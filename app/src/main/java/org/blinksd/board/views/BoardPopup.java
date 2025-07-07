@@ -28,6 +28,7 @@ public class BoardPopup extends SuperBoard {
         createEmptyLayout(KeyboardType.NUMBER);
         updateKeyState();
         mPopupFilter = new View(root.getContext());
+        mPopupFilter.setOnClickListener(v -> showPopup(false));
         mPopupFilter.setLayoutParams(new RelativeLayout.LayoutParams(-1, -2));
         mPopupFilter.setFocusable(false);
         mKey = new Key(getContext());
@@ -50,12 +51,16 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void setKey(SuperBoard board, Key key) {
+        setKey(board, key, false);
+    }
+
+    public void setKey(SuperBoard board, Key key, boolean ignoreShiftState) {
         setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
         key.getLocationInWindow(keyPosition);
         int keyHeight = mKey.getLayoutParams().height;
         setKeyLeftTop(keyPosition[0], keyPosition[1] - (keyPosition[1] >= keyHeight ? keyHeight : 0));
 
-        setShiftState(board.getShiftState());
+        setShiftState(ignoreShiftState ? SHIFT_OFF : board.getShiftState());
         key.clone(mKey);
         setKeysTextType(board.textStyle);
         setKeysShadow(board.shadowRadius, board.shadowColor);
@@ -87,9 +92,14 @@ public class BoardPopup extends SuperBoard {
     }
 
     public void showPopup(boolean visible) {
+        showPopup(visible, false);
+    }
+
+    public void showPopup(boolean visible, boolean ignoreFirstCharacter) {
         hideCharacter();
         CharSequence[] popupCharacters = mKey.getPopupCharacters();
-        boolean useFC = SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
+        boolean useFC = !ignoreFirstCharacter && SuperDBHelper.getBooleanOrDefault(SettingMap.SET_USE_FIRST_POPUP_CHARACTER);
+
         visible = visible && popupCharacters != null;
         setVisibility(visible && !useFC ? VISIBLE : GONE);
         mPopupFilter.setVisibility(getVisibility());

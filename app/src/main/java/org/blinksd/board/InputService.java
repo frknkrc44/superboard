@@ -46,7 +46,6 @@ import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.View;
@@ -68,6 +67,7 @@ import org.blinksd.board.views.BottomKeyboardBarView;
 import org.blinksd.board.views.ClipboardView;
 import org.blinksd.board.views.SuggestionLayoutV2;
 import org.blinksd.board.views.SuperBoard;
+import org.blinksd.board.views.emoji.EmojiCategoryViewV2;
 import org.blinksd.board.views.emoji.EmojiViewV2;
 import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
@@ -425,7 +425,28 @@ public final class InputService extends InputMethodService implements
         }
 
         if (emojiView == null) {
-            emojiView = new EmojiViewV2(this, emoji -> superBoardView.commitText(emoji), emojiClick);
+            emojiView = new EmojiViewV2(this, new EmojiCategoryViewV2.OnEmojiClickListener() {
+                @Override
+                public void onEmojiClick(String emoji) {
+                    superBoardView.commitText(emoji);
+                }
+
+                /*
+                @Override
+                public boolean onEmojiLongClick(Emoji emoji) {
+                    if (!emoji.skinTones.isEmpty()) {
+                        SuperBoard.Key key = superBoardView.createKey(emoji.emoji);
+                        key.setPopupCharacters(emoji.skinTones.toArray(new String[0]));
+                        boardPopup.setKey(superBoardView, key, true);
+                        boardPopup.showPopup(true, true);
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                 */
+            }, emojiClick);
             emojiView.setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
             emojiView.setFocusable(false);
             emojiView.setVisibility(View.GONE);
@@ -508,7 +529,7 @@ public final class InputService extends InputMethodService implements
             keyRemapper.currentLang = finalLangCode;
             // Log.d(getClass().getSimpleName(), "Key remapper loaded for " + lang + " " + finalLangCode);
         } catch (Throwable e) {
-            Log.d(getClass().getSimpleName(), e.getMessage(), e);
+            // Log.d(getClass().getSimpleName(), e.getMessage(), e);
             keyRemapper.setKeyMapFromFileContent(null);
             keyRemapper.currentLang = null;
         }
@@ -802,10 +823,6 @@ public final class InputService extends InputMethodService implements
 
         // showEmojiView(false);
         return super.onKeyDown(keyCode, event);
-    }
-
-    public void onEmojiText(String text) {
-        superBoardView.commitText(text);
     }
 
     private void showEmojiView(boolean value) {

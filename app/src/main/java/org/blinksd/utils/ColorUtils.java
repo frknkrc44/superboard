@@ -320,14 +320,12 @@ public final class ColorUtils {
             return ResourcesUtils.getColor(android.R.color.system_accent1_700);
         }
 
-        TypedArray arr = getSBApplication()
-                .obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent});
-        int color = arr.getColor(0, Defaults.ENTER_BACKGROUND_COLOR);
-        arr.recycle();
-
-        try {
-            arr.close();
-        } catch (Throwable ignored) {}
+        int color = Defaults.ENTER_BACKGROUND_COLOR;
+        try (TypedArray array = getSBApplication()
+                .obtainStyledAttributes(0, new int[]{android.R.attr.colorAccent})) {
+            color = array.getColor(0, color);
+            array.recycle();
+        }
 
         return color;
     }

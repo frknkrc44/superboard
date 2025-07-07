@@ -32,8 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +45,9 @@ import org.blinksd.utils.ResourcesUtils;
 
 import java.io.File;
 import java.util.TreeMap;
+
+import thirdparty.android.widget.TabHost;
+import thirdparty.android.widget.TabWidget;
 
 @SuppressLint("ViewConstructor")
 public final class ImageSelectorLayout extends LinearLayout {
@@ -98,7 +99,6 @@ public final class ImageSelectorLayout extends LinearLayout {
 
     };
 
-    @SuppressWarnings("deprecation")
     public ImageSelectorLayout(final Dialog win, final Runnable onImageSelectPressed, final Runnable onRestartKeyboard) {
         super(win.getContext());
         setOrientation(VERTICAL);

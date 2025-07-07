@@ -54,7 +54,7 @@ if status_code == 200:
             sec = first[:first.find('E') - 1]
             character = sec.strip()
 
-            if '\uFE0F' in character:
+            if '\uFE0F' in character or '\uD83C' in character:
                 continue
 
             categories[recent_group].append(character)

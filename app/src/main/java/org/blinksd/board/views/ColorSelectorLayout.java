@@ -22,8 +22,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.blinksd.board.R;
@@ -34,6 +32,9 @@ import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+
+import thirdparty.android.widget.TabHost;
+import thirdparty.android.widget.TabWidget;
 
 @SuppressLint("ViewConstructor")
 @SuppressWarnings({"deprecation", "all"})
