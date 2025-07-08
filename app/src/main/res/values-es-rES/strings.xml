@@ -107,7 +107,8 @@
     <string name="settings_backup_type_theme">Tema (tema del icono, imagen de fondo, colores, …)</string>
     <string name="settings_backup_type_other">Otros</string>
     <string name="settings_select_file">Seleccionar archivo</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Manage dictionary packs</string>
     <string name="settings_import_dict_pack">Importar paquete de diccionarios (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Importando, por favor no cierres esta aplicación</string>
     <string name="settings_dict_import_count">%s palabra importada</string>
