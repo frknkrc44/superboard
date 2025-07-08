@@ -107,7 +107,8 @@
     <string name="settings_backup_type_theme">Тема (іконки, фонове зображення, кольори, …)</string>
     <string name="settings_backup_type_other">Інші</string>
     <string name="settings_select_file">Обрати файл</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Manage dictionary packs</string>
     <string name="settings_import_dict_pack">Імпорт словника (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Імпортування. Будь ласка, не закривайте програму</string>
     <string name="settings_dict_import_count">%s слів імпортовано</string>
