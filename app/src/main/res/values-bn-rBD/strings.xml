@@ -107,7 +107,8 @@
     <string name="settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
     <string name="settings_backup_type_other">অন্যান্য</string>
     <string name="settings_select_file">Select file</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Manage dictionary packs</string>
     <string name="settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
     <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
