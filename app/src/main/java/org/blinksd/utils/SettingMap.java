@@ -18,7 +18,6 @@ import android.net.Uri;
 
 import org.blinksd.board.R;
 import org.blinksd.board.activities.BackupRestoreActivity;
-import org.blinksd.board.activities.DictionaryImportActivity;
 import org.blinksd.board.activities.DictionaryManageActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;

@@ -2,7 +2,7 @@ package org.blinksd.board.activities;
 
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
-import static org.blinksd.utils.ResourcesUtils.getSelectableItemBg;
+import static org.blinksd.utils.DensityUtils.dpInt;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.content.Intent;
@@ -11,11 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.blinksd.board.R;
+import org.blinksd.utils.ColorUtils;
 
 import java.util.Locale;
 
@@ -60,8 +63,15 @@ public class DictionaryManageActivity extends BaseActivity {
     }
 
     private void createChildView(ViewGroup rootView, String languageCode) {
-        View childView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, rootView, false);
-        TextView text1 = childView.findViewById(android.R.id.text1);
+        LinearLayout childView = new LinearLayout(this);
+        childView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        childView.setPadding(0, 0, dpInt(16), 0);
+
+        View childTextsView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, childView, false);
+        ((LinearLayout.LayoutParams) childTextsView.getLayoutParams()).weight = 1;
+        childView.addView(childTextsView);
+
+        TextView text1 = childTextsView.findViewById(android.R.id.text1);
         text1.setTextDirection(View.TEXT_DIRECTION_LTR);
         text1.getLayoutParams().width = -2;
 
@@ -79,8 +89,20 @@ public class DictionaryManageActivity extends BaseActivity {
 
         text1.setText(displayStr);
 
-        TextView text2 = childView.findViewById(android.R.id.text2);
+        TextView text2 = childTextsView.findViewById(android.R.id.text2);
         text2.setText(String.valueOf(getDictDB().getTableLength(languageCode)));
+
+        final int iconSize = dpInt(48);
+        final int iconPadding = iconSize / 8;
+        ImageView deleteIcon = new ImageView(this);
+        deleteIcon.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize, 0));
+        deleteIcon.setOnClickListener(v -> Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show());
+        deleteIcon.setBackground(getTransSelectableItemBg(this, text1.getCurrentTextColor()));
+        deleteIcon.setImageResource(R.drawable.delete);
+        deleteIcon.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
+        ColorUtils.setColorFilter(deleteIcon, text1.getCurrentTextColor());
+
+        childView.addView(deleteIcon);
 
         childView.setBackground(getTransSelectableItemBg(this, text1.getCurrentTextColor(), true));
 
