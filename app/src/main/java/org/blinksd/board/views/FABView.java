@@ -318,6 +318,7 @@ public class FABView extends LinearLayout {
                     final var child = buttonLayouts.getChildAt(i);
 
                     if (disabledKeycodes.contains((int) child.getTag(R.id.key_normal_press))) {
+                        child.setVisibility(View.GONE);
                         disabledCount++;
                         continue;
                     }
