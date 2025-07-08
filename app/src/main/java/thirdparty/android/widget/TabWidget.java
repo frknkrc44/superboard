@@ -26,7 +26,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.PointerIcon;
 import android.view.View;
@@ -66,28 +65,16 @@ public class TabWidget extends LinearLayout implements OnFocusChangeListener {
     private boolean mStripMoved;
 
     public TabWidget(Context context) {
-        this(context, null);
-    }
-
-    public TabWidget(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.tabWidgetStyle);
-    }
-
-    public TabWidget(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public TabWidget(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context);
 
         setChildrenDrawingOrderEnabled(true);
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         mStripMoved = true;
 
-        super.onSizeChanged(w, h, oldw, oldh);
+        super.onSizeChanged(w, h, oldW, oldH);
     }
 
     @Override
@@ -348,15 +335,6 @@ public class TabWidget extends LinearLayout implements OnFocusChangeListener {
     public CharSequence getAccessibilityClassName() {
         return TabWidget.class.getName();
     }
-
-    /*
-    @Override
-    public void onInitializeAccessibilityEventInternal(AccessibilityEvent event) {
-        super.onInitializeAccessibilityEventInternal(event);
-        event.setItemCount(getTabCount());
-        event.setCurrentItemIndex(mSelectedTab);
-    }
-     */
 
     /**
      * Sets the current tab and focuses the UI on it.

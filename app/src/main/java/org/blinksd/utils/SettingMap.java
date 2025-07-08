@@ -6,17 +6,14 @@ import static android.os.Build.VERSION_CODES.S;
 import static android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM;
 import static org.blinksd.board.SuperBoardApplication.getAppResources;
 import static org.blinksd.board.SuperBoardApplication.getIconThemes;
-import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
-import static org.blinksd.utils.ColorUtils.getAccentColor;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.ThemeUtils.getKeyBgOrientationTypes;
 import static org.blinksd.utils.ThemeUtils.getKeyBgTypes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.net.Uri;
 
 import org.blinksd.board.R;

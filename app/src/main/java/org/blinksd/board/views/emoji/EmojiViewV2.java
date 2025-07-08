@@ -85,7 +85,7 @@ public class EmojiViewV2 extends LinearLayout {
             indicatorView.setTextColor(keyTextColor);
             setColorFilter(indicatorView.getBackground(), keyTextColor);
 
-            final var emojiCategoryView = (EmojiCategoryViewV2) tabHost.getTabView(i);
+            final var emojiCategoryView = (EmojiCategoryViewV2) tabHost.getViewByIndex(i);
             final var scrollVerticalPortrait = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT);
             final var scrollVerticalLandscape = getBooleanOrDefault(SettingMap.SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE);
             emojiCategoryView.setScrollDirectionPortrait(scrollVerticalPortrait ? SCROLL_AXIS_VERTICAL : SCROLL_AXIS_HORIZONTAL);

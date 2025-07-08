@@ -24,19 +24,13 @@ package thirdparty.android.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,24 +55,8 @@ public class TabHost extends FrameLayout implements ViewTreeObserver.OnTouchMode
     private OnTabChangeListener mOnTabChangeListener;
     private OnKeyListener mTabKeyListener;
 
-    private int mTabLayoutId;
-
     public TabHost(Context context) {
         super(context);
-        initTabHost();
-    }
-
-    public TabHost(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.tabWidgetStyle);
-    }
-
-    public TabHost(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public TabHost(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs);
-
         initTabHost();
     }
 
@@ -123,35 +101,30 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
 
         // KeyListener to attach to all tabs. Detects non-navigation keys
         // and relays them to the tab content.
-        mTabKeyListener = new OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (KeyEvent.isModifierKey(keyCode)) {
-                    return false;
-                }
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_DPAD_CENTER:
-                    case KeyEvent.KEYCODE_DPAD_LEFT:
-                    case KeyEvent.KEYCODE_DPAD_RIGHT:
-                    case KeyEvent.KEYCODE_DPAD_UP:
-                    case KeyEvent.KEYCODE_DPAD_DOWN:
-                    case KeyEvent.KEYCODE_TAB:
-                    case KeyEvent.KEYCODE_SPACE:
-                    case KeyEvent.KEYCODE_ENTER:
-                        return false;
-
-                }
-                mTabContent.requestFocus(View.FOCUS_FORWARD);
-                return mTabContent.dispatchKeyEvent(event);
+        mTabKeyListener = (v, keyCode, event) -> {
+            if (KeyEvent.isModifierKey(keyCode)) {
+                return false;
             }
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                case KeyEvent.KEYCODE_DPAD_UP:
+                case KeyEvent.KEYCODE_DPAD_DOWN:
+                case KeyEvent.KEYCODE_TAB:
+                case KeyEvent.KEYCODE_SPACE:
+                case KeyEvent.KEYCODE_ENTER:
+                    return false;
 
+            }
+            mTabContent.requestFocus(View.FOCUS_FORWARD);
+            return mTabContent.dispatchKeyEvent(event);
         };
 
-        mTabWidget.setTabSelectionListener(new TabWidget.OnTabSelectionChanged() {
-            public void onTabSelectionChanged(int tabIndex, boolean clicked) {
-                setCurrentTab(tabIndex);
-                if (clicked) {
-                    mTabContent.requestFocus(View.FOCUS_FORWARD);
-                }
+        mTabWidget.setTabSelectionListener((tabIndex, clicked) -> {
+            setCurrentTab(tabIndex);
+            if (clicked) {
+                mTabContent.requestFocus(View.FOCUS_FORWARD);
             }
         });
 
@@ -256,6 +229,10 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
         return mCurrentView;
     }
 
+    public View getViewByIndex(int index) {
+        return mTabSpecs.get(index).mContentStrategy.getContentView();
+    }
+
     /**
      * Sets the current tab based on its tag.
      *
@@ -349,10 +326,6 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
     @Override
     public CharSequence getAccessibilityClassName() {
         return TabHost.class.getName();
-    }
-
-    public View getTabView(int index) {
-        return mTabSpecs.get(index).mContentStrategy.getContentView();
     }
 
     public void setCurrentTab(int index) {
@@ -451,7 +424,7 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
      * 1) the id of a {@link View}
      * 2) a {@link TabContentFactory} that creates the {@link View} content.
      */
-    public class TabSpec {
+    public static class TabSpec {
 
         private final String mTag;
         private IndicatorStrategy mIndicatorStrategy;
@@ -467,35 +440,10 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
         }
 
         /**
-         * Specify a label as the tab indicator.
-         */
-        public TabSpec setIndicator(CharSequence label) {
-            mIndicatorStrategy = new LabelIndicatorStrategy(label);
-            return this;
-        }
-
-        /**
-         * Specify a label and icon as the tab indicator.
-         */
-        public TabSpec setIndicator(CharSequence label, Drawable icon) {
-            mIndicatorStrategy = new LabelAndIconIndicatorStrategy(label, icon);
-            return this;
-        }
-
-        /**
          * Specify a view as the tab indicator.
          */
         public TabSpec setIndicator(View view) {
             mIndicatorStrategy = new ViewIndicatorStrategy(view);
-            return this;
-        }
-
-        /**
-         * Specify the id of the view that should be used as the content
-         * of the tab.
-         */
-        public TabSpec setContent(int viewId) {
-            mContentStrategy = new ViewIdContentStrategy(viewId);
             return this;
         }
 
@@ -547,71 +495,6 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
     }
 
     /**
-     * How to create a tab indicator that just has a label.
-     */
-    private class LabelIndicatorStrategy implements IndicatorStrategy {
-
-        private final CharSequence mLabel;
-
-        private LabelIndicatorStrategy(CharSequence label) {
-            mLabel = label;
-        }
-
-        public View createIndicatorView() {
-            final Context context = getContext();
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View tabIndicator = inflater.inflate(mTabLayoutId,
-                    mTabWidget, // tab widget is the parent
-                    false); // no inflate params
-
-            final TextView tv = tabIndicator.findViewById(android.R.id.title);
-            tv.setText(mLabel);
-
-            return tabIndicator;
-        }
-    }
-
-    /**
-     * How we create a tab indicator that has a label and an icon
-     */
-    private class LabelAndIconIndicatorStrategy implements IndicatorStrategy {
-
-        private final CharSequence mLabel;
-        private final Drawable mIcon;
-
-        private LabelAndIconIndicatorStrategy(CharSequence label, Drawable icon) {
-            mLabel = label;
-            mIcon = icon;
-        }
-
-        public View createIndicatorView() {
-            final Context context = getContext();
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View tabIndicator = inflater.inflate(mTabLayoutId,
-                    mTabWidget, // tab widget is the parent
-                    false); // no inflate params
-
-            final TextView tv = tabIndicator.findViewById(android.R.id.title);
-            final ImageView iconView = tabIndicator.findViewById(android.R.id.icon);
-
-            // when icon is gone by default, we're in exclusive mode
-            final boolean exclusive = iconView.getVisibility() == View.GONE;
-            final boolean bindIcon = !exclusive || TextUtils.isEmpty(mLabel);
-
-            tv.setText(mLabel);
-
-            if (bindIcon && mIcon != null) {
-                iconView.setImageDrawable(mIcon);
-                iconView.setVisibility(VISIBLE);
-            }
-
-            return tabIndicator;
-        }
-    }
-
-    /**
      * How to create a tab indicator by specifying a view.
      */
     private static class ViewIndicatorStrategy implements IndicatorStrategy {
@@ -624,33 +507,6 @@ mTabHost.addTab(TAB_TAG_1, "Hello, world!", "Tab 1");
 
         public View createIndicatorView() {
             return mView;
-        }
-    }
-
-    /**
-     * How to create the tab content via a view id.
-     */
-    private class ViewIdContentStrategy implements ContentStrategy {
-
-        private final View mView;
-
-        private ViewIdContentStrategy(int viewId) {
-            mView = mTabContent.findViewById(viewId);
-            if (mView != null) {
-                mView.setVisibility(View.GONE);
-            } else {
-                throw new RuntimeException("Could not create tab content because " +
-                        "could not find view with id " + viewId);
-            }
-        }
-
-        public View getContentView() {
-            mView.setVisibility(View.VISIBLE);
-            return mView;
-        }
-
-        public void tabClosed() {
-            mView.setVisibility(View.GONE);
         }
     }
 
