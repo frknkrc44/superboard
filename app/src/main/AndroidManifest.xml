@@ -6,7 +6,7 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         android:minSdkVersion="33"
-        tools:ignore="ScopedStorage" />
+        tools:ignore="AllFilesAccessPolicy,ScopedStorage" />
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <uses-permission android:name="android.permission.GET_CLIPS" />
@@ -56,6 +56,11 @@
             android:launchMode="singleTask"
             android:exported="false"
             android:name=".activities.DictionaryImportActivity"/>
+
+        <activity
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:name=".activities.DictionaryManageActivity"/>
 
         <activity
             android:launchMode="singleTask"

@@ -19,6 +19,7 @@ import android.net.Uri;
 import org.blinksd.board.R;
 import org.blinksd.board.activities.BackupRestoreActivity;
 import org.blinksd.board.activities.DictionaryImportActivity;
+import org.blinksd.board.activities.DictionaryManageActivity;
 import org.blinksd.board.activities.FontSelector;
 import org.blinksd.board.activities.KeyboardLayoutSelector;
 
@@ -75,7 +76,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KILL_BACKGROUND = "keyboard_kill_background",
             SET_THEME_PRESET = "keyboard_theme_preset",
             SET_KEY_ICON_SIZE_MULTIPLIER = "key_icon_size_multi",
-            SET_IMPORT_DICT_PACK = "import_dict_pack",
+            SET_MANAGE_DICT_PACKS = "manage_dict_packs",
             SET_DISABLE_TOP_BAR = "disable_top_bar",
             SET_DISABLE_NUMBER_ROW = "disable_number_row",
             SET_USE_FIRST_POPUP_CHARACTER = "use_first_popup_character",
@@ -108,7 +109,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             putGeneral(SET_BACKUP_RESTORE, SettingType.REDIRECT);
         putKbdLayout(SET_KEYBOARD_LANG_SELECT,  SettingType.REDIRECT);
         if (documentsUiAvailable)
-            putGeneral(SET_IMPORT_DICT_PACK,  SettingType.REDIRECT);
+            putGeneral(SET_MANAGE_DICT_PACKS,  SettingType.REDIRECT);
         putGeneral(SET_DICTIONARY_ALGORITHM, SettingType.SELECTOR);
         putGeneral(SET_DICTIONARY_LIMIT, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
@@ -250,7 +251,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         return switch (key) {
             case SET_BACKUP_RESTORE ->
                     new Intent(context, BackupRestoreActivity.class).setData(Uri.EMPTY);
-            case SET_IMPORT_DICT_PACK -> new Intent(context, DictionaryImportActivity.class);
+            case SET_MANAGE_DICT_PACKS -> new Intent(context, DictionaryManageActivity.class);
             case SET_KEYBOARD_LANG_SELECT -> new Intent(context, KeyboardLayoutSelector.class);
             case SET_KEYBOARD_TEXTTYPE_SELECT -> new Intent(context, FontSelector.class);
             default -> null;

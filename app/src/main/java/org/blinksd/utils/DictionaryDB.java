@@ -67,6 +67,19 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         }
     }
 
+    public String[] getSavedLanguageCodes() {
+        List<String> returnedCodes = new ArrayList<>();
+        Cursor cursor = getReadableDatabase()
+                .rawQuery("SELECT name FROM sqlite_schema WHERE type ='table' AND name LIKE 'LANG_%'", null);
+        cursor.moveToFirst();
+        while (cursor.moveToNext()) {
+            String ret = cursor.getString(0);
+            returnedCodes.add(ret.substring(ret.indexOf('_')+1));
+        }
+        cursor.close();
+        return returnedCodes.toArray(new String[0]);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase p1) {
         // do nothing
@@ -133,6 +146,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             }
 
             if (pairs.containsKey("locale")) {
+                // noinspection ConstantConditions
                 table = "LANG_" + escapeString(getLanguageCode(pairs.get("locale")));
 
                 sb.append("INSERT OR IGNORE INTO ")
