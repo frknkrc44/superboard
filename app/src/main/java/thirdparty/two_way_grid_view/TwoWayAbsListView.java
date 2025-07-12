@@ -362,7 +362,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
     /**
      * The last CheckForTap runnable we posted, if any
      */
-    private Runnable mPendingCheckForTap;
+    private CheckForTap mPendingCheckForTap;
 
     /**
      * The last CheckForKeyLongPress runnable we posted, if any
@@ -1255,6 +1255,39 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                 + mSelectionRightPadding, b + mSelectionBottomPadding);
     }
 
+    private CheckForTap getPendingCheckForTap() {
+        if (mPendingCheckForTap == null) {
+            mPendingCheckForTap = new CheckForTap();
+        }
+
+        return mPendingCheckForTap;
+    }
+
+    private CheckForLongPress getPendingCheckForLongPress() {
+        return getPendingCheckForLongPress(false);
+    }
+
+    private CheckForLongPress getPendingCheckForLongPress(boolean rememberAttachCount) {
+        if (mPendingCheckForLongPress == null) {
+            mPendingCheckForLongPress = new CheckForLongPress();
+        }
+
+        if (rememberAttachCount) {
+            mPendingCheckForLongPress.rememberWindowAttachCount();
+        }
+
+        return mPendingCheckForLongPress;
+    }
+
+    private CheckForKeyLongPress getPendingCheckForKeyLongPress() {
+        if (mPendingCheckForKeyLongPress == null) {
+            mPendingCheckForKeyLongPress = new CheckForKeyLongPress();
+        }
+
+        mPendingCheckForKeyLongPress.rememberWindowAttachCount();
+        return mPendingCheckForKeyLongPress;
+    }
+
     /** @noinspection all */
     @Override
     protected void dispatchDraw(Canvas canvas) {
@@ -1392,11 +1425,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                 }
             }
             if (longClickable && !mDataChanged) {
-                if (mPendingCheckForKeyLongPress == null) {
-                    mPendingCheckForKeyLongPress = new CheckForKeyLongPress();
-                }
-                mPendingCheckForKeyLongPress.rememberWindowAttachCount();
-                postDelayed(mPendingCheckForKeyLongPress, ViewConfiguration.getLongPressTimeout());
+                postDelayed(getPendingCheckForKeyLongPress(), ViewConfiguration.getLongPressTimeout());
             }
         }
     }
@@ -1738,11 +1767,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                         }
 
                         if (longClickable) {
-                            if (mPendingCheckForLongPress == null) {
-                                mPendingCheckForLongPress = new CheckForLongPress();
-                            }
-                            mPendingCheckForLongPress.rememberWindowAttachCount();
-                            postDelayed(mPendingCheckForLongPress, longPressTimeout);
+                            postDelayed(getPendingCheckForLongPress(true), longPressTimeout);
                         } else {
                             mTouchMode = TOUCH_MODE_DONE_WAITING;
                         }
@@ -2747,7 +2772,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                 // window, which would make it very hard to scroll it... but the monkeys
                 // say it's possible.
                 if (handler != null) {
-                    handler.removeCallbacks(mPendingCheckForLongPress);
+                    handler.removeCallbacks(getPendingCheckForLongPress());
                 }
                 setPressed(false);
                 View motionView = getChildAt(mMotionPosition - mFirstPosition);
@@ -3088,11 +3113,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                             // User clicked on an actual view (and was not stopping a fling). It might be a
                             // click or a scroll. Assume it is a click until proven otherwise
                             mTouchMode = TOUCH_MODE_DOWN;
-                            // FIXME Debounce
-                            if (mPendingCheckForTap == null) {
-                                mPendingCheckForTap = new CheckForTap();
-                            }
-                            postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
+                            postDelayed(getPendingCheckForTap(), ViewConfiguration.getTapTimeout());
                         } else {
                             if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
                                 // If we couldn't find a view to click on, but the down event was touching
@@ -3202,7 +3223,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                                     final Handler handler = getHandler();
                                     if (handler != null) {
                                         handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ?
-                                                mPendingCheckForTap : mPendingCheckForLongPress);
+                                                getPendingCheckForTap() : getPendingCheckForLongPress());
                                     }
                                     mLayoutMode = LAYOUT_NORMAL;
                                     if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
@@ -3276,7 +3297,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
                     final Handler handler = getHandler();
                     if (handler != null) {
-                        handler.removeCallbacks(mPendingCheckForLongPress);
+                        handler.removeCallbacks(getPendingCheckForLongPress());
                     }
 
                     if (mVelocityTracker != null) {
@@ -3305,7 +3326,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
                     final Handler handler = getHandler();
                     if (handler != null) {
-                        handler.removeCallbacks(mPendingCheckForLongPress);
+                        handler.removeCallbacks(getPendingCheckForLongPress());
                     }
 
                     if (mVelocityTracker != null) {
@@ -4007,11 +4028,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                             // User clicked on an actual view (and was not stopping a fling). It might be a
                             // click or a scroll. Assume it is a click until proven otherwise
                             mTouchMode = TOUCH_MODE_DOWN;
-                            // FIXME Debounce
-                            if (mPendingCheckForTap == null) {
-                                mPendingCheckForTap = new CheckForTap();
-                            }
-                            postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());
+                            postDelayed(getPendingCheckForTap(), ViewConfiguration.getTapTimeout());
                         } else {
                             if (ev.getEdgeFlags() != 0 && motionPosition < 0) {
                                 // If we couldn't find a view to click on, but the down event was touching
@@ -4121,7 +4138,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
                                     final Handler handler = getHandler();
                                     if (handler != null) {
                                         handler.removeCallbacks(mTouchMode == TOUCH_MODE_DOWN ?
-                                                mPendingCheckForTap : mPendingCheckForLongPress);
+                                                getPendingCheckForTap() : getPendingCheckForLongPress());
                                     }
                                     mLayoutMode = LAYOUT_NORMAL;
                                     if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
@@ -4195,7 +4212,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
                     final Handler handler = getHandler();
                     if (handler != null) {
-                        handler.removeCallbacks(mPendingCheckForLongPress);
+                        handler.removeCallbacks(getPendingCheckForLongPress());
                     }
 
                     if (mVelocityTracker != null) {
@@ -4224,7 +4241,7 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
                     final Handler handler = getHandler();
                     if (handler != null) {
-                        handler.removeCallbacks(mPendingCheckForLongPress);
+                        handler.removeCallbacks(getPendingCheckForLongPress());
                     }
 
                     if (mVelocityTracker != null) {
