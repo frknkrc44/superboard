@@ -13,56 +13,56 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdk keystoreProperties['TARGETSDK'].toInteger()
+    compileSdk = keystoreProperties['TARGETSDK'].toInteger()
 
     buildFeatures {
-        aidl true
-        buildConfig false
-        compose false
-        prefab false
-        renderScript false
-        resValues false
-        shaders false
-        viewBinding false
+        aidl = true
+        buildConfig = false
+        compose = false
+        prefab = false
+        renderScript = false
+        resValues = false
+        shaders = false
+        viewBinding = false
     }
 
     androidResources {
-        generateLocaleConfig true
+        generateLocaleConfig = true
     }
 
     defaultConfig {
-        applicationId "org.blinksd.board"
-        minSdk keystoreProperties['MINSDK'].toInteger()
-        targetSdk keystoreProperties['TARGETSDK'].toInteger()
-        versionCode keystoreProperties['VERCODE'].toInteger()
-        versionName keystoreProperties['VERNAME']
+        applicationId = "org.blinksd.board"
+        minSdk = keystoreProperties['MINSDK'].toInteger()
+        targetSdk = keystoreProperties['TARGETSDK'].toInteger()
+        versionCode = keystoreProperties['VERCODE'].toInteger()
+        versionName = keystoreProperties['VERNAME']
     }
 
    signingConfigs {
        debug {
-           keyAlias keystoreProperties['KEYALIAS']
-           keyPassword keystoreProperties['KEYPASS']
-           storeFile file(keystoreProperties['KEYFILE'])
-           storePassword keystoreProperties['STOREPASS']
+           keyAlias = keystoreProperties['KEYALIAS']
+           keyPassword = keystoreProperties['KEYPASS']
+           storeFile = file(keystoreProperties['KEYFILE'])
+           storePassword = keystoreProperties['STOREPASS']
        }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
-            debuggable false
-            jniDebuggable false
-            minifyEnabled true
-            shrinkResources true
+            signingConfig = signingConfigs.debug
+            debuggable = false
+            jniDebuggable = false
+            minifyEnabled = true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    namespace android.defaultConfig.applicationId
+    namespace = android.defaultConfig.applicationId
 }
 
 dependencies {
