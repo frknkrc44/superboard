@@ -259,7 +259,12 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         }
 
         protected List<String> doInBackground(String[] p1) {
-            String lang = p1[0].substring(0, p1[0].indexOf('_'));
+            String lang = p1[0];
+            int indexOfUnderscore = lang.indexOf('_');
+            if (indexOfUnderscore > 0) {
+                lang =  lang.substring(0, indexOfUnderscore);
+            }
+
             String prefix = p1[1].toLowerCase(Locale.forLanguageTag(lang));
 
             if (TextUtils.isEmpty(prefix)) {
