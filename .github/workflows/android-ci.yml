@@ -17,6 +17,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+      JAVA_OPTS: -Dorg.gradle.daemon=false
+
     steps:
     - name: Checkout the code
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
@@ -32,7 +36,7 @@ jobs:
           pngquant
         key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-    - name: Install pngquant
+    - name: Setup requirements
       run: |
         if [ ! -f pngquant ]
         then
@@ -61,7 +65,7 @@ jobs:
         fi
 
     - name: Build all
-      run: ./gradlew clean assemble
+      run: ./gradlew assemble
 
     - name: Upload debug APK
       uses: actions/upload-artifact@v4
