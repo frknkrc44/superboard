@@ -34,14 +34,15 @@ public final class DictionaryDB extends SQLiteOpenHelper {
 
     public static String escapeString(String str) {
         if (str != null && !str.isEmpty()) {
-            str = str.replace("\\", "\\\\");
-            str = str.replace("'", "''");
-            str = str.replace("\0", "\\0");
-            str = str.replace("\n", "\\n");
-            str = str.replace("\r", "\\r");
-            str = str.replace("\"", "\\\"");
-            str = str.replace("\\x1a", "\\Z");
+            return str.replace("\\", "\\\\")
+                    .replace("'", "''")
+                    .replace("\0", "\\0")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\"", "\\\"")
+                    .replace("\\x1a", "\\Z");
         }
+
         return str;
     }
 

@@ -28,6 +28,7 @@ import org.blinksd.utils.SuperDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -258,13 +259,13 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         }
 
         protected List<String> doInBackground(String[] p1) {
-            String prefix = p1[1].toLowerCase();
+            String lang = p1[0].substring(0, p1[0].indexOf('_'));
+            String prefix = p1[1].toLowerCase(Locale.forLanguageTag(lang));
 
             if (TextUtils.isEmpty(prefix)) {
                 return new ArrayList<>();
             }
 
-            String lang = p1[0].toLowerCase();
             return getDictDB().getQuery(lang, prefix);
         }
 
