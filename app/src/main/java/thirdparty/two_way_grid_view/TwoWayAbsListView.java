@@ -2425,12 +2425,12 @@ public abstract class TwoWayAbsListView extends TwoWayAdapterView<ListAdapter> i
 
         private ArrayList<View> mCurrentScrap;
 
+        @SuppressWarnings({"unchecked", "all"})
         public void setViewTypeCount(int viewTypeCount) {
             if (viewTypeCount < 1) {
                 throw new IllegalArgumentException("Can't have a viewTypeCount < 1");
             }
 
-            @SuppressWarnings("unchecked")
             ArrayList<View>[] scrapViews = new ArrayList[viewTypeCount];
             for (int i = 0; i < viewTypeCount; i++) {
                 scrapViews[i] = new ArrayList<>();

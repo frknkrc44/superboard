@@ -1149,7 +1149,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
                 mHandler.removeAndSendMessage(0, v);
                 break;
             case MotionEvent.ACTION_DOWN:
-                sendKeyboardEvent((Key) v);
+                sendKeyboardEvent(v);
                 break;
         }
     }
@@ -1242,7 +1242,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         }
 
         private void handleMessage(int what) {
-            Key v = (Key) messageIds.get(what);
+            Key v = messageIds.get(what);
             if (v == null && what != 0) {
                 removeAndSendEmptyMessage(0);
                 return;
