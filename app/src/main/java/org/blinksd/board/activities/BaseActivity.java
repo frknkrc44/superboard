@@ -16,6 +16,10 @@ public class BaseActivity extends Activity {
     public void setContentView(View main) {
         super.setContentView(main);
 
+        setWindowParameters(main);
+    }
+
+    protected void setWindowParameters(View main) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (isWatchDevice()) {
                 UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);

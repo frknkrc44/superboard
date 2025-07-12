@@ -1,17 +1,16 @@
 package org.blinksd.board.activities;
 
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
+import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.ResourcesUtils.getSelectableItemBg;
 
 import android.animation.Animator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 
 /** @noinspection NullableProblems*/
 @SuppressWarnings({"deprecation", "all"})
-public final class SetupActivityV2 extends Activity {
+public final class SetupActivityV2 extends BaseActivity {
 
     private final ArrayList<PageContent> pageContents = new ArrayList<>();
     int currentPage = 0;
@@ -120,15 +119,6 @@ public final class SetupActivityV2 extends Activity {
         ));
 
         changePage(0);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getWindow().getDecorView().setFitsSystemWindows(true);
-            ((ViewGroup) findViewById(android.R.id.content))
-                    .getChildAt(0).setFitsSystemWindows(false);
-            getWindow().setNavigationBarColor(0);
-            getWindow().setStatusBarColor(0);
-            getWindow().setBackgroundDrawableResource(android.R.color.system_neutral1_900);
-        }
     }
 
     private boolean isInputMethodDisabled() {
@@ -155,6 +145,10 @@ public final class SetupActivityV2 extends Activity {
 
     private void changePage(int page) {
         ViewGroup contentView = findViewById(android.R.id.content);
+        if (page == 0) {
+            setWindowParameters(contentView);
+        }
+
         PageContent content = pageContents.get(page);
         final int duration = 200;
 
@@ -167,7 +161,7 @@ public final class SetupActivityV2 extends Activity {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             contentView.removeAllViews();
-                            View view = new ImageTextAndButtonView(SetupActivityV2.this, content);
+                            View view = new ImageTextAndButtonView(SetupActivityV2.this, content, page == 0);
                             view.setAlpha(0);
                             contentView.addView(view);
                             view.animate().alpha(1).setDuration(duration).start();
@@ -175,7 +169,7 @@ public final class SetupActivityV2 extends Activity {
                     }).start();
         } else {
             contentView.removeAllViews();
-            contentView.addView(new ImageTextAndButtonView(this, content));
+            contentView.addView(new ImageTextAndButtonView(this, content, page == 0));
         }
 
         currentPage = page;
@@ -254,7 +248,7 @@ public final class SetupActivityV2 extends Activity {
         final TextView textView;
         final Button buttonView;
 
-        private ImageTextAndButtonView(Context context, PageContent content) {
+        private ImageTextAndButtonView(Context context, PageContent content, boolean ignoreImageTint) {
             super(context);
             setLayoutParams(new LayoutParams(-1, -1));
             imageView = new ImageView(context);
@@ -281,8 +275,14 @@ public final class SetupActivityV2 extends Activity {
             buttonView.setBackground(getSelectableItemBg(buttonView.getCurrentTextColor()));
 
             imageView.setImageDrawable(content.image);
+
+            if (!ignoreImageTint) {
+                setColorFilter(imageView, buttonView.getCurrentTextColor());
+            }
+
             textView.setText(String.format(content.text, getAppName()));
             buttonView.setText(content.buttonText);
+            buttonView.setAllCaps(false);
             buttonView.setOnClickListener(content.onButtonClick);
 
             if (isWatchDevice()) {
@@ -298,6 +298,7 @@ public final class SetupActivityV2 extends Activity {
                 nextButton.setBackground(getSelectableItemBg(buttonView.getCurrentTextColor()));
                 nextButton.setOnClickListener(v -> changePage(currentPage + 1));
                 nextButton.setText(R.string.wizard_nextbtn);
+                nextButton.setAllCaps(false);
                 addView(nextButton);
             }
 

@@ -3,6 +3,7 @@ package org.blinksd.utils;
 import static android.os.Build.VERSION.SDK_INT;
 import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
+import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.ColorUtils.getDarkerColor;
 import static org.blinksd.utils.ColorUtils.satisfiesTextContrast;
@@ -156,6 +157,11 @@ public final class SystemUtils {
     }
 
     public static boolean isDarkThemeEnabled() {
+        // use dark mode on watch devices directly
+        if (isWatchDevice()) {
+            return true;
+        }
+
         return (getResConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 

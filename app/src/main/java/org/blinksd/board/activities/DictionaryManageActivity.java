@@ -62,6 +62,7 @@ public class DictionaryManageActivity extends BaseActivity {
         rootView.addView(childView);
     }
 
+    @SuppressWarnings({"deprecation", "all"})
     private void createChildView(ViewGroup rootView, String languageCode) {
         LinearLayout childView = new LinearLayout(this);
         childView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
