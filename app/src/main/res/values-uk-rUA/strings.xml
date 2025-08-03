@@ -66,6 +66,7 @@
     <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
     <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
     <string name="settings_show_math_layout">Show mathematical layout</string>
+    <string name="settings_replace_physical_keys">Replace the physical keyboard key presses with your current keyboard layout</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Фото</string>
