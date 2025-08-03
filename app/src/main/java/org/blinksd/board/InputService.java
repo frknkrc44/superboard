@@ -809,7 +809,7 @@ public final class InputService extends InputMethodService implements
             boardPopup.showPopup(false);
         }
 
-        if (event.isFromSource(InputDevice.SOURCE_KEYBOARD)) {
+        if (event.isFromSource(InputDevice.SOURCE_KEYBOARD) && getBooleanOrDefault(SettingMap.SET_REPLACE_PHYSICAL_KEYS)) {
             // Log.d(getClass().getSimpleName(), "Source = KEYBOARD " + event.getScanCode());
 
             loadKeyRemapper();

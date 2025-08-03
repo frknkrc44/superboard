@@ -100,7 +100,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_KEY_STROKE_COLOR = "key_strokeclr",
             SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT = "emoji_use_vertical_scroll_portrait",
             SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape",
-            SET_SHOW_MATH_LAYOUT = "show_math_layout";
+            SET_SHOW_MATH_LAYOUT = "show_math_layout",
+            SET_REPLACE_PHYSICAL_KEYS = "replace_physical_keys";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -150,6 +151,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putTopBar(SET_SHOW_MATH_LAYOUT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_HIDE_TOP_BAR_FN_BUTTONS, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
         putTopBar(SET_SHOW_FAB_RIGHT, SettingType.BOOL, SET_DISABLE_TOP_BAR, false);
+        putGeneral(SET_REPLACE_PHYSICAL_KEYS, SettingType.BOOL);
         putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD, SettingType.BOOL, SET_SHOW_FULLSCREEN_KEYBOARD_FORCED, false);
         putGeneral(SET_SHOW_FULLSCREEN_KEYBOARD_FORCED, SettingType.BOOL, SET_SHOW_FULLSCREEN_KEYBOARD, false);
         putGeneral(SET_ENABLE_CLIPBOARD, SettingType.BOOL);
@@ -405,6 +407,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE;
             case SET_SHOW_MATH_LAYOUT:
                 return Defaults.SHOW_MATH_LAYOUT;
+            case SET_REPLACE_PHYSICAL_KEYS:
+                return Defaults.REPLACE_PHYSICAL_KEYS;
             default:
                 return null;
         }

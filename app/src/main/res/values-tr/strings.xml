@@ -69,6 +69,7 @@
 	<string name="settings_emoji_use_vertical_scroll_portrait">Dikey modda dikey kaydırma kullan</string>
 	<string name="settings_emoji_use_vertical_scroll_landscape">Yatay modda dikey kaydırma kullan</string>
 	<string name="settings_show_math_layout">Matematik düzenini göster</string>
+	<string name="settings_replace_physical_keys">Fiziksel klavye tuş basışlarını anlık klavye düzenindekilerle değiştir</string>
 
 	<!-- Image selector resources -->
 	<string name="settings_image_selector_photo">Fotoğraf</string>
