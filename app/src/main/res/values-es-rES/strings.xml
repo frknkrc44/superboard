@@ -114,6 +114,7 @@
     <string name="settings_dict_importing">Importando, por favor no cierres esta aplicación</string>
     <string name="settings_dict_import_count">%s palabra importada</string>
     <string name="settings_dict_import_delete_duplicates">Eliminando duplicados</string>
+    <string name="settings_suggestions">Suggestions</string>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Temas</string>
