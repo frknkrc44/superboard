@@ -118,7 +118,11 @@ public class DictionaryManageActivity extends BaseActivity {
         boolean isSelectedLocale = currentLangCode.equals(languageCode);
         enabledForSuggestions.setEnabled(!isSelectedLocale);
         enabledForSuggestions.setChecked(isSelectedLocale || SuperDBHelper.getBooleanOrDefault(String.format("LANG_%s_sug", languageCode)));
-        enabledForSuggestions.setLayoutParams(new LinearLayout.LayoutParams(-2, iconSize, 0));
+
+        var enabledForSuggestionsParams = new LinearLayout.LayoutParams(-2, iconSize, 0);
+        enabledForSuggestionsParams.rightMargin = iconPadding;
+        enabledForSuggestions.setLayoutParams(enabledForSuggestionsParams);
+
         enabledForSuggestions.setSwitchPadding(iconPadding);
         childView.addView(enabledForSuggestions);
 
