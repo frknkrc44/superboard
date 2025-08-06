@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
+import android.util.ArraySet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,8 +28,10 @@ import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -234,7 +237,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         public void execute(String... args) {
             onPreExecute();
             mThreadPool.execute(() -> {
-                List<String> out = doInBackground(args);
+                Iterable<String> out = doInBackground(args);
                 mainHandler.post(() -> onPostExecute(out));
             });
         }
@@ -258,7 +261,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             }
         }
 
-        protected List<String> doInBackground(String[] p1) {
+        protected Iterable<String> doInBackground(String[] p1) {
             String lang = p1[0];
             int indexOfUnderscore = lang.indexOf('_');
             if (indexOfUnderscore > 0) {
@@ -268,13 +271,13 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             String prefix = p1[1].toLowerCase(Locale.forLanguageTag(lang));
 
             if (TextUtils.isEmpty(prefix)) {
-                return new ArrayList<>();
+                return new ArraySet<>();
             }
 
-            return getDictDB().getQuery(lang, prefix);
+            return getDictDB().getQuery(prefix);
         }
 
-        protected void onPostExecute(final List<String> result) {
+        protected void onPostExecute(final Iterable<String> result) {
             if (!mLoadDictTasks.contains(this)) {
                 return;
             }

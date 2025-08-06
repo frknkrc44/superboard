@@ -1,5 +1,7 @@
 package org.blinksd.board.activities;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
 import static org.blinksd.utils.DensityUtils.dpInt;
@@ -10,15 +12,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
+import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.ColorUtils;
+import org.blinksd.utils.LayoutCreator;
+import org.blinksd.utils.LayoutUtils;
+import org.blinksd.utils.SuperDBHelper;
 
 import java.util.Locale;
 
@@ -44,8 +53,9 @@ public class DictionaryManageActivity extends BaseActivity {
         final var languageCodes = getDictDB().getSavedLanguageCodes();
         Log.d(getClass().getSimpleName(), String.join(", ", languageCodes));
 
+        var currentLangCode = getCurrentKeyboardLanguage().language.split("_")[0];
         for (var code : languageCodes) {
-            createChildView(mainLayout, code);
+            createChildView(mainLayout, currentLangCode, code);
         }
 
         setContentView(scroller);
@@ -63,7 +73,7 @@ public class DictionaryManageActivity extends BaseActivity {
     }
 
     @SuppressWarnings({"deprecation", "all"})
-    private void createChildView(ViewGroup rootView, String languageCode) {
+    private void createChildView(ViewGroup rootView, String currentLangCode, String languageCode) {
         LinearLayout childView = new LinearLayout(this);
         childView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         childView.setPadding(0, 0, dpInt(16), 0);
@@ -95,6 +105,23 @@ public class DictionaryManageActivity extends BaseActivity {
 
         final int iconSize = dpInt(48);
         final int iconPadding = iconSize / 8;
+
+        Switch enabledForSuggestions = LayoutCreator.createSwitch(
+                this, SettingsBaseActivity.getTranslation("suggestions"),
+                false, new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getAppDB().putBoolean(String.format("LANG_%s_sug", languageCode), isChecked, true);
+            }
+        });
+
+        boolean isSelectedLocale = currentLangCode.equals(languageCode);
+        enabledForSuggestions.setEnabled(!isSelectedLocale);
+        enabledForSuggestions.setChecked(isSelectedLocale || SuperDBHelper.getBooleanOrDefault(String.format("LANG_%s_sug", languageCode)));
+        enabledForSuggestions.setLayoutParams(new LinearLayout.LayoutParams(-2, iconSize, 0));
+        enabledForSuggestions.setSwitchPadding(iconPadding);
+        childView.addView(enabledForSuggestions);
+
         ImageView deleteIcon = new ImageView(this);
         deleteIcon.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize, 0));
         deleteIcon.setOnClickListener(v -> Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show());
@@ -102,7 +129,6 @@ public class DictionaryManageActivity extends BaseActivity {
         deleteIcon.setImageResource(R.drawable.delete);
         deleteIcon.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
         ColorUtils.setColorFilter(deleteIcon, text1.getCurrentTextColor());
-
         childView.addView(deleteIcon);
 
         childView.setBackground(getTransSelectableItemBg(this, text1.getCurrentTextColor(), true));

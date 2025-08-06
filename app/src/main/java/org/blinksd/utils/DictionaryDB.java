@@ -1,18 +1,24 @@
 package org.blinksd.utils;
 
+import static org.blinksd.board.SuperBoardApplication.getAppDB;
+import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getLanguageTypes;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -229,10 +235,138 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         db.execSQL(sb);
     }
 
-    public List<String> getQuery(String lang, String prefix) {
+    Iterable<String> mergeDictionaries(Iterable<LinkedHashMap<String, Integer>> in) {
+        LinkedHashMap<String, Integer> proc1 = new LinkedHashMap<>();
+
+        // put every word in the same hashmap
+        for (var map : in) {
+            for (var key : map.keySet()) {
+                proc1.put(key, map.get(key));
+            }
+        }
+
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(proc1.entrySet());
+
+        switch (SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_ALGORITHM)) {
+            case QUERY_ALGORITHM_ONLY_LEN_WORD:
+            case QUERY_ALGORITHM_USAGE_THEN_LEN_WORD:
+                // Sort the list
+                Collections.sort(list, new Comparator<>() {
+                    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                        return Integer.compare(o1.getKey().length(), o2.getKey().length());
+                    }
+                });
+                break;
+            case QUERY_ALGORITHM_ONLY_USAGE:
+            case QUERY_ALGORITHM_LEN_WORD_THEN_USAGE:
+            default:
+                // Sort the list
+                Collections.sort(list, new Comparator<>() {
+                    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                        return (o1.getValue()).compareTo(o2.getValue());
+                    }
+                });
+
+                // Reverse the list
+                Collections.reverse(list);
+                break;
+        }
+
+        List<String> out = new ArrayList<>();
+        for (Map.Entry<String, Integer> aa : list) {
+            out.add(aa.getKey());
+        }
+
+        return out;
+    }
+
+    public Iterable<String> getQuery(String prefix) {
+        var enabledLanguageCodes = new ArrayList<String>();
+        var currentLangCode = getCurrentKeyboardLanguage().language.split("_")[0];
+        for (var code : getSavedLanguageCodes()) {
+            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) || currentLangCode.equals(code)) {
+                enabledLanguageCodes.add(code);
+            }
+        }
+
+        if (enabledLanguageCodes.size() < 2)
+            return getQuery(enabledLanguageCodes.get(0), prefix);
+
+        List<LinkedHashMap<String, Integer>> out = new ArrayList<>();
+
+        if (!isReady)
+            return new ArrayList<>();
+
+        if (TextUtils.isEmpty(prefix))
+            return new ArrayList<>();
+
+        try {
+            SQLiteDatabase db = getReadableDatabase();
+
+            for (String lang : enabledLanguageCodes) {
+                LinkedHashMap<String, Integer> langOut = new LinkedHashMap<>();
+                out.add(langOut);
+
+                if (lang.contains("_"))
+                    lang = lang.split("_")[0];
+
+                lang = escapeString(lang.trim().toLowerCase());
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("SELECT * FROM LANG_")
+                        .append(lang);
+
+                sb.append(" WHERE word")
+                        .append(" LIKE ")
+                        .append("'")
+                        .append(escapeString(prefix))
+                        .append("%'");
+
+                switch (SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_ALGORITHM)) {
+                    case QUERY_ALGORITHM_ONLY_LEN_WORD:
+                        sb.append(" ORDER BY LENGTH(word) ASC");
+                        break;
+                    case QUERY_ALGORITHM_ONLY_USAGE:
+                        sb.append(" ORDER BY usage_count DESC");
+                        break;
+                    case QUERY_ALGORITHM_USAGE_THEN_LEN_WORD:
+                        sb.append(" ORDER BY usage_count DESC, LENGTH(word) ASC");
+                        break;
+                    case QUERY_ALGORITHM_LEN_WORD_THEN_USAGE:
+                    default:
+                        sb.append(" ORDER BY LENGTH(word) ASC, usage_count DESC");
+                        break;
+                }
+
+                sb.append(" LIMIT ");
+                sb.append(SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_LIMIT));
+                Cursor cursor = db.rawQuery(sb.toString(), null);
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        String word = cursor.getString(1);
+                        int usageCount = cursor.getInt(2);
+                        langOut.put(word, usageCount);
+                    } while (cursor.moveToNext());
+                }
+
+                cursor.close();
+            }
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+
+        return mergeDictionaries(out);
+    }
+
+    private Iterable<String> getQuery(String lang, String prefix) {
         List<String> out = new ArrayList<>();
 
         if (!isReady) return out;
+
+        if (TextUtils.isEmpty(prefix))
+            return out;
 
         try {
             SQLiteDatabase db = getReadableDatabase();
@@ -244,9 +378,6 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             StringBuilder sb = new StringBuilder();
             sb.append("SELECT * FROM LANG_")
                     .append(escapeString(lang.trim().toLowerCase()));
-
-            if (prefix == null || prefix.isEmpty())
-                return out;
 
             sb.append(" WHERE word")
                     .append(" LIKE ")

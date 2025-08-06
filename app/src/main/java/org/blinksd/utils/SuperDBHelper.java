@@ -9,6 +9,7 @@ import static org.blinksd.utils.DensityUtils.minPInt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +54,12 @@ public final class SuperDBHelper {
         SuperDBExt db = getAppDB();
         String ret = "";
         if (!db.isDBContainsKey(key)) {
-            return getSettings().getDefaults(key).toString();
+            var defValue = getSettings().getDefaults(key);
+            if (defValue == null) {
+                return "";
+            }
+
+            return defValue.toString();
         }
 
         return db.getString(key, ret);
