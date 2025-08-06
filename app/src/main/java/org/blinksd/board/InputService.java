@@ -757,12 +757,13 @@ public final class InputService extends InputMethodService implements
             if (navbarView != null)
                 keyboardLayoutHolder.removeView(navbarView);
 
+            boolean isColorized = isColorized();
             if (SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                 disableEdgeToEdge(w);
-                w.setDecorFitsSystemWindows(true);
+                w.setDecorFitsSystemWindows(!isColorized);
             }
 
-            if (navbarAndroid9ModeEnabled() && !isColorized()) {
+            if (navbarAndroid9ModeEnabled() && !isColorized) {
                 w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 w.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
@@ -774,10 +775,7 @@ public final class InputService extends InputMethodService implements
                 w.getDecorView().setSystemUiVisibility(ColorUtils.satisfiesTextContrast(color)
                         ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
                         : View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            } else if (isColorized()) {
-                if (SDK_INT >= Build.VERSION_CODES.R)
-                    w.setDecorFitsSystemWindows(false);
-
+            } else if (isColorized) {
                 // I found a bug at SDK 30 (Android R)
                 // FLAG_LAYOUT_NO_LIMITS not working
                 // set FLAG_TRANSLUCENT_NAVIGATION for this SDK only
