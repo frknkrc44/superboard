@@ -114,6 +114,7 @@
     <string name="settings_dict_importing">அகராதி உள்ளிடப்படுகிறது, செயலியை முடக்காதீர்</string>
     <string name="settings_dict_import_count">%s சொல் அகராதியில் சேர்க்கப்பட்டது</string>
     <string name="settings_dict_import_delete_duplicates">நகல்கள் நீக்கப்படுகின்றன</string>
+    <string name="settings_suggestions">Suggestions</string>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Theming</string>
