@@ -114,6 +114,7 @@
     <string name="settings_dict_importing">Імпортування. Будь ласка, не закривайте програму</string>
     <string name="settings_dict_import_count">%s слів імпортовано</string>
     <string name="settings_dict_import_delete_duplicates">Видалення дублікатів</string>
+    <string name="settings_suggestions">Suggestions</string>
     <!-- Settings category resources -->
     <string name="settings_category_general">Загальні</string>
     <string name="settings_category_theming">Вигляд</string>
