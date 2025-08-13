@@ -283,6 +283,9 @@ public final class DictionaryDB extends SQLiteOpenHelper {
     }
 
     public Iterable<String> getQuery(String prefix) {
+        if (!isReady || TextUtils.isEmpty(prefix))
+            return new ArrayList<>();
+
         var enabledLanguageCodes = new ArrayList<String>();
         var currentLangCode = getCurrentKeyboardLanguage().language.split("_")[0];
         for (var code : getSavedLanguageCodes()) {
@@ -299,12 +302,6 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             return getQuery(enabledLanguageCodes.get(0), prefix);
 
         List<LinkedHashMap<String, Integer>> out = new ArrayList<>();
-
-        if (!isReady)
-            return new ArrayList<>();
-
-        if (TextUtils.isEmpty(prefix))
-            return new ArrayList<>();
 
         try {
             SQLiteDatabase db = getReadableDatabase();
