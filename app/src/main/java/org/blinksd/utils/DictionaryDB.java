@@ -230,7 +230,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String sb = "UPDATE LANG_" + escapeString(lang) +
                 " SET usage_count = usage_count +1 WHERE word = '" +
-                word +
+                escapeString(word) +
                 "'";
         db.execSQL(sb);
     }
