@@ -100,8 +100,9 @@ public class DictionaryManageActivity extends BaseActivity {
 
         text1.setText(displayStr);
 
+        int tableLength = getDictDB().getTableLength(languageCode);
         TextView text2 = childTextsView.findViewById(android.R.id.text2);
-        text2.setText(String.valueOf(getDictDB().getTableLength(languageCode)));
+        text2.setText(String.valueOf(tableLength));
 
         final int iconSize = dpInt(48);
         final int iconPadding = iconSize / 8;
@@ -116,7 +117,7 @@ public class DictionaryManageActivity extends BaseActivity {
         });
 
         boolean isSelectedLocale = currentLangCode.equals(languageCode);
-        enabledForSuggestions.setEnabled(!isSelectedLocale);
+        enabledForSuggestions.setEnabled(!isSelectedLocale && tableLength > 0);
         enabledForSuggestions.setChecked(isSelectedLocale || getAppDB().getBoolean(String.format("LANG_%s_sug", languageCode), false));
 
         var enabledForSuggestionsParams = new LinearLayout.LayoutParams(-2, iconSize, 0);

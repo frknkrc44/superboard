@@ -235,6 +235,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         db.execSQL(sb);
     }
 
+    @SuppressWarnings("all")
     Iterable<String> mergeDictionaries(Iterable<LinkedHashMap<String, Integer>> in) {
         LinkedHashMap<String, Integer> proc1 = new LinkedHashMap<>();
 
@@ -285,10 +286,15 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         var enabledLanguageCodes = new ArrayList<String>();
         var currentLangCode = getCurrentKeyboardLanguage().language.split("_")[0];
         for (var code : getSavedLanguageCodes()) {
-            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) || currentLangCode.equals(code)) {
+            if (getTableLength(code) < 1)
+                continue;
+
+            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) || currentLangCode.equals(code))
                 enabledLanguageCodes.add(code);
-            }
         }
+
+        enabledLanguageCodes.remove(currentLangCode);
+        enabledLanguageCodes.add(currentLangCode);
 
         if (enabledLanguageCodes.size() < 2)
             return getQuery(enabledLanguageCodes.get(0), prefix);
@@ -303,8 +309,13 @@ public final class DictionaryDB extends SQLiteOpenHelper {
 
         try {
             SQLiteDatabase db = getReadableDatabase();
+            final int totalWordCount = SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_LIMIT);
+            final int enabledLangCount = enabledLanguageCodes.size();
+            int perLanguageLimit = totalWordCount / enabledLangCount;
+            int consumedWordCount = 0;
 
-            for (String lang : enabledLanguageCodes) {
+            for (int i = 0; i < enabledLanguageCodes.size(); i++) {
+                String lang = enabledLanguageCodes.get(i);
                 LinkedHashMap<String, Integer> langOut = new LinkedHashMap<>();
                 out.add(langOut);
 
@@ -340,7 +351,12 @@ public final class DictionaryDB extends SQLiteOpenHelper {
                 }
 
                 sb.append(" LIMIT ");
-                sb.append(SuperDBHelper.getIntOrDefault(SettingMap.SET_DICTIONARY_LIMIT));
+
+                if (currentLangCode.equals(lang) && (consumedWordCount / (i + 1) != perLanguageLimit)) {
+                    perLanguageLimit = (totalWordCount - consumedWordCount);
+                }
+
+                sb.append(perLanguageLimit);
                 Cursor cursor = db.rawQuery(sb.toString(), null);
 
                 if (cursor.moveToFirst()) {
@@ -348,6 +364,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
                         String word = cursor.getString(1);
                         int usageCount = cursor.getInt(2);
                         langOut.put(word, usageCount);
+                        consumedWordCount++;
                     } while (cursor.moveToNext());
                 }
 
