@@ -289,11 +289,10 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             if (getTableLength(code) < 1)
                 continue;
 
-            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) || currentLangCode.equals(code))
+            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) && !currentLangCode.equals(code))
                 enabledLanguageCodes.add(code);
         }
 
-        enabledLanguageCodes.remove(currentLangCode);
         enabledLanguageCodes.add(currentLangCode);
 
         if (enabledLanguageCodes.size() < 2)
