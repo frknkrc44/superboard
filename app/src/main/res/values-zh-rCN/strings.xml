@@ -115,6 +115,11 @@
     <string name="settings_dict_import_count">%s word imported</string>
     <string name="settings_dict_import_delete_duplicates">Deleting duplicates</string>
     <string name="settings_suggestions">Suggestions</string>
+    <string name="settings_delete_dictionary_title">Are you sure?</string>
+    <string name="settings_delete_dictionary_desc">You\'ll lose all of suggestions for %s and this cannot be undone.</string>
+    <plurals name="settings_word_count">
+        <item quantity="other">%d words</item>
+    </plurals>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Theming</string>
