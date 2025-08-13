@@ -84,6 +84,7 @@ public final class DictionaryDB extends SQLiteOpenHelper {
             returnedCodes.add(ret.substring(ret.indexOf('_')+1));
         }
         cursor.close();
+        Collections.sort(returnedCodes, String::compareToIgnoreCase);
         return returnedCodes.toArray(new String[0]);
     }
 
@@ -131,6 +132,15 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         }
 
         return rawCode;
+    }
+
+    public void dropDatabase(String lang) {
+        isReady = false;
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("LANG_" + escapeString(lang), null, null);
+
+        isReady = true;
     }
 
     private void saveToDBGZ(BufferedReader reader, OnSaveProgressListener listener) throws IOException {

@@ -122,6 +122,12 @@
 	<string name="settings_dict_import_count">%s kelime içe aktarıldı</string>
 	<string name="settings_dict_import_delete_duplicates">Fazlalıklar siliniyor</string>
 	<string name="settings_suggestions">Öneriler</string>
+	<string name="settings_delete_dictionary_title">Emin misiniz?</string>
+	<string name="settings_delete_dictionary_desc">%s için bütün önerileri kaybedeceksiniz ve bu işlem geri alınamaz.</string>
+	<plurals name="settings_word_count">
+		<item quantity="one">%d kelime</item>
+		<item quantity="other">%d kelime</item>
+	</plurals>
 
 	<!-- Settings category resources -->
 	<string name="settings_category_general">Genel</string>

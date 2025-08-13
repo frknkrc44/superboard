@@ -4,8 +4,8 @@ import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.mainHandler;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.util.concurrent.Executors;
 
 @SuppressWarnings({"deprecation", "all"})
-public final class DictionaryImportActivity extends Activity {
+public final class DictionaryImportActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public final class DictionaryImportActivity extends Activity {
         int pad = DensityUtils.dpInt(16);
         ll.setPadding(pad, pad, pad, pad);
         ProgressBar pb = new ProgressBar(this);
+        pb.setIndeterminateTintList(ColorStateList.valueOf(getColor(R.color.seekbar_progress)));
         pb.setIndeterminate(true);
         ll.addView(pb);
         TextView tv = new TextView(this);
