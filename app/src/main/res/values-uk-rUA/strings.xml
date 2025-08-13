@@ -115,6 +115,14 @@
     <string name="settings_dict_import_count">%s слів імпортовано</string>
     <string name="settings_dict_import_delete_duplicates">Видалення дублікатів</string>
     <string name="settings_suggestions">Suggestions</string>
+    <string name="settings_delete_dictionary_title">Are you sure?</string>
+    <string name="settings_delete_dictionary_desc">You\'ll lose all of suggestions for %s and this cannot be undone.</string>
+    <plurals name="settings_word_count">
+        <item quantity="one">%d word</item>
+        <item quantity="few">%d words</item>
+        <item quantity="many">%d words</item>
+        <item quantity="other">%d words</item>
+    </plurals>
     <!-- Settings category resources -->
     <string name="settings_category_general">Загальні</string>
     <string name="settings_category_theming">Вигляд</string>
