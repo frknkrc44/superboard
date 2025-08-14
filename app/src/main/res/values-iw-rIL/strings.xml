@@ -62,6 +62,7 @@
     <string name="settings_insert_space_after_punc">הכנס רווח לאחר סימני פיסוק</string>
     <string name="settings_monet_color_scheme">ערכת צבעים של Monet</string>
     <string name="settings_keyboard_padding">ריפוד מקלדת</string>
+    <string name="settings_keyboard_round">Keyboard radius</string>
     <string name="settings_compat_monet_max_colors">ספירת צבעים מקסימלית מחושבת עבור compat monet</string>
     <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
     <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
