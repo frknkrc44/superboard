@@ -68,6 +68,7 @@
 	<string name="settings_insert_space_after_punc">Insert space after punctuation</string>
 	<string name="settings_monet_color_scheme">Monet color scheme</string>
 	<string name="settings_keyboard_padding">Keyboard padding</string>
+	<string name="settings_keyboard_round">Keyboard radius</string>
 	<string name="settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
 	<string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
 	<string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>

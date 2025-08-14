@@ -16,6 +16,7 @@ import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 import static org.blinksd.utils.ColorUtils.convertARGBtoRGB;
 import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.hp;
+import static org.blinksd.utils.DensityUtils.minP;
 import static org.blinksd.utils.DensityUtils.minPInt;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.getSpecialCases;
@@ -43,6 +44,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
@@ -585,6 +587,17 @@ public final class InputService extends InputMethodService implements
 
             keyboardLayoutHolder.setBackgroundColor(c);
             superBoardView.setBackgroundColor(Color.TRANSPARENT);
+
+            float keyboardRound = minP(getFloatedIntOrDefault(SettingMap.SET_KEYBOARD_ROUND));
+            if (keyboardRound > 0) {
+                GradientDrawable background = new GradientDrawable();
+                background.setCornerRadii(new float[] { keyboardRound, keyboardRound, keyboardRound, keyboardRound, 0, 0, 0, 0 });
+                keyboardBackgroundHolder.setBackground(background);
+                keyboardBackgroundHolder.setClipToOutline(true);
+            } else {
+                keyboardBackgroundHolder.setBackground(null);
+                keyboardBackgroundHolder.setClipToOutline(false);
+            }
 
             int keyClr = getIntOrDefault(SettingMap.SET_KEY_BGCLR);
             int keyPressClr = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);

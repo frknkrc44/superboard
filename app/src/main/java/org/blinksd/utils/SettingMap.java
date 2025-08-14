@@ -101,7 +101,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_EMOJI_USE_VERTICAL_SCROLL_PORTRAIT = "emoji_use_vertical_scroll_portrait",
             SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape",
             SET_SHOW_MATH_LAYOUT = "show_math_layout",
-            SET_REPLACE_PHYSICAL_KEYS = "replace_physical_keys";
+            SET_REPLACE_PHYSICAL_KEYS = "replace_physical_keys",
+            SET_KEYBOARD_ROUND = "keyboard_round";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -115,6 +116,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         putKbdLayout(SET_KEYBOARD_HEIGHT, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_LANDSCAPE_HEIGHT_INCREASER, SettingType.FLOAT_NUMBER);
         putKbdLayout(SET_KEYBOARD_PADDING, SettingType.MM_DECIMAL_NUMBER);
+        putKbdLayout(SET_KEYBOARD_ROUND, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_VIBRATE_DURATION, SettingType.DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_LONGPRESS_DURATION, SettingType.MM_DECIMAL_NUMBER);
         putKbdLayout(SET_KEY_PADDING, SettingType.FLOAT_NUMBER);
@@ -409,6 +411,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.SHOW_MATH_LAYOUT;
             case SET_REPLACE_PHYSICAL_KEYS:
                 return Defaults.REPLACE_PHYSICAL_KEYS;
+            case SET_KEYBOARD_ROUND:
+                return Defaults.KEYBOARD_ROUND;
             default:
                 return null;
         }
@@ -464,6 +468,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 break;
             case SET_KEY_STROKE_WIDTH:
                 minMaxNumbers[1] = Defaults.MinMaxValues.MAX_STROKE_WIDTH;
+            case SET_KEYBOARD_ROUND:
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_KEYBOARD_ROUND;
         }
         return minMaxNumbers;
     }

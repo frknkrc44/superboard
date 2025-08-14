@@ -65,6 +65,7 @@
 	<string name="settings_insert_space_after_punc">Noktalama işaretinden sonra boşluk bırak</string>
 	<string name="settings_monet_color_scheme">Sistem rengi şeması</string>
 	<string name="settings_keyboard_padding">Klavye içe girintisi</string>
+	<string name="settings_keyboard_round">Klavye yuvarlaklığı</string>
 	<string name="settings_compat_monet_max_colors">Sistem duvar kağıdından seçilenen fazla renk sayısı</string>
 	<string name="settings_emoji_use_vertical_scroll_portrait">Dikey modda dikey kaydırma kullan</string>
 	<string name="settings_emoji_use_vertical_scroll_landscape">Yatay modda dikey kaydırma kullan</string>

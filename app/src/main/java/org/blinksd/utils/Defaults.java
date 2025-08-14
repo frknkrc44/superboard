@@ -35,6 +35,7 @@ public final class Defaults {
     static final int KEY_INDICATOR_HEIGHT = 5;
     static final int LANDSCAPE_HEIGHT_INCREASER = 15;
     static final int KEY_STROKE_WIDTH = 0;
+    static final int KEYBOARD_ROUND = 0;
 
     public static final String KEYBOARD_LANGUAGE_KEY = "en_US";
     public static final String KEYBOARD_SPACETYPE = "theme";
@@ -95,5 +96,6 @@ public final class Defaults {
         static final int MIN_LANDSCAPE_HEIGHT_INCREASER = 10;
         static final int MAX_LANDSCAPE_HEIGHT_INCREASER = 30;
         static final int MAX_STROKE_WIDTH = 20;
+        static final int MAX_KEYBOARD_ROUND = 80;
     }
 }
