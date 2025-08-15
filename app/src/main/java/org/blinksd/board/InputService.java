@@ -183,9 +183,7 @@ public final class InputService extends InputMethodService implements
 
         superBoardView.afterKeyboardEvent();
 
-        getDictDB().increaseUsageCount(
-                        currentLanguageCache.language.split("_")[0],
-                        suggestion.toString().trim());
+        getDictDB().increaseUsageCount(suggestion.toString().trim());
     }
 
     @Override

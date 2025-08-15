@@ -236,13 +236,28 @@ public final class DictionaryDB extends SQLiteOpenHelper {
         isReady = true;
     }
 
-    public void increaseUsageCount(String lang, String word) {
+    public void increaseUsageCount(String word) {
         SQLiteDatabase db = getWritableDatabase();
-        String sb = "UPDATE LANG_" + escapeString(lang) +
-                " SET usage_count = usage_count +1 WHERE word = '" +
-                escapeString(word) +
-                "'";
-        db.execSQL(sb);
+
+        var enabledLanguageCodes = new ArrayList<String>();
+        var currentLangCode = getCurrentKeyboardLanguage().language.split("_")[0];
+        for (var code : getSavedLanguageCodes()) {
+            if (getTableLength(code) < 1)
+                continue;
+
+            if (getAppDB().getBoolean(String.format("LANG_%s_sug", code), false) && !currentLangCode.equals(code))
+                enabledLanguageCodes.add(code);
+        }
+
+        enabledLanguageCodes.add(currentLangCode);
+
+        for (var code : enabledLanguageCodes) {
+            String sb = "UPDATE LANG_" + escapeString(code) +
+                    " SET usage_count = usage_count +1 WHERE word = '" +
+                    escapeString(word) +
+                    "'";
+            db.execSQL(sb);
+        }
     }
 
     @SuppressWarnings("all")
