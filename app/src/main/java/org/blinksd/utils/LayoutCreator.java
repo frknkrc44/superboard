@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.blinksd.board.R;
+import org.blinksd.board.views.CustomSwitch;
 
 import java.lang.reflect.Constructor;
 
@@ -94,15 +94,10 @@ public final class LayoutCreator {
     }
 
     public static Switch createSwitch(Context ctx, String text, boolean on, CompoundButton.OnCheckedChangeListener listener) {
-        Switch sw = (Switch) getView(Switch.class, ctx);
+        CustomSwitch sw = new CustomSwitch(ctx);
         sw.setText(text);
         sw.setChecked(on);
         sw.setOnCheckedChangeListener(listener);
-        sw.setTextOff("");
-        sw.setTextOn("");
-
-        sw.setThumbResource(R.drawable.switch_thumb);
-        sw.setTrackResource(R.drawable.switch_track);
 
         return sw;
     }
