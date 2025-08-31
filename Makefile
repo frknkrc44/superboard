@@ -83,7 +83,9 @@ langpacks:
 	cd SuperBoardLayoutCreator && \
 		${SHELL} create_packs.sh
 emojijson:
+ifeq (,$(wildcard app/src/main/assets/emoji_list.json))
 	cd EmojiJsonCreator && \
 		python3 emoji_parser.py || true
+endif
 keystore:
 	${SHELL} apply_keystore_props.sh
