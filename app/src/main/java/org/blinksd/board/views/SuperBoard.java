@@ -216,10 +216,14 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
         final int mainChildCount = getChildCount();
         for (int i = 0; i < mainChildCount; i++) {
-            final int kbdChildCount = getKeyboard(i).getChildCount();
+            final var keyboard = getKeyboard(i);
+            if (keyboard == null) continue;
+            final int kbdChildCount = keyboard.getChildCount();
 
             for (int g = 0; g < kbdChildCount; g++) {
-                getRow(i, g).setKeyWidths();
+                final var row = getRow(i, g);
+                if (row == null) return;
+                row.setKeyWidths();
             }
         }
     }
@@ -235,6 +239,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setKeyBackgroundAndItemColor(int keyboardIndex, int rowIndex, int keyIndex, Drawable background, int itemColor) {
         Key key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
         key.setBackground(background);
         key.setKeyItemColor(itemColor);
     }
@@ -244,7 +249,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeyRepeat(int keyboardIndex, int rowIndex, int keyIndex, boolean repeat) {
-        setKeyRepeat(getKey(keyboardIndex, rowIndex, keyIndex), repeat);
+        final var key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
+        setKeyRepeat(key, repeat);
     }
 
     public final void setKeyRepeat(SuperBoard.Key key, boolean repeat) {
@@ -252,7 +259,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setKeyWidthPercent(int keyboardIndex, int rowIndex, int keyIndex, int percent) {
-        getKey(keyboardIndex, rowIndex, keyIndex).setKeyWidthPercent(percent);
+        final var key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
+        key.setKeyWidthPercent(percent);
     }
 
     public final void setLongPressMultiplier(int multi) {
@@ -266,6 +275,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void setPopupForKey(int keyboardIndex, int rowIndex, int keyIndex, String chars) {
         Key key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
         Set<String> newSet = new LinkedHashSet<>(Arrays.asList(chars.split("")));
         key.setPopupCharacters(newSet.toArray(new String[0]));
     }
@@ -274,6 +284,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         if (chars != null) {
             if (keyboardIndex < getChildCount() && keyboardIndex >= 0) {
                 ViewGroup v = getKeyboard(keyboardIndex);
+                if (v == null) return;
+
                 final int vChildCount = v.getChildCount();
 
                 assert (vChildCount == chars.length)
@@ -281,6 +293,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
                 for (int i = 0; i < vChildCount; i++) {
                     Row r = getRow(keyboardIndex, i);
+                    if (r == null) continue;
                     final int rChildCount = r.getChildCount();
 
                     assert (rChildCount == chars[i].length)
@@ -368,9 +381,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void applyToAllKeys(ApplyToKeyRunnable runnable) {
         final int mainChildCount = getChildCount();
         for (int j = 0; j < mainChildCount; j++) {
-            final int kbdChildCount = getKeyboard(j).getChildCount();
+            final var keyboard = getKeyboard(j);
+            if (keyboard == null) continue;
+            final int kbdChildCount = keyboard.getChildCount();
             for (int i = 0; i < kbdChildCount; i++) {
-                final int rowChildCount = getRow(j, i).getChildCount();
+                final var row = getRow(j, i);
+                if (row == null) continue;
+                final int rowChildCount = row.getChildCount();
                 for (int g = 0; g < rowChildCount; g++) {
                     runnable.run(getKey(j, i, g));
                 }
@@ -403,6 +420,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     public final void setKeyDrawable(int keyboardIndex, int rowIndex, int keyIndex, Drawable d) {
         setColorFilter(d, keyTextColor);
         Key t = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (t == null) return;
         ((LinearLayout.LayoutParams) t.getLayoutParams()).gravity = CENTER;
         t.setKeyIcon(d);
     }
@@ -427,7 +445,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setLayoutType(int keyboardIndex, KeyboardType type) {
-        getKeyboard(keyboardIndex).setTag(type);
+        final var keyboard = getKeyboard(keyboardIndex);
+        if (keyboard == null) return;
+        keyboard.setTag(type);
     }
 
     public final void createLayoutWithRows(String[][] keys, KeyboardType type) {
@@ -454,18 +474,23 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
 
     public final void replaceTextKeyboard(String[][] newKeyboard) {
         ViewGroup vg = getKeyboard(findTextKeyboardIndex());
+        if (vg == null) return;
         vg.removeAllViewsInLayout();
         addRows(findTextKeyboardIndex(), newKeyboard);
     }
 
     public final Row getRow(int keyboardIndex, int rowIndex) {
-        if (rowIndex < 0) rowIndex += getKeyboard(keyboardIndex).getChildCount();
-        return (Row) getKeyboard(keyboardIndex).getChildAt(rowIndex);
+        final var keyboard = getKeyboard(keyboardIndex);
+        if (keyboard == null) return null;
+        if (rowIndex < 0) rowIndex += keyboard.getChildCount();
+        return (Row) keyboard.getChildAt(rowIndex);
     }
 
     public final Key getKey(int keyboardIndex, int rowIndex, int keyIndex) {
-        if (keyIndex < 0) keyIndex += getRow(keyboardIndex, rowIndex).getChildCount();
-        return (Key) getRow(keyboardIndex, rowIndex).getChildAt(keyIndex);
+        final var row = getRow(keyboardIndex, rowIndex);
+        if (row == null) return null;
+        if (keyIndex < 0) keyIndex += row.getChildCount();
+        return (Key) row.getChildAt(keyIndex);
     }
 
     public void addRows(int keyboardIndex, CharSequence[][] keys) {
@@ -487,6 +512,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void addRow(int keyboardIndex, Key template, CharSequence[] keys) {
+        final var keyboard = getKeyboard(keyboardIndex);
+        if (keyboard == null) return;
+
         Row r = new Row(getContext());
         if (keys.length > 0) {
             for (CharSequence key : keys) {
@@ -499,7 +527,8 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             }
             r.setKeyWidths();
         }
-        getKeyboard(keyboardIndex).addView(r);
+
+        keyboard.addView(r);
     }
 
     protected void sendKeyboardEvent(Key v) {
@@ -964,17 +993,23 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setRowPadding(int keyboardIndex, int rowIndex, int padding) {
-        getRow(keyboardIndex, rowIndex).setPadding(padding, 0, padding, 0);
+        final var row = getRow(keyboardIndex, rowIndex);
+        if (row == null) return;
+        row.setPadding(padding, 0, padding, 0);
     }
 
     public final boolean isDisabledModifierForKeyboard(int keyboardIndex) {
-        Object tag = getKeyboard(keyboardIndex).getTag(TAG_DISABLE_MODIFIER);
+        final var keyboard = getKeyboard(keyboardIndex);
+        if (keyboard == null) return false;
+        Object tag = keyboard.getTag(TAG_DISABLE_MODIFIER);
         return tag != null && (boolean) tag;
     }
 
     @SuppressWarnings("unused")
     public final void setDisableModifierForKeyboard(int keyboardIndex, boolean value) {
-        getKeyboard(keyboardIndex).setTag(TAG_DISABLE_MODIFIER, value);
+        final var keyboard = getKeyboard(keyboardIndex);
+        if (keyboard == null) return;
+        keyboard.setTag(TAG_DISABLE_MODIFIER, value);
     }
 
     public final void setPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode) {
@@ -982,7 +1017,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode, boolean isEvent) {
-        setPressEventForKey(getKey(keyboardIndex, rowIndex, keyIndex), keyCode, isEvent);
+        final var key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
+        setPressEventForKey(key, keyCode, isEvent);
     }
 
     public final void setPressEventForKey(Key key, int keyCode, boolean isEvent) {
@@ -994,7 +1031,9 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
     }
 
     public final void setLongPressEventForKey(int keyboardIndex, int rowIndex, int keyIndex, int keyCode, boolean isEvent) {
-        setLongPressEventForKey(getKey(keyboardIndex, rowIndex, keyIndex), keyCode, isEvent);
+        final var key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
+        setLongPressEventForKey(key, keyCode, isEvent);
     }
 
     public final void setLongPressEventForKey(Key key, int keyCode, boolean isEvent) {
