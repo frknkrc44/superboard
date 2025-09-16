@@ -16,9 +16,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -100,32 +100,28 @@ public final class SystemUtils {
             return DensityUtils.dpInt(48);
         } else if (SDK_INT >= Build.VERSION_CODES.R) {
             WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-            boolean gesturesEnabled = isGesturesEnabled();
-
-            // TODO: Detect Android 12L+ Taskbar
-            int type = gesturesEnabled ? WindowInsets.Type.systemGestures() : WindowInsets.Type.navigationBars();
-            return (int) (wm.getCurrentWindowMetrics()
+            Insets gestureInsets = wm.getCurrentWindowMetrics()
                     .getWindowInsets()
-                    .getInsets(type)
-                    .bottom * (gesturesEnabled ? 1.5 : 1));
+                    .getInsets(WindowInsets.Type.systemGestures());
+
+            if (gestureInsets.bottom < 1) {
+                return wm.getCurrentWindowMetrics()
+                        .getWindowInsets()
+                        .getInsets(WindowInsets.Type.systemBars())
+                        .bottom;
+            }
+
+            return (int) (gestureInsets.bottom * 1.5f);
         }
 
         return 0;
-    }
-
-    public static boolean isGesturesEnabled() {
-        try {
-            return Settings.Secure.getInt(getSBApplication().getContentResolver(), "navigation_mode") == 2;
-        } catch (Throwable t) {
-            return false;
-        }
     }
 
     /** @noinspection JavaReflectionMemberAccess*/
     @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
     public static int navbarH(Context ctx) {
         if (isColorized()) {
-            if (!isGesturesEnabled() && isLand() && !isTablet()) return 0;
+            if (isLand() && !isTablet()) return 0;
             int gestureHeight = findGestureHeight(ctx);
             if (gestureHeight > 0) return gestureHeight;
             Resources res = ctx.getResources();

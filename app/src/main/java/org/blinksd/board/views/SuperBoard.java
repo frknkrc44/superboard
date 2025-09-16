@@ -1612,7 +1612,7 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
             return popupCharacters;
         }
 
-        public final void setPopupCharacters(CharSequence[] cs) {
+        public void setPopupCharacters(CharSequence[] cs) {
             if (cs == null || cs.length < 1) {
                 popupCharacters = null;
                 setSubText("");
