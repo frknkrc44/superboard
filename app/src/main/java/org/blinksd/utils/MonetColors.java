@@ -1,13 +1,11 @@
 package org.blinksd.utils;
 
-import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
-import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.utils.ResourcesUtils.getColor;
 import static org.blinksd.utils.SuperDBHelper.getBooleanOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 import static org.blinksd.utils.SuperDBHelper.getStringOrDefault;
+import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
 import android.annotation.SuppressLint;
@@ -268,11 +266,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
     /** @noinspection ConstantConditions */
     private int getColorFromIndex(int index) {
         final var scheme = getStringOrDefault(SettingMap.SET_MONET_COLOR_SCHEME);
-        final var resId = get(scheme)[isDark() ? 1 : 0][index];
+        final var resId = get(scheme)[isDarkThemeEnabled() ? 1 : 0][index];
         return isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
-    }
-
-    public static boolean isDark() {
-        return (getResConfiguration().uiMode & UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES;
     }
 }
