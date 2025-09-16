@@ -2,6 +2,7 @@ package org.blinksd.utils;
 
 import android.util.Log;
 import android.util.Property;
+import android.view.Window;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -38,24 +39,22 @@ public final class MiniLSPass {
     }
 
     /**
-     * set a restrict field named {@code fieldName} of the given object {@code thiz} to the {@code arg}
-     * 
-     * @param thisObj    this object, which cannot be {@code null}
-     * @param fieldName  the field name
-     * @param arg        argument to set the field with name {@code fieldName}
+     * disable Google's Edge2Edge enforcement.
+     *
+     * @param window The current activity/service window
      */
-    public static void setField(Object thisObj, String fieldName, Object arg) {
+    public static void disableEdgeToEdge(Window window) {
         try {
-            Field field = thisObj.getClass().getDeclaredField(fieldName);
+            Field field = window.getClass().getDeclaredField("mEdgeToEdgeEnforced");
             field.setAccessible(true);
-            field.set(thisObj, arg);
+            field.set(window, false);
         } catch (Throwable e) {
             Log.w(TAG, "setField", e);
         }
     }
 
     /**
-     * Allows an app to execute the hidden API methods without restrictions.
+     * allow an app to execute the hidden API methods without restrictions.
      */
     public static void allowHiddenApi() {
         try {

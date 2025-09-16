@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -159,9 +158,5 @@ public final class SystemUtils {
 
     public static float getMultipliedTextSize(float size) {
         return 1.5f * size;
-    }
-
-    public static void disableEdgeToEdge(Window window) {
-        MiniLSPass.setField(window, "mEdgeToEdgeEnforced", false);
     }
 }
