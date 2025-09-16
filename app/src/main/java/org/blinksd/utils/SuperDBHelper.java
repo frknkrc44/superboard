@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class SuperDBHelper {
-    private static final List<String> THEME_PROPS = Arrays.asList(
+    private static final List<String> EXCEPT_PROPS = Arrays.asList(
+            // don't export theme props
             SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT,
             SettingMap.SET_ICON_THEME,
             SettingMap.SET_KEYBOARD_BGCLR,
@@ -190,6 +191,6 @@ public final class SuperDBHelper {
     }
 
     public static Map<String, String> exportAllExceptTheme() {
-        return exportAllToMap(THEME_PROPS);
+        return exportAllToMap(EXCEPT_PROPS);
     }
 }
