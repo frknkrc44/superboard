@@ -1,6 +1,8 @@
 package org.blinksd.utils;
 
 import static android.os.Build.VERSION.SDK_INT;
+import static android.view.WindowInsets.Type.systemBars;
+import static android.view.WindowInsets.Type.systemGestures;
 import static org.blinksd.board.SuperBoardApplication.getResConfiguration;
 import static org.blinksd.board.SuperBoardApplication.getSBApplication;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
@@ -16,7 +18,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Insets;
 import android.os.Build;
 import android.os.Environment;
 import android.view.View;
@@ -100,18 +101,13 @@ public final class SystemUtils {
             return DensityUtils.dpInt(48);
         } else if (SDK_INT >= Build.VERSION_CODES.R) {
             WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-            Insets gestureInsets = wm.getCurrentWindowMetrics()
-                    .getWindowInsets()
-                    .getInsets(WindowInsets.Type.systemGestures());
+            WindowInsets windowInsets = wm.getCurrentWindowMetrics().getWindowInsets();
 
-            if (gestureInsets.bottom < 1) {
-                return wm.getCurrentWindowMetrics()
-                        .getWindowInsets()
-                        .getInsets(WindowInsets.Type.systemBars())
-                        .bottom;
-            }
+            int bottomGestureInset = windowInsets.getInsets(systemGestures()).bottom;
+            if (bottomGestureInset > 0)
+                return (int) (bottomGestureInset * 1.5f);
 
-            return (int) (gestureInsets.bottom * 1.5f);
+            return windowInsets.getInsets(systemBars()).bottom;
         }
 
         return 0;
