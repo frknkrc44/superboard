@@ -272,7 +272,7 @@ public class MonetColors extends LinkedHashMap<String, int[][]> {
         return isSystemMonetEnabled() ? getColor(resId) : getColorCompat(resId);
     }
 
-    private static boolean isDark() {
+    public static boolean isDark() {
         return (getResConfiguration().uiMode & UI_MODE_NIGHT_MASK) == UI_MODE_NIGHT_YES;
     }
 }

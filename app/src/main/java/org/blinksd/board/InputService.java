@@ -635,7 +635,7 @@ public final class InputService extends InputMethodService implements
             boolean isDBEmpty = getDictDB()
                     .getTableLength(currentLanguageCache.language.split("_")[0]) < 1;
             boolean topBarDisabled = getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR);
-            boolean sugDisabled = topBarDisabled || getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS) || isDBEmpty;
+            boolean sugDisabled = topBarDisabled || isDBEmpty || getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
             boolean fnDisabled = topBarDisabled || getBooleanOrDefault(SettingMap.SET_HIDE_TOP_BAR_FN_BUTTONS);
             boolean numDisabled = !topBarDisabled && getBooleanOrDefault(SettingMap.SET_DISABLE_NUMBER_ROW);
             boolean showFABRight = !topBarDisabled && getBooleanOrDefault(SettingMap.SET_SHOW_FAB_RIGHT);
@@ -654,12 +654,11 @@ public final class InputService extends InputMethodService implements
                 RowOptions subKOpt = kOpt.get(i);
                 for (int g = 0; g < subKOpt.keys.size(); g++) {
                     KeyOptions ko = subKOpt.keys.get(g);
-                    if (ko.darkerKeyTint) {
-                        superBoardView.setKeyBackgroundAndItemColor(0, i, g, key2Bg, key2TextClr);
-                    }
 
                     if (ko.pressKeyCode == Keyboard.KEYCODE_DONE) {
                         superBoardView.setKeyBackgroundAndItemColor(0, i, g, enterBg, enterTextClr);
+                    } else if (ko.darkerKeyTint) {
+                        superBoardView.setKeyBackgroundAndItemColor(0, i, g, key2Bg, key2TextClr);
                     }
                 }
             }
@@ -671,6 +670,7 @@ public final class InputService extends InputMethodService implements
                 emojiView.applyTheme(superBoardView);
                 emojiView.getLayoutParams().height = superBoardView.getKeyboardHeight();
             }
+
             clearCustomFont();
             getCustomFont();
 
