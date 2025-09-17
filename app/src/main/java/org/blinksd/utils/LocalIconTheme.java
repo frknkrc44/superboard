@@ -2,7 +2,6 @@ package org.blinksd.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 import org.blinksd.board.services.parcelables.IconThemeParcel;
@@ -50,26 +49,12 @@ public final class LocalIconTheme {
 
     public LocalIconTheme(int[] map) {
         this(
-                getDrawable(map[0]),
-                getDrawable(map[1]),
-                getDrawable(map[2]),
-                getDrawable(map[3]),
-                getDrawable(map[4])
+                IconThemeUtils.getDrawable(map[0]),
+                IconThemeUtils.getDrawable(map[1]),
+                IconThemeUtils.getDrawable(map[2]),
+                IconThemeUtils.getDrawable(map[3]),
+                IconThemeUtils.getDrawable(map[4])
         );
-    }
-
-    private static Drawable getDrawable(int res) {
-        switch (res) {
-            case SpaceBarThemeUtils.SPACEBAR_DEFAULT:
-            case SpaceBarThemeUtils.SPACEBAR_TEXT:
-                return null;
-            case SpaceBarThemeUtils.SPACEBAR_HIDE:
-                return new ColorDrawable();
-            default:
-                break;
-        }
-
-        return ResourcesUtils.getDrawable(res);
     }
 
     public Drawable getIconByType(int type) {
@@ -86,6 +71,6 @@ public final class LocalIconTheme {
                 return deleteIcon;
         }
 
-        return new ColorDrawable();
+        return IconThemeUtils.emptyDrawable;
     }
 }

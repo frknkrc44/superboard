@@ -24,6 +24,8 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
     private final Context mContext;
     private Runnable mRunnable;
 
+    public static final Drawable emptyDrawable = new ColorDrawable();
+
     public IconThemeUtils(Context context) {
         put("theme_default", new LocalIconTheme(new int[]{
                 R.drawable.sym_keyboard_shift,
@@ -145,9 +147,9 @@ public final class IconThemeUtils extends ListedMap<String, LocalIconTheme> {
         return get(containsKey(themeKey) ? themeKey : Defaults.ICON_THEME).getIconByType(type);
     }
 
-    private Drawable getDrawable(int res) {
+    public static Drawable getDrawable(int res) {
         return switch (res) {
-            case SpaceBarThemeUtils.SPACEBAR_HIDE -> new ColorDrawable();
+            case SpaceBarThemeUtils.SPACEBAR_HIDE -> emptyDrawable;
             case SpaceBarThemeUtils.SPACEBAR_TEXT, SpaceBarThemeUtils.SPACEBAR_DEFAULT -> null;
             default -> ResourcesUtils.getDrawable(res);
         };
