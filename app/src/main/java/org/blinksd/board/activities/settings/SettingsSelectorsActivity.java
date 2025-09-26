@@ -7,6 +7,7 @@ import static org.blinksd.board.SuperBoardApplication.getMonetColors;
 import static org.blinksd.board.SuperBoardApplication.getSettings;
 import static org.blinksd.board.SuperBoardApplication.getSpaceBarStyles;
 import static org.blinksd.board.SuperBoardApplication.getThemesCache;
+import static org.blinksd.utils.DialogUtils.doHacksAndShow;
 import static org.blinksd.utils.LayoutUtils.getKeyListFromLanguageList;
 import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.ResourcesUtils.getListPreferredItemHeight;

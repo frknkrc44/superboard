@@ -2,6 +2,7 @@ package org.blinksd.board.views;
 
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
+import static org.blinksd.utils.DialogUtils.doHacksAndShow;
 import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
@@ -36,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.blinksd.board.R;
-import org.blinksd.board.activities.settings.AppSettingsV3;
 import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
@@ -53,6 +53,7 @@ import thirdparty.android.widget.TabWidget;
 public final class ImageSelectorLayout extends LinearLayout {
     private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;
+    private final TabHost host;
     private TreeMap<Integer, Integer> colorList;
     GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
@@ -73,7 +74,7 @@ public final class ImageSelectorLayout extends LinearLayout {
                 prev.setImageBitmap(convertGradientToBitmap());
                 p0.dismiss();
             });
-            AppSettingsV3.doHacksAndShow(build.create());
+            doHacksAndShow(build.create());
         }
 
     };
@@ -106,7 +107,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         TabWidget widget = new TabWidget(win.getContext());
         widget.setId(android.R.id.tabs);
 
-        final TabHost host = new TabHost(win.getContext());
+        host = new TabHost(win.getContext());
         host.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2));
         FrameLayout fl = new FrameLayout(win.getContext());
         fl.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -1));
@@ -144,7 +145,8 @@ public final class ImageSelectorLayout extends LinearLayout {
                     setCurrentWallpaperPreview();
                     break;
                 case 1:
-                    gradientAddColorListener.onClick(host);
+                    showGradientColorPresetsDialog();
+                    // gradientAddColorListener.onClick(host);
                     break;
             }
 
@@ -317,6 +319,40 @@ public final class ImageSelectorLayout extends LinearLayout {
         Canvas drw = new Canvas(out);
         gd.draw(drw);
         return out;
+    }
+
+    private void showGradientColorPresetsDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle(getImageSelectorTranslation("gradient"))
+                .create();
+
+        final var view = new GradientColorPresetsView(getContext(), new GradientColorPresetsView.OnGradientItemClickListener() {
+            @Override
+            public void onColorPressed(int[] scheme) {
+                ViewGroup gradientSel = host.findViewById(R.id.gradient_selector);
+
+                for (int item : scheme) {
+                    int index = indexNum++;
+                    View v = getColorSelectorItem(getContext(), index);
+                    int count = gradientSel.getChildCount();
+                    gradientSel.addView(v, count - 2);
+                    v.setTag(item);
+                }
+
+                prev.setImageBitmap(convertGradientToBitmap());
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onAddPressed() {
+                dialog.dismiss();
+                gradientAddColorListener.onClick(host);
+            }
+        });
+
+        dialog.setView(view);
+
+        doHacksAndShow(dialog);
     }
 
     private final View.OnClickListener gradientAddColorListener = new View.OnClickListener() {

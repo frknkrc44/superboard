@@ -4,8 +4,8 @@ import static org.blinksd.board.SuperBoardApplication.getAppDB;
 import static org.blinksd.board.SuperBoardApplication.getCurrentKeyboardLanguage;
 import static org.blinksd.board.SuperBoardApplication.getDictDB;
 import static org.blinksd.board.SuperBoardApplication.getKeyboardLanguageList;
-import static org.blinksd.board.activities.settings.SettingsBaseActivity.doHacksAndShow;
 import static org.blinksd.utils.DensityUtils.dpInt;
+import static org.blinksd.utils.DialogUtils.doHacksAndShow;
 import static org.blinksd.utils.ResourcesUtils.getTransSelectableItemBg;
 
 import android.app.AlertDialog;
