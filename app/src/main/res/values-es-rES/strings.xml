@@ -62,7 +62,7 @@
     <string name="settings_insert_space_after_punc">Insertar espacio después de la puntuación</string>
     <string name="settings_monet_color_scheme">Esquema de color Monet</string>
     <string name="settings_keyboard_padding">Relleno de teclas</string>
-    <string name="settings_keyboard_round">Keyboard radius</string>
+    <string name="settings_keyboard_round">Radio del teclado</string>
     <string name="settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
     <string name="settings_emoji_use_vertical_scroll_portrait">Usar desplazamiento vertical en modo vertical</string>
     <string name="settings_emoji_use_vertical_scroll_landscape">Usar desplazamiento vertical en modo horizontal</string>
