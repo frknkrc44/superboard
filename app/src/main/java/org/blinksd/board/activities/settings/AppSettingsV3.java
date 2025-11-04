@@ -21,7 +21,6 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
         super.onCreate(b);
         main = LayoutCreator.createFilledVerticalLayout(FrameLayout.class, this);
         createAppBarView();
-        // createPreviewView();
         createTabBarView();
 
         setKeyPrefs();
@@ -31,34 +30,6 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
         mTabsHolder.getChildAt(mTabsHolder.getChildCount() - 1).requestFocus();
     }
-
-    /*
-    private void createPreviewView() {
-        LinearLayout mainHolder = (LinearLayout) LayoutCreator.getHFilledView(LinearLayout.class, LinearLayout.class, this);
-        mainHolder.setGravity(Gravity.CENTER);
-        mPreviewHolder = (FrameLayout) LayoutCreator.getHFilledView(FrameLayout.class, LinearLayout.class, this);
-        mPreviewHolder.setForegroundGravity(Gravity.CENTER);
-        kbdPreview = new PreviewBoard(this);
-        kbdPreview.addRow(0, new String[]{"1", "2", "3", "4"});
-        kbdPreview.getKey(0, 0, 0).setSubText("½");
-        for (int i = 0; i < 4; i++) kbdPreview.getKey(0, 0, i).setId(i);
-        kbdPreview.createEmptyLayout(KeyboardType.TEXT);
-        kbdPreview.setEnabledLayout(0);
-        kbdPreview.setKeysPadding(minPInt(1));
-        kbdPreview.setKeyboardHeight(12);
-        backgroundImageView = new ImageView(this);
-        backgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        backgroundImageView.setLayoutParams(new FrameLayout.LayoutParams(-1, -2));
-        mPreviewHolder.addView(backgroundImageView);
-        mPreviewHolder.addView(kbdPreview);
-        mainHolder.addView(mPreviewHolder);
-        main.addView(mainHolder);
-
-        if (isWatchDevice()) {
-            mainHolder.setVisibility(GONE);
-        }
-    }
-     */
 
     @SuppressWarnings({"deprecation", "all"})
     private void createAppBarView() {

@@ -282,6 +282,12 @@ public final class InputService extends InputMethodService implements
                 superBoardView.isDisabledSuggestionsTemporarily() ||
                 getBooleanOrDefault(SettingMap.SET_DISABLE_TOP_BAR) ||
                 getBooleanOrDefault(SettingMap.SET_DISABLE_SUGGESTIONS);
+
+        if (suggestionLayout != null && sugDisabled) {
+            suggestionLayout.clearCompletions();
+            return;
+        }
+
         if (superBoardView == null) return;
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;

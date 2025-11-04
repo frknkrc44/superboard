@@ -158,6 +158,10 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         task.execute(lang, str);
     }
 
+    public void clearCompletions() {
+        mCompletionsLayout.removeAllViews();
+    }
+
     private void addCompletionView(final CharSequence text) {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
