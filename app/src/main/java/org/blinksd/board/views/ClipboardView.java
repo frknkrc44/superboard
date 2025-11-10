@@ -106,11 +106,15 @@ public final class ClipboardView extends LinearLayout
 
         addView(scrollView);
 
-        String[] clipboardHistoryArray = getAppDB()
-                .getStringArray(SettingMap.SET_CLIPBOARD_HISTORY, new String[]{});
-        for (String str : clipboardHistoryArray) {
-            clipboardHistory.add(str);
-            addClipView(str, false);
+        try {
+            String[] clipboardHistoryArray = getAppDB()
+                    .getStringArray(SettingMap.SET_CLIPBOARD_HISTORY, new String[]{});
+            for (String str : clipboardHistoryArray) {
+                clipboardHistory.add(str);
+                addClipView(str, false);
+            }
+        } catch (Throwable e) {
+            getAppDB().removeKeyFromDB(SettingMap.SET_CLIPBOARD_HISTORY);
         }
 
         clipboardManager = (ClipboardManager) getContext()
