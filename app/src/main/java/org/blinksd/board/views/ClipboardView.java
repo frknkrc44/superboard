@@ -26,6 +26,7 @@ import android.widget.TextView;
 import org.blinksd.board.R;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.TextUtilsCompat;
 import org.blinksd.utils.ViewUtils;
 import org.frknkrc44.minidb.SuperMiniDB;
 
@@ -157,6 +158,8 @@ public final class ClipboardView extends LinearLayout
                 v -> removeClipView(clipLayout, true),
                 null
         );
+
+        reTheme(clipLayout);
 
         if (addToHistory) {
             clipboardHistory.add(text);
@@ -315,6 +318,10 @@ public final class ClipboardView extends LinearLayout
     }
 
     public void reTheme() {
+        reTheme(null);
+    }
+
+    public void reTheme(View targetView) {
         getLayoutParams().height = superBoard.getHeight();
 
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
@@ -326,21 +333,34 @@ public final class ClipboardView extends LinearLayout
         setColorFilter(backButton, textColor);
         backButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
 
-        final int childCount = listView.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = listView.getChildAt(i);
+        // target all if targetView is null
+        if (targetView == null) {
+            final int childCount = listView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = listView.getChildAt(i);
 
-            ExpandableTextView textView1 = child.findViewById(android.R.id.text1);
-            textView1.setTextColor(textColor);
-            textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(superBoard.getKeysTextSize()) * 0.75f);
-
-            ImageButton button1 = child.findViewById(android.R.id.button1);
-            setColorFilter(button1, textColor);
-            button1.setBackground(getTransSelectableItemBg(getContext(), textColor));
-
-            ImageButton button2 = child.findViewById(android.R.id.button2);
-            setColorFilter(button2, textColor);
-            button2.setBackground(getTransSelectableItemBg(getContext(), textColor));
+                reThemeLocked(child);
+            }
+        } else {
+            reThemeLocked(targetView);
         }
+    }
+
+    private void reThemeLocked(View child) {
+        int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
+        textColor = convertARGBtoRGB(textColor);
+
+        ExpandableTextView textView1 = child.findViewById(android.R.id.text1);
+        textView1.setTextColor(textColor);
+        textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getMultipliedTextSize(superBoard.getKeysTextSize()) * 0.75f);
+        TextUtilsCompat.setCurrentTypeface(textView1);
+
+        ImageButton button1 = child.findViewById(android.R.id.button1);
+        setColorFilter(button1, textColor);
+        button1.setBackground(getTransSelectableItemBg(getContext(), textColor));
+
+        ImageButton button2 = child.findViewById(android.R.id.button2);
+        setColorFilter(button2, textColor);
+        button2.setBackground(getTransSelectableItemBg(getContext(), textColor));
     }
 }

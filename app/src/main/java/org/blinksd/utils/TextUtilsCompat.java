@@ -1,6 +1,7 @@
 package org.blinksd.utils;
 
 import static org.blinksd.board.SuperBoardApplication.getCustomFont;
+import static org.blinksd.utils.SuperDBHelper.getIntOrDefault;
 
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -111,6 +112,10 @@ public final class TextUtilsCompat {
         paint.getTextBounds(TOFU_STRING, 0, TOFU_STRING.length(), rects.first);
         paint.getTextBounds(string, 0, length, rects.second);
         return !rects.first.equals(rects.second);
+    }
+
+    public static void setCurrentTypeface(TextView label) {
+        setTypefaceFromTextType(label, TextType.getFromIndex(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT)));
     }
 
     public static void setTypefaceFromTextType(TextView label, TextType style) {

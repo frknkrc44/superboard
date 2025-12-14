@@ -26,6 +26,8 @@ import org.blinksd.utils.ColorUtils;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
+import org.blinksd.utils.TextUtilsCompat;
+import org.blinksd.utils.superboard.TextType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,6 +179,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
         tv.setText(text);
         tv.setOnClickListener(this);
         tv.setFocusable(false);
+        TextUtilsCompat.setCurrentTypeface(tv);
         mCompletionsLayout.addView(tv);
     }
 
