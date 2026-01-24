@@ -95,6 +95,7 @@
     <string name="settings_key_vibrate_duration">কী প্রেস কম্পন সময়কাল</string>
     <string name="settings_keyboard_height">কীবোর্ডের উচ্চতা</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">দীর্ঘ প্রেস সময়কাল গুণক</string>
     <string name="settings_key_padding">বাটন প্যাডিং</string>
     <string name="settings_key_radius">বাটন ব্যাসার্ধ</string>
