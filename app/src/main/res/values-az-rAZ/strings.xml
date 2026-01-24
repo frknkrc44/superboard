@@ -95,6 +95,7 @@
     <string name="settings_key_vibrate_duration">Düyməni basmaq vibrasiya müddəti</string>
     <string name="settings_keyboard_height">Klaviatura hündürlüyü</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">Uzun basma müddəti multiplikatoru</string>
     <string name="settings_key_padding">Açar doldurma</string>
     <string name="settings_key_radius">Açar radiusu</string>
