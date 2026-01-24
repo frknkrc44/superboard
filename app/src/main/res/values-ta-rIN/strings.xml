@@ -95,6 +95,7 @@
     <string name="settings_key_vibrate_duration">விசை அழுத்தல் அதிர்வுறு நேரம்</string>
     <string name="settings_keyboard_height">விசைப்பலகை உயரம்</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">அழுத்திப் பிடித்திருக்கும் அவகாசப் பெருக்கி</string>
     <string name="settings_key_padding">விசை இடைவெளி</string>
     <string name="settings_key_radius">விசை ஆரம்</string>
