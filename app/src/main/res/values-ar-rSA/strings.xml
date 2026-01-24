@@ -95,6 +95,7 @@
     <string name="settings_key_vibrate_duration">مدة الاهتزاز عند الضغط على الزر</string>
     <string name="settings_keyboard_height">ارتفاع لوحة المفاتيح</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">مدة الضغط المطول</string>
     <string name="settings_key_padding">حشو الزر</string>
     <string name="settings_key_radius">دوران الحواف</string>
