@@ -38,6 +38,10 @@ android {
         versionName = keystoreProperties['VERNAME']
     }
 
+    base {
+        archivesName = "${rootProject.name}-v${defaultConfig.versionName}"
+    }
+
    signingConfigs {
        debug {
            keyAlias = keystoreProperties['KEYALIAS']
@@ -57,9 +61,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs (for IzzyOnDroid/F-Droid)
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles (for Google Play)
+        includeInBundle = false
     }
 
     namespace = android.defaultConfig.applicationId
@@ -67,12 +79,6 @@ android {
 
 dependencies {
     implementation 'com.github.frknkrc44:superminidb:b05b17d'
-}
-
-android.applicationVariants.configureEach { variant ->
-    variant.outputs.configureEach {
-        outputFileName = "${rootProject.name}-v${variant.versionName}-${variant.buildType.name}.apk"
-    }
 }
 
 preBuild.dependsOn ':pre'

@@ -102,7 +102,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
             SET_EMOJI_USE_VERTICAL_SCROLL_LANDSCAPE = "emoji_use_vertical_scroll_landscape",
             SET_SHOW_MATH_LAYOUT = "show_math_layout",
             SET_REPLACE_PHYSICAL_KEYS = "replace_physical_keys",
-            SET_KEYBOARD_ROUND = "keyboard_round";
+            SET_KEYBOARD_ROUND = "keyboard_round",
+            SET_GESTURE_HEIGHT_INCREASER = "gesture_height_increaser";
 
     public SettingMap() {
         final var documentsUiAvailable = isDocumentsUiAvailable();
@@ -143,6 +144,7 @@ public class SettingMap extends ListedMap<String, SettingItem> {
         if (!SystemUtils.isNotColorizeNavbar() || SDK_INT >= VANILLA_ICE_CREAM) {
             putTheming(SET_COLORIZE_NAVBAR, SettingType.BOOL, SET_COLORIZE_NAVBAR_ALT, false);
             putTheming(SET_COLORIZE_NAVBAR_ALWAYS_TRANS, SettingType.BOOL, SET_COLORIZE_NAVBAR, true);
+            putTheming(SET_GESTURE_HEIGHT_INCREASER, SettingType.FLOAT_NUMBER);
         }
         if (SDK_INT >= P)
             putTheming(SET_COLORIZE_NAVBAR_ALT, SettingType.BOOL, SET_COLORIZE_NAVBAR, false);
@@ -287,6 +289,8 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 return Defaults.KEYBOARD_HEIGHT;
             case SET_LANDSCAPE_HEIGHT_INCREASER:
                 return Defaults.LANDSCAPE_HEIGHT_INCREASER;
+            case SET_GESTURE_HEIGHT_INCREASER:
+                return Defaults.GESTURE_HEIGHT_INCREASER;
             case SET_KEY_LONGPRESS_DURATION:
                 return Defaults.KEY_LONGPRESS_DURATION;
             case SET_KEY_PADDING:
@@ -466,10 +470,16 @@ public class SettingMap extends ListedMap<String, SettingItem> {
                 minMaxNumbers[0] = Defaults.MinMaxValues.MIN_LANDSCAPE_HEIGHT_INCREASER;
                 minMaxNumbers[1] = Defaults.MinMaxValues.MAX_LANDSCAPE_HEIGHT_INCREASER;
                 break;
+            case SET_GESTURE_HEIGHT_INCREASER:
+                minMaxNumbers[0] = Defaults.MinMaxValues.MIN_GESTURE_HEIGHT_INCREASER;
+                minMaxNumbers[1] = Defaults.MinMaxValues.MAX_GESTURE_HEIGHT_INCREASER;
+                break;
             case SET_KEY_STROKE_WIDTH:
                 minMaxNumbers[1] = Defaults.MinMaxValues.MAX_STROKE_WIDTH;
+                break;
             case SET_KEYBOARD_ROUND:
                 minMaxNumbers[1] = Defaults.MinMaxValues.MAX_KEYBOARD_ROUND;
+                break;
         }
         return minMaxNumbers;
     }

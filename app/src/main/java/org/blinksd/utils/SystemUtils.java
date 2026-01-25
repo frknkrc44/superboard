@@ -101,12 +101,14 @@ public final class SystemUtils {
         } else if (SDK_INT >= Build.VERSION_CODES.R) {
             WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
             WindowInsets windowInsets = wm.getCurrentWindowMetrics().getWindowInsets();
+            float gestureHeightIncreaser = SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_GESTURE_HEIGHT_INCREASER);
 
             int bottomGestureInset = windowInsets.getInsets(systemGestures()).bottom;
-            if (bottomGestureInset > 0)
-                return (int) (bottomGestureInset * 1.5f);
+            if (bottomGestureInset > 0) {
+                return (int) (bottomGestureInset * gestureHeightIncreaser);
+            }
 
-            return windowInsets.getInsets(systemBars()).bottom;
+            return (int) (windowInsets.getInsets(systemBars()).bottom * gestureHeightIncreaser);
         }
 
         return 0;

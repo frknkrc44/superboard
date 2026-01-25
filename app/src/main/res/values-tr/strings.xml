@@ -100,6 +100,7 @@
 	<string name="settings_key_vibrate_duration">Tuş titreme süresi</string>
 	<string name="settings_keyboard_height">Klavye yüksekliği</string>
 	<string name="settings_land_height_increaser">Yatay mod için klavye yüksekliği arttırma oranı</string>
+    <string name="settings_gesture_height_increaser">Alt bar kaplama yüksekliği arttırma oranı</string>
 	<string name="settings_key_longpress_duration">Tuşa uzun basma süresi arttırıcı</string>
 	<string name="settings_key_padding">Tuş içe girintisi</string>
 	<string name="settings_key_radius">Tuş yuvarlaklığı</string>
