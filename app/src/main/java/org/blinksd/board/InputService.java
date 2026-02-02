@@ -245,6 +245,17 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
+    public void onWindowShown() {
+        super.onWindowShown();
+
+        setPrefs();
+
+        if (superBoardView != null) {
+            superBoardView.updateKeyState();
+        }
+    }
+
+    @Override
     public void requestHideSelf(int flags) {
         hiddenBySelf = true;
         super.requestHideSelf(flags);
@@ -255,7 +266,6 @@ public final class InputService extends InputMethodService implements
         super.onStartInput(attribute, restarting);
 
         if (superBoardView != null) {
-            setPrefs();
             superBoardView.updateKeyState();
         }
     }
