@@ -51,7 +51,6 @@ import android.inputmethodservice.Keyboard;
 import android.os.Build;
 import android.view.InputDevice;
 import android.view.KeyEvent;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -107,8 +106,6 @@ public final class InputService extends InputMethodService implements
     private boolean hiddenBySelf = false;
     Intent settingsActivity = null;
     final Runnable onColorsLoadedListener = this::setPrefs;
-    private OrientationEventListener mOrientationEventListener;
-    private boolean mOrientationDetectionEnabled = true;
 
     private final View.OnClickListener emojiClick = v -> {
         final int num = Integer.parseInt(v.getTag().toString());
@@ -254,22 +251,13 @@ public final class InputService extends InputMethodService implements
 
         if (superBoardView != null)
             superBoardView.updateKeyState();
+    }
 
-        if (mOrientationEventListener == null && mOrientationDetectionEnabled) {
-            mOrientationEventListener = new OrientationEventListener(this) {
-                @Override
-                public void onOrientationChanged(int orientation) {
-                    setPrefs();
-                }
-            };
+    @Override
+    public void onComputeInsets(Insets outInsets) {
+        super.onComputeInsets(outInsets);
 
-            if (mOrientationEventListener.canDetectOrientation()) {
-                mOrientationEventListener.enable();
-            } else {
-                mOrientationDetectionEnabled = false;
-                mOrientationEventListener = null;
-            }
-        }
+        setPrefs();
     }
 
     @Override
