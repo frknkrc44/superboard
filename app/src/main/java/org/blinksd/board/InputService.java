@@ -254,13 +254,6 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
-    public void onComputeInsets(Insets outInsets) {
-        super.onComputeInsets(outInsets);
-
-        setPrefs();
-    }
-
-    @Override
     public void requestHideSelf(int flags) {
         hiddenBySelf = true;
         super.requestHideSelf(flags);
