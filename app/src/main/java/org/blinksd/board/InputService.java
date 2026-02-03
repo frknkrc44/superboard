@@ -250,9 +250,8 @@ public final class InputService extends InputMethodService implements
 
         setPrefs();
 
-        if (superBoardView != null) {
+        if (superBoardView != null)
             superBoardView.updateKeyState();
-        }
     }
 
     @Override
@@ -265,9 +264,11 @@ public final class InputService extends InputMethodService implements
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
 
-        if (superBoardView != null) {
+        if (superBoardView != null)
             superBoardView.updateKeyState();
-        }
+
+        if (suggestionLayout != null)
+            suggestionLayout.setCompletion(superBoardView, null, null);
     }
 
     @Override
