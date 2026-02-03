@@ -18,6 +18,7 @@ import static org.blinksd.utils.DensityUtils.getFloatNumberFromInt;
 import static org.blinksd.utils.DensityUtils.hp;
 import static org.blinksd.utils.DensityUtils.minP;
 import static org.blinksd.utils.DensityUtils.minPInt;
+import static org.blinksd.utils.IMUtils.getFullText;
 import static org.blinksd.utils.LayoutUtils.getLayoutKeys;
 import static org.blinksd.utils.LayoutUtils.getSpecialCases;
 import static org.blinksd.utils.LayoutUtils.setKeyOpts;
@@ -48,6 +49,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.View;
@@ -140,7 +142,7 @@ public final class InputService extends InputMethodService implements
     }
 
     @Override
-    public void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion) {
+    public void onSuggestionSelected(String text, String oldText, int oldTextPosition, CharSequence suggestion) {
         if (superBoardView == null) return;
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
@@ -166,19 +168,19 @@ public final class InputService extends InputMethodService implements
                 break;
         }
 
-        ExtractedTextRequest req = new ExtractedTextRequest();
-        ExtractedText exText = ic.getExtractedText(req, 0);
-        String exTextStr = exText.text.toString();
-        exTextStr = exTextStr.substring(text.length() - 1);
+        String fullText = getFullText(ic);
+        if (fullText == null) fullText = text; // not required, but trying to keep linter quiet
 
-        ic.deleteSurroundingText(oldText.length(), exTextStr.indexOf(' '));
+        int replacementEndPosition = fullText.length();
+        if (oldTextPosition + oldText.length() < fullText.length()) {
+            replacementEndPosition = fullText.indexOf(' ', oldTextPosition);
+        }
+
+        ic.deleteSurroundingText(oldText.length(), replacementEndPosition - oldText.length() + 1);
         suggestion += " ";
-        ic.commitText(suggestion, suggestion.length());
+        ic.commitText(suggestion, oldTextPosition + suggestion.length());
 
-        req = new ExtractedTextRequest();
-        exText = ic.getExtractedText(req, 0);
-        exTextStr = exText.text.toString();
-        int pos = exTextStr.indexOf(' ', exText.selectionStart);
+        int pos = oldTextPosition + suggestion.length();
         ic.setSelection(pos, pos);
 
         superBoardView.afterKeyboardEvent();

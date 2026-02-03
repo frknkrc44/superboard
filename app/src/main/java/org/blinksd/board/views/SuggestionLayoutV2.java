@@ -44,6 +44,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     private final ExecutorService mThreadPool = Executors.newFixedThreadPool(64);
     private OnSuggestionSelectedListener mOnSuggestionSelectedListener;
     private String mLastText, mCompleteText;
+    private int mLastTextIndex = 0;
     private FABView fabView;
     private boolean oldReversed = false;
 
@@ -103,7 +104,7 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     }
 
     public void setCompletion(SuperBoard superBoard, ExtractedText text, String lang) {
-        setCompletionText(superBoard, text == null ? "" : text.text, lang);
+        setCompletionText(superBoard, text == null ? null : text.text, lang);
     }
 
     public void setReversed(boolean reversed) {
@@ -151,9 +152,19 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
             return;
         }
 
-        str = str.trim();
-        str = str.substring(str.lastIndexOf(' ') + 1);
-        str = str.substring(str.lastIndexOf('\n') + 1);
+        mLastTextIndex = mCompleteText.lastIndexOf(' ');
+        var lastNLIndex = mCompleteText.lastIndexOf('\n');
+        if (lastNLIndex >= 0) {
+            mLastTextIndex = lastNLIndex;
+        }
+
+        if (mLastTextIndex > 0) {
+            mLastTextIndex++;
+        } else if (mLastTextIndex < 0) {
+            mLastTextIndex = 0;
+        }
+
+        str = str.substring(mLastTextIndex);
         mLastText = str;
         LoadDictTask task = new LoadDictTask();
         mLoadDictTasks.add(task);
@@ -230,12 +241,12 @@ public class SuggestionLayoutV2 extends RelativeLayout implements View.OnClickLi
     @Override
     public void onClick(View p1) {
         if (mOnSuggestionSelectedListener != null) {
-            mOnSuggestionSelectedListener.onSuggestionSelected(mCompleteText, mLastText, ((TextView) p1).getText());
+            mOnSuggestionSelectedListener.onSuggestionSelected(mCompleteText, mLastText, mLastTextIndex, ((TextView) p1).getText());
         }
     }
 
     public interface OnSuggestionSelectedListener {
-        void onSuggestionSelected(CharSequence text, CharSequence oldText, CharSequence suggestion);
+        void onSuggestionSelected(String text, String oldText, int oldTextPosition, CharSequence suggestion);
     }
 
     private class LoadDictTask {
