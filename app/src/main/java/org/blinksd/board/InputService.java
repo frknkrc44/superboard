@@ -49,7 +49,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.View;
@@ -57,8 +56,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.ExtractedText;
-import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -660,7 +657,7 @@ public final class InputService extends InputMethodService implements
             boolean showFABRight = !topBarDisabled && getBooleanOrDefault(SettingMap.SET_SHOW_FAB_RIGHT);
             superBoardView.setPressEventForKey(2, 3, 0,
                     fnDisabled ? Keyboard.KEYCODE_ALT : Keyboard.KEYCODE_CANCEL);
-            superBoardView.getKey(2, 3, 0).setText(topBarDisabled || fnDisabled ? "S3" : "S1");
+            superBoardView.setKeyText(2, 3, 0, topBarDisabled || fnDisabled ? "S3" : "S1");
             suggestionLayout.setVisibility(sugDisabled && topBarDisabled ? View.GONE : View.VISIBLE);
             suggestionLayout.setOnSuggestionSelectedListener(sugDisabled ? null : this);
             suggestionLayout.setReversed(showFABRight);
@@ -682,7 +679,7 @@ public final class InputService extends InputMethodService implements
                 }
             }
 
-            superBoardView.getRow(0, 0).setVisibility(numDisabled ? View.GONE : View.VISIBLE);
+            superBoardView.setRowVisibility(0, 0, !numDisabled);
 
             superBoardView.setKeyboardLanguage(currentLanguageCache.language);
             if (emojiView != null) {
@@ -751,8 +748,8 @@ public final class InputService extends InputMethodService implements
         if (!language.language.equals(lang)) {
             throw new RuntimeException("Where is the layout JSON file (in assets)?");
         }
-        String[][] lkeys = getLayoutKeys(language.layout);
-        superBoardView.replaceTextKeyboard(lkeys);
+        String[][] layoutKeys = getLayoutKeys(language.layout);
+        superBoardView.replaceTextKeyboard(layoutKeys);
         superBoardView.setLayoutPopup(keyboardIndex, getLayoutKeys(language.popup));
         for (int i = 0; i < language.layout.size(); i++) {
             RowOptions opts = language.layout.get(i);

@@ -27,7 +27,6 @@ import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.SuperDBHelper;
 import org.blinksd.utils.TextUtilsCompat;
-import org.blinksd.utils.superboard.TextType;
 
 import java.util.ArrayList;
 import java.util.List;

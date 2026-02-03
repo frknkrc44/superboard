@@ -237,6 +237,12 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         createEmptyLayout(KeyboardType.TEXT);
     }
 
+    public final void setKeyText(int keyboardIndex, int rowIndex, int keyIndex, String text) {
+        Key key = getKey(keyboardIndex, rowIndex, keyIndex);
+        if (key == null) return;
+        key.setText(text);
+    }
+
     public final void setKeyBackgroundAndItemColor(int keyboardIndex, int rowIndex, int keyIndex, Drawable background, int itemColor) {
         Key key = getKey(keyboardIndex, rowIndex, keyIndex);
         if (key == null) return;
@@ -996,6 +1002,13 @@ public class SuperBoard extends FrameLayout implements OnTouchListener {
         final var row = getRow(keyboardIndex, rowIndex);
         if (row == null) return;
         row.setPadding(padding, 0, padding, 0);
+    }
+
+
+    public final void setRowVisibility(int keyboardIndex, int rowIndex, boolean visible) {
+        final var row = getRow(keyboardIndex, rowIndex);
+        if (row == null) return;
+        row.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public final boolean isDisabledModifierForKeyboard(int keyboardIndex) {
