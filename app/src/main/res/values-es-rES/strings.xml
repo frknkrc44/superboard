@@ -95,7 +95,7 @@
     <string name="settings_key_vibrate_duration">Duración de la vibración al presionar una tecla</string>
     <string name="settings_keyboard_height">Altura del teclado</string>
     <string name="settings_land_height_increaser">La altura del teclado aumenta la cantidad para el modo horizontal</string>
-    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
+    <string name="settings_gesture_height_increaser">Aumenta la altura de la barra de navegación</string>
     <string name="settings_key_longpress_duration">Multiplicador de duración de pulsación larga</string>
     <string name="settings_key_padding">Espaciado entre teclas</string>
     <string name="settings_key_radius">Radio de las esquinas de las teclas</string>
