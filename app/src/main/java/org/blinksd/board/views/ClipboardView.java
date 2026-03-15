@@ -332,17 +332,11 @@ public final class ClipboardView extends LinearLayout
 
         setColorFilter(clearAllButton, textColor);
         clearAllButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
-        clearAllButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
-        var clearAllButtonParams = (LinearLayout.LayoutParams) clearAllButton.getLayoutParams();
-        clearAllButtonParams.width = clearAllButtonParams.height = buttonSize;
-        clearAllButtonParams.rightMargin = buttonPadding;
+        setButtonSize(clearAllButton, buttonSize, buttonPadding, true);
 
         setColorFilter(backButton, textColor);
         backButton.setBackground(getTransSelectableItemBg(getContext(), textColor));
-        backButton.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
-        var backButtonParams = (LinearLayout.LayoutParams) backButton.getLayoutParams();
-        backButtonParams.width = backButtonParams.height = buttonSize;
-        backButtonParams.rightMargin = buttonPadding;
+        setButtonSize(backButton, buttonSize, buttonPadding, true);
 
         // target all if targetView is null
         if (targetView == null) {
@@ -350,19 +344,16 @@ public final class ClipboardView extends LinearLayout
             for (int i = 0; i < childCount; i++) {
                 View child = listView.getChildAt(i);
 
-                reThemeLocked(child);
+                reThemeLocked(child, buttonSize, buttonPadding);
             }
         } else {
-            reThemeLocked(targetView);
+            reThemeLocked(targetView, buttonSize, buttonPadding);
         }
     }
 
-    private void reThemeLocked(View child) {
+    private void reThemeLocked(View child, int buttonSize, int buttonPadding) {
         int textColor = SuperDBHelper.getIntOrDefault(SettingMap.SET_KEY_TEXTCLR);
         textColor = convertARGBtoRGB(textColor);
-
-        int buttonSize = dpInt(48);
-        int buttonPadding = buttonSize / 4;
 
         var childParams = (LinearLayout.LayoutParams) child.getLayoutParams();
         childParams.rightMargin = buttonPadding;
@@ -376,15 +367,21 @@ public final class ClipboardView extends LinearLayout
         ImageButton button1 = child.findViewById(android.R.id.button1);
         setColorFilter(button1, textColor);
         button1.setBackground(getTransSelectableItemBg(getContext(), textColor));
-        var button1Params = button1.getLayoutParams();
-        button1Params.width = button1Params.height = buttonSize;
-        button1.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        setButtonSize(button1, buttonSize, buttonPadding, false);
 
         ImageButton button2 = child.findViewById(android.R.id.button2);
         setColorFilter(button2, textColor);
         button2.setBackground(getTransSelectableItemBg(getContext(), textColor));
-        var button2Params = button2.getLayoutParams();
-        button2Params.width = button2Params.height = buttonSize;
-        button2.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+        setButtonSize(button2, buttonSize, buttonPadding, false);
+    }
+
+    private void setButtonSize(ImageButton button, int buttonSize, int buttonPadding, boolean setRightMargin) {
+        button.setPadding(buttonPadding, buttonPadding, buttonPadding, buttonPadding);
+
+        var buttonParams = (LinearLayout.LayoutParams) button.getLayoutParams();
+        buttonParams.width = buttonParams.height = buttonSize;
+        if (setRightMargin) {
+            buttonParams.rightMargin = buttonPadding;
+        }
     }
 }
