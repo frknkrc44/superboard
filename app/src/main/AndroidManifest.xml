@@ -9,10 +9,6 @@
         tools:ignore="AllFilesAccessPolicy,ScopedStorage" />
     <uses-permission android:name="android.permission.VIBRATE"/>
 
-    <uses-permission android:name="android.permission.GET_CLIPS" />
-    <uses-permission android:name="android.permission.WRITE_CLIPS"
-        tools:ignore="all" />
-
     <!--
     <permission-group
         android:name="org.blinksd.board.views.SuperBoard"
