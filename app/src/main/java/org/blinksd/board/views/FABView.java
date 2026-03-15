@@ -247,9 +247,25 @@ public class FABView extends LinearLayout {
         main.setBackground(getTransSelectableItemBg(getContext(), textColor));
         setColorFilter(main, textColor);
 
+        int btnSize = getButtonSize();
+        int p = DensityUtils.minPInt(2);
+        main.setPadding(p,p,p,p);
+
+        var mainLayoutParams = (LinearLayout.LayoutParams) main.getLayoutParams();
+        mainLayoutParams.rightMargin = p / 2;
+        mainLayoutParams.width = mainLayoutParams.height = (int) (btnSize * 0.85f);
+
+        var bugFixLayoutParams = bugFixLayout.getLayoutParams();
+        bugFixLayoutParams.width = bugFixLayoutParams.height = btnSize;
+
         final var childCount = buttonLayouts.getChildCount();
         for (int i = 0; i < childCount; i++) {
             if (buttonLayouts.getChildAt(i) instanceof StatefulImageView child) {
+                child.setPadding(p,p,p,p);
+                var layoutParams = (LinearLayout.LayoutParams) child.getLayoutParams();
+                layoutParams.rightMargin = p / 2;
+                layoutParams.width = layoutParams.height = (int) (btnSize * 0.75f);
+
                 if ((boolean) child.getTag(R.id.key_long_press)) {
                     var stateListDrawable = new StateListDrawable();
                     stateListDrawable.addState(new int[]{android.R.attr.state_selected}, getCircleButtonBackground(keyColor, textColor, true));
@@ -266,6 +282,8 @@ public class FABView extends LinearLayout {
                     child.setBackground(getCircleButtonBackground(keyColor, textColor, false));
                     setColorFilter(child, textColor);
                 }
+
+                child.invalidate();
             }
         }
     }
