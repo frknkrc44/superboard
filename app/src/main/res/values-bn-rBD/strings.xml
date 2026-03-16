@@ -135,6 +135,9 @@
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">ডিফল্ট</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
+    <!-- Settings image selector color scheme resources -->
+    <string name="settings_image_selector_cs_colorful_v1">Colorful</string>
+    <string name="settings_image_selector_cs_colorful_v2">Colorful with black background</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>নিয়মিত</item>
