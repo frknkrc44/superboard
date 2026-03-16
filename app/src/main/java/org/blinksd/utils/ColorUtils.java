@@ -272,7 +272,13 @@ public final class ColorUtils {
         bitmap = Bitmap.createScaledBitmap(bitmap, 64, 64, false);
         int width = bitmap.getWidth(), height = bitmap.getHeight();
         int[] pixels = new int[width * height];
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        if (bitmap.getConfig().equals(Bitmap.Config.HARDWARE)) {
+            var copyOfBitmap = bitmap.copy(Bitmap.Config.RGB_565, false);
+            copyOfBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        } else {
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        }
+
         int color, count = 0, r = 0, g = 0, b = 0, a;
         for (int pixel : pixels) {
             color = pixel;
