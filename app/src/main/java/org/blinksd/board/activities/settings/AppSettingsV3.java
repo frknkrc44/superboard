@@ -2,6 +2,8 @@ package org.blinksd.board.activities.settings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.blinksd.board.SuperBoardApplication.clearCustomFont;
+import static org.blinksd.board.SuperBoardApplication.getCustomFont;
 import static org.blinksd.board.SuperBoardApplication.isWatchDevice;
 
 import android.os.Bundle;
@@ -78,59 +80,9 @@ public class AppSettingsV3 extends SettingsCategoriesActivity {
 
     @Override
     public void setKeyPrefs() {
-        /*
-        boolean useMonet = getMonetColors().isMonetEnabled();
-
-        File img = getBackgroundImageFile();
-        if (img.exists() && !useMonet) {
-            int blur = getIntOrDefault(SettingMap.SET_KEYBOARD_BGBLUR);
-            Bitmap b = BitmapFactory.decodeFile(img.getAbsolutePath());
-            backgroundImageView.setImageBitmap(blur > 0 ? ImageUtils.getBlur(b, blur) : b);
-        } else {
-            backgroundImageView.setImageBitmap(null);
-        }
-        int keyClr = getIntOrDefault(SettingMap.SET_KEY_BGCLR);
-        int keyPressClr = getIntOrDefault(SettingMap.SET_KEY_PRESS_BGCLR);
-        kbdPreview.setKeysBackground(ResourcesUtils.getKeyBg(keyClr, keyPressClr, true));
-        Drawable key2Bg = ResourcesUtils.getKeyBg(
-                getIntOrDefault(SettingMap.SET_KEY2_BGCLR),
-                getIntOrDefault(SettingMap.SET_KEY2_PRESS_BGCLR), true);
-        Drawable enterBg = ResourcesUtils.getKeyBg(
-                getIntOrDefault(SettingMap.SET_ENTER_BGCLR),
-                getIntOrDefault(SettingMap.SET_ENTER_PRESS_BGCLR), true);
-        kbdPreview.setKeysShadow(getIntOrDefault(SettingMap.SET_KEY_SHADOWSIZE),
-                getIntOrDefault(SettingMap.SET_KEY_SHADOWCLR));
-        kbdPreview.setKeyBackground(0, 0, 2, key2Bg);
-        kbdPreview.setKeyBackground(0, 0, -1, enterBg);
-        kbdPreview.setBackgroundColor(getIntOrDefault(SettingMap.SET_KEYBOARD_BGCLR));
-        kbdPreview.setKeysTextSize(getFloatPercentOrDefault(SettingMap.SET_KEY_TEXTSIZE));
-        kbdPreview.setIconSizeMultiplier(getIntOrDefault(SettingMap.SET_KEY_ICON_SIZE_MULTIPLIER));
-        kbdPreview.setKeysTextType(getIntOrDefault(SettingMap.SET_KEYBOARD_TEXTTYPE_SELECT));
-        IconThemeUtils iconThemes = getIconThemes();
-        kbdPreview.setKeyDrawable(0, 0, 2,
-                iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_DELETE));
-        setSpaceBarViewPrefs(iconThemes,
-                kbdPreview.getKey(0, 0, 1),
-                getCurrentKeyboardLanguage().name);
-        kbdPreview.setKeyDrawable(0, 0, -1,
-                iconThemes.getIconResource(LocalIconTheme.SYM_TYPE_ENTER));
-        kbdPreview.setKeyVibrateDuration(getIntOrDefault(SettingMap.SET_KEY_VIBRATE_DURATION));
-        kbdPreview.setKeysTextColor(getIntOrDefault(SettingMap.SET_KEY_TEXTCLR));
-
-        float kbdPadPercent = SuperDBHelper.getFloatedIntOrDefault(SettingMap.SET_KEYBOARD_PADDING);
-        float kbdHeightPercent = 12 + (kbdPadPercent * 2);
-
-        ((View) mPreviewHolder.getParent()).getLayoutParams().height = DensityUtils.hpInt(kbdHeightPercent);
-        kbdPreview.setKeyboardHeight(kbdHeightPercent - kbdPadPercent);
-        kbdPreview.getLayoutParams().height = -1;
-
-        int kbdPadding = minPInt(kbdPadPercent);
-        kbdPreview.setPadding(kbdPadding, kbdPadding, kbdPadding, kbdPadding);
-
         try {
             clearCustomFont();
             getCustomFont();
         } catch (Throwable ignored) {}
-        */
     }
 }

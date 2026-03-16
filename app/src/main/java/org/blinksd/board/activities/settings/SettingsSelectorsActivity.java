@@ -81,6 +81,7 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         btn.setTextColor(textColor);
         btn.setText(getTranslation(key));
         numSelector.setTag(key);
+        numSelector.setTag(R.id.key_normal_press, isFloat);
         numSelector.setOnClickListener(numberSelectorListener);
         numSelector.addView(btn);
         numSelector.addView(img);

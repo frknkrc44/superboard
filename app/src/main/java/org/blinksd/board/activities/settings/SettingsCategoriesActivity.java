@@ -13,6 +13,7 @@ import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.view.RoundedCorner;
@@ -20,13 +21,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 
+import org.blinksd.board.R;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.SettingCategory;
@@ -236,6 +240,27 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
                     switchItem.setOnCheckedChangeListener(null);
                     switchItem.setChecked(val);
                     switchItem.setOnCheckedChangeListener(switchListener);
+                }
+
+                if (item instanceof ViewGroup) {
+                    var key = (String) item.getTag();
+
+                    var icon = item.findViewById(android.R.id.icon);
+                    if (icon instanceof ImageView imageView) {
+                        int color = SuperDBHelper.getIntOrDefault(key);
+                        var gradient = (GradientDrawable) imageView.getDrawable();
+                        gradient.setColor(color);
+                    }
+
+                    var text1 = item.findViewById(android.R.id.text1);
+                    if (text1 instanceof TextView textView) {
+                        int num = SuperDBHelper.getIntOrDefault(key);
+                        var isFloat = (boolean) text1.getTag(R.id.key_normal_press);
+
+                        textView.setText(isFloat
+                                ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
+                                : String.valueOf(num));
+                    }
                 }
             }
         }
