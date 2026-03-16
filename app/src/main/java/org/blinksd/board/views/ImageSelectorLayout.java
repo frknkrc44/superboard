@@ -3,7 +3,11 @@ package org.blinksd.board.views;
 import static org.blinksd.board.SuperBoardApplication.getBackgroundImageFile;
 import static org.blinksd.utils.ColorUtils.setColorFilter;
 import static org.blinksd.utils.DialogUtils.doHacksAndShow;
+import static org.blinksd.utils.LayoutCreator.createButton;
+import static org.blinksd.utils.LayoutCreator.createFilledVerticalLayout;
+import static org.blinksd.utils.LayoutCreator.createLayoutParams;
 import static org.blinksd.utils.ResourcesUtils.getDefaultTextColor;
+import static org.blinksd.utils.SuperDBHelper.calculateColorsForScheme;
 import static org.blinksd.utils.SystemUtils.isDocumentsUiAvailable;
 import static org.blinksd.utils.SystemUtils.isPermGranted;
 
@@ -43,7 +47,6 @@ import org.blinksd.board.R;
 import org.blinksd.board.activities.settings.SettingsBaseActivity;
 import org.blinksd.utils.DensityUtils;
 import org.blinksd.utils.ImageUtils;
-import org.blinksd.utils.LayoutCreator;
 import org.blinksd.utils.ResourcesUtils;
 
 import java.io.File;
@@ -56,6 +59,7 @@ import thirdparty.android.widget.TabWidget;
 public final class ImageSelectorLayout extends LinearLayout {
     private byte indexNum = 0, gradientType = 0;
     private final ImageView prev;
+    private final SuperBoard superBoard;
     private final TabHost host;
     private TreeMap<Integer, Integer> colorList;
     private final GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
@@ -111,26 +115,40 @@ public final class ImageSelectorLayout extends LinearLayout {
         widget.setId(android.R.id.tabs);
 
         host = new TabHost(win.getContext());
-        host.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -2));
+        host.setLayoutParams(createLayoutParams(LinearLayout.class, -1, -2));
         FrameLayout fl = new FrameLayout(win.getContext());
-        fl.setLayoutParams(LayoutCreator.createLayoutParams(LinearLayout.class, -1, -1));
+        fl.setLayoutParams(createLayoutParams(LinearLayout.class, -1, -1));
         fl.setId(android.R.id.tabcontent);
-        LinearLayout holder = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, win.getContext());
+        LinearLayout holder = createFilledVerticalLayout(LinearLayout.class, win.getContext());
         holder.setGravity(Gravity.CENTER);
         holder.addView(widget);
-        prev = new ImageView(win.getContext());
+        prev = new ImageView(win.getContext()) {
+            @Override
+            public void setImageDrawable(Drawable drawable) {
+                super.setImageDrawable(drawable);
+
+                if (prev.getTag(R.id.gradient_selector) instanceof ColorScheme colorScheme &&
+                        drawable instanceof BitmapDrawable bitmapDrawable) {
+                    applyColorPreview(bitmapDrawable.getBitmap(), colorScheme);
+                }
+            }
+        };
         prev.setId(R.id.dialog_image_preview);
         int gradientPadding = DensityUtils.dpInt(2);
         int frameMargin = DensityUtils.dpInt(8);
-        prev.setPadding(gradientPadding, gradientPadding, gradientPadding, gradientPadding);
         int dp = DensityUtils.hpInt(25);
-        LinearLayout.LayoutParams imagePreviewParams =
-                new LinearLayout.LayoutParams(-1, dp, 0);
-        imagePreviewParams.setMargins(frameMargin, frameMargin, frameMargin, frameMargin);
-        prev.setLayoutParams(imagePreviewParams);
+        prev.setLayoutParams(new FrameLayout.LayoutParams(-1, dp));
         prev.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        superBoard = getSuperBoardView();
+        FrameLayout prevContainer = new FrameLayout(win.getContext());
+        var prevContainerParams = new LinearLayout.LayoutParams(-1, -2, 0);
+        prevContainerParams.setMargins(frameMargin, frameMargin, frameMargin, frameMargin);
+        prevContainer.setLayoutParams(prevContainerParams);
+        prevContainer.setPadding(gradientPadding, gradientPadding, gradientPadding, gradientPadding);
+        prevContainer.addView(prev);
+        prevContainer.addView(superBoard);
         holder.addView(getColorSchemeSelector());
-        holder.addView(prev);
+        holder.addView(prevContainer);
         holder.addView(fl);
         host.addView(holder);
         host.setOnTabChangedListener(p1 -> {
@@ -164,7 +182,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             TextView tv = (TextView) LayoutInflater.from(win.getContext())
                     .inflate(android.R.layout.simple_list_item_1, widget, false);
             LinearLayout.LayoutParams pr = (LinearLayout.LayoutParams) 
-                    LayoutCreator.createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
+                    createLayoutParams(LinearLayout.class, -1, DensityUtils.dpInt(48));
             pr.weight = 0.33f;
             tv.setLayoutParams(pr);
             tv.setText(getImageSelectorTranslation(tabTitles[i]));
@@ -188,6 +206,69 @@ public final class ImageSelectorLayout extends LinearLayout {
         }
     }
 
+    private SuperBoard getSuperBoardView() {
+        var superBoard = new SuperBoard(getContext()) {
+            @Override
+            protected void sendKeyboardEvent(Key v) {}
+        };
+        superBoard.setLayoutParams(new FrameLayout.LayoutParams(-1, -2));
+        superBoard.addRow(0, new CharSequence[]{});
+        superBoard.addRow(0, new CharSequence[]{ "a", "", "" });
+        superBoard.addRow(0, new CharSequence[]{});
+        superBoard.setKeysTextSize(DensityUtils.minP(2.5f));
+        superBoard.setKeysPadding(10);
+        superBoard.setIconSizeMultiplier(2);
+
+        for (int i = 0; i <= 2; i += 2) {
+            var row = superBoard.getRow(0, i);
+            if (row != null) {
+                row.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        var delKey = superBoard.getKey(0, 1, 1);
+        if (delKey != null) {
+            delKey.setKeyIcon(R.drawable.sym_keyboard_delete);
+        }
+
+        var enterKey = superBoard.getKey(0, 1, 2);
+        if (enterKey != null) {
+            enterKey.setKeyIcon(R.drawable.sym_keyboard_return);
+        }
+
+        return superBoard;
+    }
+
+    private void applyColorPreview(Bitmap b, ColorScheme scheme) {
+        superBoard.setKeyboardHeight(25);
+        superBoard.fixHeight();
+
+        var calculatedScheme = calculateColorsForScheme(b, scheme);
+        superBoard.setBackgroundColor(calculatedScheme[0]);
+
+        int keyClr          = calculatedScheme[ 1];
+        int keyPressClr     = calculatedScheme[ 2];
+        int key2Clr         = calculatedScheme[ 3];
+        int key2PressClr    = calculatedScheme[ 4];
+        int enterClr        = calculatedScheme[ 5];
+        int enterPressClr   = calculatedScheme[ 6];
+        int keyTextColor    = calculatedScheme[ 7];
+        int key2TextColor   = calculatedScheme[ 8];
+        int enterTextColor  = calculatedScheme[ 9];
+        int textShadowColor = calculatedScheme[10];
+
+        Drawable keyBg = ResourcesUtils.getKeyBg(keyClr, keyPressClr, true);
+        Drawable key2Bg = ResourcesUtils.getKeyBg(key2Clr, key2PressClr, true);
+        Drawable enterBg = ResourcesUtils.getKeyBg(enterClr, enterPressClr, true);
+
+        superBoard.setKeysBackground(keyBg);
+        superBoard.setKeysTextColor(keyTextColor);
+
+        superBoard.setKeyBackgroundAndItemColor(0, 1, 1, key2Bg, key2TextColor);
+        superBoard.setKeyBackgroundAndItemColor(0, 1, 2, enterBg, enterTextColor);
+        superBoard.setKeysShadow(DensityUtils.minPInt(1), textShadowColor);
+    }
+
     private View getColorSchemeSelector() {
         prev.setTag(R.id.gradient_selector, ColorScheme.COLORFUL_V1);
 
@@ -200,6 +281,10 @@ public final class ImageSelectorLayout extends LinearLayout {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 var selection = ColorScheme.values()[position];
                 prev.setTag(R.id.gradient_selector, selection);
+
+                if (prev.getDrawable() instanceof BitmapDrawable bitmapDrawable) {
+                    applyColorPreview(bitmapDrawable.getBitmap(), selection);
+                }
             }
 
             @Override
@@ -215,9 +300,9 @@ public final class ImageSelectorLayout extends LinearLayout {
                                          final Runnable onRestartKeyboard) {
         Context ctx = win.getContext();
         int margin = DensityUtils.dpInt(8);
-        LinearLayout l = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
+        LinearLayout l = createFilledVerticalLayout(LinearLayout.class, ctx);
         l.setPadding(margin, margin, margin, margin);
-        Button s = LayoutCreator.createButton(ctx);
+        Button s = createButton(ctx);
         s.setBackground(ResourcesUtils.getSelectableItemBg(s.getCurrentTextColor()));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin;
@@ -227,7 +312,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         l.addView(s);
 
         if (isDocumentsUiAvailable()) {
-            Button w = LayoutCreator.createButton(ctx);
+            Button w = createButton(ctx);
             w.setBackground(ResourcesUtils.getSelectableItemBg(w.getCurrentTextColor()));
             params = new LinearLayout.LayoutParams(-1, -2, 0);
             params.bottomMargin = margin;
@@ -263,7 +348,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             });
         }
 
-        Button rb = LayoutCreator.createButton(ctx);
+        Button rb = createButton(ctx);
         rb.setBackground(ResourcesUtils.getSelectableItemBg(rb.getCurrentTextColor()));
         params = new LinearLayout.LayoutParams(-1, -2, 0);
         params.bottomMargin = margin * 2;
@@ -304,7 +389,7 @@ public final class ImageSelectorLayout extends LinearLayout {
             colorList = new TreeMap<>();
         }
 
-        LinearLayout gradientSel = LayoutCreator.createFilledVerticalLayout(LinearLayout.class, ctx);
+        LinearLayout gradientSel = createFilledVerticalLayout(LinearLayout.class, ctx);
         gradientSel.setId(R.id.gradient_selector);
         gradientSel.addView(getColorSelectorItem(ctx, -1));
         gradientSel.addView(getColorSelectorItem(ctx, -2));
