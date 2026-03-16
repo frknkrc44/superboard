@@ -221,48 +221,44 @@ public abstract class SettingsCategoriesActivity extends SettingsSelectorsActivi
 
     @Override
     public void restartKeyboard() {
-        super.restartKeyboard();
-
-        // Re-apply switch dependencies
+        // Re-apply dependencies
         for (int i = 0; i < categoryList.size(); i++) {
             ViewGroup categoryView = (ViewGroup) getCategoryView(i).getChildAt(0);
             final int childCount = categoryView.getChildCount();
 
             for (int g = 0; g < childCount; g++) {
                 View item = categoryView.getChildAt(g);
+                var key = (String) item.getTag();
 
                 if (item instanceof Switch switchItem) {
-                    String key = (String) switchItem.getTag();
-
                     boolean enabled = getSettings().getSwitchEnabledFromDependency(key);
                     boolean val = enabled && SuperDBHelper.getBooleanOrDefault(key);
                     switchItem.setEnabled(enabled);
                     switchItem.setOnCheckedChangeListener(null);
                     switchItem.setChecked(val);
                     switchItem.setOnCheckedChangeListener(switchListener);
-                }
-
-                if (item instanceof ViewGroup) {
-                    var key = (String) item.getTag();
-
+                } else {
                     var icon = item.findViewById(android.R.id.icon);
                     if (icon instanceof ImageView imageView) {
                         int color = SuperDBHelper.getIntOrDefault(key);
-                        var gradient = (GradientDrawable) imageView.getDrawable();
-                        gradient.setColor(color);
+                        GradientDrawable gd = new GradientDrawable();
+                        gd.setColor(color);
+                        gd.setCornerRadius(1000);
+                        imageView.setImageDrawable(gd);
                     }
 
                     var text1 = item.findViewById(android.R.id.text1);
-                    if (text1 instanceof TextView textView) {
+                    var isFloat = text1 != null ? text1.getTag(R.id.key_normal_press) : null;
+                    if (text1 instanceof TextView textView && isFloat != null) {
                         int num = SuperDBHelper.getIntOrDefault(key);
-                        var isFloat = (boolean) text1.getTag(R.id.key_normal_press);
-
-                        textView.setText(isFloat
+                        textView.setText((boolean) isFloat
                                 ? String.valueOf(DensityUtils.getFloatNumberFromInt(num))
                                 : String.valueOf(num));
                     }
                 }
             }
         }
+
+        super.restartKeyboard();
     }
 }

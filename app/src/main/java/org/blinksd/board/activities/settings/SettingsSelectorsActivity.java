@@ -291,11 +291,11 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
         doHacksAndShow(build.create());
     };
 
-    private final View.OnClickListener imageSelectorListener = p1 -> {
-        AlertDialog.Builder build = new AlertDialog.Builder(p1.getContext());
-        build.setTitle(getTranslation(p1.getTag().toString()));
-        build.setNegativeButton(android.R.string.cancel, (p11, p2) -> p11.dismiss());
-        build.setPositiveButton(android.R.string.ok, (p112, p2) -> {
+    private final View.OnClickListener imageSelectorListener = imageSelector -> {
+        AlertDialog.Builder build = new AlertDialog.Builder(imageSelector.getContext());
+        build.setTitle(getTranslation(imageSelector.getTag().toString()));
+        build.setNegativeButton(android.R.string.cancel, null);
+        build.setPositiveButton(android.R.string.ok, (dialog, p2) -> {
             ImageView img = dialogView.findViewById(R.id.dialog_image_preview);
             Drawable d = img.getDrawable();
             if (d instanceof BitmapDrawable bitmapDrawable) {
@@ -306,7 +306,6 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
                 restartKeyboard();
                 // recreate();
             }
-            p112.dismiss();
         });
         AlertDialog dialog = build.create();
         dialogView = new ImageSelectorLayout(dialog, () -> {
