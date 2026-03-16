@@ -280,29 +280,26 @@ public final class ColorUtils {
             copyOfBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
         }
 
-        int color, count = 0, r = 0, g = 0, b = 0, a;
+        int count = 0, r = 0, g = 0, b = 0;
         for (int pixel : pixels) {
-            color = pixel;
-            a = alpha(color);
-            if (a > 0) {
-                color = (a < 255) ? convertARGBtoRGB(color) : color;
-                r += red(color);
-                g += green(color);
-                b += blue(color);
+            if (alpha(pixel) > 0) {
+                r += red(pixel);
+                g += green(pixel);
+                b += blue(pixel);
                 count++;
             }
         }
-        if (r == g && g == b && r == 0) {
-            count = 1;
-        }
+
+        if (r == g && g == b && r == 0) return 0xFF000000;
+        if (count < 1) count = 1;
+
         r /= count;
         g /= count;
         b /= count;
         r = (r << 16) & 0x00FF0000;
         g = (g << 8) & 0x0000FF00;
         b = b & 0x000000FF;
-        color = 0xFF000000 | r | g | b;
-        return color;
+        return 0xFF000000 | r | g | b;
     }
 
     public static int convertARGBtoRGB(int color) {
