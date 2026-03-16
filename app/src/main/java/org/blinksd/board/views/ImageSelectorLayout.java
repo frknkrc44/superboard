@@ -28,11 +28,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +58,7 @@ public final class ImageSelectorLayout extends LinearLayout {
     private final ImageView prev;
     private final TabHost host;
     private TreeMap<Integer, Integer> colorList;
-    GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
+    private final GradientDrawable.Orientation[] gradientOrientations = GradientDrawable.Orientation.values();
     private final View.OnClickListener colorSelectorListener = new View.OnClickListener() {
 
         @Override
@@ -126,6 +129,7 @@ public final class ImageSelectorLayout extends LinearLayout {
         imagePreviewParams.setMargins(frameMargin, frameMargin, frameMargin, frameMargin);
         prev.setLayoutParams(imagePreviewParams);
         prev.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        holder.addView(getColorSchemeSelector());
         holder.addView(prev);
         holder.addView(fl);
         host.addView(holder);
@@ -182,6 +186,27 @@ public final class ImageSelectorLayout extends LinearLayout {
 
             host.addTab(ts);
         }
+    }
+
+    private View getColorSchemeSelector() {
+        prev.setTag(R.id.gradient_selector, ColorScheme.COLORFUL_V1);
+
+        var spinner = new Spinner(getContext());
+        spinner.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        spinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, ColorScheme.values()));
+        spinner.setSelection(0);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                var selection = ColorScheme.values()[position];
+                prev.setTag(R.id.gradient_selector, selection);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        return spinner;
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
@@ -383,7 +408,24 @@ public final class ImageSelectorLayout extends LinearLayout {
 
     };
 
-    private String getImageSelectorTranslation(String key) {
+    public enum ColorScheme {
+        COLORFUL_V1(0),
+        COLORFUL_V2(1);
+
+        final int schemeId;
+
+        ColorScheme(int schemeId) {
+            this.schemeId = schemeId;
+        }
+
+        /** @noinspection all */
+        @Override
+        public String toString() {
+            return getImageSelectorTranslation("cs_" + super.toString().toLowerCase());
+        }
+    }
+
+    private static String getImageSelectorTranslation(String key) {
         return SettingsBaseActivity.getTranslation("image_selector_" + key);
     }
 }

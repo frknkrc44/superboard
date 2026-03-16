@@ -11,6 +11,7 @@ import static org.blinksd.utils.SystemUtils.isDarkThemeEnabled;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import org.blinksd.board.views.ImageSelectorLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -149,28 +150,104 @@ public final class SuperDBHelper {
         getAppDB().writeAll();
     }
 
-    public static void setColorsFromBitmap(Bitmap b) {
-        if (b == null) return;
+    public static void setColorsFromBitmap(Bitmap b, ImageSelectorLayout.ColorScheme scheme) {
+        var colors = calculateColorsForScheme(b, scheme);
+        if (colors == null) return;
+
+        assert colors.length == 11 : "The colors array size is wrong";
+
+        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR,    colors[ 0]);
+        getAppDB().putInteger(SettingMap.SET_KEY_BGCLR,         colors[ 1]);
+        getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR,        colors[ 2]);
+        getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR,   colors[ 3]);
+        getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR,  colors[ 4]);
+        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR,       colors[ 5]);
+        getAppDB().putInteger(SettingMap.SET_ENTER_PRESS_BGCLR, colors[ 6]);
+        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR,       colors[ 7]);
+        getAppDB().putInteger(SettingMap.SET_KEY2_TEXTCLR,      colors[ 8]);
+        getAppDB().putInteger(SettingMap.SET_ENTER_TEXTCLR,     colors[ 9]);
+        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR,     colors[10]);
+        getAppDB().writeAll();
+    }
+
+    /**
+     * Calculate and return colors from bitmap by using the color scheme
+     * <br><br>
+     * Returned output:
+     * <pre>
+     *     int[] {
+     *          "keyboard background color",
+     *          "key normal background color",
+     *          "key pressed background color",
+     *          "key2 normal background color",
+     *          "key2 pressed background color",
+     *          "enter normal background color",
+     *          "enter pressed background color",
+     *          "key text color",
+     *          "key2 text color",
+     *          "enter text color",
+     *          "text shadow color",
+     *     }
+     * </pre>
+     *
+     * @param b input image
+     * @param scheme color scheme to generate colors
+     * @return an int array with colors
+     */
+    public static int[] calculateColorsForScheme(Bitmap b, ImageSelectorLayout.ColorScheme scheme) {
+        if (b == null) return null;
+
         final int c = ColorUtils.getBitmapColor(b);
         final int keyClr = c - 0xAA000000;
-        getAppDB().putInteger(SettingMap.SET_KEYBOARD_BGCLR, keyClr);
 
-        final int keyPressClr = ColorUtils.getDarkerColor(keyClr);
-        final int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
-        final int enterPressClr = ColorUtils.getDarkerColor(keyPress2Clr);
-        getAppDB().putInteger(SettingMap.SET_KEY_BGCLR, keyClr);
-        getAppDB().putInteger(SettingMap.SET_KEY2_BGCLR, keyPressClr);
-        getAppDB().putInteger(SettingMap.SET_KEY_PRESS_BGCLR, keyPressClr);
-        getAppDB().putInteger(SettingMap.SET_KEY2_PRESS_BGCLR, keyPress2Clr);
-        getAppDB().putInteger(SettingMap.SET_ENTER_BGCLR, keyPress2Clr);
-        getAppDB().putInteger(SettingMap.SET_ENTER_PRESS_BGCLR, enterPressClr);
+        switch (scheme) {
+            case COLORFUL_V1 -> {
+                final int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+                final int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+                final int enterPressClr = ColorUtils.getDarkerColor(keyPress2Clr);
+                final int textClr = satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
 
-        final int textClr = satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
-        getAppDB().putInteger(SettingMap.SET_KEY_TEXTCLR, textClr);
-        getAppDB().putInteger(SettingMap.SET_KEY2_TEXTCLR, textClr);
-        getAppDB().putInteger(SettingMap.SET_ENTER_TEXTCLR, textClr);
-        getAppDB().putInteger(SettingMap.SET_KEY_SHADOWCLR, invertColor(textClr));
-        getAppDB().writeAll();
+                return new int[] {
+                        keyClr,               /* keyboard background color */
+                        keyClr,               /* key normal background color */
+                        keyPressClr,          /* key pressed background color */
+                        keyPressClr,          /* key2 normal background color */
+                        keyPress2Clr,         /* key2 pressed background color */
+                        keyPress2Clr,         /* enter normal background color */
+                        enterPressClr,        /* enter pressed background color */
+                        textClr,              /* key text color */
+                        textClr,              /* key2 text color */
+                        textClr,              /* enter text color */
+                        invertColor(textClr), /* text shadow color */
+                };
+            }
+
+            case COLORFUL_V2 -> {
+                final int bgClr = 0xAA000000;
+                final int keyPressClr = ColorUtils.getDarkerColor(keyClr);
+                final int keyPress2Clr = ColorUtils.getDarkerColor(keyPressClr);
+                final int enterPressClr = ColorUtils.getDarkerColor(keyPress2Clr);
+                final int textClr = satisfiesTextContrast(c) ? 0xFF212121 : 0xFFDEDEDE;
+
+                return new int[] {
+                        bgClr,                /* keyboard background color */
+                        0x00000000,           /* key normal background color */
+                        keyPressClr,          /* key pressed background color */
+                        keyPressClr,          /* key2 normal background color */
+                        keyPress2Clr,         /* key2 pressed background color */
+                        keyPress2Clr,         /* enter normal background color */
+                        enterPressClr,        /* enter pressed background color */
+                        textClr,              /* key text color */
+                        textClr,              /* key2 text color */
+                        textClr,              /* enter text color */
+                        invertColor(textClr), /* text shadow color */
+                };
+            }
+
+            default -> {
+                return null;
+            }
+        }
     }
 
     public static Map<String, String> exportAllToMap(List<String> except) {

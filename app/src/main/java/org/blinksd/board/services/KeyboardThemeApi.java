@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 
 import org.blinksd.board.services.parcelables.IconThemeParcel;
+import org.blinksd.board.views.ImageSelectorLayout;
 import org.blinksd.utils.LocalIconTheme;
 import org.blinksd.utils.SettingMap;
 import org.blinksd.utils.ThemeUtils;
@@ -119,7 +120,7 @@ public final class KeyboardThemeApi extends IKeyboardThemeApi.Stub {
             File file = getBackgroundImageFile();
             outputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            setColorsFromBitmap(bmp);
+            setColorsFromBitmap(bmp, ImageSelectorLayout.ColorScheme.COLORFUL_V1);
 
             // disable monet because we're imported a background image
             // and pulled colors from it

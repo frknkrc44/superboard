@@ -298,14 +298,10 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
             ImageView img = dialogView.findViewById(R.id.dialog_image_preview);
             Drawable d = img.getDrawable();
             if (d instanceof BitmapDrawable bitmapDrawable) {
-                try {
-                    File bgFile = getBackgroundImageFile();
-                    Bitmap bmp = bitmapDrawable.getBitmap();
-                    setColorsFromBitmap(bmp);
-                    FileOutputStream fos = new FileOutputStream(bgFile);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                } catch (Throwable ignored) {
-                }
+                setImageAsBackground(
+                        bitmapDrawable.getBitmap(),
+                        (ImageSelectorLayout.ColorScheme) img.getTag(R.id.gradient_selector)
+                );
                 restartKeyboard();
                 // recreate();
             }
@@ -399,4 +395,13 @@ public abstract class SettingsSelectorsActivity extends SettingsBaseActivity {
 
         doHacksAndShow(build.create());
     };
+
+    private void setImageAsBackground(Bitmap bmp, ImageSelectorLayout.ColorScheme scheme) {
+        setColorsFromBitmap(bmp, scheme);
+
+        File bgFile = getBackgroundImageFile();
+        try (FileOutputStream fos = new FileOutputStream(bgFile)) {
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Throwable ignored) {}
+    }
 }
