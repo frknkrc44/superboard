@@ -9,16 +9,15 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageButton;
 
 import org.blinksd.utils.ResourcesUtils;
 
 import java.util.ArrayList;
 
-import thirdparty.two_way_grid_view.TwoWayGridView;
-
 @SuppressLint("ViewConstructor")
-public class GradientColorPresetsView extends TwoWayGridView {
+public class GradientColorPresetsView extends GridView {
     private final ArrayList<int[]> colorProfiles = new ArrayList<>();
     private final OnGradientItemClickListener onGradientItemClickListener;
 
@@ -28,8 +27,6 @@ public class GradientColorPresetsView extends TwoWayGridView {
         setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
 
         this.onGradientItemClickListener = listener;
-        setScrollDirectionPortrait(SCROLL_AXIS_VERTICAL);
-        setScrollDirectionLandscape(SCROLL_AXIS_VERTICAL);
 
         setNumColumns(3);
 
@@ -94,7 +91,7 @@ public class GradientColorPresetsView extends TwoWayGridView {
 
             if (item == null) {
                 ImageButton imageButton = new ImageButton(getContext());
-                imageButton.setLayoutParams(new TwoWayGridView.LayoutParams(-1, height));
+                imageButton.setLayoutParams(new GridView.LayoutParams(-1, height));
                 imageButton.setBackground(ResourcesUtils.getTransSelectableItemBg(getContext(), tintColor, true));
                 imageButton.setImageResource(android.R.drawable.ic_input_add);
                 imageButton.setImageTintList(ColorStateList.valueOf(tintColor));
@@ -107,7 +104,7 @@ public class GradientColorPresetsView extends TwoWayGridView {
             gradientDrawable.setStroke((int) (getResources().getDisplayMetrics().density * 8), 0);
             gradientDrawable.setCornerRadius(16);
             View coloredView = new View(getContext());
-            coloredView.setLayoutParams(new TwoWayGridView.LayoutParams(-1, height));
+            coloredView.setLayoutParams(new GridView.LayoutParams(-1, height));
             coloredView.setBackground(gradientDrawable);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
