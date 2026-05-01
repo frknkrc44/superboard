@@ -62,7 +62,12 @@
     <string name="settings_insert_space_after_punc">Вставляти пробіл після символу пунктуації</string>
     <string name="settings_monet_color_scheme">Кольорова схема Monet</string>
     <string name="settings_keyboard_padding">Відступ клавіатури</string>
+    <string name="settings_keyboard_round">Keyboard radius</string>
     <string name="settings_compat_monet_max_colors">Максимальна обрахована кількість кольорів для сумісного monet</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
+    <string name="settings_show_math_layout">Show mathematical layout</string>
+    <string name="settings_replace_physical_keys">Replace the physical keyboard key presses with your current keyboard layout</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Фото</string>
@@ -90,6 +95,7 @@
     <string name="settings_key_vibrate_duration">Тривалість вібрації при натисканні клавіш</string>
     <string name="settings_keyboard_height">Висота клавіатури</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">Множник тривалості довгого натискання</string>
     <string name="settings_key_padding">Відступ клавіш</string>
     <string name="settings_key_radius">Радіус клавіш</string>
@@ -104,15 +110,26 @@
     <string name="settings_backup_type_theme">Тема (іконки, фонове зображення, кольори, …)</string>
     <string name="settings_backup_type_other">Інші</string>
     <string name="settings_select_file">Обрати файл</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Manage dictionary packs</string>
     <string name="settings_import_dict_pack">Імпорт словника (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Імпортування. Будь ласка, не закривайте програму</string>
     <string name="settings_dict_import_count">%s слів імпортовано</string>
     <string name="settings_dict_import_delete_duplicates">Видалення дублікатів</string>
+    <string name="settings_suggestions">Suggestions</string>
+    <string name="settings_delete_dictionary_title">Are you sure?</string>
+    <string name="settings_delete_dictionary_desc">You\'ll lose all of suggestions for %s and this cannot be undone.</string>
+    <plurals name="settings_word_count">
+        <item quantity="one">%d word</item>
+        <item quantity="few">%d words</item>
+        <item quantity="many">%d words</item>
+        <item quantity="other">%d words</item>
+    </plurals>
     <!-- Settings category resources -->
     <string name="settings_category_general">Загальні</string>
     <string name="settings_category_theming">Вигляд</string>
     <string name="settings_category_theming_adv">Розширене оформлення</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Розкладка клавіатури</string>
     <string name="settings_category_popup">Спливаючі меню</string>
     <string name="settings_category_top_bar">Верхня панель</string>
@@ -120,6 +137,9 @@
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">За замовчуванням</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
+    <!-- Settings image selector color scheme resources -->
+    <string name="settings_image_selector_cs_colorful_v1">Colorful</string>
+    <string name="settings_image_selector_cs_colorful_v2">Colorful with black background</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Звичайний</item>

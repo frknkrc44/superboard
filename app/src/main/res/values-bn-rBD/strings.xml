@@ -62,7 +62,12 @@
     <string name="settings_insert_space_after_punc">Insert space after punctuation</string>
     <string name="settings_monet_color_scheme">Monet color scheme</string>
     <string name="settings_keyboard_padding">Keyboard padding</string>
+    <string name="settings_keyboard_round">Keyboard radius</string>
     <string name="settings_compat_monet_max_colors">Maximum calculated color count for compat monet</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Use vertical scroll on portrait mode</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Use vertical scroll on landscape mode</string>
+    <string name="settings_show_math_layout">Show mathematical layout</string>
+    <string name="settings_replace_physical_keys">Replace the physical keyboard key presses with your current keyboard layout</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">ছবি</string>
@@ -90,6 +95,7 @@
     <string name="settings_key_vibrate_duration">কী প্রেস কম্পন সময়কাল</string>
     <string name="settings_keyboard_height">কীবোর্ডের উচ্চতা</string>
     <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_gesture_height_increaser">Navigation bar overlay height increase amount</string>
     <string name="settings_key_longpress_duration">দীর্ঘ প্রেস সময়কাল গুণক</string>
     <string name="settings_key_padding">বাটন প্যাডিং</string>
     <string name="settings_key_radius">বাটন ব্যাসার্ধ</string>
@@ -104,15 +110,24 @@
     <string name="settings_backup_type_theme">থিম (আইকন থিম, ব্যাকগ্রাউন্ড ইমেজ, রং, …)</string>
     <string name="settings_backup_type_other">অন্যান্য</string>
     <string name="settings_select_file">Select file</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Manage dictionary packs</string>
     <string name="settings_import_dict_pack">Import dictionary pack (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">আমদানি করা হচ্ছে, দয়া করে এই অ্যাপটি বন্ধ করবেন না</string>
     <string name="settings_dict_import_count">%s শব্দ আমদানি করা হয়েছে</string>
     <string name="settings_dict_import_delete_duplicates">ডুপ্লিকেট মুছে ফেলা হচ্ছে</string>
+    <string name="settings_suggestions">Suggestions</string>
+    <string name="settings_delete_dictionary_title">Are you sure?</string>
+    <string name="settings_delete_dictionary_desc">You\'ll lose all of suggestions for %s and this cannot be undone.</string>
+    <plurals name="settings_word_count">
+        <item quantity="one">%d word</item>
+        <item quantity="other">%d words</item>
+    </plurals>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Theming</string>
     <string name="settings_category_theming_adv">Advanced Theming</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Keyboard Layout</string>
     <string name="settings_category_popup">Popup</string>
     <string name="settings_category_top_bar">Top Bar</string>
@@ -120,6 +135,9 @@
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">ডিফল্ট</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
+    <!-- Settings image selector color scheme resources -->
+    <string name="settings_image_selector_cs_colorful_v1">Colorful</string>
+    <string name="settings_image_selector_cs_colorful_v2">Colorful with black background</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>নিয়মিত</item>

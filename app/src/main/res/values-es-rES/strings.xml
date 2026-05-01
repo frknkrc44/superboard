@@ -14,7 +14,7 @@
     <!-- Settings resources -->
     <string name="settings_activity">Ajustes</string>
     <string name="settings_keyboard_bgimg">Imagen de fondo del teclado</string>
-    <string name="settings_keyboard_bgblur_use_alt">Use the alternative method for blur</string>
+    <string name="settings_keyboard_bgblur_use_alt">Usar el método alternativo para el desenfoque</string>
     <string name="settings_keyboard_show_popup">Mostrar caracter mientras escribe</string>
     <string name="settings_colorize_navbar">Usar un fondo transparente para la barra de navegación</string>
     <string name="settings_colorize_navbar_always_trans">Hacer la barra de navegación completamente transparente</string>
@@ -23,9 +23,9 @@
     <string name="settings_disable_repeat">Deshabilitar repetición de caracteres al presionar contínuamente</string>
     <string name="settings_disable_top_bar">Desactivar la barra superior</string>
     <string name="settings_hide_top_bar_fn_buttons">Ocultar botones de función de la barra superior</string>
-    <string name="settings_show_fab_right">Show top bar buttons at right</string>
-    <string name="settings_show_fs_keyboard">Show the full-screen keyboard when available</string>
-    <string name="settings_show_fs_keyboard_forced">Show the full-screen keyboard always</string>
+    <string name="settings_show_fab_right">Mostrar botones de la barra superior derecha</string>
+    <string name="settings_show_fs_keyboard">Mostrar el teclado a pantalla completa cuando esté disponible</string>
+    <string name="settings_show_fs_keyboard_forced">Mostrar siempre el teclado a pantalla completa</string>
     <string name="settings_enable_clipboard">Habilitar portapapeles</string>
     <string name="settings_disable_suggestions">Deshabilitar palabras sugeridas</string>
     <string name="settings_disable_number_row">Desactivar fila de números (beta)</string>
@@ -47,10 +47,10 @@
     <string name="settings_key2_press_bgclr">Color al presionar la segunda tecla</string>
     <string name="settings_keyboard_bgclr">Color de fondo del teclado</string>
     <string name="settings_key_textclr">Color del texto en las teclas</string>
-    <string name="settings_key2_textclr">Secondary key text color</string>
-    <string name="settings_enter_textclr">Enter key text color</string>
-    <string name="settings_key_stroke_width">Key stroke width</string>
-    <string name="settings_key_strokeclr">Key stroke color</string>
+    <string name="settings_key2_textclr">Color de texto de tecla secundaria</string>
+    <string name="settings_enter_textclr">Color del texto de la tecla</string>
+    <string name="settings_key_stroke_width">Ancho del trazo de la tecla</string>
+    <string name="settings_key_strokeclr">Color del trazo de tecla</string>
     <string name="settings_play_snd_press">Reproducir sonido al pulsar la tecla eventos</string>
     <string name="settings_keyboard_kill_background">Reduce el uso de la RAM (aumenta el tiempo de espera al inicio)</string>
     <string name="settings_use_first_popup_character">Usa el primer carácter emergente con pulsación larga (debes habilitar el menú emergente)</string>
@@ -62,7 +62,12 @@
     <string name="settings_insert_space_after_punc">Insertar espacio después de la puntuación</string>
     <string name="settings_monet_color_scheme">Esquema de color Monet</string>
     <string name="settings_keyboard_padding">Relleno de teclas</string>
+    <string name="settings_keyboard_round">Radio del teclado</string>
     <string name="settings_compat_monet_max_colors">Número máximo de colores calculado para el monet compat</string>
+    <string name="settings_emoji_use_vertical_scroll_portrait">Usar desplazamiento vertical en modo vertical</string>
+    <string name="settings_emoji_use_vertical_scroll_landscape">Usar desplazamiento vertical en modo horizontal</string>
+    <string name="settings_show_math_layout">Mostrar el diseño matemático</string>
+    <string name="settings_replace_physical_keys">Reemplaza la tecla física del teclado con la disposición actual del teclado</string>
     <!-- Color selector layout resources -->
     <!-- Image selector resources -->
     <string name="settings_image_selector_photo">Foto</string>
@@ -89,7 +94,8 @@
     <string name="settings_keyboard_bgblur">Desenfoque de la imagen de fondo del teclado</string>
     <string name="settings_key_vibrate_duration">Duración de la vibración al presionar una tecla</string>
     <string name="settings_keyboard_height">Altura del teclado</string>
-    <string name="settings_land_height_increaser">Keyboard height increase amount for landscape mode</string>
+    <string name="settings_land_height_increaser">La altura del teclado aumenta la cantidad para el modo horizontal</string>
+    <string name="settings_gesture_height_increaser">Aumenta la altura de la barra de navegación</string>
     <string name="settings_key_longpress_duration">Multiplicador de duración de pulsación larga</string>
     <string name="settings_key_padding">Espaciado entre teclas</string>
     <string name="settings_key_radius">Radio de las esquinas de las teclas</string>
@@ -104,15 +110,24 @@
     <string name="settings_backup_type_theme">Tema (tema del icono, imagen de fondo, colores, …)</string>
     <string name="settings_backup_type_other">Otros</string>
     <string name="settings_select_file">Seleccionar archivo</string>
-    <!-- Dictionary importer resources -->
+    <!-- Dictionary resources -->
+    <string name="settings_manage_dict_packs">Administrar paquetes de diccionarios</string>
     <string name="settings_import_dict_pack">Importar paquete de diccionarios (.fbd/combined.gz)</string>
     <string name="settings_dict_importing">Importando, por favor no cierres esta aplicación</string>
     <string name="settings_dict_import_count">%s palabra importada</string>
     <string name="settings_dict_import_delete_duplicates">Eliminando duplicados</string>
+    <string name="settings_suggestions">Sugerencias</string>
+    <string name="settings_delete_dictionary_title">¿Estás seguro?</string>
+    <string name="settings_delete_dictionary_desc">Perderás todas las sugerencias de %s y esto no se puede deshacer.</string>
+    <plurals name="settings_word_count">
+        <item quantity="one">%d palabra</item>
+        <item quantity="other">%d palabras</item>
+    </plurals>
     <!-- Settings category resources -->
     <string name="settings_category_general">General</string>
     <string name="settings_category_theming">Temas</string>
     <string name="settings_category_theming_adv">Temas Avanzados</string>
+    <string name="settings_category_emoji">Emoji Layout</string>
     <string name="settings_category_layout">Diseño del Teclado</string>
     <string name="settings_category_popup">Emergente</string>
     <string name="settings_category_top_bar">Barra Superior</string>
@@ -120,6 +135,9 @@
     <!-- Settings monet color scheme resources -->
     <string name="settings_monet_scheme_default">Por defecto</string>
     <string name="settings_monet_scheme_md3">Material Design 3</string>
+    <!-- Settings image selector color scheme resources -->
+    <string name="settings_image_selector_cs_colorful_v1">Colorful</string>
+    <string name="settings_image_selector_cs_colorful_v2">Colorful with black background</string>
     <!-- List selector resources -->
     <string-array name="settings_keyboard_texttype_select">
         <item>Regular</item>
